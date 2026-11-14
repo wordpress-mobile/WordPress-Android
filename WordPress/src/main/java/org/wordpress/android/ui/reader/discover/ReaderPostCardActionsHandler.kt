@@ -508,7 +508,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     Event(PreLoadPostContent(post.blogId, post.postId))
                 )
                 // the post reads as saved or unsaved already, so show it rather than wait for the server
-                is Started -> _refreshPosts.postValue(Event(Unit))
+                Started -> _refreshPosts.postValue(Event(Unit))
                 NoNetwork -> _snackbarEvents.postValue(
                     Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
                 )
@@ -548,7 +548,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                             appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
                                             showSnackbarAction.invoke()
                                         },
-                                        message = if (savedPostsRepository.isEnabled) {
+                                        message = if (savedPostsRepository.isSyncedWithAccount) {
                                             R.string.reader_save_posts_synced_dialog_message
                                         } else {
                                             R.string.reader_save_posts_locally_dialog_message

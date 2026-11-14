@@ -39,7 +39,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         isBookmarkList: Boolean,
         source: String
     ) = flow {
-        val bookmarked = if (savedPostsRepository.isEnabled) {
+        val bookmarked = if (savedPostsRepository.isSyncedWithAccount) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NoNetwork)
                 return@flow
@@ -88,7 +88,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
                 write.onAwait { false }
             }
             changed.cancel()
-            if (showsChange) emit(Started(setToBookmarked))
+            if (showsChange) emit(Started)
             write.await()
         }
         if (!succeeded) {
@@ -145,7 +145,7 @@ sealed class BookmarkPostState {
     data class Success(val bookmarked: Boolean) : BookmarkPostState()
 
     /** A synced save or unsave shows, while the server hasn't answered yet. [Success] or [Failed] follows. */
-    data class Started(val bookmarked: Boolean) : BookmarkPostState()
+    data object Started : BookmarkPostState()
     data object NoNetwork : BookmarkPostState()
     data object Failed : BookmarkPostState()
 }

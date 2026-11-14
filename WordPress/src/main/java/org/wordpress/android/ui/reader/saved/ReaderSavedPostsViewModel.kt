@@ -76,6 +76,9 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private val reloadRequests = Channel<Unit>(Channel.CONFLATED)
 
     private var isStarted = false
+
+    // a card only changes when its item does, so cards are kept across reloads
+    private var cards = emptyMap<ReaderSavedListItem, ReaderPostUiState>()
     private var photonWidth = 0
     private var photonHeight = 0
     private val cardCallbacks = ReaderSavedPostCardBuilder.Callbacks(
@@ -96,7 +99,10 @@ class ReaderSavedPostsViewModel @Inject constructor(
         // set before the collection, which is created off the main thread, so a view recreated meanwhile
         // doesn't start a second one
         if (isStarted) {
-            if (isPhotonSizeChanged) requestReload()
+            if (isPhotonSizeChanged) {
+                cards = emptyMap()
+                requestReload()
+            }
             return
         }
         isStarted = true
@@ -153,7 +159,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
         }
     }
 
-    fun onItemClicked(item: ReaderSavedListItem) {
+    private fun onItemClicked(item: ReaderSavedListItem) {
         track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST, item)
         viewModelScope.launch { _events.send(Event.OpenItem(item)) }
     }
@@ -234,8 +240,14 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private suspend fun reload() {
         val collection = collection ?: return
         try {
-            val (items, info) = withContext(ioDispatcher) { collection.loadItems() to collection.listInfo() }
-            val posts = items.map { SavedPost(it, cardBuilder.build(it, photonWidth, photonHeight, cardCallbacks)) }
+            val cards = cards
+            val (posts, info) = withContext(ioDispatcher) {
+                val posts = collection.loadItems().map { item ->
+                    SavedPost(item, cards[item] ?: cardBuilder.build(item, photonWidth, photonHeight, cardCallbacks))
+                }
+                posts to collection.listInfo()
+            }
+            this.cards = posts.associate { it.item to it.card }
             _uiState.update {
                 it.copy(posts = posts, isLoaded = true, hasMore = info.hasMore == true)
             }

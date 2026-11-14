@@ -73,21 +73,22 @@ class ReaderSavedPostsRepository @Inject constructor(
         }
     }
 
-    val isEnabled: Boolean
+    /** Whether saves go to a WordPress.com account. Without one, they're only kept on this device. */
+    val isSyncedWithAccount: Boolean
         get() = accountStore.hasAccessToken()
 
     private val userId: Long
         get() = accountStore.account.userId
 
     /** Whether the Saved tab shows the synced list rather than the device's own. */
-    fun isSyncedListReady(): Boolean = isEnabled && appPrefsWrapper.isReaderSavedPostsImported(userId)
+    fun isSyncedListReady(): Boolean = isSyncedWithAccount && appPrefsWrapper.isReaderSavedPostsImported(userId)
 
     /**
      * Whether [post] is saved, as far as this device knows. Doesn't touch the network or the disk, so
      * it's safe on the main thread.
      */
     fun isSaved(post: ReaderPost): Boolean {
-        val status = if (isEnabled) peekService()?.status(post.toSaveIdentity()) else null
+        val status = if (isSyncedWithAccount) peekService()?.status(post.toSaveIdentity()) else null
         return when (status) {
             ReaderSavedStatus.SAVED -> true
             ReaderSavedStatus.NOT_SAVED -> false
@@ -97,7 +98,7 @@ class ReaderSavedPostsRepository @Inject constructor(
 
     /** Imports this device's saves if they haven't been, then catches up with saves made elsewhere. */
     fun sync() {
-        if (!isEnabled) return
+        if (!isSyncedWithAccount) return
         appScope.launch(ioDispatcher) {
             importLocalSavesIfNeeded()
             try {

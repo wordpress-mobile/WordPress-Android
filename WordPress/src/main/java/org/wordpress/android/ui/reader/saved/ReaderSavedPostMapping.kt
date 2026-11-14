@@ -91,8 +91,8 @@ fun ReaderSavedListItem.toCardPost(): ReaderPost = ReaderPost().also { card ->
     card.url = url
     card.title = if (record == null) url else record.title
     card.excerpt = record?.excerpt
-    card.featuredImage = record?.displayImageUrl.nonBlank() ?: record?.featuredImage
-    card.blogName = record?.siteName.nonBlank() ?: host
+    card.featuredImage = record?.displayImageUrl?.ifBlank { null } ?: record?.featuredImage
+    card.blogName = record?.siteName?.ifBlank { null } ?: host
     card.blogUrl = record?.siteUrl
     card.blogImageUrl = record?.siteIconUrl
     card.authorName = record?.authorName
@@ -108,5 +108,3 @@ fun ReaderSavedListItem.toCardPost(): ReaderPost = ReaderPost().also { card ->
 }
 
 private fun String?.nonEmpty(): String? = this?.takeIf { it.isNotEmpty() }
-
-private fun String?.nonBlank(): String? = this?.takeIf { it.isNotBlank() }

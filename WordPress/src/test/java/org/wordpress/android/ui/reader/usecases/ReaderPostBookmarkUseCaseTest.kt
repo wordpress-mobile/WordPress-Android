@@ -65,7 +65,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when synced and offline, nothing changes and NoNetwork is emitted`() = test {
-        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
@@ -78,7 +78,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     @Test
     fun `when synced, saving follows the account state and saves locally and on the account`() = test {
         val dummyPost = init(isBookmarked = false)
-        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
         whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(true)
 
@@ -91,7 +91,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     @Test
     fun `when synced, the change shows as soon as the write starts, before the server answers`() = test {
         val dummyPost = init(isBookmarked = false)
-        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
         whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenAnswer {
             // what wordpress-rs does when the write starts
@@ -101,13 +101,13 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
-        assertThat(result).containsExactly(BookmarkPostState.Started(true), BookmarkPostState.Success(true))
+        assertThat(result).containsExactly(BookmarkPostState.Started, BookmarkPostState.Success(true))
     }
 
     @Test
     fun `when synced, unsaving a post saved elsewhere doesn't touch the local flag that's already clear`() = test {
         val dummyPost = init(isBookmarked = false)
-        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(true)
         whenever(savedPostsRepository.setSaved(any(), eq(false), anyOrNull())).thenReturn(true)
 
@@ -120,7 +120,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     @Test
     fun `when synced and the account write fails, the local flag is untouched and Failed is emitted`() = test {
         val dummyPost = init(isBookmarked = false)
-        whenever(savedPostsRepository.isEnabled).thenReturn(true)
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
         whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(false)
 
