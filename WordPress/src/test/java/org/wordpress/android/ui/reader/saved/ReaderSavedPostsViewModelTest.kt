@@ -15,10 +15,16 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.CompactBlogSectionData
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsViewModel.Event
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.image.ImageType
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderSavedException
@@ -42,6 +48,9 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
+    @Mock
+    lateinit var cardBuilder: ReaderSavedPostCardBuilder
+
     private lateinit var viewModel: ReaderSavedPostsViewModel
 
     @Before
@@ -51,6 +60,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
             readerPostTableWrapper,
             readerTracker,
             networkUtilsWrapper,
+            cardBuilder,
             testDispatcher()
         )
     }
@@ -133,16 +143,41 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
         whenever(collection.listInfo()).thenReturn(ReaderSavedListInfo(ListState.ERROR, null, false, null))
         whenever(collection.refresh()).thenThrow(ReaderSavedException.PostCannotBeSaved())
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(cardBuilder.build(any(), any(), any(), any())).thenReturn(card)
 
-        viewModel.start()
+        viewModel.start(photonWidth = 100, photonHeight = 50)
 
         val state = viewModel.uiState.value
-        assertThat(state.items).containsExactly(postItem)
+        assertThat(state.posts.map { it.item }).containsExactly(postItem)
         assertThat(state.error).isInstanceOf(ReaderPostListEmptyState.RequestFailed::class.java)
         assertThat(state.isRefreshing).isFalse()
     }
 
     private companion object {
+        val card = ReaderPostUiState(
+            source = ReaderTracker.SOURCE_SAVED,
+            postId = 0L,
+            blogId = 0L,
+            feedId = 0L,
+            isFollowed = false,
+            blogSection = CompactBlogSectionData(
+                0L, 0L, "", UiStringText(""), null, null, false, ImageType.BLAVATAR, null
+            ),
+            title = null,
+            excerpt = null,
+            featuredImageUrl = null,
+            thumbnailStripSection = null,
+            featuredImageVisibility = false,
+            moreMenuVisibility = false,
+            bookmarkAction = PrimaryAction(true, type = ReaderPostCardActionType.BOOKMARK),
+            likeAction = PrimaryAction(false, type = ReaderPostCardActionType.LIKE),
+            reblogAction = PrimaryAction(false, type = ReaderPostCardActionType.REBLOG),
+            commentsAction = PrimaryAction(true, type = ReaderPostCardActionType.COMMENTS),
+            onItemClicked = { _, _ -> },
+            onItemRendered = {},
+            onMoreButtonClicked = {},
+            onMoreDismissed = {},
+        )
         const val BLOG_ID = 1L
         const val POST_ID = 2L
         val identity = ReaderPostSaveIdentity(

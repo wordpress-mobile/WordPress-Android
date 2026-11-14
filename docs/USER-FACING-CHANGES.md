@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Reader saved posts sync with your WordPress.com account**
-  Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the Reader opens. Each saved post shows its site icon, up to three tags, its author, its comment count and when it was saved; tap its filled save icon, swipe it away or long-press it to remove it. Saving or unsaving now needs a connection, except removing a post saved only on this device.
+  Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the Reader opens. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving or unsaving now needs a connection, except removing a post saved only on this device.
   - **Apps:** Both
   - **Type:** New
   - **Availability:** Everyone

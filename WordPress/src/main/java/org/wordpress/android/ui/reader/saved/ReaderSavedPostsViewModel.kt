@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.util.AppLog
@@ -40,10 +41,14 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val cardBuilder: ReaderSavedPostCardBuilder,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+    /** A saved item and the card that shows it. */
+    data class SavedPost(val item: ReaderSavedListItem, val card: ReaderPostUiState)
+
     data class UiState(
-        val items: List<ReaderSavedListItem> = emptyList(),
+        val posts: List<SavedPost> = emptyList(),
         val isLoaded: Boolean = false,
         val isRefreshing: Boolean = false,
         val isLoadingMore: Boolean = false,
@@ -54,6 +59,8 @@ class ReaderSavedPostsViewModel @Inject constructor(
 
     sealed class Event {
         data class OpenItem(val item: ReaderSavedListItem) : Event()
+        data class OpenComments(val blogId: Long, val postId: Long) : Event()
+        data class OpenSite(val blogId: Long, val feedId: Long, val isFollowed: Boolean) : Event()
         data class Unsaved(val item: ReaderSavedListItem) : Event()
         data object RequestFailed : Event()
         data object LoadMoreFailed : Event()
@@ -69,13 +76,29 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private val reloadRequests = Channel<Unit>(Channel.CONFLATED)
 
     private var isStarted = false
+    private var photonWidth = 0
+    private var photonHeight = 0
+    private val cardCallbacks = ReaderSavedPostCardBuilder.Callbacks(
+        onClicked = ::onItemClicked,
+        onUnsaveClicked = ::onUnsaveClicked,
+        onCommentsClicked = ::onCommentsClicked,
+        onSiteClicked = ::onSiteClicked,
+    )
     private var collection: ReaderSavedPostsCollection? = null
     private var observable: ObservableCollection<ReaderSavedListItem>? = null
 
-    fun start() {
+    /** [photonWidth] and [photonHeight] size the cards' images, as in the Reader's other post lists. */
+    fun start(photonWidth: Int, photonHeight: Int) {
+        // the window width, and so the image size, changes on rotation
+        val isPhotonSizeChanged = photonWidth != this.photonWidth || photonHeight != this.photonHeight
+        this.photonWidth = photonWidth
+        this.photonHeight = photonHeight
         // set before the collection, which is created off the main thread, so a view recreated meanwhile
         // doesn't start a second one
-        if (isStarted) return
+        if (isStarted) {
+            if (isPhotonSizeChanged) requestReload()
+            return
+        }
         isStarted = true
         viewModelScope.launch {
             val collection = repository.savedPosts()?.also { collection = it } ?: run {
@@ -133,6 +156,18 @@ class ReaderSavedPostsViewModel @Inject constructor(
     fun onItemClicked(item: ReaderSavedListItem) {
         track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST, item)
         viewModelScope.launch { _events.send(Event.OpenItem(item)) }
+    }
+
+    private fun onCommentsClicked(item: ReaderSavedListItem) {
+        val identity = item.post?.identity ?: return
+        viewModelScope.launch { _events.send(Event.OpenComments(identity.localBlogId, identity.localPostId)) }
+    }
+
+    private fun onSiteClicked(item: ReaderSavedListItem) {
+        val identity = item.post?.identity ?: return
+        val feedId = identity.feedId?.toLong() ?: 0L
+        val event = Event.OpenSite(identity.localBlogId, feedId, isFollowed = item.post?.isFollowing == true)
+        viewModelScope.launch { _events.send(event) }
     }
 
     fun onUnsaveClicked(item: ReaderSavedListItem) {
@@ -200,8 +235,9 @@ class ReaderSavedPostsViewModel @Inject constructor(
         val collection = collection ?: return
         try {
             val (items, info) = withContext(ioDispatcher) { collection.loadItems() to collection.listInfo() }
+            val posts = items.map { SavedPost(it, cardBuilder.build(it, photonWidth, photonHeight, cardCallbacks)) }
             _uiState.update {
-                it.copy(items = items, isLoaded = true, hasMore = info.hasMore == true)
+                it.copy(posts = posts, isLoaded = true, hasMore = info.hasMore == true)
             }
         } catch (e: ReaderSavedException) {
             AppLog.e(T.READER, "Loading saved posts failed", e)

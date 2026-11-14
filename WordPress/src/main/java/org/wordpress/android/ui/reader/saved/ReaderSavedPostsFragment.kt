@@ -21,10 +21,13 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPSnackbar
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderSavedListItem
@@ -38,6 +41,9 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
     @Inject
     lateinit var readerPostListRepository: ReaderPostListRepository
 
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
     private val viewModel: ReaderSavedPostsViewModel by viewModels()
     private val listState = LazyListState()
 
@@ -45,8 +51,6 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
         val actions = ReaderSavedPostsActions(
             onRefresh = viewModel::refresh,
             onLoadMore = viewModel::loadMore,
-            onItemClicked = viewModel::onItemClicked,
-            onUnsaveClicked = viewModel::onUnsaveClicked,
             onEmptyStateButtonClicked = ::onEmptyStateButtonClicked
         )
         return MeasureOnLayoutComposeView(requireContext(), {
@@ -64,7 +68,10 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
                 viewModel.events.collect(::handleEvent)
             }
         }
-        viewModel.start()
+        // the images are sized as in the Reader's other post lists
+        val photonWidth = DisplayUtils.getWindowPixelWidth(requireContext()) -
+            resources.getDimensionPixelSize(R.dimen.reader_card_margin) * 2
+        viewModel.start(photonWidth, (photonWidth / FEATURED_IMAGE_ASPECT_RATIO).toInt())
     }
 
     override fun onScrollToTop() {
@@ -74,6 +81,20 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
     private fun handleEvent(event: ReaderSavedPostsViewModel.Event) {
         when (event) {
             is ReaderSavedPostsViewModel.Event.OpenItem -> openItem(event.item)
+            is ReaderSavedPostsViewModel.Event.OpenComments -> ReaderActivityLauncher.showReaderComments(
+                requireContext(),
+                event.blogId,
+                event.postId,
+                ThreadedCommentsActionSource.READER_POST_CARD.sourceDescription
+            )
+            is ReaderSavedPostsViewModel.Event.OpenSite -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                requireContext(),
+                event.blogId,
+                event.feedId,
+                event.isFollowed,
+                ReaderTracker.SOURCE_SAVED,
+                readerTracker
+            )
             // only an item with a post can be saved again
             is ReaderSavedPostsViewModel.Event.Unsaved -> showMessage(
                 R.string.reader_saved_post_removed,
@@ -133,4 +154,8 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
 
     // the main activity's coordinator, which sits above the bottom navigation
     private fun snackbarParent(): View = requireActivity().findViewById(R.id.coordinator) ?: requireView()
+
+    companion object {
+        private const val FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f
+    }
 }

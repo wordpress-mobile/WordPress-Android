@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.reader.saved
 
+import androidx.core.net.toUri
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.util.DateTimeUtils
 import uniffi.wp_api.ReaderPostAuthor
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderPostTag
+import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderLocalSave
+import uniffi.wp_mobile.ReaderSavedListItem
 
 /**
  * The fields wordpress-rs needs to pick the key a post is saved under. [ReaderPost] keeps them as
@@ -70,4 +73,40 @@ fun ReaderPost.toSavedPostDetails() = uniffi.wp_api.ReaderPost(
     commentCount = numReplies.toULong()
 )
 
+/**
+ * The saved post as the Reader's post cards read it, built from what wordpress-rs keeps with the save, since a
+ * post saved elsewhere often isn't in the local database. Only what a card shows is filled in. A page saved by
+ * URL has nothing but its address, so its host stands in for the site and the address for the title.
+ */
+fun ReaderSavedListItem.toCardPost(): ReaderPost = ReaderPost().also { card ->
+    val record = post
+    val identity = record?.identity
+    val url = identity?.url ?: (key as? ReaderSavedKey.Url)?.url
+    val host = url?.let { it.toUri().host ?: it }
+    card.postId = identity?.localPostId ?: 0L
+    card.blogId = identity?.localBlogId ?: 0L
+    card.feedId = identity?.feedId?.toLong() ?: 0L
+    card.feedItemId = identity?.feedItemId?.toLong() ?: 0L
+    card.isExternal = identity?.isExternal == true
+    card.url = url
+    card.title = if (record == null) url else record.title
+    card.excerpt = record?.excerpt
+    card.featuredImage = record?.displayImageUrl.nonBlank() ?: record?.featuredImage
+    card.blogName = record?.siteName.nonBlank() ?: host
+    card.blogUrl = record?.siteUrl
+    card.blogImageUrl = record?.siteIconUrl
+    card.authorName = record?.authorName
+    card.postAvatar = record?.authorAvatarUrl
+    record?.date?.let { card.setDatePublished(DateTimeUtils.iso8601UTCFromDate(it)) }
+    card.numLikes = record?.likeCount?.toInt() ?: 0
+    card.numReplies = record?.commentCount?.toInt() ?: 0
+    card.isLikedByCurrentUser = record?.iLike == true
+    card.isFollowedByCurrentUser = record?.isFollowing == true
+    // the saved post doesn't say, and the card only offers comments for a WordPress.com post that has them open
+    card.isCommentsOpen = !card.isExternal && card.blogId != 0L
+    card.isBookmarked = true
+}
+
 private fun String?.nonEmpty(): String? = this?.takeIf { it.isNotEmpty() }
+
+private fun String?.nonBlank(): String? = this?.takeIf { it.isNotBlank() }
