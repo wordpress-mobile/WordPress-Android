@@ -3,13 +3,19 @@ package org.wordpress.android.ui.reader.saved
 import android.content.Context
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
@@ -40,6 +47,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -69,6 +77,10 @@ private const val EXCERPT_MAX_LINES = 2
 private const val FOOTNOTE_MAX_LINES = 2
 private const val MAX_TAGS = 3
 private val SITE_ICON_SIZE = 20.dp
+private val SAVE_TOUCH_TARGET = 40.dp
+
+// between the save icon and the edge of its touch target
+private val SAVE_ICON_INSET = 8.dp
 
 class ReaderSavedPostsActions(
     val onRefresh: () -> Unit,
@@ -160,6 +172,8 @@ private fun SavedPostContent(item: ReaderSavedListItem, actions: ReaderSavedPost
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                // so the trailing column can push the save button to the bottom of the row
+                .height(IntrinsicSize.Min)
                 .background(colorResource(R.color.reader_post_list_background))
                 .combinedClickable(
                     onClick = { actions.onItemClicked(item) },
@@ -170,16 +184,23 @@ private fun SavedPostContent(item: ReaderSavedListItem, actions: ReaderSavedPost
             horizontalArrangement = Arrangement.spacedBy(Margin.Large.value)
         ) {
             SavedPostText(item, modifier = Modifier.weight(1f))
-            // the image the post's Reader card shows, else its featured image
-            (post?.displayImageUrl ?: post?.featuredImage)?.takeIf { it.isNotBlank() }?.let { imageUrl ->
-                AsyncImage(
-                    model = placeholderImageRequest(imageUrl),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(THUMBNAIL_SIZE)
-                        .clip(RoundedCornerShape(Margin.Medium.value))
-                )
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                // the image the post's Reader card shows, else its featured image
+                (post?.displayImageUrl ?: post?.featuredImage)?.takeIf { it.isNotBlank() }?.let { imageUrl ->
+                    AsyncImage(
+                        model = placeholderImageRequest(imageUrl),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(THUMBNAIL_SIZE)
+                            .clip(RoundedCornerShape(Margin.Medium.value))
+                    )
+                } ?: Spacer(Modifier)
+                UnsaveButton(onClick = { actions.onUnsaveClicked(item) })
             }
         }
         DropdownMenu(expanded = isMenuShown, onDismissRequest = { isMenuShown = false }) {
@@ -191,6 +212,25 @@ private fun SavedPostContent(item: ReaderSavedListItem, actions: ReaderSavedPost
                 }
             )
         }
+    }
+}
+
+/** The filled save icon Reader post cards show for a saved post, so a post can be removed in one tap. */
+@Composable
+private fun UnsaveButton(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            // the icon, not its touch target, lines up with the thumbnail's edge
+            .offset(x = SAVE_ICON_INSET, y = SAVE_ICON_INSET)
+            .size(SAVE_TOUCH_TARGET)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_bookmark_fill_new_24dp),
+            contentDescription = stringResource(R.string.reader_remove_bookmark),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
