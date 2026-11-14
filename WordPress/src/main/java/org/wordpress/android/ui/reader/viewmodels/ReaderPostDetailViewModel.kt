@@ -221,8 +221,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     /**
-     * [post] is null if there was no WordPress.com post to refresh. Only a new body needs the WebView to render it
-     * again.
+     * [post] is null if there was no WordPress.com post to refresh, or the user moved on to another post. Only a
+     * new body needs the WebView to render it again.
      */
     data class PostRefreshed(val post: ReaderPost?, val hasNewBody: Boolean)
 
@@ -588,12 +588,25 @@ class ReaderPostDetailViewModel @Inject constructor(
         val bodyBeforeRefresh = post.text
         launch {
             val isChanged = readerPostRepository.refreshPost(post).isNewOrChanged
-            onRefreshCommentsData(post.blogId, post.postId)
-            if (isChanged) {
-                onRefreshLikersData(post)
-                onUpdatePost(post)
+            // the user may have moved on, e.g. to a related post, while this one was refreshing
+            val current = this@ReaderPostDetailViewModel.post
+            if (current == null || current.blogId != post.blogId || current.postId != post.postId) {
+                _postRefreshed.value = Event(PostRefreshed(post = null, hasNewBody = false))
+                return@launch
             }
-            _postRefreshed.value = Event(PostRefreshed(post, hasNewBody = isChanged && post.text != bodyBeforeRefresh))
+            onRefreshCommentsData(post.blogId, post.postId)
+            val refreshedPost = if (isChanged) {
+                withContext(bgDispatcher) { readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false) }
+            } else {
+                null
+            }
+            refreshedPost?.let {
+                this@ReaderPostDetailViewModel.post = it
+                onRefreshLikersData(it)
+                onUpdatePost(it)
+            }
+            val hasNewBody = refreshedPost != null && refreshedPost.text != bodyBeforeRefresh
+            _postRefreshed.value = Event(PostRefreshed(this@ReaderPostDetailViewModel.post, hasNewBody))
         }
     }
 

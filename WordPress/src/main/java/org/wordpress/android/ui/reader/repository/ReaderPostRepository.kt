@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -307,11 +308,17 @@ class ReaderPostRepository @Inject constructor(
         }
     }
 
-    private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult {
-        val result = getWithLocale(client, path)
+    /**
+     * The request and the save run in the app scope, so a cancelled caller still leaves the post stored for next
+     * time
+     */
+    private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult = applicationScope.async {
+        val result = awaitRestRequest { listener, errorListener ->
+            client.getWithLocale(path, null, null, listener, errorListener)
+        }
         val json = result.response
-            ?: return FetchPostResult.Failure((result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0)
-        return withContext(ioDispatcher) {
+            ?: return@async FetchPostResult.Failure((result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0)
+        withContext(ioDispatcher) {
             val post = ReaderPost.fromJson(json)
             // keep the stored publish date, so editorial dates (e.g. Freshly Pressed "displayed_on") aren't
             // overwritten by this endpoint, which lacks the editorial section
@@ -320,7 +327,7 @@ class ReaderPostRepository @Inject constructor(
             savePostLikes(post, json)
             FetchPostResult.Success(post)
         }
-    }
+    }.await()
 
     /**
      * Fetches the latest version of the stored post and copies its counts, flags and text into [localPost] and

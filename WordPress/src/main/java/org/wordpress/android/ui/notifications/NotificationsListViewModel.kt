@@ -135,7 +135,8 @@ class NotificationsListViewModel @Inject constructor(
             if (readerPost != null) {
                 openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
             } else {
-                launch {
+                // the callbacks start activities, so they run on the main thread
+                launch(mainDispatcher) {
                     val result = readerPostRepository.fetchPost(note.siteId.toLong(), note.postId.toLong())
                     if (result is FetchPostResult.Failure) {
                         appLogWrapper.w(AppLog.T.NOTIFS, "Failed to fetch post for comment: ${result.statusCode}")

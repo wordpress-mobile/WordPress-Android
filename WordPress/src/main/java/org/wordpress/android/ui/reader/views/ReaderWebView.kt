@@ -203,17 +203,18 @@ class ReaderWebView @JvmOverloads constructor(
 
         // Fire the url click listener only once the WebView is visible: some posts with iframes try to open urls
         // without being clicked before the page has loaded
-        @Suppress("OVERRIDE_DEPRECATION")
-        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean =
-            view.visibility == View.VISIBLE &&
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+            val url = request.url.toString()
+            return view.visibility == View.VISIBLE &&
                 isValidClickedUrl(url) &&
                 readerWebView.urlClickListener?.onUrlClick(url) == true
+        }
 
         /**
          * Adds the WP.com authorization header to requests for a private post's images
          */
-        @Suppress("OVERRIDE_DEPRECATION")
-        override fun shouldInterceptRequest(view: WebView, url: String): WebResourceResponse? {
+        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+            val url = request.url.toString()
             val token = readerWebView.token
             val imageUrl = if (readerWebView.isPrivatePost && readerWebView.blogSchemeIsHttps &&
                 UrlUtils.isImageUrl(url)
