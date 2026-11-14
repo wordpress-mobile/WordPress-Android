@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-23 09:58:21+0000
+Translation-Revision-Date: 2026-11-12 22:19:55+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ko_KR
@@ -336,6 +336,7 @@ Language: ko_KR
     <string name="he_support_empty_conversations_button">대화 시작</string>
     <string name="he_support_empty_conversations_message">지원팀과 대화를 시작하여 질문에 대한 도움을 받으세요.</string>
     <string name="he_support_empty_conversations_title">아직 대화 없음</string>
+    <string name="unified_support_new_conversation_content_description">새로운 대화</string>
     <string name="ai_bot_time_just_now">지금</string>
     <string name="ai_bot_welcome_message">저는 개인 AI 도우미입니다. 사이트 또는 계정에 대한 질문에 도움을 드릴 수 있습니다.</string>
     <string name="ai_bot_welcome_greeting">%1$s 님, 안녕하세요. 👋</string>

@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-18 11:43:12+0000
+Translation-Revision-Date: 2026-11-12 09:36:42+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: cs_CZ
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Obnovit editor</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Pro pokračování v úpravách znovu načtěte editor.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor přestal fungovat</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Neznámá chyba</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Nepodařilo se načíst editor</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Na tomto zařízení není k dispozici fotoaparát</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Pokoj</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Fotografie</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Žádný blok neodpovídá výrazu „%1$s“</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Žádné výsledky</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Vymazat vyhledávání</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Nedávné</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Zavřít</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Přidat blok</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Vyhledávací bloky</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Nelze zobrazit nástroj pro vkládání bloků.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Doporučeno</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Nejčastěji používané</string>
+    <string name="comment_detail_in_reply_to">V odpovědi na %1$s:</string>
+    <string name="comment_author_info_guest">Host</string>
+    <string name="comment_author_info_registered">Registrovaný uživatel</string>
+    <string name="comment_author_info_bio">Životopis</string>
+    <string name="comment_author_info_posted_from">Zveřejněno z</string>
+    <string name="comment_author_info_send_email">Odeslat e-mail</string>
+    <string name="comment_author_info_email">E-mail</string>
+    <string name="comment_author_info_website">Webové stránky</string>
+    <string name="comment_author_info_posted_at">Zveřejněno dne</string>
+    <string name="comment_author_info_show">Zobrazit údaje o autorovi</string>
+    <string name="comment_detail_on_post">je %1$s</string>
+    <string name="comment_reply_continue">Pokračovat v odpovědi</string>
+    <string name="comment_reply_save_draft">Uložit koncept</string>
+    <string name="comment_reply_delete_draft">Odstranit koncept</string>
+    <string name="comment_reply_keep_editing">Pokračovat v úpravách</string>
+    <string name="comment_reply_unsent">Máte neodesanou odpověď.</string>
+    <string name="comment_trash_has_replies">Tento komentář má odpovědi. Ty nebudou spolu s ním přesunuty do koše.</string>
+    <string name="content_list_density_show_comfortable">Zobrazit rozbalený seznam</string>
+    <string name="content_list_density_show_condensed">Zobrazit zkrácený seznam</string>
+    <string name="content_list_comment_count_plural">Komentáře k %1$s</string>
+    <string name="content_list_comment_count_singular">%1$s jak</string>
+    <string name="content_list_view_count_plural">%1$s zobrazení</string>
+    <string name="content_list_view_count_singular">Zobrazení %1$s</string>
+    <string name="content_list_fab_write">Napsat</string>
+    <string name="content_list_group_earlier_in">Dříve v %1$s</string>
+    <string name="content_list_group_this_week">Tento týden</string>
+    <string name="content_list_group_yesterday">Včera</string>
+    <string name="content_list_group_today">Dnes</string>
+    <string name="unified_support_related_label">Související:</string>
+    <string name="unified_support_attachment_link_content_description">Otevřít odkaz: %1$s</string>
+    <string name="unified_support_status_ai_assistant">AI asistent</string>
+    <string name="he_support_status_ongoing">Probíhá</string>
+    <string name="he_support_reply_sent_confirmation">Vaše odpověď byla odeslána. Sledujte svůj e-mail, kde se dozvíte další informace.</string>
+    <string name="he_support_add_more_info_button">Přidat další informace</string>
+    <string name="application_password_private_site_card">Tato stránka je soukromá, takže se k ní nemůžeme znovu připojit.</string>
+    <string name="application_password_private_site_error">Tato stránka je soukromá, takže nemůžeme načíst její nastavení a přihlásit vás.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Odstranit značku %1$s</string>
+    <string name="prepublishing_tags_add_hint">Přidat štítek</string>
+    <string name="photo_picker_choose_other_files">Ostatní soubory</string>
+    <string name="photo_picker_choose_photo_or_video">Fotografie a videa</string>
+    <string name="editor_saving_locked_leave">Odejít</string>
+    <string name="editor_saving_locked_continue">Pokračovat</string>
+    <string name="editor_saving_locked_keep_editing">Pokračujte v úpravách</string>
+    <string name="editor_saving_locked_leave_message">Pokud stránku nyní opustíte, všechny probíhající operace, jako je například nahrávání médií, se zastaví a ve vašem příspěvku mohou chybět nebo být poškozené.</string>
+    <string name="editor_saving_locked_save_message">V editoru právě probíhá nějaká operace, například nahrávání souboru. Pokud budete pokračovat, může se stát, že se tato součást ve vašem příspěvku neobjeví nebo nebude fungovat správně.</string>
+    <string name="editor_saving_locked_title">Váš příspěvek ještě není připravený</string>
+    <string name="domain_registration_purchase_unconfirmed">Váš kredit na doménu byl vyčerpán, ale výsledek se nám nepodařilo ověřit. Než to zkusíte znovu, zkontrolujte své domény a v případě, že chybí %s, obraťte se na podporu.</string>
+    <string name="domain_registration_purchase_incomplete">Váš kredit na doménu byl vyčerpán, ale doménu %s se nepodařilo zaregistrovat. Obraťte se prosím na podporu.</string>
+    <string name="support_screen_login_description">Přihlaste se na WordPress.com, abyste mohli využít chat s podporou.</string>
+    <string name="site_picker_add_site_menu_expanded">Zobrazit rozbalené menu webu</string>
+    <string name="site_picker_add_site_menu_collapsed">Přidat sbalené menu webu</string>
+    <string name="site_picker_add_a_site_expand">Ukažte, jak přidat webovou stránku</string>
+    <string name="site_picker_add_a_site_collapse">Zavřít nabídku pro přidání webu</string>
+    <string name="get_likes_empty_state_no_likes">Zatím žádné lajky</string>
+    <string name="stats_archives_section_taxonomies">Taxonomie</string>
+    <string name="stats_archives_section_other">Ostatní</string>
+    <string name="stats_archives_section_aggregated">Souhrnné</string>
+    <string name="stats_archives_section_error">Chyba</string>
+    <string name="stats_archives_section_dates">Termíny</string>
+    <string name="stats_archives_section_authors">Autoři</string>
+    <string name="stats_archives_section_tags">Štítky</string>
+    <string name="stats_archives_section_categories">Kategorie</string>
+    <string name="stats_archives_section_search">Hledané výrazy</string>
+    <string name="stats_archives_title_label">Stránky archivu</string>
+    <string name="stats_archives_title">Archivy</string>
+    <string name="stats_view_selected_period_content_description">Zobrazit statistiky za vybrané období</string>
+    <string name="stats_period_next_content_description">Příští hodina</string>
+    <string name="stats_period_previous_content_description">Předchozí období</string>
+    <string name="stats_period_this_year">Letos</string>
+    <string name="stats_period_this_month">Tento měsíc</string>
+    <string name="stats_feature_gate_plans_unavailable">Nelze otevřít stránku s plány pro tento web</string>
+    <string name="stats_feature_gate_explore_plans">Prohlédněte si tarify</string>
+    <string name="stats_feature_gate_message">Upgradujte svůj tarif a získejte přístup k pokročilým analytickým nástrojům</string>
+    <string name="stats_error_not_available">Tyto statistiky nejsou pro tento web k dispozici</string>
+    <string name="stats_next_day">Další den</string>
+    <string name="stats_previous_day">Předchozí den</string>
+    <string name="stats_post_detail_average">Průměr</string>
+    <string name="stats_post_detail_total">Celkem</string>
+    <string name="stats_post_detail_activity_more">Více</string>
+    <string name="stats_post_detail_activity_less">Méně</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Zveřejněno %1$s</string>
+    <string name="stats_post_detail_title">Statistiky příspěvků</string>
+    <string name="stats_open_link">Otevřít odkaz</string>
+    <string name="stats_traffic_date_range_content_description">%1$s to %2$s</string>
+    <string name="stats_show_views">Zobrazit pohledy</string>
+    <string name="stats_hourly_data_not_available">Údaje za jednotlivé hodiny nejsou k dispozici</string>
+    <string name="rs_date_trashed">Zmaženo: %s</string>
+    <string name="rs_date_modified">Změněno: %s</string>
+    <string name="rs_date_now">Teď</string>
+    <string name="stats_new_stats_feedback_dialog_message">Jste ochotni s námi sdílet zpětnou vazbu ohledně nového rozhraní Stats?</string>
+    <string name="deleting_tag_failed">Odstranění značky se nezdařilo</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d z %2$d komentářů se nepodařilo aktualizovat</string>
+    <string name="comments_rs_moderation_failed_single">Komentář se nepodařilo aktualizovat</string>
+    <string name="comments_rs_search_nothing_found">Žádné komentáře neodpovídající vašemu vyhledávání</string>
+    <string name="comments_rs_search_prompt">Prohledat komentáře</string>
+    <string name="web_view_log_in_to_site">Přihlaste se na tento web</string>
     <string name="support_screen_unified_support_description">Získejte odpovědi od našeho týmu podpory, kdykoli budete potřebovat</string>
     <string name="support_screen_unified_support_title">Získat pomoc</string>
     <string name="unified_support_attachment_match_score">%1$d%% shoda</string>
@@ -97,6 +212,7 @@ Language: cs_CZ
     <string name="gutenberg_kit_announcement_title">Připravuje se vylepšený blokový editor</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Nejprve přepněte do blokového editoru, abyste si nový editor vyzkoušeli.</string>
     <string name="site_settings_gutenberg_kit_enabled_summary">Zapněte si na tomto webu blokový editor nové generace</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Do konce roku 2026 se stane výchozím editorem pro všechny. %1$s</string>
     <string name="site_settings_gutenberg_kit_enabled">Vyzkoušejte nový editor</string>
     <string name="site_connectivity_banner_text">Nelze se připojit k vašemu webu. Některé funkce mohou být omezené.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Vaše stránka nepodporuje načítání bloků třetích stran v editoru.</string>
@@ -1200,6 +1316,7 @@ Language: cs_CZ
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="scan_vault_press_active_on_site_button_text">Přejít na nástěnku</string>
     <string name="scan_vault_press_active_on_site_subtitle">Vaše stránky jsou již chráněny VaultPress. Níže naleznete odkaz na svůj řídicí panel VaultPress.</string>
+    <string name="stats_period_this_week">Tento týden</string>
     <string name="scan_vault_press_active_on_site_title">Váš web má VaultPress</string>
     <string name="locale_picker_current_language">Aktuální jazyk:</string>
     <string name="hpp_choose_and_create_site">Vytvořit stránku</string>
