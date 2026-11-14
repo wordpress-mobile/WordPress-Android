@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-11 23:02:58+0000
+Translation-Revision-Date: 2026-11-12 00:48:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -28,7 +28,7 @@ Language: de
     <string name="comment_author_info_guest">Gast</string>
     <string name="comment_author_info_registered">Registrierter Benutzer</string>
     <string name="comment_author_info_bio">Biografie</string>
-    <string name="comment_author_info_posted_from">Veröffentlicht von</string>
+    <string name="comment_author_info_posted_from">Gesendet über</string>
     <string name="comment_author_info_send_email">E-Mail senden</string>
     <string name="comment_author_info_email">E-Mail-Adresse</string>
     <string name="comment_author_info_website">Website</string>
@@ -48,24 +48,41 @@ Language: de
     <string name="content_list_view_count_plural">%1$s Aufrufe</string>
     <string name="content_list_view_count_singular">%1$s Aufruf</string>
     <string name="content_list_fab_write">Schreiben</string>
+    <string name="content_list_group_earlier_in">Zuvor in %1$s</string>
     <string name="content_list_group_this_week">Diese Woche</string>
     <string name="content_list_group_yesterday">Gestern</string>
     <string name="content_list_group_today">Heute</string>
+    <string name="unified_support_related_label">Ähnlich:</string>
     <string name="unified_support_attachment_link_content_description">Link öffnen: %1$s</string>
     <string name="unified_support_status_ai_assistant">KI-Assistent</string>
+    <string name="he_support_status_ongoing">In Bearbeitung</string>
+    <string name="he_support_reply_sent_confirmation">Deine Antwort wurde gesendet. Prüfe deinen Posteingang auf neue Nachrichten.</string>
+    <string name="he_support_add_more_info_button">Weitere Informationen hinzufügen</string>
     <string name="application_password_private_site_card">Diese Website ist privat, daher können wir die Verbindung nicht wiederherstellen.</string>
     <string name="application_password_private_site_error">Diese Website ist privat, daher können wir die Einstellungen nicht auslesen, um dich anzumelden.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Schlagwort %1$s entfernen</string>
     <string name="prepublishing_tags_add_hint">Schlagwort hinzufügen</string>
     <string name="photo_picker_choose_other_files">Andere Dateien</string>
     <string name="photo_picker_choose_photo_or_video">Fotos und Videos</string>
+    <string name="editor_saving_locked_leave">Verlassen</string>
+    <string name="editor_saving_locked_continue">Fortfahren</string>
     <string name="editor_saving_locked_keep_editing">Weiter bearbeiten</string>
+    <string name="editor_saving_locked_leave_message">Wenn du den Editor jetzt verlässt, werden alle noch aktiven Vorgänge (wie ein Medien-Upload) abgebrochen. Dadurch können Inhalte in deinem Beitrag fehlen oder fehlerhaft sein.</string>
+    <string name="editor_saving_locked_save_message">Ein Vorgang im Editor, wie ein Medien-Upload, ist noch nicht abgeschlossen. Wenn du fortfährst, fehlt der Inhalt möglicherweise in deinem Beitrag oder ist fehlerhaft.</string>
+    <string name="editor_saving_locked_title">Dein Beitrag ist noch nicht fertig</string>
+    <string name="domain_registration_purchase_unconfirmed">Dein Domain-Guthaben wurde verwendet, aber wir konnten das Ergebnis nicht bestätigen. Überprüfe deine Domains, bevor du es erneut versuchst, und wende dich an den Support, falls %s fehlt.</string>
+    <string name="domain_registration_purchase_incomplete">Dein Domain-Guthaben wurde verwendet, aber %s konnte nicht registriert werden. Bitte wende dich an den Support.</string>
     <string name="support_screen_login_description">Melde dich bei WordPress.com an, um auf den Support-Chat zuzugreifen.</string>
     <string name="site_picker_add_site_menu_expanded">Menü „Website hinzufügen“ ausgeklappt</string>
     <string name="site_picker_add_site_menu_collapsed">Menü „Website hinzufügen“ eingeklappt</string>
+    <string name="site_picker_add_a_site_expand">Möglichkeiten zum Hinzufügen einer Website anzeigen</string>
     <string name="site_picker_add_a_site_collapse">Menü „Website hinzufügen“ schließen</string>
     <string name="get_likes_empty_state_no_likes">Noch keine Likes</string>
     <string name="stats_archives_section_taxonomies">Taxonomien</string>
+    <string name="stats_archives_section_other">Sonstige</string>
+    <string name="stats_archives_section_aggregated">Zusammengefasst</string>
     <string name="stats_archives_section_error">Fehler</string>
+    <string name="stats_archives_section_dates">Datumsangaben</string>
     <string name="stats_archives_section_authors">Autoren</string>
     <string name="stats_archives_section_tags">Schlagwörter</string>
     <string name="stats_archives_section_categories">Kategorien</string>
@@ -79,9 +96,11 @@ Language: de
     <string name="stats_period_this_month">Dieser Monat</string>
     <string name="stats_feature_gate_plans_unavailable">Die Tarifseite für diese Website kann nicht geöffnet werden</string>
     <string name="stats_feature_gate_explore_plans">Tarife entdecken</string>
+    <string name="stats_feature_gate_message">Führe ein Upgrade deines Tarifs durch, um Zugriff auf erweiterte Analysen zu erhalten</string>
     <string name="stats_error_not_available">Diese Statistiken sind für diese Website nicht verfügbar</string>
     <string name="stats_next_day">Nächster Tag</string>
     <string name="stats_previous_day">Vorheriger Tag</string>
+    <string name="stats_post_detail_average">Durchschnitt</string>
     <string name="stats_post_detail_total">Gesamt</string>
     <string name="stats_post_detail_activity_more">Mehr</string>
     <string name="stats_post_detail_activity_less">Weniger</string>
@@ -89,10 +108,14 @@ Language: de
     <string name="stats_post_detail_published">Veröffentlicht am %1$s</string>
     <string name="stats_post_detail_title">Beitragsstatistiken</string>
     <string name="stats_open_link">Link öffnen</string>
+    <string name="stats_traffic_date_range_content_description">%1$s bis %2$s</string>
     <string name="stats_show_views">Aufrufe anzeigen</string>
+    <string name="stats_hourly_data_not_available">Stündliche Daten sind nicht verfügbar</string>
     <string name="rs_date_trashed">In den Papierkorb verschoben: %s</string>
     <string name="rs_date_modified">Geändert: %s</string>
     <string name="rs_date_now">Jetzt</string>
+    <string name="stats_new_stats_feedback_dialog_message">Möchtest du uns dein Feedback zur neuen Statistikerfahrung mitteilen?</string>
+    <string name="deleting_tag_failed">Löschen des Schlagworts fehlgeschlagen</string>
     <string name="comments_rs_moderation_failed_multiple">%1$d von %2$d Kommentaren konnten nicht aktualisiert werden</string>
     <string name="comments_rs_moderation_failed_single">Der Kommentar konnte nicht aktualisiert werden</string>
     <string name="comments_rs_search_nothing_found">Keine Kommentare entsprechen deiner Suche</string>
@@ -527,8 +550,8 @@ Language: de
     <string name="subscribers_renewal_interval">Verlängerungsintervall</string>
     <string name="subscribers_renewal_info">Verlängerungsinformationen</string>
     <string name="subscribers_price">Preis</string>
-    <string name="subscribers_inactive_interval">Inaktives Intervall</string>
-    <string name="subscribers_billing_interval">Zahlungsintervall</string>
+    <string name="subscribers_inactive_interval">Inaktivitätsintervall</string>
+    <string name="subscribers_billing_interval">Abrechnungsintervall</string>
     <string name="subscribers_billing_info">Rechnungsinformationen</string>
     <string name="subscribers_end_date">Enddatum</string>
     <string name="subscribers_start_date">Startdatum</string>
@@ -1681,7 +1704,7 @@ Language: de
     <string name="gutenberg_native_outside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Außen</string>
     <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kein individueller Platzhalter eingestellt</string>
     <string name="gutenberg_native_inside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Innen</string>
-    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Suchüberschriften ausblenden</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Suchüberschrift ausblenden</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Bearbeiten des Platzhaltertexts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Für die Bearbeitung des Beschriftungstexts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Bearbeiten des Button-Texts zweimal tippen</string>
@@ -2917,7 +2940,7 @@ Language: de
     <string name="permissions_denied_message">Es sieht so aus, als hättest du die für diese Funktion erforderlichen Berechtigungen deaktiviert.&lt;br/&gt;&lt;br/&gt;Um dies zu ändern, bearbeite deine Berechtigungen und stelle sicher, dass &lt;strong&gt;%s&lt;/strong&gt; aktiviert ist.</string>
     <string name="permissions_denied_title">Berechtigungen</string>
     <string name="plugin_caption_featured">Hervorgehoben</string>
-    <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen für soziale Medien zugreifen, da dein Jetpack Social-Modul deaktiviert ist.</string>
+    <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen für soziale Medien zugreifen, da dein Jetpack-Social-Modul deaktiviert ist.</string>
     <string name="sharing_disabled">Social-Modul deaktiviert</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="notification_sound_has_invalid_path">Der Pfad für den ausgewählten Ton ist ungültig. Bitte wähle einen anderen.</string>

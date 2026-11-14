@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-19 21:01:56+0000
+Translation-Revision-Date: 2026-11-12 13:21:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: es_MX
@@ -97,6 +97,7 @@ Language: es_MX
     <string name="gutenberg_kit_announcement_title">Se acerca un mejor editor de bloques</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Cambia primero al editor de bloques para probar el nuevo editor.</string>
     <string name="site_settings_gutenberg_kit_enabled_summary">Suscríbete al editor de bloques de nueva generación para este sitio</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Para finales de 2026, se convertirá en el editor por defecto para todo el mundo. %1$s</string>
     <string name="site_settings_gutenberg_kit_enabled">Probar el nuevo editor</string>
     <string name="site_connectivity_banner_text">No se puede conectar con tu sitio. Algunas funciones pueden estar limitadas.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Tu sitio no admite la carga de bloques de terceros en el editor.</string>
