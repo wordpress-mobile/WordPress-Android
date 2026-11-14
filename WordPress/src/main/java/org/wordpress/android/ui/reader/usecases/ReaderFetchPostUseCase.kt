@@ -36,22 +36,20 @@ class ReaderFetchPostUseCase @Inject constructor(
         return try {
             // Never wait forever: a request that neither succeeds nor fails (e.g. a stalled
             // connection) resolves to RequestFailed so the caller can leave the loading state.
-            val statusCode = withTimeoutOrNull(FETCH_TIMEOUT_MS) {
-                fetchPostAndWaitForResult(requestParams)
+            val result = withTimeoutOrNull(FETCH_TIMEOUT_MS) {
+                readerPostRepository.fetchPost(blogId, postId, isFeed)
             }
-            statusCode?.let { FetchReaderPostState.fromStatusCode(it) } ?: RequestFailed
+            when (result) {
+                is FetchPostResult.Success -> Success
+                is FetchPostResult.Failure -> FetchReaderPostState.fromStatusCode(result.statusCode)
+                null -> RequestFailed
+            }
         } finally {
             // Always release the slot, including on timeout or coroutine cancellation, so a
             // later retry of the same post isn't wrongly rejected as AlreadyRunning.
             inFlightRequests.remove(requestParams)
         }
     }
-
-    private suspend fun fetchPostAndWaitForResult(params: FetchPostRequestParams): Int =
-        when (val result = readerPostRepository.fetchPost(params.blogId, params.postId, params.isFeed)) {
-            is FetchPostResult.Success -> HttpURLConnection.HTTP_OK
-            is FetchPostResult.Failure -> result.statusCode
-        }
 
     sealed class FetchReaderPostState {
         object Success : FetchReaderPostState()
@@ -64,8 +62,10 @@ class ReaderFetchPostUseCase @Inject constructor(
         }
 
         companion object {
-            fun fromStatusCode(statusCode: Int) = when (statusCode) {
-                HttpURLConnection.HTTP_OK -> Success
+            /**
+             * The failure a failed request's status code stands for
+             */
+            fun fromStatusCode(statusCode: Int): Failed = when (statusCode) {
                 HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN -> NotAuthorised
                 HttpURLConnection.HTTP_NOT_FOUND -> PostNotFound
                 else -> RequestFailed

@@ -105,6 +105,17 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given a failure with an ok status code, when reader post is fetched, then request failed is returned`() =
+        test {
+            whenever(readerPostRepository.fetchPost(blogId, postId, false))
+                .thenReturn(FetchPostResult.Failure(HttpURLConnection.HTTP_OK))
+
+            val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
+
+            assertThat(result).isEqualTo(Failed.RequestFailed)
+        }
+
+    @Test
     fun `given the request never responds, when reader post is fetched, then request failed is returned`() = test {
         whenever(readerPostRepository.fetchPost(blogId, postId, false)).doSuspendableAnswer { awaitCancellation() }
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)

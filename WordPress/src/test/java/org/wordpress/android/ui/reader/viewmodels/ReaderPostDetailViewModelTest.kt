@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -1306,6 +1307,23 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.post).isSameAs(post)
         assertThat(refreshed).containsExactly(PostRefreshed(post = post, hasNewBody = false))
+    }
+
+    @Test
+    fun `given a refresh is running, when another starts, then only the newer one reports back`() = test {
+        val post = createDummyReaderPost(1)
+        val relatedPost = createDummyReaderPost(2)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer { awaitCancellation() }
+        whenever(readerPostRepository.refreshPost(relatedPost)).thenReturn(UpdateResult.UNCHANGED)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+        viewModel.post = relatedPost
+        viewModel.onRefreshPost()
+
+        assertThat(refreshed).containsExactly(PostRefreshed(post = relatedPost))
     }
 
     @Test

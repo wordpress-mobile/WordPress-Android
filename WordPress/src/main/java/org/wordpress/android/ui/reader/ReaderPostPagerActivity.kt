@@ -330,13 +330,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         })
 
         onBackPressedDispatcher.addCallback(this) {
-            pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)?.let { fragment ->
+            // there's no page yet while a post slug is being looked up
+            val fragment = pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)
+            when {
                 // if full screen video is showing, hide the custom view rather than navigate back
-                if (fragment.isCustomViewShowing) {
-                    fragment.hideCustomView()
-                } else if (!fragment.goBackInPostHistory()) {
-                    onBackPressedDispatcher.onBackPressedCompat(this)
-                }
+                fragment?.isCustomViewShowing == true -> fragment.hideCustomView()
+                fragment?.goBackInPostHistory() == true -> Unit
+                else -> onBackPressedDispatcher.onBackPressedCompat(this)
             }
         }
 
@@ -566,6 +566,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     private fun resolvePostSlug(blogSlug: String, postSlug: String) {
         if (slugResolutionJob?.isActive == true) return
+        // the post is new to the pager, e.g. resolved after signing in, so it hasn't been tracked
+        trackedPositions.clear()
         progressBar?.visibility = View.VISIBLE
         slugResolutionJob = lifecycleScope.launch {
             val result = readerPostRepository.fetchPostBySlug(blogSlug, postSlug)
@@ -783,7 +785,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * if it hasn't already been done
      */
     private fun trackPostAtPositionIfNeeded(position: Int) {
-        if (!hasPagerAdapter() || trackedPositions.contains(position)) {
+        // a page whose post slug couldn't be looked up has no post to track
+        if (!hasPagerAdapter() || trackedPositions.contains(position) || pagerAdapter?.slugFailureStatus != null) {
             return
         }
 
@@ -1063,7 +1066,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private inner class PostPagerAdapter(
         private val idList: ReaderBlogIdPostIdList,
         // the status code of a failed post slug request, which the page shows as its error
-        private val slugFailureStatus: Int?,
+        val slugFailureStatus: Int?,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
 

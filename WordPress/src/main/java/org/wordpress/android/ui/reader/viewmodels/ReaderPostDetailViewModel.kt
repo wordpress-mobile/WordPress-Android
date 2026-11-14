@@ -126,6 +126,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
     private var commentSnippetJob: Job? = null
+    private var refreshJob: Job? = null
 
     private val _uiState = MediatorLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -586,7 +587,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
         // refreshPost copies the server's changes into this very post, so remember the body on screen
         val bodyBeforeRefresh = post.text
-        launch {
+        // a newer refresh, e.g. of a related post opened since, supersedes this one
+        refreshJob?.cancel()
+        refreshJob = launch {
             val isChanged = readerPostRepository.refreshPost(post).isNewOrChanged
             // the user may have moved on, e.g. to a related post, while this one was refreshing
             val current = this@ReaderPostDetailViewModel.post
