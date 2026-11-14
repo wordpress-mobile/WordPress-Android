@@ -12,9 +12,9 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the Reader opens. Each saved post shows its site icon, up to three tags, its author, its comment count and when it was saved; swipe a post away or long-press it to remove it. Saving or unsaving now needs a connection, except removing a post saved only on this device.
   - **Apps:** Both
   - **Type:** New
-  - **Availability:** Internal (debug builds only, via the "Sync saved Reader posts" experimental feature)
+  - **Availability:** Everyone
   - **Where:** Reader → Saved; the bookmark button on Reader posts
-  - **Notes:** Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saves the account refuses (it holds at most 1,000) stay on the device, marked "On this device only". The one-time dialog shown on the first save now says saved posts sync across devices. Signing out removes from the device the saved posts the account holds, and keeps those only on this device. Saves made while the experimental feature is off are added to the account when it's turned back on. A post saved elsewhere can't be opened offline.
+  - **Notes:** Needs a WordPress.com account; without one, posts are still saved only on the device. Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saves the account refuses (it holds at most 1,000) stay on the device, marked "On this device only". The one-time dialog shown on the first save now says saved posts sync across devices. Signing out removes from the device the saved posts the account holds, and keeps those only on this device. A post saved elsewhere can't be opened offline.
 
 - **Reblogging from a site's or tag's post list confirms the result**
   After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.

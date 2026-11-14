@@ -18,8 +18,6 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -40,15 +38,14 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 /**
- * The signed-in account's Reader saved posts, synced through wordpress-rs [ReaderSavedService] when
- * the [Feature.READER_SAVED_POSTS_SYNC] experimental feature is on.
+ * The signed-in WordPress.com account's Reader saved posts, synced through wordpress-rs
+ * [ReaderSavedService]. Without an account, posts are only saved on this device.
  *
  * The posts saved on this device before syncing are imported once per account. Until that import
  * succeeds the Saved tab keeps showing the device's own list, so a failed import never hides a save.
  */
 @Singleton
 class ReaderSavedPostsRepository @Inject constructor(
-    private val experimentalFeatures: ExperimentalFeatures,
     private val accountStore: AccountStore,
     private val wpServiceProvider: WpServiceProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -77,7 +74,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     }
 
     val isEnabled: Boolean
-        get() = experimentalFeatures.isEnabled(Feature.READER_SAVED_POSTS_SYNC) && accountStore.hasAccessToken()
+        get() = accountStore.hasAccessToken()
 
     private val userId: Long
         get() = accountStore.account.userId
@@ -124,7 +121,7 @@ class ReaderSavedPostsRepository @Inject constructor(
                 "Saved posts import: imported=${report.imported}, rejected=${report.rejected.size}, " +
                     "unsaveable=${report.unsaveable}, alreadyImported=${report.alreadyImported}"
             )
-            // unless the account was signed out, or sync turned off, while the import ran
+            // unless the account was signed out while the import ran
             if (peekService() === service) appPrefsWrapper.setReaderSavedPostsImported(userId)
             if (!report.alreadyImported) {
                 trackImport(
@@ -200,17 +197,6 @@ class ReaderSavedPostsRepository @Inject constructor(
                 }
             }
         }
-    }
-
-    /**
-     * Call when sync is turned off. Saves made until it's back on only reach this device, so the
-     * account's synced saves are forgotten here, and turning sync on again imports the device's saves
-     * again rather than hiding the new ones behind the synced list.
-     */
-    fun onSyncTurnedOff() {
-        val userId = userId
-        appPrefsWrapper.setReaderSavedPostsImported(0)
-        clear(userId, savesImported = false)
     }
 
     private fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {

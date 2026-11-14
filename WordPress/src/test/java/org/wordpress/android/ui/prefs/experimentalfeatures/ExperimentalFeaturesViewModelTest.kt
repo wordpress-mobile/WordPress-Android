@@ -13,7 +13,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
-import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
@@ -29,9 +28,6 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Mock
-    private lateinit var readerSavedPostsRepository: ReaderSavedPostsRepository
 
     private lateinit var viewModel: ExperimentalFeaturesViewModel
 
@@ -119,8 +115,7 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
             experimentalFeatures = experimentalFeatures,
             appLogWrapper = appLogWrapper,
             appPrefsWrapper = appPrefsWrapper,
-            analyticsTrackerWrapper = analyticsTrackerWrapper,
-            readerSavedPostsRepository = readerSavedPostsRepository
+            analyticsTrackerWrapper = analyticsTrackerWrapper
         )
     }
 }
