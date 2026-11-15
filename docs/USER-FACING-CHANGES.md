@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Self-hosted sites on Jetpack Free can upload videos longer than five minutes**
+  Adding a video longer than five minutes to a post on a self-hosted site connected to Jetpack on the free plan no longer shows the "needs a paid plan" notice, and the video uploads to the site's own media library. WordPress.com-hosted sites on the free plan keep the five-minute limit.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Post editor or Media library → Add media → a video longer than five minutes
+  - **Notes:** The app previously applied the WordPress.com free-plan limit to self-hosted Jetpack Free sites too, because both report a free plan. VideoPress-enabled sites are unaffected.
+
 - **Experimental block editor uploads follow the Media settings**
   Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
   - **Apps:** Both
