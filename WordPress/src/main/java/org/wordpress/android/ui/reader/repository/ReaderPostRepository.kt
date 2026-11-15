@@ -282,16 +282,16 @@ class ReaderPostRepository @Inject constructor(
      */
     suspend fun fetchPost(blogId: Long, postId: Long, isFeed: Boolean = false): FetchPostResult =
         if (isFeed) {
-            requestPost(WordPress.getRestClientUtilsV1_3(), "read/feed/$blogId/posts/$postId/?meta=site,likes")
+            requestPost(WordPress.getRestClientUtilsV1_3(), "read/feed/$blogId/posts/$postId")
         } else {
-            requestPost(WordPress.getRestClientUtilsV1_1(), "read/sites/$blogId/posts/$postId/?meta=site,likes")
+            requestPost(WordPress.getRestClientUtilsV1_1(), "read/sites/$blogId/posts/$postId")
         }
 
     suspend fun fetchPostBySlug(blogSlug: String, postSlug: String): FetchPostResult =
         // the blog slug can come from an app link host, so encode it as a single path segment
         requestPost(
             WordPress.getRestClientUtilsV1_1(),
-            "sites/" + UrlUtils.urlEncode(blogSlug) + "/posts/slug:$postSlug/?meta=site,likes"
+            "sites/" + UrlUtils.urlEncode(blogSlug) + "/posts/slug:$postSlug"
         )
 
     /**
@@ -309,11 +309,11 @@ class ReaderPostRepository @Inject constructor(
     }
 
     /**
-     * The request and the save run in the app scope, so a cancelled caller still leaves the post stored for next
-     * time
+     * Requests the post at [path] with its site and likes. The request and the save run in the app scope, so a
+     * cancelled caller still leaves the post stored for next time.
      */
     private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult = applicationScope.async {
-        val result = getWithLocale(client, path)
+        val result = getWithLocale(client, "$path/?meta=site,likes")
         val json = result.response
             ?: return@async FetchPostResult.Failure((result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0)
         withContext(ioDispatcher) {
