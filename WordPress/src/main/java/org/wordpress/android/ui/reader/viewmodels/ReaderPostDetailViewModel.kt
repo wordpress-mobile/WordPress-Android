@@ -61,6 +61,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuild
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -82,7 +83,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
@@ -109,7 +109,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
     private val readerTracker: ReaderTracker,
-    private val eventBusWrapper: EventBusWrapper,
     private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -122,10 +121,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
     private val readerCommentRepository: ReaderCommentRepository,
+    private val readerPostRepository: ReaderPostRepository,
     private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
     private var commentSnippetJob: Job? = null
+    private var refreshJob: Job? = null
 
     private val _uiState = MediatorLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -151,6 +152,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _postRefreshed = MutableLiveData<Event<PostRefreshed>>()
+    val postRefreshed: LiveData<Event<PostRefreshed>> = _postRefreshed
 
     private val _postBlocked = MutableLiveData(false)
     val postBlocked: LiveData<Boolean> = _postBlocked
@@ -217,15 +221,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         ) : CommentSnippetState()
     }
 
+    /**
+     * [post] is null if there was no WordPress.com post to refresh, or the user moved on to another post. Only a
+     * new body needs the WebView to render it again.
+     */
+    data class PostRefreshed(val post: ReaderPost?, val hasNewBody: Boolean = false)
+
     data class CommentSnippetUiState(
         val commentsNumber: Int,
         val showFollowConversation: Boolean,
         val snippetItems: List<CommentSnippetItemState>
     )
-
-    init {
-        eventBusWrapper.register(readerFetchRelatedPostsUseCase)
-    }
 
     fun start(isRelatedPost: Boolean, isFeed: Boolean, interceptedUri: String?) {
         if (isStarted) {
@@ -473,8 +479,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         this.isFeed = isFeedPost
     }
 
-    fun onNotAuthorisedRequestFailure() {
-        trackAndUpdateNotAuthorisedErrorState()
+    /**
+     * Shows the error for a post whose slug couldn't be looked up
+     */
+    fun onPostSlugRequestFailed(statusCode: Int) {
+        showFetchOutcomeWithoutContent(
+            if (networkUtilsWrapper.isNetworkAvailable()) {
+                FetchReaderPostState.fromStatusCode(statusCode)
+            } else {
+                FetchReaderPostState.Failed.NoNetwork
+            }
+        )
     }
 
     fun onMoreButtonClicked() {
@@ -558,6 +573,43 @@ class ReaderPostDetailViewModel @Inject constructor(
                 _snackbarEvents.value = Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error)))
             }
             pendingReblogPost = null
+        }
+    }
+
+    /**
+     * Fetches the latest version of the post, then reloads what shows its counts
+     */
+    fun onRefreshPost() {
+        val post = post
+        if (post == null || !post.isWP) {
+            _postRefreshed.value = Event(PostRefreshed(post = null))
+            return
+        }
+        // refreshPost copies the server's changes into this very post, so remember the body on screen
+        val bodyBeforeRefresh = post.text
+        // a newer refresh, e.g. of a related post opened since, supersedes this one
+        refreshJob?.cancel()
+        refreshJob = launch {
+            val isChanged = readerPostRepository.refreshPost(post).isNewOrChanged
+            // the user may have moved on, e.g. to a related post, while this one was refreshing
+            val current = this@ReaderPostDetailViewModel.post
+            if (current == null || current.blogId != post.blogId || current.postId != post.postId) {
+                _postRefreshed.value = Event(PostRefreshed(post = null))
+                return@launch
+            }
+            onRefreshCommentsData(post.blogId, post.postId)
+            val refreshedPost = if (isChanged) {
+                withContext(bgDispatcher) { readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false) }
+            } else {
+                null
+            }
+            refreshedPost?.let {
+                this@ReaderPostDetailViewModel.post = it
+                onRefreshLikersData(it)
+                onUpdatePost(it)
+            }
+            val hasNewBody = refreshedPost != null && refreshedPost.text != bodyBeforeRefresh
+            _postRefreshed.value = Event(PostRefreshed(this@ReaderPostDetailViewModel.post, hasNewBody))
         }
     }
 
@@ -1101,7 +1153,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         getLikesJob?.cancel()
         getLikesHandler.clear()
         readerPostCardActionsHandler.onCleared()
-        eventBusWrapper.unregister(readerFetchRelatedPostsUseCase)
     }
 
     fun onArticleTextCopied() {

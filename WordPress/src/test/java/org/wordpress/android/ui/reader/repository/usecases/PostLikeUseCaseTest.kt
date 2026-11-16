@@ -10,6 +10,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -18,7 +19,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.NoNetwork
@@ -40,9 +40,6 @@ class PostLikeUseCaseTest : BaseUnitTest() {
     private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
-
-    @Mock
     private lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
@@ -58,7 +55,6 @@ class PostLikeUseCaseTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
 
         useCase = PostLikeUseCase(
-            readerPostActionsWrapper,
             readerPostRepository,
             readerTracker,
             accountStore,
@@ -231,7 +227,7 @@ class PostLikeUseCaseTest : BaseUnitTest() {
             ).toList(mutableListOf())
 
             // Assert
-            verify(readerPostActionsWrapper).bumpPageViewForPost(anyOrNull())
+            verify(readerPostRepository).bumpPageView(any())
         }
 
     @Test
@@ -247,7 +243,7 @@ class PostLikeUseCaseTest : BaseUnitTest() {
             ).toList(mutableListOf())
 
             // Assert
-            verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())
+            verify(readerPostRepository, never()).bumpPageView(any())
         }
 
     private suspend fun init(
