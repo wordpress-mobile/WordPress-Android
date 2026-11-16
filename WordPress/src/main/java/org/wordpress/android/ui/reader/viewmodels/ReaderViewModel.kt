@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -90,7 +91,8 @@ class ReaderViewModel @Inject constructor(
     private var readerTagsList = ReaderTagList()
 
     init {
-        launch {
+        // subscribe now since these events aren't replayed
+        launch(start = CoroutineStart.UNDISPATCHED) {
             tagsAndSitesUpdater.events.collect { event ->
                 when (event) {
                     is ReaderTagsAndSitesEvent.FollowedTagsChanged -> onTagsUpdated(event)

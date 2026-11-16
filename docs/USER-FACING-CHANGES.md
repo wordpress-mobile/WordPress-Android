@@ -16,6 +16,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Media → + → Choose from device; My Site → Media → Documents; editor → File block → Choose from device or Media Library
   - **Notes:** Other WordPress.com sites still show .txt files greyed out, because WordPress.com only accepts .txt uploads on plugin-enabled sites with plan features activated. A .txt file uploaded from the web shows under Documents once the Media library's All list has loaded it.
 
+- **Posts list shows posts that haven't been uploaded**
+  Posts saved on the device that never reached the site, because they were written offline or their upload failed, are reachable from the Posts list again. A banner above the tabs says how many there are ("2 posts haven't been uploaded"); tapping it opens a sheet listing each one with its title and when it was last changed. Tapping a post opens it in the editor. A post whose upload failed reads "Upload failed" and offers Retry.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Sites added with an Application Password; WordPress.com sites behind `Flag: android_wp_rs_wpcom`
+  - **Where:** My Site → Posts → banner above the tabs
+  - **Notes:** Before, such a post had no row in this list, so once the upload-failure notification was dismissed there was no way back to it. The list says "posts" rather than "drafts" because it also holds posts published or scheduled while offline, which go live once they upload. The banner is hidden while searching, and these posts aren't included in search results. A post being uploaded for the first time isn't counted or listed until the upload fails, so a post written online doesn't show here while it uploads. A post whose upload failed stays listed as failed while it's uploaded again, by Retry or automatically when the device reconnects; until that upload finishes, tapping the post or its Retry closes the sheet and says it's uploading. Retry while offline closes the sheet and says there's no connection. There is no way to delete one of these posts from the list. The sheet doesn't update live while an upload starts, only when one finishes. Pages are unchanged.
+
+- **Reader: Subscriptions no longer opens on a blank page**
+  Opening the Reader on Subscriptions when no posts were saved on the device could show a blank page, with no posts, spinner or message, until you switched feeds. It now loads the latest posts. The Blogs and Tags filter chips could also be missing at startup, and now appear.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions
+  - **Notes:** It happened intermittently, depending on how fast the app started, and only when the feed had no posts saved on the device.
+
 - **Deleted media no longer stays stuck on "Deleting"**
   On self-hosted sites using the REST API, a deleted media item kept showing a "Deleting" spinner in the Media library even though it had already been removed from the site. It only disappeared after switching tabs or reopening the screen. It now disappears as soon as the delete finishes. A delete that fails part way through a batch no longer leaves the remaining items spinning either — they go back to normal and can be selected again to retry.
   - **Apps:** Both
