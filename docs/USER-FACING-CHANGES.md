@@ -15,6 +15,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Availability:** Everyone
   - **Where:** A WordPress.com post link opened in the app
 
+- **Swiping between media previews shows the next image right away**
+  In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item → tap the image → swipe left or right
+  - **Notes:** Only affects images; audio and video were already prepared ahead of time. Pre-loading reaches one item either side, so a fast swipe through several items can still show a spinner.
+
 - **Experimental block editor uploads follow the Media settings**
   Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
   - **Apps:** Both
