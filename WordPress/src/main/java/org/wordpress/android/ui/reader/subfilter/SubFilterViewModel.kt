@@ -94,8 +94,7 @@ class SubFilterViewModel @Inject constructor(
             subfilterJson = it.getString(ARG_CURRENT_SUBFILTER_JSON)
         }
 
-        // subscribe now since these events aren't replayed, so the subfilters (and the top bar's filter chips) aren't
-        // left empty when the update made as the list opens ends before a later pass of the main thread
+        // subscribe now since these events aren't replayed
         launch(mainDispatcher, start = CoroutineStart.UNDISPATCHED) {
             tagsAndSitesUpdater.events.collect { event ->
                 when (event) {

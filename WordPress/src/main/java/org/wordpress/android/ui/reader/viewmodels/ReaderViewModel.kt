@@ -91,7 +91,7 @@ class ReaderViewModel @Inject constructor(
     private var readerTagsList = ReaderTagList()
 
     init {
-        // subscribe now since these events aren't replayed, so the end of the update start() makes isn't missed
+        // subscribe now since these events aren't replayed
         launch(start = CoroutineStart.UNDISPATCHED) {
             tagsAndSitesUpdater.events.collect { event ->
                 when (event) {

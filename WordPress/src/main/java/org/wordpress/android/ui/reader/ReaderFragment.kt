@@ -464,20 +464,18 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             currentSubfilterObserver
         )
 
+        // started before the update so it's listening for the update's result
+        start(startedTag, startedTag, savedInstanceState)
+
         if (startedTag.isFilterable) {
             subFilters.observe(
                 viewLifecycleOwner,
                 subFiltersObserver
             )
+
+            updateTagsAndSites()
         } else {
             viewModel.hideTopBarFilterGroup(startedTag)
-        }
-
-        start(startedTag, startedTag, savedInstanceState)
-
-        // after start() so the view model is listening for the update's result
-        if (startedTag.isFilterable) {
-            updateTagsAndSites()
         }
     }
 

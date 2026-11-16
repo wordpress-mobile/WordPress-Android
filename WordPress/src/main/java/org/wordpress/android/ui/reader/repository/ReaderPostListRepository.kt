@@ -31,8 +31,7 @@ class ReaderPostListRepository @Inject constructor(
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    // these aren't merged so the list can subscribe to both right away: merge() subscribes to its flows later, and
-    // these don't replay, so an event sent in between (such as the end of the startup tags update) would be lost
+    // not merged, since merge() subscribes late and these don't replay, so events sent in between would be lost
     val updateEvents: Flow<ReaderPostListEvent> = readerPostUpdater.events
 
     val followEvents: Flow<ReaderPostListEvent> = tagsAndSitesUpdater.events.map { event ->

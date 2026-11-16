@@ -259,8 +259,7 @@ class ReaderPostListViewModel @Inject constructor(
             }
         }
 
-        // subscribe now rather than on a later pass of the main thread, since these events aren't replayed and the
-        // followed tags update made at startup can end before then - on a list with no posts that's what fetches them
+        // subscribe now since these events aren't replayed - the startup tags update is what fetches an empty list
         launch(start = CoroutineStart.UNDISPATCHED) {
             repository.updateEvents.collect { onRepositoryEvent(it) }
         }
