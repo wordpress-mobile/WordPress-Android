@@ -896,7 +896,6 @@ Language: lv
     <string name="reader_comments_post_fetch_failure">Iegūstot ziņas datus, radās kļūda</string>
     <string name="reader_comments_view_all">Skatīt visus komentārus</string>
     <string name="reader_comments_be_first_to_comment">Esiet pirmais, kas komentē</string>
-    <string name="reader_comments_follow_conversation">Sekojiet sarunai</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sazinieties ar atbalsta dienestu</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Veiciet dubultskārienu, lai atlasītu noklusējuma fonta lielumu</string>
     <string name="reader_btn_follow_conversation_settings">Sekojiet sarunas iestatījumiem</string>

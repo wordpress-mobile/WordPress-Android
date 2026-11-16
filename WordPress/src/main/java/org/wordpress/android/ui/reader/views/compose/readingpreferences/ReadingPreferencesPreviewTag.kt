@@ -17,14 +17,14 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.res.ResourcesCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
 
 /**
- * Compose version of the "new" version of ReaderExpandableTagsView to be used in the Reading Preferences screen.
- * This looks better than trying to use the actual ReaderExpandableTagsView in Compose.
+ * A post tag chip, shown in the Reading Preferences preview and below the post in the Reader's post detail
  */
 @Composable
 fun ReadingPreferencesPreviewTag(
@@ -32,6 +32,7 @@ fun ReadingPreferencesPreviewTag(
     baseTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     fontSizeMultiplier: Float = 1f,
     fontFamily: FontFamily = FontFamily.Default,
+    modifier: Modifier = Modifier,
 ) {
     val minHeight = dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_height)
     val horizontalPadding = Margin.ExtraLarge.value
@@ -43,7 +44,7 @@ fun ReadingPreferencesPreviewTag(
     val strokeWidth = dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_border)
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .semantics(mergeDescendants = true) {
                 role = Role.Button
             }
@@ -60,6 +61,7 @@ fun ReadingPreferencesPreviewTag(
             text,
             color = baseTextColor,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = baseTextColor,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize * fontSizeMultiplier,

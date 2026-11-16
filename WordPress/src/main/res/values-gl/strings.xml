@@ -1355,7 +1355,6 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dúas veces para seleccionar un tamaño de fonte</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Contactar co soporte</string>
     <string name="reader_comments_view_all">Ver todos os comentarios</string>
-    <string name="reader_comments_follow_conversation">Seguir a conversa</string>
     <string name="reader_comments_be_first_to_comment">Sé o primeiro en comentar</string>
     <string name="reader_comments_post_fetch_failure">Houbo un erro ao obter os datos da entrada</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca dúas veces para seleccionar o tamaño de fonte por defecto</string>

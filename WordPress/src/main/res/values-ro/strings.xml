@@ -1356,7 +1356,6 @@ Language: ro
     <string name="reader_comments_post_fetch_failure">A fost o eroare la preluarea datelor articolului</string>
     <string name="reader_comments_view_all">Vezi toate comentariile</string>
     <string name="reader_comments_be_first_to_comment">Fii primul care comentează</string>
-    <string name="reader_comments_follow_conversation">Urmărește conversația</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Contactează suportul</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atinge de două ori pentru a selecta dimensiunea implicită pentru font</string>
     <string name="reader_comments_fetch_failure">A fost o eroare la preluarea comentariilor</string>

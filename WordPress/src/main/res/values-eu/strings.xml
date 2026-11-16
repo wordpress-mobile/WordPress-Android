@@ -24,7 +24,6 @@ Language: eu_ES
     <string name="gutenberg_native_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Letra-tipo tamaina</string>
     <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">%1$s(r)i buruz</string>
     <string name="reader_comments_view_all">Ikusi iruzkin guztiak</string>
-    <string name="reader_comments_follow_conversation">Elkarrizketa jarraitu</string>
     <string name="reader_comments_be_first_to_comment">Izan erantzuten lehena</string>
     <string name="me_btn_about">WordPressi buruz</string>
     <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Arbeletik</string>

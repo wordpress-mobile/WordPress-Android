@@ -1348,7 +1348,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">按兩下以選擇字型大小</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">按兩下以選擇預設字型大小</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">聯絡支援團隊</string>
-    <string name="reader_comments_follow_conversation">關注討論</string>
     <string name="reader_comments_be_first_to_comment">成為第一位留言的人</string>
     <string name="reader_comments_view_all">查看所有留言</string>
     <string name="reader_comments_post_fetch_failure">取得文章的資料時發生錯誤</string>

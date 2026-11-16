@@ -752,10 +752,22 @@ class ReaderPostDetailViewModel @Inject constructor(
             )
         }
 
-        return if (headerUiState !== newUiState.headerUiState) {
+        val withHeader = if (headerUiState !== newUiState.headerUiState) {
             newUiState.copy(headerUiState = headerUiState)
         } else {
             newUiState
+        }
+
+        // A re-render of the same post keeps the related posts already fetched for it, which the screen renders
+        // from this state and would otherwise drop until they're requested again
+        val isSamePost = currentUiState.postId == newUiState.postId && currentUiState.blogId == newUiState.blogId
+        return if (isSamePost) {
+            withHeader.copy(
+                localRelatedPosts = withHeader.localRelatedPosts ?: currentUiState.localRelatedPosts,
+                globalRelatedPosts = withHeader.globalRelatedPosts ?: currentUiState.globalRelatedPosts,
+            )
+        } else {
+            withHeader
         }
     }
 

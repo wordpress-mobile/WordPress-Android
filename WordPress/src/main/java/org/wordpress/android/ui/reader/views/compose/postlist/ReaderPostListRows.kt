@@ -218,7 +218,7 @@ internal fun ReaderTagHeader(item: ReaderPostListItem.TagHeader, onFollowClick: 
 }
 
 @Composable
-private fun FollowButton(isFollowed: Boolean, isInProgress: Boolean, onClick: () -> Unit) {
+internal fun FollowButton(isFollowed: Boolean, isInProgress: Boolean, onClick: () -> Unit) {
     Box(contentAlignment = Alignment.Center) {
         if (isFollowed) {
             OutlinedButton(onClick = onClick, enabled = !isInProgress) {

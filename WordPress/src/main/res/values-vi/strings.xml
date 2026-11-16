@@ -226,7 +226,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nhấn hai lần để cỡ chữ</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nhấn hai lần để chọn cỡ chữ mặc định</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hỗ trợ</string>
-    <string name="reader_comments_follow_conversation">Theo dõi thảo luận</string>
     <string name="reader_comments_be_first_to_comment">Trở thành người phản hồi đầu tiên</string>
     <string name="reader_comments_view_all">Xem tất cả bình luận</string>
     <string name="reader_comments_post_fetch_failure">Xảy ra lỗi khi tải dữ liệu bài viết</string>

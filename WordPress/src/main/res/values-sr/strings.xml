@@ -1354,7 +1354,6 @@ Language: sr_RS
     <string name="gutenberg_native_get_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Потражи подршку</string>
     <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изабрано: подразумевано</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Двапут додирните да изаберете подразумевану величину слова</string>
-    <string name="reader_comments_follow_conversation">Прати разговор</string>
     <string name="reader_comments_be_first_to_comment">Будите први који ће коментарисати</string>
     <string name="reader_comments_view_all">Погледај све коментаре</string>
     <string name="reader_comments_post_fetch_failure">Дошло је до грешке при добијању података чланка</string>
