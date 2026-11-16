@@ -187,6 +187,10 @@ public class MediaPreviewFragment extends Fragment {
         super.onStart();
         if (showAudioOrVideo()) {
             initializePlayer();
+        } else {
+            // load the image as soon as the fragment is started rather than waiting for it to become
+            // the active page, so the pager's adjacent images are ready before the user swipes to them
+            loadImage(mContentUri, mImageView);
         }
     }
 
@@ -207,10 +211,8 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (showAudioOrVideo()) {
-            if (mPlayer == null) initializePlayer();
-        } else {
-            loadImage(mContentUri, mImageView);
+        if (showAudioOrVideo() && mPlayer == null) {
+            initializePlayer();
         }
     }
 
