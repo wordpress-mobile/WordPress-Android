@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.utils.MimeType.Subtype
 import org.wordpress.android.fluxc.utils.MimeType.Type.APPLICATION
 import org.wordpress.android.fluxc.utils.MimeType.Type.AUDIO
 import org.wordpress.android.fluxc.utils.MimeType.Type.IMAGE
+import org.wordpress.android.fluxc.utils.MimeType.Type.TEXT
 import org.wordpress.android.fluxc.utils.MimeType.Type.VIDEO
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan.NO_PLAN_SPECIFIED
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan.SELF_HOSTED
@@ -87,7 +88,7 @@ class MimeTypes {
      * Free MIME Types
      *
      * The WordPress supported image types based on https://wordpress.com/support/accepted-filetypes/ are:
-     * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .key (Apple Keynote Presentation), .zip (Archive File Format)
+     * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .txt (Plain Text), .key (Apple Keynote Presentation), .zip (Archive File Format)
      * This translates (based on https://android.googlesource.com/platform/frameworks/base/+/cd92588/media/java/android/media/MediaFile.java) to:
      * .pdf - "application/pdf"
      * .doc - "application/msword", "application/doc", "application/ms-doc"
@@ -99,6 +100,7 @@ class MimeTypes {
      * .odt - missing - "application/vnd.oasis.opendocument.text"
      * .xls - "application/excel", "application/x-excel", "application/x-msexcel", "application/vnd.ms-excel"
      * .xlsx - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+     * .txt - "text/plain"
      *
      * Paid / Self hosted MIME Types
      *
@@ -132,7 +134,8 @@ class MimeTypes {
                     listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
                     listOf("xls")
             ),
-            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
+            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
+            MimeType(TEXT, Subtype.PLAIN, listOf("txt"))
     )
 
     private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes + listOf(

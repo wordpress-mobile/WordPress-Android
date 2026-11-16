@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Plain-text (.txt) files can be uploaded as documents**
+  When choosing a document to upload from the device, .txt files can now be selected and uploaded. Before, the file picker showed them greyed out.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → + → Choose from device; editor → File block → Choose from device
+  - **Notes:** An uploaded .txt file appears in the Media library under All but not under the Documents filter, which only lists files whose type starts with "application/". That was already the case for .txt files uploaded from the web.
+
 - **Swiping between media previews shows the next image right away**
   In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.
   - **Apps:** Both
