@@ -171,7 +171,6 @@ private fun TopBar(
     isRelatedPost: Boolean,
     actions: ReaderPostDetailScreenActions,
 ) {
-    val contentColor = MaterialTheme.colorScheme.onSurface
     TopAppBar(
         title = {
             if (isRelatedPost) {
@@ -215,12 +214,9 @@ private fun TopBar(
                 }
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = contentColor,
-            navigationIconContentColor = contentColor,
-            actionIconContentColor = contentColor,
-        ),
+        // the other colors default to the surface's, but action icons default to onSurfaceVariant, which the reading
+        // theme makes translucent
+        colors = TopAppBarDefaults.topAppBarColors(actionIconContentColor = MaterialTheme.colorScheme.onSurface),
     )
 }
 
@@ -247,7 +243,8 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             BottomBarAction(
-                state = state,
+                postId = state.postId,
+                blogId = state.blogId,
                 action = actions.bookmarkAction,
                 labelRes = R.string.save,
                 iconRes = if (actions.bookmarkAction.isSelected && actions.bookmarkAction.isEnabled) {
@@ -256,15 +253,23 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
                     R.drawable.ic_bookmark_outline_new_24dp
                 },
             )
-            BottomBarAction(state, actions.reblogAction, R.string.reader_view_reblog, R.drawable.ic_reblog_new_24dp)
             BottomBarAction(
-                state = state,
+                postId = state.postId,
+                blogId = state.blogId,
+                action = actions.reblogAction,
+                labelRes = R.string.reader_view_reblog,
+                iconRes = R.drawable.ic_reblog_new_24dp,
+            )
+            BottomBarAction(
+                postId = state.postId,
+                blogId = state.blogId,
                 action = actions.commentsAction,
                 labelRes = R.string.comment,
                 iconRes = R.drawable.ic_comment_outline_new_24dp,
             )
             BottomBarAction(
-                state = state,
+                postId = state.postId,
+                blogId = state.blogId,
                 action = actions.likeAction,
                 labelRes = R.string.like,
                 iconRes = if (actions.likeAction.isSelected) {
@@ -279,7 +284,8 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
 
 @Composable
 private fun BottomBarAction(
-    state: ReaderPostDetailsUiState,
+    postId: Long,
+    blogId: Long,
     action: PrimaryAction,
     @StringRes labelRes: Int,
     @DrawableRes iconRes: Int,
@@ -296,7 +302,7 @@ private fun BottomBarAction(
             .widthIn(max = ACTION_MAX_WIDTH_DP.dp)
             .heightIn(min = 48.dp)
             .clickable(enabled = action.isEnabled) {
-                action.onClicked?.invoke(state.postId, state.blogId, action.type)
+                action.onClicked?.invoke(postId, blogId, action.type)
             }
             .semantics {
                 description?.let { contentDescription = it }

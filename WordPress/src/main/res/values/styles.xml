@@ -474,8 +474,6 @@
         <item name="colorOnPrimary">?attr/colorOnSecondary</item>
     </style>
 
-    <!-- NUX Styles -->
-
     <style name="WordPress.EmptyList">
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:gravity">center</item>

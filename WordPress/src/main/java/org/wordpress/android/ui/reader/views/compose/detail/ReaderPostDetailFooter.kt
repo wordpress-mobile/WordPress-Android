@@ -73,8 +73,8 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.Comm
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.compose.comments.AuthorBadge
-import org.wordpress.android.ui.reader.views.compose.postcard.CircleAvatar
 import org.wordpress.android.ui.reader.views.compose.comments.FollowConversationActions
+import org.wordpress.android.ui.reader.views.compose.postcard.CircleAvatar
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesPreviewTag
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.utils.UiString
@@ -83,7 +83,6 @@ import org.wordpress.android.util.image.ImageType
 
 private const val RELATED_POST_MAX_LINES = 3
 private const val RELATED_POST_IMAGE_RATIO = 16f / 9f
-
 
 class ReaderPostDetailFooterActions(
     val onExcerptFooterClick: (String) -> Unit,
@@ -113,20 +112,28 @@ fun ReaderPostDetailFooter(
         detailsState?.excerptFooterUiState?.let {
             ExcerptFooter(it, actions.onExcerptFooterClick, Modifier.padding(horizontal = margin))
         }
-        val tags = detailsState?.headerUiState?.tagItems.orEmpty()
-        if (hasWebViewContent && tags.isNotEmpty()) {
-            Tags(
-                tags = tags,
-                readingPreferences = readingPreferences,
-                onExpandToggled = actions.onTagsExpandToggled,
-                modifier = Modifier.padding(start = margin, end = margin, top = Margin.ExtraLarge.value),
-            )
-        }
-        if (hasWebViewContent && likesState != null && likesState.showLikeFacesTrainContainer) {
-            Likers(likesState, actions.onLikesClick)
-        }
-        if (hasWebViewContent && commentSnippetState != null) {
-            CommentSnippet(commentSnippetState, followConversationState, actions.onCommentImageClick)
+        if (hasWebViewContent) {
+            val tags = detailsState?.headerUiState?.tagItems.orEmpty()
+            if (tags.isNotEmpty()) {
+                Tags(
+                    tags = tags,
+                    readingPreferences = readingPreferences,
+                    onExpandToggled = actions.onTagsExpandToggled,
+                    modifier = Modifier.padding(start = margin, end = margin, top = Margin.ExtraLarge.value),
+                )
+            }
+            if (likesState != null && likesState.showLikeFacesTrainContainer) {
+                // pads itself, so its ripple spans the full width
+                Likers(likesState, actions.onLikesClick)
+            }
+            commentSnippetState?.let {
+                CommentSnippet(
+                    state = it,
+                    followState = followConversationState,
+                    onImageClick = actions.onCommentImageClick,
+                    modifier = Modifier.padding(horizontal = margin),
+                )
+            }
         }
         Column(modifier = Modifier.padding(horizontal = margin)) {
             RelatedPosts(detailsState?.localRelatedPosts, isGlobal = false, actions.onRelatedPostsPositioned)
@@ -381,13 +388,10 @@ private fun CommentSnippet(
     state: CommentSnippetUiState,
     followState: FollowConversationUiState?,
     onImageClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimensionResource(R.dimen.reader_detail_margin))
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

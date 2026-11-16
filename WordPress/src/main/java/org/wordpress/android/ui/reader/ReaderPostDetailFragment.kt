@@ -21,6 +21,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -92,7 +93,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.PostRefreshed
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
@@ -286,8 +286,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // The reading theme's View style still matters to the Compose chrome: the more menu resolves its colors
         // from the context's attributes, and the dialogs and sheets this screen opens are themed by it
         val readingPreferences = getReadingPreferences()
-        val themedContext = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
         val theme = readingPreferences.theme
+        val themedContext = ContextThemeWrapper(requireContext(), theme.style)
         val themeValues = ReaderReadingPreferences.ThemeValues.from(themedContext, theme)
 
         val bodyBinding = ReaderPostDetailBodyBinding.inflate(inflater.cloneInContext(themedContext))
@@ -480,11 +480,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is LoadingUiState -> Unit // Do Nothing
-                is ReaderPostDetailsUiState -> onPostExecuteShowPost()
-                is ErrorUiState -> Unit // Do Nothing
-            }
+            if (it is ReaderPostDetailsUiState) onPostExecuteShowPost()
         }
 
         viewModel.postRefreshed.observeEvent(viewLifecycleOwner, ::onPostRefreshed)
@@ -780,41 +776,39 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /**
-     * Shows the snackbar in place of any already showing, as the View-based snackbars did, rather than queueing it
+     * Shows a snackbar in place of any already showing, as the View-based snackbars did, rather than queueing it
      * behind that one
      */
-    private fun SnackbarMessageHolder.showSnackbar() {
+    private fun replaceSnackbar(show: suspend SnackbarHostState.() -> Unit) {
         if (view == null) return
         val hostState = chrome.snackbarHostState
-        val context = requireContext()
         viewLifecycleOwner.lifecycleScope.launch {
             hostState.currentSnackbarData?.dismiss()
-            hostState.showMessage(this@showSnackbar, context, uiHelpers)
+            hostState.show()
         }
     }
 
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val context = requireContext()
+        replaceSnackbar { showMessage(this@showSnackbar, context, uiHelpers) }
+    }
+
     /**
-     * Shows [message] in place of any snackbar already showing. An indefinite one gets a dismiss button, since a
-     * Compose snackbar can't be swiped away.
+     * An indefinite snackbar gets a dismiss button, since a Compose snackbar can't be swiped away
      */
     private fun showSnackbar(
         message: String,
         actionLabel: String? = null,
         isIndefinite: Boolean = false,
         action: () -> Unit = {},
-    ) {
-        if (view == null) return
-        val hostState = chrome.snackbarHostState
-        viewLifecycleOwner.lifecycleScope.launch {
-            hostState.currentSnackbarData?.dismiss()
-            val result = hostState.showSnackbar(
-                message = message,
-                actionLabel = actionLabel,
-                withDismissAction = isIndefinite,
-                duration = if (isIndefinite) SnackbarDuration.Indefinite else SnackbarDuration.Long,
-            )
-            if (result == SnackbarResult.ActionPerformed) action()
-        }
+    ) = replaceSnackbar {
+        val result = showSnackbar(
+            message = message,
+            actionLabel = actionLabel,
+            withDismissAction = isIndefinite,
+            duration = if (isIndefinite) SnackbarDuration.Indefinite else SnackbarDuration.Long,
+        )
+        if (result == SnackbarResult.ActionPerformed) action()
     }
 
     override fun onDestroyView() {
