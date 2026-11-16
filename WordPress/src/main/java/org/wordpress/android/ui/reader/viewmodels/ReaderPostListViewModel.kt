@@ -259,7 +259,7 @@ class ReaderPostListViewModel @Inject constructor(
             }
         }
 
-        // subscribe now since these events aren't replayed - the startup tags update is what fetches an empty list
+        // subscribe now since these events aren't replayed
         launch(start = CoroutineStart.UNDISPATCHED) {
             repository.updateEvents.collect { onRepositoryEvent(it) }
         }
@@ -694,9 +694,9 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onFollowedTagsFetched() = launch {
-        val target = ReaderPostListTarget.Tag(currentTag ?: return@launch)
-        // update the current tag if it has no saved posts - this happens on first run. The saved posts are checked
-        // rather than [posts] since that's empty until the first load ends
+        val target = currentTarget() ?: return@launch
+        // fetch if nothing's saved and no update is running - checks the saved posts since [posts] is empty until
+        // the first load ends
         if (updateActions.isNotEmpty() || repository.getPostCount(target) > 0) return@launch
         if (repository.hasFollowedBlogs() || !hasUpdatedPosts) {
             requestPosts(target, UpdateAction.REQUEST_NEWER)
