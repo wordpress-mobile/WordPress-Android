@@ -885,6 +885,12 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     }
 
     private void deleteMedia(final ArrayList<Integer> ids) {
+        // deleting from the server needs a connection - check before anything is marked DELETING,
+        // since nothing resets that state and the items would be left stuck showing "Deleting"
+        if (hasRemoteMediaToDelete(ids) && !NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
 
@@ -920,6 +926,24 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         if (!mediaToDelete.isEmpty()) {
             startMediaDeleteService(mediaToDelete);
         }
+    }
+
+    /*
+     * true when any of the passed ids is media that lives on the server, so deleting it is more
+     * than a local removal
+     */
+    private boolean hasRemoteMediaToDelete(@NonNull ArrayList<Integer> ids) {
+        for (int currentId : ids) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(currentId);
+            if (mediaModel == null) {
+                continue;
+            }
+            if (mediaModel.getUploadState() == null
+                || !MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void uploadList(List<Uri> uriList) {

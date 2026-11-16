@@ -8,6 +8,7 @@
         android:icon="@drawable/ic_trash_white_24dp"
         android:title="@string/delete"
         android:visible="false"
+        app:iconTint="?attr/wpColorActionModeIcon"
         app:showAsAction="always"/>
 
     <item

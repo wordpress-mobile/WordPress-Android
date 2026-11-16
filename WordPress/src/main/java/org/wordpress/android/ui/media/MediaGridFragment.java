@@ -811,9 +811,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
+        // GlotPress can't translate quantity strings, so the two forms are separate strings
+        int messageResId = localMediaIds.size() == 1
+                ? R.string.confirm_delete_single_media
+                : R.string.confirm_delete_multi_media;
+
         new MaterialAlertDialogBuilder(requireActivity())
-                .setMessage(getResources().getQuantityString(R.plurals.confirm_delete_multi_media,
-                        localMediaIds.size(), localMediaIds.size()))
+                .setMessage(getString(messageResId, localMediaIds.size()))
                 .setCancelable(true)
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
                     mListener.onMediaRequestDelete(localMediaIds);

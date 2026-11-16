@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -419,6 +420,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mInMultiSelect;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setInMultiSelect(boolean value) {
         if (mInMultiSelect != value) {
             mInMultiSelect = value;

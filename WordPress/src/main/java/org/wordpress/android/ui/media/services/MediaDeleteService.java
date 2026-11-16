@@ -89,7 +89,11 @@ public class MediaDeleteService extends Service {
         }
 
         mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
-        mDeleteQueue = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        // only replace the queue when the intent actually carries one - the activity restarts this
+        // service without a list on every resume, which would otherwise drop deletes still pending
+        if (intent.hasExtra(MEDIA_LIST_KEY)) {
+            mDeleteQueue = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        }
 
         // start deleting queued media
         deleteNextInQueue();

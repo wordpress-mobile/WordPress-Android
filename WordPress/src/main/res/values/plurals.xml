@@ -41,10 +41,4 @@
         <item quantity="one">%1$d year</item>
         <item quantity="other">%1$d years</item>
     </plurals>
-
-    <!-- Media library - confirmation shown before deleting the selected media items -->
-    <plurals name="confirm_delete_multi_media">
-        <item quantity="one">Delete %1$d media item?</item>
-        <item quantity="other">Delete %1$d media items?</item>
-    </plurals>
 </resources>

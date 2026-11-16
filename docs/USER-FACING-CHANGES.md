@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Deleted media no longer stays stuck on "Deleting"**
+  On self-hosted sites using the REST API, a deleted media item kept showing a "Deleting" spinner in the Media library even though it had already been removed from the site. It only disappeared after switching tabs or reopening the screen. It now disappears as soon as the delete finishes.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media
+  - **Notes:** Only self-hosted sites on the REST API were affected. WordPress.com and XML-RPC sites already removed the item correctly.
+
 - **Select several items at once in the Media library**
   Long-pressing a media item in the Media library starts a selection, and tapping other items adds them to it. A toolbar shows how many are selected and lets you delete them all at once. Before, media could only be deleted one item at a time, from its details screen.
   - **Apps:** Both
