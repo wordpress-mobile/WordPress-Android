@@ -7,6 +7,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -88,7 +89,8 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(actionsHandler.refreshPosts).thenReturn(MutableLiveData())
         whenever(actionsHandler.followStatusUpdated).thenReturn(followStatusUpdated)
         whenever(actionsHandler.scrollToSiteId).thenReturn(scrollToSiteId)
-        whenever(repository.events).thenReturn(repositoryEvents)
+        whenever(repository.updateEvents).thenReturn(repositoryEvents)
+        whenever(repository.followEvents).thenReturn(emptyFlow())
         whenever(repository.getPosts(any())).thenReturn(ReaderPostList())
         whenever(repository.getPostCount(any())).thenReturn(0)
         whenever(repository.shouldAutoUpdateTag(any())).thenReturn(false)

@@ -60,8 +60,6 @@ import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
@@ -115,11 +113,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     }
 
     private val subFiltersObserver = Observer<List<SubfilterListItem>> { subFilters ->
-        val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag
-        if (selectedTag == null) {
-            AppLog.d(T.READER, "reader blank > ${subFilters.size} subfilters dropped, no selected tag")
-            return@Observer
-        }
+        val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag ?: return@Observer
         viewModel.showTopBarFilterGroup(
             selectedTag,
             subFilters
@@ -300,7 +294,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         // only report a feed the first time it's shown, not when it's restored
         var hasReportedTag by rememberSaveable { mutableStateOf(false) }
         LaunchedEffect(Unit) {
-            AppLog.d(T.READER, "reader blank > feed composed for ${tag.tagSlug}/${tag.tagType}")
             topBarScrollConnection.reset()
             if (!hasReportedTag) {
                 hasReportedTag = true
@@ -331,17 +324,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     }
 
     private fun onFeedAdded(feed: Fragment) {
-        if (feed !== currentFeed) {
-            val feedCount = childFragmentManager.fragments.count {
-                it is ReaderPostListFragment || it is ReaderTagsFeedFragment || it is ReaderDiscoverTabsFragment
-            }
-            AppLog.d(
-                T.READER,
-                "reader blank > feed added: ${feed.javaClass.simpleName}@${System.identityHashCode(feed)}, " +
-                        "isAdded=${feed.isAdded}, hasView=${feed.view != null}, " +
-                        "state=${feed.lifecycle.currentState}, feeds=$feedCount"
-            )
-        }
         currentFeed = feed
         feed.enableNestedScrollInterop()
     }
@@ -487,13 +469,16 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                 viewLifecycleOwner,
                 subFiltersObserver
             )
-
-            updateTagsAndSites()
         } else {
             viewModel.hideTopBarFilterGroup(startedTag)
         }
 
         start(startedTag, startedTag, savedInstanceState)
+
+        // after start() so the view model is listening for the update's result
+        if (startedTag.isFilterable) {
+            updateTagsAndSites()
+        }
     }
 
     companion object {

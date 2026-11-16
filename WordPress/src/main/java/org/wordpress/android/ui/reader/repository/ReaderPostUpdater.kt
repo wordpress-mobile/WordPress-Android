@@ -11,7 +11,6 @@ import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
-import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,11 +37,6 @@ class ReaderPostUpdater @Inject constructor(
         applicationScope.launch(ioDispatcher) {
             _events.emit(ReaderPostListEvent.UpdateStarted(tag, action))
             val result = requestPosts(target, action)
-            AppLog.d(
-                AppLog.T.READER,
-                "reader blank > ${tag?.tagSlug} $action ended $result, " +
-                        "${_events.subscriptionCount.value} subscribers"
-            )
             _events.emit(ReaderPostListEvent.UpdateEnded(tag, action, result))
         }
     }

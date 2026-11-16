@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader: Subscriptions no longer opens on a blank page**
+  Opening the Reader on Subscriptions when no posts were saved on the device could show a blank page, with no posts, spinner or message, until you switched feeds. It now loads the latest posts. The Blogs and Tags filter chips could also be missing at startup, and now appear.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions
+  - **Notes:** It happened intermittently, depending on how fast the app started, and only when the feed had no posts saved on the device.
+
 - **Experimental block editor uploads follow the Media settings**
   Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
   - **Apps:** Both

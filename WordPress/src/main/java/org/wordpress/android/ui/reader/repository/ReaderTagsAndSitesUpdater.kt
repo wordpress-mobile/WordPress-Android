@@ -217,11 +217,7 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
         fetch: suspend () -> T?,
         save: suspend (T) -> Unit
     ): Deferred<Boolean> = synchronized(updateLock) {
-        runningUpdates[task]?.also {
-            AppLog.d(AppLog.T.READER, "reader blank > $task update joined a running one")
-            staleUpdates += task
-        } ?: CompletableDeferred<Boolean>().also { result ->
-            AppLog.d(AppLog.T.READER, "reader blank > $task update started")
+        runningUpdates[task]?.also { staleUpdates += task } ?: CompletableDeferred<Boolean>().also { result ->
             runningUpdates[task] = result
             // launch rather than async so an exception crashes the app, as the update service did
             applicationScope.launch(ioDispatcher) {
@@ -230,11 +226,6 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                     synchronized(updateLock) { staleUpdates -= task }
                     response = fetch()
                     val isCurrent = synchronized(updateLock) { task !in staleUpdates }
-                    AppLog.d(
-                        AppLog.T.READER,
-                        "reader blank > $task fetch ${if (response != null) "succeeded" else "failed"}, " +
-                                "current=$isCurrent"
-                    )
                     if (isCurrent) response?.let { save(it) }
                     // the update stays registered until it's saved, so a change made during the save marks it
                     // stale and it's sent again, since the save may have undone that change
@@ -316,10 +307,6 @@ class ReaderTagsAndSitesUpdater @Inject constructor(
                 ReaderTagTable.replaceTags(serverTopics)
             }
         }
-        AppLog.d(
-            AppLog.T.READER,
-            "reader blank > emitting FollowedTagsChanged to ${_events.subscriptionCount.value} subscribers"
-        )
         _events.emit(ReaderTagsAndSitesEvent.FollowedTagsChanged(ReaderTagTable.getFollowedTags().size, didChange))
         AppPrefs.setReaderTagsUpdatedTimestamp(System.currentTimeMillis())
     }
