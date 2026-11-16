@@ -48,12 +48,14 @@ class ReaderSubsRepository @Inject constructor(
     fun isFollowedTagName(name: String): Boolean = ReaderTagTable.isFollowedTagName(name)
 
     /**
-     * Returns true if the passed URL matches a followed site's URL or feed URL, ignoring the scheme, "www."
-     * and a trailing slash, since the stored URLs are spelled however the server returned them
+     * Returns true if the passed URL matches a followed site's URL or feed URL by [urlKey], since the stored
+     * URLs are spelled however the server returned them
      */
     suspend fun isFollowedUrl(url: String): Boolean {
         val key = urlKey(url) ?: return false
-        return getFollowedBlogs().any { urlKey(it.url) == key || urlKey(it.feedUrl) == key }
+        return withContext(ioDispatcher) {
+            ReaderBlogTable.getFollowedBlogs().any { urlKey(it.url) == key || urlKey(it.feedUrl) == key }
+        }
     }
 
     fun createFollowedTag(name: String): ReaderTag = ReaderUtils.createTagFromTagName(name, ReaderTagType.FOLLOWED)
@@ -63,7 +65,7 @@ class ReaderSubsRepository @Inject constructor(
      * it isn't a valid network URL
      */
     fun normalizeEntryUrl(entry: String): String? {
-        val url = UrlUtils.normalizeUrl(if (entry.contains("://")) entry else "http://$entry")
+        val url = UrlUtils.normalizeUrl(withScheme(entry))
         return url.takeIf { URLUtil.isNetworkUrl(it) }
     }
 
@@ -100,12 +102,13 @@ class ReaderSubsRepository @Inject constructor(
          * URL has no host
          */
         internal fun urlKey(url: String): String? {
-            val withScheme = if (url.contains("://")) url else "http://$url"
-            val uri = runCatching { URI(withScheme.trim()) }.getOrNull() ?: return null
+            val uri = runCatching { URI(withScheme(url).trim()) }.getOrNull() ?: return null
             val host = uri.host?.lowercase(Locale.ROOT)?.removePrefix("www.")?.takeIf { it.isNotEmpty() }
                 ?: return null
             return host + uri.path.orEmpty().trimEnd('/').lowercase(Locale.ROOT)
         }
+
+        private fun withScheme(url: String) = if (url.contains("://")) url else "http://$url"
     }
 }
 

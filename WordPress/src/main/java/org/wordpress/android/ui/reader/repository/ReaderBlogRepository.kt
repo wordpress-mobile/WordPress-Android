@@ -104,23 +104,20 @@ class ReaderBlogRepository @Inject constructor(
         if (feedUrl.isEmpty()) return FollowUrlResult.FAILED
         // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
         return withContext(ioDispatcher + NonCancellable) {
+            // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the follow does
             val blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
-            val succeeded = if (blogInfo != null) {
-                followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
-            } else {
-                // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the
-                // follow does
-                val fetchedInfo = fetchFeedInfo(0, feedUrl)
-                if (fetchedInfo?.isFollowing == true) return@withContext FollowUrlResult.ALREADY_FOLLOWING
+                ?: fetchFeedInfo(0, feedUrl)
+            when {
+                blogInfo?.isFollowing == true -> FollowUrlResult.ALREADY_FOLLOWING
                 followFeed(
-                    blogId = fetchedInfo?.blogId ?: 0,
-                    feedId = fetchedInfo?.feedId ?: 0,
-                    feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
+                    blogId = blogInfo?.blogId ?: 0,
+                    feedId = blogInfo?.feedId ?: 0,
+                    feedUrl = blogInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
                     follow = true,
                     source = source
-                )
+                ) -> FollowUrlResult.FOLLOWED
+                else -> FollowUrlResult.FAILED
             }
-            if (succeeded) FollowUrlResult.FOLLOWED else FollowUrlResult.FAILED
         }
     }
 
