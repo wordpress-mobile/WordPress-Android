@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.core.os.BundleCompat
+import androidx.core.view.doOnAttach
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -135,6 +136,12 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         isFilterableScreen = arguments.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
         tagFragmentStartedWith =
             BundleCompat.getSerializable(arguments, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
+        AppLog.d(
+            AppLog.T.READER,
+            "reader blank > post list ${System.identityHashCode(this)} created for " +
+                    "${tagFragmentStartedWith?.tagSlug}, restoring=${savedInstanceState != null}, " +
+                    "topLevel=$isTopLevel"
+        )
 
         savedInstanceState?.let {
             AppLog.d(AppLog.T.READER, "reader post list fragment > restoring instance state")
@@ -190,6 +197,10 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AppLog.d(AppLog.T.READER, "reader blank > post list ${System.identityHashCode(this)} view created")
+        view.doOnAttach {
+            AppLog.d(AppLog.T.READER, "reader blank > post list ${System.identityHashCode(this)} view attached")
+        }
 
         savedInstanceState?.let {
             postListViewModel.onViewRestored(it.getInt(ReaderConstants.KEY_RESTORE_POSITION))

@@ -259,6 +259,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
 
         launch {
+            logBlank("collecting repository events")
             repository.events.collect { onRepositoryEvent(it) }
         }
 
@@ -294,6 +295,10 @@ class ReaderPostListViewModel @Inject constructor(
      */
     fun onStart() {
         isViewStarted = true
+        logBlank(
+            "onStart: isLoaded=$isLoaded, hasRequestedPosts=$hasRequestedPosts, " +
+                    "hasUpdatedPosts=$hasUpdatedPosts, network=${networkUtilsWrapper.isNetworkAvailable()}"
+        )
         if (!isLoaded && loadJob?.isActive != true) {
             reload()
         }
@@ -643,6 +648,7 @@ class ReaderPostListViewModel @Inject constructor(
     private fun isCurrentSearch(query: String) = isSearch && query == searchQuery
 
     private fun onRepositoryEvent(event: ReaderPostListEvent) {
+        logBlank("event ${event.javaClass.simpleName}")
         when (event) {
             is ReaderPostListEvent.UpdateStarted -> if (isCurrentTarget(event.tag)) {
                 setIsUpdating(true, event.action)
@@ -690,7 +696,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     private fun onFollowedTagsFetched() = launch {
         // update the current tag if the list is empty - this happens on first run
-        if (posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)) {
+        val shouldRequest = posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)
+        logBlank("followed tags fetched: ${posts.size} posts, requesting=$shouldRequest")
+        if (shouldRequest) {
             currentTag?.let { requestPosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_NEWER) }
         }
     }
@@ -757,7 +765,9 @@ class ReaderPostListViewModel @Inject constructor(
     private fun updateCurrentTagIfTime() {
         val tag = currentTag ?: return
         launch {
-            if (repository.shouldAutoUpdateTag(tag)) {
+            val shouldUpdate = repository.shouldAutoUpdateTag(tag)
+            logBlank("updateCurrentTagIfTime: shouldAutoUpdateTag=$shouldUpdate")
+            if (shouldUpdate) {
                 requestPosts(ReaderPostListTarget.Tag(tag), UpdateAction.REQUEST_NEWER)
             } else if (isBookmarksList || tag.isListTopic) {
                 // there won't be an update, so show the empty state for these lists right away
@@ -775,6 +785,12 @@ class ReaderPostListViewModel @Inject constructor(
         // show the update as running now: its UpdateStarted can be emitted before this starts collecting events
         setIsUpdating(true, action)
         repository.requestPosts(target, action)
+    }
+
+    private fun logBlank(message: String) {
+        if (listType == ReaderPostListType.TAG_FOLLOWED) {
+            AppLog.d(T.READER, "reader blank > ${currentTag?.tagSlug} ${System.identityHashCode(this)}: $message")
+        }
     }
 
     private fun blogOrFeedTarget() = if (feedId != 0L) {
@@ -849,6 +865,10 @@ class ReaderPostListViewModel @Inject constructor(
         applyPendingScroll()
 
         updateUiState()
+        logBlank(
+            "loaded ${posts.size} posts, updates=$updateActions, hasUpdatedPosts=$hasUpdatedPosts, " +
+                    "autoUpdateSkipped=$autoUpdateSkipped, emptyState=${_uiState.value.emptyState}"
+        )
         sendUiEvent(ReaderPostListUiEvent.DataLoaded)
         // the follow state may have changed elsewhere, so re-read the header whenever the posts are
         if (siteHeaderIds() != null && siteHeaderJob?.isActive != true) {

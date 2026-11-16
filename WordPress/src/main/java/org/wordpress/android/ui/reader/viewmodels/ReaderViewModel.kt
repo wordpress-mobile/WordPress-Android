@@ -36,6 +36,8 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterSelected
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
@@ -122,12 +124,24 @@ class ReaderViewModel @Inject constructor(
     fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
             val tagList = loadReaderItemsUseCase.load()
-            if (tagList.isNotEmpty() && readerTagsList != tagList) {
+            val isChanged = tagList.isNotEmpty() && readerTagsList != tagList
+            AppLog.d(
+                T.READER,
+                "reader blank > loadTabs: ${tagList.size} tags, changed=$isChanged, " +
+                        "restoring=${savedInstanceState != null}"
+            )
+            if (isChanged) {
                 updateReaderTagsList(tagList)
                 updateTopBarUiState(savedInstanceState)
+                val selectedTag = selectedReaderTag()
+                AppLog.d(
+                    T.READER,
+                    "reader blank > loadTabs: selected tag ${selectedTag?.tagSlug}/${selectedTag?.tagType}, " +
+                            "top bar item ${_topBarUiState.value?.selectedItem?.id}"
+                )
                 _uiState.value = ContentUiState(
                     tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
-                    selectedReaderTag = selectedReaderTag(),
+                    selectedReaderTag = selectedTag,
                 )
                 if (!initialized) {
                     initialized = true
