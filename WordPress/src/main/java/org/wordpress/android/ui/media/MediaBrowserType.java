@@ -88,12 +88,23 @@ public enum MediaBrowserType {
         return this == GUTENBERG_SINGLE_MEDIA_PICKER;
     }
 
+    /**
+     * True when this picker returns more than one media item to its caller.
+     */
     public boolean canMultiselect() {
         return this == EDITOR_PICKER
                || this == AZTEC_EDITOR_PICKER
                || this == GUTENBERG_IMAGE_PICKER
                || this == GUTENBERG_VIDEO_PICKER
                || this == FEEDBACK_FORM_MEDIA_PICKER;
+    }
+
+    /**
+     * True when several items can be selected at once, either to return them to the caller
+     * (multiselect pickers) or to act on them together, such as deleting them (the browser).
+     */
+    public boolean supportsMultiselect() {
+        return isBrowser() || canMultiselect();
     }
 
     public boolean canFilter() {

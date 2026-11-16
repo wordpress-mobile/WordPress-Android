@@ -16,6 +16,30 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Posts → banner above the tabs
   - **Notes:** Before, such a post had no row in this list, so once the upload-failure notification was dismissed there was no way back to it. The list says "posts" rather than "drafts" because it also holds posts published or scheduled while offline, which go live once they upload. The banner is hidden while searching, and these posts aren't included in search results. A post being uploaded for the first time isn't counted or listed until the upload fails, so a post written online doesn't show here while it uploads. A post whose upload failed stays listed as failed while it's uploaded again, by Retry or automatically when the device reconnects; until that upload finishes, tapping the post or its Retry closes the sheet and says it's uploading. Retry while offline closes the sheet and says there's no connection. There is no way to delete one of these posts from the list. The sheet doesn't update live while an upload starts, only when one finishes. Pages are unchanged.
 
+- **Reader: Subscriptions no longer opens on a blank page**
+  Opening the Reader on Subscriptions when no posts were saved on the device could show a blank page, with no posts, spinner or message, until you switched feeds. It now loads the latest posts. The Blogs and Tags filter chips could also be missing at startup, and now appear.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions
+  - **Notes:** It happened intermittently, depending on how fast the app started, and only when the feed had no posts saved on the device.
+
+- **Deleted media no longer stays stuck on "Deleting"**
+  On self-hosted sites using the REST API, a deleted media item kept showing a "Deleting" spinner in the Media library even though it had already been removed from the site. It only disappeared after switching tabs or reopening the screen. It now disappears as soon as the delete finishes. A delete that fails part way through a batch no longer leaves the remaining items spinning either — they go back to normal and can be selected again to retry.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media
+  - **Notes:** Only self-hosted sites on the REST API were affected by the first problem. WordPress.com and XML-RPC sites already removed the item correctly. Items left spinning after a failed or interrupted delete affected all site types.
+
+- **Select several items at once in the Media library**
+  Long-pressing a media item in the Media library starts a selection, and tapping other items adds them to it. A toolbar shows how many are selected and lets you delete them all at once. Before, media could only be deleted one item at a time, from its details screen.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → long-press an item
+  - **Notes:** Deleting asks for confirmation first. Items already being deleted can't be selected. Back, or the toolbar's X, leaves the selection. The media type tabs are greyed out while a selection is active, so you finish or leave the selection before changing filter. Media pickers opened from the editor are unaffected.
+
 - **Opening a WordPress.com post link no longer sticks on a spinner**
   Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
   - **Apps:** Jetpack
