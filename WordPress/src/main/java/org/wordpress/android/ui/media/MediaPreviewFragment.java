@@ -64,6 +64,7 @@ public class MediaPreviewFragment extends Fragment {
     private boolean mIsVideo;
     private boolean mIsAudio;
     private boolean mAutoPlay;
+    private boolean mImageLoadFailed;
     private int mPosition;
 
     private SiteModel mSite;
@@ -211,8 +212,14 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (showAudioOrVideo() && mPlayer == null) {
-            initializePlayer();
+        if (showAudioOrVideo()) {
+            if (mPlayer == null) {
+                initializePlayer();
+            }
+        } else if (mImageLoadFailed) {
+            // the pre-load that ran while this page was offscreen failed, so try again now that
+            // the user has swiped to it
+            loadImage(mContentUri, mImageView);
         }
     }
 
@@ -235,9 +242,9 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
-    private void showLoadingError() {
+    private void showLoadingError(boolean show) {
         if (isAdded()) {
-            getView().findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.text_error).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -249,9 +256,18 @@ public class MediaPreviewFragment extends Fragment {
             return;
         }
 
+        // the video thumbnail shares this method, but only the main image is retried on selection
+        final boolean isMainImage = imageView == mImageView;
+
         if (TextUtils.isEmpty(mediaUri)) {
-            showLoadingError();
+            // an empty URI won't start working on its own, so don't mark it for retry
+            showLoadingError(true);
             return;
+        }
+
+        if (isMainImage) {
+            mImageLoadFailed = false;
+            showLoadingError(false);
         }
 
         imageView.setVisibility(View.VISIBLE);
@@ -281,13 +297,16 @@ public class MediaPreviewFragment extends Fragment {
 
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        if (isMainImage) {
+                            mImageLoadFailed = true;
+                        }
                         if (isAdded()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);
                             }
                             showProgress(false);
                             if (!mIsVideo) {
-                                showLoadingError();
+                                showLoadingError(true);
                             }
                         }
                     }
