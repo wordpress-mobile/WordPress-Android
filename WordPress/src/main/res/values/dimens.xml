@@ -133,9 +133,6 @@
 
     <!-- reader follow unfollow comments dimensions -->
 
-    <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">130dp</dimen>
-
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_extra_low
     </item>
