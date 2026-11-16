@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
@@ -150,6 +151,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     private MenuItem menuNewMediaItem;
 
     private boolean mShowAudioTab;
+    private boolean mTabsEnabled = true;
 
     private boolean mLaunchPhotoPicker = false;
 
@@ -344,6 +346,39 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         }
     }
 
+    /*
+     * greys the tabs out and stops them responding to taps, rather than hiding them - used while
+     * multiselect is active, since hiding the whole tab row makes the screen jump
+     */
+    private void setTabsEnabled(boolean enabled) {
+        mTabsEnabled = enabled;
+
+        if (!shouldShowTabs()) return;
+
+        applyTabsEnabledState();
+    }
+
+    private void applyTabsEnabledState() {
+        float alpha = mTabsEnabled ? 1f : getDisabledTabAlpha();
+
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            if (tab == null) {
+                continue;
+            }
+            tab.view.setEnabled(mTabsEnabled);
+            tab.view.setClickable(mTabsEnabled);
+            tab.view.setAlpha(alpha);
+        }
+    }
+
+    private float getDisabledTabAlpha() {
+        TypedValue disabledAlpha = new TypedValue();
+        getResources().getValue(
+                com.google.android.material.R.dimen.material_emphasis_disabled, disabledAlpha, true);
+        return disabledAlpha.getFloat();
+    }
+
     private void setupTabs() {
         if (shouldShowTabs()) {
             mTabLayout.removeAllTabs();
@@ -394,6 +429,10 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                     }
                 }
             });
+
+            // the tabs were just recreated, so they're enabled again - re-apply the current state
+            // in case this happened while multiselect was active
+            applyTabsEnabledState();
         } else {
             mTabLayout.setVisibility(View.GONE);
         }
@@ -783,6 +822,11 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         deleteMedia(ids);
     }
 
+    @Override
+    public void onMediaRequestDelete(@NonNull List<Integer> localMediaIds) {
+        deleteMedia(new ArrayList<>(localMediaIds));
+    }
+
     private void showMediaSettings(@NonNull MediaModel media) {
         List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
         ArrayList<String> idList = new ArrayList<>();
@@ -831,7 +875,10 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                     int localMediaId = mediaModel.getId();
                     mMediaGridFragment.removeFromMultiSelect(localMediaId);
                 }
-                break;
+                // a deleted item comes back from the server without its local id, so the grid
+                // can't match it to a tile - reload the whole grid from the store instead
+                reloadMediaGrid();
+                return;
         }
 
         if (event.mediaList.size() == 1) {
@@ -865,19 +912,24 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        enableTabs(false);
-        showQuota(false);
+        // the tabs stay in place while multiselect is active, only greyed out - hiding them makes
+        // the grid jump. the quota stays too, since it's useful while deciding what to delete
+        setTabsEnabled(false);
     }
 
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
-        enableTabs(true);
-        showQuota(true);
+        setTabsEnabled(true);
     }
 
-    // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
     private void deleteMedia(final ArrayList<Integer> ids) {
+        // deleting from the server needs a connection - check before anything is marked DELETING,
+        // since nothing resets that state and the items would be left stuck showing "Deleting"
+        if (hasRemoteMediaToDelete(ids) && !NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
 
@@ -913,6 +965,24 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         if (!mediaToDelete.isEmpty()) {
             startMediaDeleteService(mediaToDelete);
         }
+    }
+
+    /*
+     * true when any of the passed ids is media that lives on the server, so deleting it is more
+     * than a local removal
+     */
+    private boolean hasRemoteMediaToDelete(@NonNull ArrayList<Integer> ids) {
+        for (int currentId : ids) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(currentId);
+            if (mediaModel == null) {
+                continue;
+            }
+            if (mediaModel.getUploadState() == null
+                || !MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void uploadList(List<Uri> uriList) {

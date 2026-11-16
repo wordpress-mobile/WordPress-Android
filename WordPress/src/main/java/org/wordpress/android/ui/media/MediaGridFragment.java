@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -168,6 +170,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         void onMediaRequestRetry(int localMediaId);
 
         void onMediaRequestDelete(int localMediaId);
+
+        void onMediaRequestDelete(@NonNull List<Integer> localMediaIds);
     }
 
     public static MediaGridFragment newInstance(@NonNull SiteModel site,
@@ -472,7 +476,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (!mBrowserType.canMultiselect()) {
+        if (!mBrowserType.supportsMultiselect()) {
             return;
         }
 
@@ -793,6 +797,39 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         getAdapter().setHasRetrievedAll(true);
     }
 
+    /*
+     * asks the user to confirm deleting every media item currently selected in the browser
+     */
+    private void confirmDeleteSelectedMedia() {
+        if (!isAdded()) {
+            return;
+        }
+
+        // copy the ids, since clearing the selection below empties the adapter's list
+        final List<Integer> localMediaIds = new ArrayList<>(getAdapter().getSelectedItems());
+        if (localMediaIds.isEmpty()) {
+            return;
+        }
+
+        // GlotPress can't translate quantity strings, so the two forms are separate strings
+        int messageResId = localMediaIds.size() == 1
+                ? R.string.confirm_delete_single_media
+                : R.string.confirm_delete_multi_media;
+
+        new MaterialAlertDialogBuilder(requireActivity())
+                .setMessage(getString(messageResId, localMediaIds.size()))
+                .setCancelable(true)
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    mListener.onMediaRequestDelete(localMediaIds);
+                    getAdapter().clearSelection();
+                    if (mActionMode != null) {
+                        mActionMode.finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
     private void setResultIdsAndFinish() {
         Intent intent = new Intent();
         if (getAdapter().getSelectedItemCount() > 0) {
@@ -828,6 +865,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
             mnuConfirm.setVisible(mBrowserType.isPicker());
 
+            MenuItem mnuTrash = menu.findItem(R.id.mnu_delete_selection);
+            mnuTrash.setVisible(mBrowserType.isBrowser());
+
             AccessibilityUtils.setActionModeDoneButtonContentDescription(getActivity(), getString(R.string.cancel));
             return true;
         }
@@ -836,6 +876,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
                 setResultIdsAndFinish();
+            } else if (item.getItemId() == R.id.mnu_delete_selection) {
+                confirmDeleteSelectedMedia();
             }
             return true;
         }
