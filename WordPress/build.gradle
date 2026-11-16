@@ -260,8 +260,8 @@ android {
 
     buildTypes {
         release {
-            // Proguard is used to shrink our apk, and reduce the number of methods in our final apk,
-            // but we don't obfuscate the bytecode.
+            // R8 shrinks, optimizes and obfuscates the release build. Google Play requires all three
+            // for apps with more than 10 MB of DEX.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard.cfg'
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
