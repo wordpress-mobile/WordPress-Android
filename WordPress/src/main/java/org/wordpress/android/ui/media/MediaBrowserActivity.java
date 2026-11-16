@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
@@ -150,6 +151,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     private MenuItem menuNewMediaItem;
 
     private boolean mShowAudioTab;
+    private boolean mTabsEnabled = true;
 
     private boolean mLaunchPhotoPicker = false;
 
@@ -344,6 +346,39 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         }
     }
 
+    /*
+     * greys the tabs out and stops them responding to taps, rather than hiding them - used while
+     * multiselect is active, since hiding the whole tab row makes the screen jump
+     */
+    private void setTabsEnabled(boolean enabled) {
+        mTabsEnabled = enabled;
+
+        if (!shouldShowTabs()) return;
+
+        applyTabsEnabledState();
+    }
+
+    private void applyTabsEnabledState() {
+        float alpha = mTabsEnabled ? 1f : getDisabledTabAlpha();
+
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            if (tab == null) {
+                continue;
+            }
+            tab.view.setEnabled(mTabsEnabled);
+            tab.view.setClickable(mTabsEnabled);
+            tab.view.setAlpha(alpha);
+        }
+    }
+
+    private float getDisabledTabAlpha() {
+        TypedValue disabledAlpha = new TypedValue();
+        getResources().getValue(
+                com.google.android.material.R.dimen.material_emphasis_disabled, disabledAlpha, true);
+        return disabledAlpha.getFloat();
+    }
+
     private void setupTabs() {
         if (shouldShowTabs()) {
             mTabLayout.removeAllTabs();
@@ -394,6 +429,10 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                     }
                 }
             });
+
+            // the tabs were just recreated, so they're enabled again - re-apply the current state
+            // in case this happened while multiselect was active
+            applyTabsEnabledState();
         } else {
             mTabLayout.setVisibility(View.GONE);
         }
@@ -873,15 +912,15 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        enableTabs(false);
-        showQuota(false);
+        // the tabs stay in place while multiselect is active, only greyed out - hiding them makes
+        // the grid jump. the quota stays too, since it's useful while deciding what to delete
+        setTabsEnabled(false);
     }
 
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
-        enableTabs(true);
-        showQuota(true);
+        setTabsEnabled(true);
     }
 
     private void deleteMedia(final ArrayList<Integer> ids) {

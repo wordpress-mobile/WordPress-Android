@@ -22,7 +22,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Type:** New
   - **Availability:** Everyone
   - **Where:** My Site → Media → long-press an item
-  - **Notes:** Deleting asks for confirmation first. Items already being deleted can't be selected. Back, or the toolbar's X, leaves the selection. Media pickers opened from the editor are unaffected.
+  - **Notes:** Deleting asks for confirmation first. Items already being deleted can't be selected. Back, or the toolbar's X, leaves the selection. The media type tabs are greyed out while a selection is active, so you finish or leave the selection before changing filter. Media pickers opened from the editor are unaffected.
 
 - **Opening a WordPress.com post link no longer sticks on a spinner**
   Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
