@@ -894,6 +894,19 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         verify(localDraftsSource, never()).retry(any(), any())
     }
 
+    @Test
+    fun `a server post tapped while a local draft is opening is not opened`() = test {
+        whenever(localDraftsSource.open(site, LOCAL_DRAFT_ID)).thenReturn(postUpload())
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.openLocalDraft(LOCAL_DRAFT_ID)
+        viewModel.openPost(42L, PostRsListTab.PUBLISHED)
+        advanceUntilIdle()
+
+        verifyBlocking(fluxCBridge, never()) { fetchAndBridgePost(any(), any(), anyOrNull()) }
+    }
+
     private fun localDraft() = RsLocalDraftUiModel(
         localId = LOCAL_DRAFT_ID,
         title = "Title",

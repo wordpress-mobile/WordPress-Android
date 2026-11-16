@@ -123,8 +123,8 @@ class PostRsListViewModel @Inject constructor(
     val localDrafts: StateFlow<List<RsLocalDraftUiModel>> = _localDrafts.asStateFlow()
     private var localDraftsJob: Job? = null
 
-    // A local draft opens without a fetch, so nothing else stops a second tap from stacking another
-    // editor before this screen stops. Cleared when it comes back.
+    // A local draft opens without a fetch, so nothing else stops a second tap, on it or on a server
+    // post, from stacking another editor before this screen stops. Cleared when it comes back.
     private var isOpeningLocalDraft = false
     private var pendingReveal: RsReveal<PostRsListTab>? = null
 
@@ -306,7 +306,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
-        if (_isOpeningPost.value) return
+        if (_isOpeningPost.value || isOpeningLocalDraft) return
         // Search lists every status inside whichever tab it was opened from, so the post's own
         // status decides; the tab only stands in when the post isn't loaded.
         val post = _tabStates.value[tab]?.items?.firstOrNull { it.remoteId == remotePostId }
