@@ -164,6 +164,17 @@ class MimeTypesTest {
         assertThat(allTypes).isEqualTo(allAudioMimeTypes)
     }
 
+    @Test
+    fun `returns document types that aren't application types`() {
+        assertThat(mimeTypes.getNonApplicationDocumentTypes()).containsExactly("text/plain")
+    }
+
+    @Test
+    fun `text types are not application types`() {
+        assertThat(mimeTypes.isApplicationType("application/pdf")).isTrue
+        assertThat(mimeTypes.isApplicationType("text/plain")).isFalse
+    }
+
     private val allAudioMimeTypes = arrayOf(
             "audio/mpeg",
             "audio/mp4",
