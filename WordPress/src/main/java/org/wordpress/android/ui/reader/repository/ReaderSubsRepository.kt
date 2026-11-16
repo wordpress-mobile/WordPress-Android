@@ -14,6 +14,8 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.UrlUtils
+import java.net.URI
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -45,7 +47,14 @@ class ReaderSubsRepository @Inject constructor(
 
     fun isFollowedTagName(name: String): Boolean = ReaderTagTable.isFollowedTagName(name)
 
-    fun isFollowedUrl(url: String) = ReaderBlogTable.isFollowedBlogUrl(url) || ReaderBlogTable.isFollowedFeedUrl(url)
+    /**
+     * Returns true if the passed URL matches a followed site's URL or feed URL, ignoring the scheme, "www."
+     * and a trailing slash, since the stored URLs are spelled however the server returned them
+     */
+    suspend fun isFollowedUrl(url: String): Boolean {
+        val key = urlKey(url) ?: return false
+        return getFollowedBlogs().any { urlKey(it.url) == key || urlKey(it.feedUrl) == key }
+    }
 
     fun createFollowedTag(name: String): ReaderTag = ReaderUtils.createTagFromTagName(name, ReaderTagType.FOLLOWED)
 
@@ -76,13 +85,28 @@ class ReaderSubsRepository @Inject constructor(
      * Follows the passed URL as a feed, since typed URLs are more likely to point to a feed than a
      * WordPress site (and the endpoint follows it as a site if it is one)
      */
-    suspend fun followUrl(url: String): Boolean = blogRepository.followFeedUrl(url, ReaderTracker.SOURCE_SETTINGS)
+    suspend fun followUrl(url: String): FollowUrlResult =
+        blogRepository.followFeedUrl(url, ReaderTracker.SOURCE_SETTINGS)
 
     /**
      * Returns null if the URL is reachable, otherwise the status code. The follow endpoint accepts any
      * URL, even one that doesn't exist, so this is checked first.
      */
     suspend fun checkUrlReachable(url: String): Int? = blogRepository.checkUrlReachable(url)
+
+    companion object {
+        /**
+         * Returns the host without "www." plus the path without a trailing slash, lowercased, or null if the
+         * URL has no host
+         */
+        internal fun urlKey(url: String): String? {
+            val withScheme = if (url.contains("://")) url else "http://$url"
+            val uri = runCatching { URI(withScheme.trim()) }.getOrNull() ?: return null
+            val host = uri.host?.lowercase(Locale.ROOT)?.removePrefix("www.")?.takeIf { it.isNotEmpty() }
+                ?: return null
+            return host + uri.path.orEmpty().trimEnd('/').lowercase(Locale.ROOT)
+        }
+    }
 }
 
 sealed class ReaderSubsEvent {

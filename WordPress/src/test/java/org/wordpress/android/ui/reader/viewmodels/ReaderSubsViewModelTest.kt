@@ -28,6 +28,7 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.FollowUrlResult
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
 import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -54,6 +55,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         whenever(repository.getFollowedBlogs()).thenReturn(emptyList())
         whenever(repository.getHost(any())).thenAnswer { (it.arguments[0] as String).substringAfter("://") }
         whenever(repository.isValidTagName(any())).thenReturn(true)
+        whenever(repository.isFollowedUrl(any())).thenReturn(false)
         whenever(repository.createFollowedTag(any())).thenAnswer { tag(it.arguments[0] as String) }
         whenever(resourceProvider.getString(any())).thenAnswer { string(it.arguments[0] as Int) }
         whenever(resourceProvider.getString(any(), anyVararg())).thenAnswer { string(it.arguments[0] as Int) }
@@ -298,11 +300,28 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a url the lookup shows is already followed keeps the entry and reloads the sites`() = test {
+        val url = "http://example.wordpress.com"
+        whenever(repository.normalizeEntryUrl("example.wordpress.com")).thenReturn(url)
+        whenever(repository.checkUrlReachable(url)).thenReturn(null)
+        whenever(repository.followUrl(url)).thenReturn(FollowUrlResult.ALREADY_FOLLOWING)
+
+        viewModel.events.test {
+            add("example.wordpress.com")
+
+            assertThat(awaitItem()).isEqualTo(message(R.string.reader_toast_err_already_follow_this_blog))
+        }
+        assertThat(viewModel.uiState.value.entry).isEqualTo("example.wordpress.com")
+        assertThat(viewModel.uiState.value.isAdding).isFalse()
+        verify(repository).getFollowedBlogs()
+    }
+
+    @Test
     fun `following a url clears the entry, reloads the sites and requests an update`() = test {
         val url = "http://example.com"
         whenever(repository.normalizeEntryUrl("example.com")).thenReturn(url)
         whenever(repository.checkUrlReachable(url)).thenReturn(null)
-        whenever(repository.followUrl(url)).thenReturn(true)
+        whenever(repository.followUrl(url)).thenReturn(FollowUrlResult.FOLLOWED)
 
         viewModel.events.test {
             add("example.com")

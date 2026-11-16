@@ -98,19 +98,20 @@ class ReaderBlogRepository @Inject constructor(
         }
 
     /**
-     * Follows the passed feed URL and returns whether it succeeded
+     * Follows the passed feed URL, unless the lookup shows it's already followed under another URL
      */
-    suspend fun followFeedUrl(feedUrl: String, source: String): Boolean {
-        if (feedUrl.isEmpty()) return false
+    suspend fun followFeedUrl(feedUrl: String, source: String): FollowUrlResult {
+        if (feedUrl.isEmpty()) return FollowUrlResult.FAILED
         // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
         return withContext(ioDispatcher + NonCancellable) {
             val blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
-            if (blogInfo != null) {
+            val succeeded = if (blogInfo != null) {
                 followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
             } else {
                 // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the
                 // follow does
                 val fetchedInfo = fetchFeedInfo(0, feedUrl)
+                if (fetchedInfo?.isFollowing == true) return@withContext FollowUrlResult.ALREADY_FOLLOWING
                 followFeed(
                     blogId = fetchedInfo?.blogId ?: 0,
                     feedId = fetchedInfo?.feedId ?: 0,
@@ -119,6 +120,7 @@ class ReaderBlogRepository @Inject constructor(
                     source = source
                 )
             }
+            if (succeeded) FollowUrlResult.FOLLOWED else FollowUrlResult.FAILED
         }
     }
 
@@ -395,3 +397,5 @@ data class BlockedUserResult(
     // key: (tag slug, tag type)
     val deletedRows: Map<Pair<String, ReaderTagType>, ReaderPostList>
 )
+
+enum class FollowUrlResult { FOLLOWED, ALREADY_FOLLOWING, FAILED }

@@ -18,6 +18,7 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.FollowUrlResult
 import org.wordpress.android.ui.reader.repository.ReaderSubsEvent
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
 import org.wordpress.android.ui.reader.repository.UpdateTask
@@ -200,35 +201,38 @@ class ReaderSubsViewModel @Inject constructor(
     }
 
     private fun addAsUrl(entry: String) {
-        val url = repository.normalizeEntryUrl(entry)
-        when {
-            // not a valid URL, so add the original entry as a tag
-            url == null -> addAsTag(entry)
-            repository.isFollowedUrl(url) -> showMessage(R.string.reader_toast_err_already_follow_this_blog)
-            checkConnection() -> followNewUrl(url)
+        // not a valid URL, so add the original entry as a tag
+        val url = repository.normalizeEntryUrl(entry) ?: return addAsTag(entry)
+        _uiState.update { it.copy(isAdding = true) }
+        launch {
+            when {
+                repository.isFollowedUrl(url) -> showMessage(R.string.reader_toast_err_already_follow_this_blog)
+                checkConnection() -> followNewUrl(url)
+            }
+            _uiState.update { it.copy(isAdding = false) }
         }
     }
 
-    private fun followNewUrl(url: String) {
-        _uiState.update { it.copy(isAdding = true) }
-        launch {
-            val failedStatusCode = repository.checkUrlReachable(url)
-            if (failedStatusCode != null) {
-                _uiState.update { it.copy(isAdding = false) }
-                showMessage(getUrlErrorMessage(failedStatusCode))
-                return@launch
-            }
-            val succeeded = repository.followUrl(url)
-            _uiState.update { it.copy(isAdding = false) }
-            if (succeeded) {
+    private suspend fun followNewUrl(url: String) {
+        val failedStatusCode = repository.checkUrlReachable(url)
+        if (failedStatusCode != null) {
+            showMessage(getUrlErrorMessage(failedStatusCode))
+            return
+        }
+        when (repository.followUrl(url)) {
+            FollowUrlResult.FOLLOWED -> {
                 clearEntry()
                 showMessage(R.string.reader_label_blog_subscribed)
                 loadSites()
                 // the site may belong to a tag we don't have yet, and the filter sheet lists the followed sites
                 requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
-            } else {
-                showMessage(R.string.reader_toast_err_unable_to_follow_blog)
             }
+            // followed under another URL, which the lookup just saved, so it shows up even if the list was stale
+            FollowUrlResult.ALREADY_FOLLOWING -> {
+                showMessage(R.string.reader_toast_err_already_follow_this_blog)
+                loadSites()
+            }
+            FollowUrlResult.FAILED -> showMessage(R.string.reader_toast_err_unable_to_follow_blog)
         }
     }
 
