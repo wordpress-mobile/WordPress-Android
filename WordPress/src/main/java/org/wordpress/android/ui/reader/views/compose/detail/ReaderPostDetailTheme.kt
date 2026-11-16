@@ -6,7 +6,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
@@ -23,16 +22,16 @@ internal val LocalReadingTextColor = staticCompositionLocalOf { Color.Unspecifie
 /**
  * The app's M3 theme with the reading theme's background and text colors, as the `ReaderTheme.*` View styles apply
  * them to the native parts of the post detail. The system theme leaves the app's colors alone.
+ *
+ * [themeValues] are resolved by the caller, once for all of a screen's compositions.
  */
 @Composable
 fun ReaderPostDetailTheme(
-    readingPreferences: ReaderReadingPreferences,
+    theme: ReaderReadingPreferences.Theme,
+    themeValues: ReaderReadingPreferences.ThemeValues,
     content: @Composable () -> Unit
 ) {
     AppThemeM3WithoutBackground {
-        val theme = readingPreferences.theme
-        val context = LocalContext.current
-        val themeValues = remember(theme) { ReaderReadingPreferences.ThemeValues.from(context, theme) }
         val baseScheme = MaterialTheme.colorScheme
         val colorScheme = remember(themeValues, baseScheme) {
             if (theme == ReaderReadingPreferences.Theme.SYSTEM) {

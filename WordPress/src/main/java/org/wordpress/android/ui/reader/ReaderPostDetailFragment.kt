@@ -25,6 +25,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.platform.ComposeView
@@ -34,7 +35,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -110,10 +113,12 @@ import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
+import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
@@ -147,6 +152,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var customViewContainer: FrameLayout
 
     private lateinit var chrome: ReaderPostDetailChromeState
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     /** Where each related posts section was last laid out, keyed by whether it's the global one */
     private val relatedPostsCoordinates = mutableMapOf<Boolean, LayoutCoordinates>()
@@ -281,6 +287,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // from the context's attributes, and the dialogs and sheets this screen opens are themed by it
         val readingPreferences = getReadingPreferences()
         val themedContext = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
+        val theme = readingPreferences.theme
+        val themeValues = ReaderReadingPreferences.ThemeValues.from(themedContext, theme)
 
         val bodyBinding = ReaderPostDetailBodyBinding.inflate(inflater.cloneInContext(themedContext))
         scrollView = bodyBinding.scrollViewReader
@@ -294,17 +302,27 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             setBackgroundColor(CUSTOM_VIEW_BACKGROUND)
             visibility = View.GONE
         }
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(bodyBinding.swipeToRefresh) {
+            if (isAdded) {
+                if (commentsSnippetFeatureConfig.isEnabled()) {
+                    conversationViewModel.onRefresh()
+                }
+                viewModel.onRefreshPost()
+            }
+        }
         chrome = ReaderPostDetailChromeState(
             canScroll = { scrollView.canScrollVertically(1) || scrollView.canScrollVertically(-1) }
         )
 
         bodyBinding.headerComposeView.setContent {
-            ReaderPostDetailTheme(readingPreferences) { Header(readingPreferences) }
+            ReaderPostDetailTheme(theme, themeValues) { Header(readingPreferences) }
         }
         val isLikesEnabled = likesEnhancementsFeatureConfig.isEnabled()
         val isSnippetEnabled = commentsSnippetFeatureConfig.isEnabled()
         bodyBinding.footerComposeView.setContent {
-            ReaderPostDetailTheme(readingPreferences) { Footer(readingPreferences, isLikesEnabled, isSnippetEnabled) }
+            ReaderPostDetailTheme(theme, themeValues) {
+                Footer(readingPreferences, isLikesEnabled, isSnippetEnabled)
+            }
         }
 
         // hides the toolbar of NotificationsDetailActivity, which this screen's own top bar replaces
@@ -313,7 +331,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return ComposeView(themedContext).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                ReaderPostDetailTheme(readingPreferences) {
+                ReaderPostDetailTheme(theme, themeValues) {
                     val uiState by viewModel.uiState.observeAsState()
                     val isPostBlocked by viewModel.postBlocked.observeAsState(false)
                     ReaderPostDetailScreen(
@@ -332,10 +350,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Composable
     private fun Header(readingPreferences: ReaderReadingPreferences) {
-        val uiState by viewModel.uiState.observeAsState()
-        (uiState as? ReaderPostDetailsUiState)?.let { state ->
-            ReaderPostDetailHeader(state.headerUiState, readingPreferences, viewModel::handleHeaderAction)
-        }
+        // only the header's own state, so the rest of the post's state changing (a like, the more menu) skips it
+        val headerState = remember {
+            viewModel.uiState.map { (it as? ReaderPostDetailsUiState)?.headerUiState }.distinctUntilChanged()
+        }.observeAsState().value
+        headerState?.let { ReaderPostDetailHeader(it, readingPreferences, viewModel::handleHeaderAction) }
     }
 
     @Composable
@@ -353,7 +372,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             null
         }
         ReaderPostDetailFooter(
-            detailsState = uiState as? ReaderPostDetailsUiState,
+            detailsState = currentDetailsState(uiState),
             hasWebViewContent = chrome.hasWebViewContent,
             likesState = likesState,
             commentSnippetState = commentSnippetState,
@@ -387,15 +406,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // lambdas rather than bound references, which would read the view model before the fragment is attached
         onMoreDismiss = { viewModel.onMoreMenuDismissed() },
         onMoreItemClick = { type -> viewModel.onMoreMenuItemClicked(type) },
-        onRefresh = {
-            if (isAdded) {
-                chrome.isRefreshing = true
-                if (commentsSnippetFeatureConfig.isEnabled()) {
-                    conversationViewModel.onRefresh()
-                }
-                viewModel.onRefreshPost()
-            }
-        },
         onSignInClick = ::signIn,
         onOpenInBrowserClick = {
             viewModel.interceptedUri?.let { uri ->
@@ -412,11 +422,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (isAdded) viewModel.onLikesClicked()
         },
         onTagsExpandToggled = { readerTracker.track(AnalyticsTracker.Stat.READER_CHIPS_MORE_TOGGLED) },
+        onCommentImageClick = ::showCommentImage,
         onRelatedPostsPositioned = { isGlobal, coordinates ->
             relatedPostsCoordinates[isGlobal] = coordinates
             trackRelatedPostsIfShowing()
         },
     )
+
+    private fun showCommentImage(imageUrl: String) {
+        val options = EnumSet.noneOf(PhotoViewerOption::class.java)
+        if (viewModel.post?.isPrivate == true) {
+            options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        }
+        ReaderActivityLauncher.showReaderPhotoViewer(requireActivity(), imageUrl, null, null, options, 0, 0)
+    }
 
     private fun signIn() {
         viewModel.interceptedUri?.let { readerTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, it) }
@@ -943,7 +962,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         hasTrackedGlobalRelatedPosts = false
         hasTrackedLocalRelatedPosts = false
 
-        // hides what's below the body - the tags, likers and comments - until the new post's body is laid out
+        // hides what's below the body until the new post's state arrives and its body is laid out
+        chrome.replacedState = viewModel.uiState.value
         chrome.hasWebViewContent = false
         removeWebViewLayoutListener()
 
@@ -959,7 +979,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * already tracked it
      */
     private fun trackRelatedPostsIfShowing() {
-        val state = viewModel.uiState.value as? ReaderPostDetailsUiState ?: return
+        val state = currentDetailsState(viewModel.uiState.value) ?: return
         if (!hasTrackedGlobalRelatedPosts && isScrolledIntoView(isGlobal = true)) {
             hasTrackedGlobalRelatedPosts = true
             AppLog.d(T.READER, "reader post detail > global related posts rendered")
@@ -972,6 +992,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             state.localRelatedPosts?.railcarJsonStrings?.forEach { it?.let(readerTracker::trackRailcar) }
         }
     }
+
+    /**
+     * The details state, unless it's still that of a post replaced in place, whose related posts and other details
+     * mustn't show below the new post or be tracked for it
+     */
+    private fun currentDetailsState(uiState: UiState?) =
+        (uiState as? ReaderPostDetailsUiState)?.takeUnless { it === chrome.replacedState }
 
     /*
      * returns True if the related posts section is showing and at least partly scrolled into view
@@ -1017,7 +1044,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun onPostRefreshed(refreshed: PostRefreshed) {
-        chrome.isRefreshing = false
+        swipeToRefreshHelper.isRefreshing = false
         val post = refreshed.post ?: return
         if (commentsSnippetFeatureConfig.isEnabled()) {
             conversationViewModel.onUpdatePost(post.blogId, post.postId)

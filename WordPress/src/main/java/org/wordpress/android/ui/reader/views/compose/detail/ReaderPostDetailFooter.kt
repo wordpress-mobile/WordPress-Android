@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -88,6 +89,7 @@ class ReaderPostDetailFooterActions(
     val onExcerptFooterClick: (String) -> Unit,
     val onLikesClick: () -> Unit,
     val onTagsExpandToggled: () -> Unit,
+    val onCommentImageClick: (String) -> Unit,
     /** Reports where a related posts section is, so the fragment can tell when it's scrolled into view */
     val onRelatedPostsPositioned: (isGlobal: Boolean, coordinates: LayoutCoordinates) -> Unit,
 )
@@ -124,7 +126,7 @@ fun ReaderPostDetailFooter(
             Likers(likesState, actions.onLikesClick)
         }
         if (hasWebViewContent && commentSnippetState != null) {
-            CommentSnippet(commentSnippetState, followConversationState)
+            CommentSnippet(commentSnippetState, followConversationState, actions.onCommentImageClick)
         }
         Column(modifier = Modifier.padding(horizontal = margin)) {
             RelatedPosts(detailsState?.localRelatedPosts, isGlobal = false, actions.onRelatedPostsPositioned)
@@ -183,7 +185,8 @@ private fun Tags(
     onExpandToggled: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isExpanded by rememberSaveable(tags.map { it.slug }) { mutableStateOf(false) }
+    val slugs = remember(tags) { tags.map { it.slug } }
+    var isExpanded by rememberSaveable(slugs) { mutableStateOf(false) }
     val textColor = LocalReadingTextColor.current
     val fontFamily = readingPreferences.fontFamily.toComposeFontFamily()
     val fontSizeMultiplier = readingPreferences.fontSize.multiplier
@@ -277,8 +280,11 @@ private fun CollapsedTags(
     modifier: Modifier,
 ) {
     val spacing = with(LocalDensity.current) { Margin.Medium.value.roundToPx() }
-    // built here rather than in the measure block, so a remeasure reuses it and doesn't recompose every chip
+    // built here rather than in the measure block, so a remeasure reuses them rather than recomposing every chip;
+    // the overflow chip's content is kept per count for the same reason
     val tagChips: @Composable () -> Unit = { tags.forEach { tagChip(it) } }
+    val overflowChips = remember(overflowChip) { mutableMapOf<Int, @Composable () -> Unit>() }
+    fun overflowContent(hiddenCount: Int) = overflowChips.getOrPut(hiddenCount) { { overflowChip(hiddenCount) } }
     SubcomposeLayout(modifier = modifier.fillMaxWidth()) { constraints ->
         val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val chips = subcompose("tags", tagChips).map { it.measure(looseConstraints) }
@@ -296,10 +302,10 @@ private fun CollapsedTags(
         var visibleCount = countFitting(constraints.maxWidth)
         val overflow = if (visibleCount < chips.size) {
             // make room for the widest the overflow chip can be, then count what's left
-            val widestOverflow = subcompose("overflowMeasure") { overflowChip(chips.size) }
+            val widestOverflow = subcompose("overflowMeasure", overflowContent(chips.size))
                 .first().measure(looseConstraints)
             visibleCount = countFitting(constraints.maxWidth - widestOverflow.width - spacing).coerceAtLeast(1)
-            subcompose("overflow") { overflowChip(chips.size - visibleCount) }.first().measure(looseConstraints)
+            subcompose("overflow", overflowContent(chips.size - visibleCount)).first().measure(looseConstraints)
         } else {
             null
         }
@@ -319,8 +325,14 @@ private fun CollapsedTags(
 private fun Likers(state: TrainOfFacesUiState, onClick: () -> Unit) {
     val avatarSize = dimensionResource(R.dimen.avatar_sz_small)
     val avatarSizePx = with(LocalDensity.current) { avatarSize.roundToPx() }
-    val avatars = state.engageItemsList.filterIsInstance<AvatarItem>()
-    val label = state.engageItemsList.filterIsInstance<TrailingLabelTextItem>().firstOrNull()
+    val avatarModels = remember(state.engageItemsList, avatarSizePx) {
+        state.engageItemsList.filterIsInstance<AvatarItem>().map {
+            TrainOfIconsModel(WPAvatarUtils.rewriteAvatarUrl(it.userAvatarUrl, avatarSizePx))
+        }
+    }
+    val label = remember(state.engageItemsList) {
+        state.engageItemsList.filterIsInstance<TrailingLabelTextItem>().firstOrNull()
+    }
     val description = uiStringText(state.contentDescription)
     Row(
         modifier = Modifier
@@ -345,11 +357,9 @@ private fun Likers(state: TrainOfFacesUiState, onClick: () -> Unit) {
             )
             return@Row
         }
-        if (avatars.isNotEmpty()) {
+        if (avatarModels.isNotEmpty()) {
             TrainOfIcons(
-                iconModels = avatars.map {
-                    TrainOfIconsModel(WPAvatarUtils.rewriteAvatarUrl(it.userAvatarUrl, avatarSizePx))
-                },
+                iconModels = avatarModels,
                 iconSize = avatarSize,
                 modifier = Modifier.padding(end = Margin.Medium.value),
             )
@@ -367,7 +377,11 @@ private fun Likers(state: TrainOfFacesUiState, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CommentSnippet(state: CommentSnippetUiState, followState: FollowConversationUiState?) {
+private fun CommentSnippet(
+    state: CommentSnippetUiState,
+    followState: FollowConversationUiState?,
+    onImageClick: (String) -> Unit,
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -396,12 +410,12 @@ private fun CommentSnippet(state: CommentSnippetUiState, followState: FollowConv
             modifier = Modifier.padding(bottom = Margin.Large.value),
             color = colorResource(R.color.reader_separator),
         )
-        state.snippetItems.forEach { item -> CommentSnippetItem(item) }
+        state.snippetItems.forEach { item -> CommentSnippetItem(item, onImageClick) }
     }
 }
 
 @Composable
-private fun CommentSnippetItem(item: CommentSnippetItemState) {
+private fun CommentSnippetItem(item: CommentSnippetItemState, onImageClick: (String) -> Unit) {
     val margin = dimensionResource(R.dimen.reader_detail_margin)
     when (item) {
         is CommentSnippetItemState.LoadingState -> Box(
@@ -412,7 +426,7 @@ private fun CommentSnippetItem(item: CommentSnippetItemState) {
         ) {
             CircularProgressIndicator()
         }
-        is CommentSnippetItemState.CommentState -> SnippetComment(item)
+        is CommentSnippetItemState.CommentState -> SnippetComment(item, onImageClick)
         is CommentSnippetItemState.ButtonState -> OutlinedButton(
             onClick = { item.onCommentSnippetClicked(item.postId, item.blogId) },
             modifier = Modifier.fillMaxWidth(),
@@ -432,7 +446,7 @@ private fun CommentSnippetItem(item: CommentSnippetItemState) {
 }
 
 @Composable
-private fun SnippetComment(comment: CommentSnippetItemState.CommentState) {
+private fun SnippetComment(comment: CommentSnippetItemState.CommentState, onImageClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(bottom = Margin.Large.value)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CircleAvatar(
@@ -461,6 +475,7 @@ private fun SnippetComment(comment: CommentSnippetItemState.CommentState) {
         CommentHtmlBody(
             html = comment.commentText.ifBlank { stringResource(R.string.comment_unable_to_show_error) },
             modifier = Modifier.padding(top = Margin.Small.value),
+            onImageClick = onImageClick,
         )
     }
 }

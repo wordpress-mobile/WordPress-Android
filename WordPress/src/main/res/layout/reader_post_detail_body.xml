@@ -2,74 +2,83 @@
 
 <!--
     The scrolling body of ReaderPostDetailFragment, hosted in its Compose chrome. It stays a View because a
-    WebView can't be measured inside a Compose scroll container.
+    WebView can't be measured inside a Compose scroll container. Pull to refresh stays a View too: Compose's
+    pull to refresh only hears of a release that's fast enough to fling the NestedScrollView.
 -->
-<org.wordpress.android.widgets.WPScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_view_reader"
+    android:id="@+id/swipe_to_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:scrollbarStyle="insideOverlay"
-    android:scrollbars="vertical"
-    android:visibility="invisible">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <org.wordpress.android.widgets.WPScrollView
+        android:id="@+id/scroll_view_reader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/margin_extra_large">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        android:visibility="invisible">
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/header_compose_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/reader_detail_margin"
-            android:layout_marginEnd="@dimen/reader_detail_margin" />
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/margin_extra_large">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/reader_detail_margin"
-            android:layout_marginEnd="@dimen/reader_detail_margin">
-
-            <!--
-                saveEnabled is off because the WebView's saved state (its serialized back/forward
-                list) can reach megabytes and overflow the saved-state Binder transaction, crashing
-                with TransactionTooLargeException. The post is always re-rendered from local data
-                by ReaderPostRenderer, so this state is never used on restore.
-            -->
-            <org.wordpress.android.ui.reader.views.ReaderWebView
-                android:id="@+id/reader_webview"
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/header_compose_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:saveEnabled="false"
-                android:scrollbars="none" />
+                android:layout_marginStart="@dimen/reader_detail_margin"
+                android:layout_marginEnd="@dimen/reader_detail_margin" />
 
-            <ProgressBar
-                android:id="@+id/reader_progress_bar"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/margin_extra_large"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:layout_marginStart="@dimen/reader_detail_margin"
+                android:layout_marginEnd="@dimen/reader_detail_margin">
 
-        </FrameLayout>
+                <!--
+                    saveEnabled is off because the WebView's saved state (its serialized back/forward
+                    list) can reach megabytes and overflow the saved-state Binder transaction, crashing
+                    with TransactionTooLargeException. The post is always re-rendered from local data
+                    by ReaderPostRenderer, so this state is never used on restore.
+                -->
+                <org.wordpress.android.ui.reader.views.ReaderWebView
+                    android:id="@+id/reader_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:saveEnabled="false"
+                    android:scrollbars="none" />
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/footer_compose_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ProgressBar
+                    android:id="@+id/reader_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="@dimen/margin_extra_large"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
-        <!-- keeps the end of the post clear of the bottom bar -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:layout_marginBottom="@dimen/margin_extra_large" />
+            </FrameLayout>
 
-    </LinearLayout>
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/footer_compose_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-</org.wordpress.android.widgets.WPScrollView>
+            <!-- keeps the end of the post clear of the bottom bar -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                android:layout_marginBottom="@dimen/margin_extra_large" />
+
+        </LinearLayout>
+
+    </org.wordpress.android.widgets.WPScrollView>
+
+</org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>

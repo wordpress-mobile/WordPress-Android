@@ -1126,7 +1126,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        private const val OFFSCREEN_PAGE_LIMIT = 2
+        private const val OFFSCREEN_PAGE_LIMIT = 1
         private const val GENERATION_OFFSET = 100_000L
         private const val KEY_PAGER_GENERATION = "pager_generation"
     }

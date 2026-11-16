@@ -58,7 +58,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.views.compose.ReaderShellLayout
 import org.wordpress.android.ui.reader.views.compose.ReaderTopBarScrollConnection
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostMoreMenuItem
-import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 
 private const val ACTION_MAX_WIDTH_DP = 80
 
@@ -74,7 +73,7 @@ data class ReaderPostDetailTopBarState(
 
 /**
  * The parts of the screen driven by the fragment, rather than by the view model's UI state: the WebView body and
- * what waits for it, pull to refresh, fullscreen video and snackbars
+ * what waits for it, fullscreen video and snackbars
  */
 @Stable
 class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
@@ -84,10 +83,14 @@ class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
     /** Whether the WebView has laid out the post's body, which the parts below it wait for */
     var hasWebViewContent by mutableStateOf(false)
 
-    var isRefreshing by mutableStateOf(false)
-
     /** Whether fullscreen video is showing, which hides the top and bottom bars */
     var isCustomViewShowing by mutableStateOf(false)
+
+    /**
+     * The state of the post this screen showed before it was replaced by another in place (a related post, or one
+     * from its post history), which mustn't render below the new post while it loads
+     */
+    var replacedState by mutableStateOf<UiState?>(null)
 
     val snackbarHostState = SnackbarHostState()
 
@@ -102,7 +105,6 @@ class ReaderPostDetailScreenActions(
     val onMoreClick: () -> Unit,
     val onMoreDismiss: () -> Unit,
     val onMoreItemClick: (ReaderPostCardActionType) -> Unit,
-    val onRefresh: () -> Unit,
     val onSignInClick: () -> Unit,
     val onOpenInBrowserClick: () -> Unit,
 )
@@ -134,14 +136,7 @@ fun ReaderPostDetailScreen(
                     TopBar(topBarState, detailsState?.moreMenuItems, isRelatedPost, actions)
                 }
             },
-            content = {
-                ContentListPullToRefreshBox(
-                    isRefreshing = chrome.isRefreshing,
-                    onRefresh = actions.onRefresh,
-                ) {
-                    AndroidView(factory = { body }, modifier = Modifier.fillMaxSize())
-                }
-            },
+            content = { AndroidView(factory = { body }, modifier = Modifier.fillMaxSize()) },
         )
         when (uiState) {
             is LoadingUiState -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
