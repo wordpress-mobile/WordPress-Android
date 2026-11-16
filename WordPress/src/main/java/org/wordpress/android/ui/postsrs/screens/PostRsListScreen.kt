@@ -98,7 +98,7 @@ fun PostRsListScreen(
     density: ContentListDensity = ContentListDensity.COMFORTABLE,
     localDrafts: List<RsLocalDraftUiModel> = emptyList(),
     onOpenLocalDraft: (Int) -> Unit = {},
-    onRetryLocalDraft: (Int) -> Unit = {},
+    onRetryLocalDraft: (Int) -> Boolean = { true },
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -270,7 +270,10 @@ fun PostRsListScreen(
                 isLocalDraftsSheetShown = false
                 onOpenLocalDraft(localId)
             },
-            onRetry = onRetryLocalDraft,
+            onRetry = { localId ->
+                // The snackbar explaining a refused retry is drawn behind the sheet, so close it.
+                if (!onRetryLocalDraft(localId)) isLocalDraftsSheetShown = false
+            },
             onDismiss = { isLocalDraftsSheetShown = false }
         )
     }

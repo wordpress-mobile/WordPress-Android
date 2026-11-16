@@ -856,9 +856,10 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     fun `retry restarts the upload and reloads the drafts`() = test {
         val viewModel = createViewModel()
 
-        viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+        val isStarted = viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
         advanceUntilIdle()
 
+        assertThat(isStarted).isTrue
         verify(localDraftsSource).retry(site, LOCAL_DRAFT_ID)
         verifyBlocking(localDraftsSource) { load(any(), any(), anyOrNull()) }
         verify(analyticsTracker).track(
@@ -873,8 +874,9 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         val viewModel = createViewModel()
 
-        viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+        val isStarted = viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
 
+        assertThat(isStarted).isFalse
         verify(localDraftsSource, never()).retry(any(), any())
     }
 
@@ -885,7 +887,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val viewModel = createViewModel()
 
         viewModel.snackbarMessages.test {
-            viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+            assertThat(viewModel.retryLocalDraft(LOCAL_DRAFT_ID)).isFalse
 
             assertThat(awaitItem().message).isEqualTo("Uploading")
         }

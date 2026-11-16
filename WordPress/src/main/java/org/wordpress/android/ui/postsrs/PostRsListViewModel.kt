@@ -767,21 +767,24 @@ class PostRsListViewModel @Inject constructor(
      * Uploads a local draft whose upload failed again; the change listener reports the result. Refused
      * while it's already uploading: the row keeps its failure until the upload succeeds, so Retry stays
      * on screen, and another tap would queue the post a second time.
+     *
+     * Returns whether the upload was started. When it wasn't, a snackbar says why.
      */
     @MainThread
-    fun retryLocalDraft(localId: Int) {
+    fun retryLocalDraft(localId: Int): Boolean {
         analyticsTracker.track(
             Stat.POST_LIST_BUTTON_PRESSED,
             site,
             mapOf(TRACKS_ACTION to "retry", TRACKS_IS_LOCAL_DRAFT to true)
         )
-        if (localDraftsSource.isUploadingOrQueued(site, localId)) {
-            showDraftUploading()
-            return
+        val isUploading = localDraftsSource.isUploadingOrQueued(site, localId)
+        if (isUploading) showDraftUploading()
+        val isStarted = !isUploading && checkNetwork()
+        if (isStarted) {
+            localDraftsSource.retry(site, localId)
+            reloadLocalDrafts()
         }
-        if (!checkNetwork()) return
-        localDraftsSource.retry(site, localId)
-        reloadLocalDrafts()
+        return isStarted
     }
 
     private fun showDraftUploading() {
