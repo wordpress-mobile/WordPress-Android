@@ -206,7 +206,7 @@ class ReaderSubsViewModel @Inject constructor(
         _uiState.update { it.copy(isAdding = true) }
         launch {
             when {
-                repository.isFollowedUrl(url) -> showMessage(R.string.reader_toast_err_already_follow_this_blog)
+                repository.isFollowedUrl(url) -> showAlreadySubscribed()
                 checkConnection() -> followNewUrl(url)
             }
             _uiState.update { it.copy(isAdding = false) }
@@ -229,7 +229,7 @@ class ReaderSubsViewModel @Inject constructor(
             }
             // followed under another URL, which the lookup just saved, so it shows up even if the list was stale
             FollowUrlResult.ALREADY_FOLLOWING -> {
-                showMessage(R.string.reader_toast_err_already_follow_this_blog)
+                showAlreadySubscribed()
                 loadSites()
             }
             FollowUrlResult.FAILED -> showMessage(R.string.reader_toast_err_unable_to_follow_blog)
@@ -338,9 +338,13 @@ class ReaderSubsViewModel @Inject constructor(
 
     private fun showMessage(@StringRes messageRes: Int) = showMessage(resourceProvider.getString(messageRes))
 
-    private fun showMessage(message: String) {
-        _events.trySend(ReaderSubsUiEvent.ShowMessage(message))
+    private fun showMessage(message: String, isShort: Boolean = false) {
+        _events.trySend(ReaderSubsUiEvent.ShowMessage(message, isShort))
     }
+
+    // a quick heads-up rather than an error, so it doesn't linger like the other messages
+    private fun showAlreadySubscribed() =
+        showMessage(resourceProvider.getString(R.string.reader_toast_err_already_subscribed_to_site), isShort = true)
 
     private fun trackTag(stat: Stat, slug: String) = readerTracker.trackTag(stat, slug, ReaderTracker.SOURCE_SETTINGS)
 
@@ -416,7 +420,7 @@ data class ReaderSubsSite(
 }
 
 sealed class ReaderSubsUiEvent {
-    data class ShowMessage(val message: String) : ReaderSubsUiEvent()
+    data class ShowMessage(val message: String, val isShort: Boolean = false) : ReaderSubsUiEvent()
     data class ShowSitePreview(val blogId: Long, val feedId: Long, val isFollowing: Boolean) : ReaderSubsUiEvent()
     data object HideKeyboard : ReaderSubsUiEvent()
 }

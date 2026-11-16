@@ -294,7 +294,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         viewModel.events.test {
             add("example.com")
 
-            assertThat(awaitItem()).isEqualTo(message(R.string.reader_toast_err_already_follow_this_blog))
+            assertThat(awaitItem()).isEqualTo(alreadySubscribedMessage())
         }
         verify(repository, never()).checkUrlReachable(any())
     }
@@ -309,7 +309,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         viewModel.events.test {
             add("example.wordpress.com")
 
-            assertThat(awaitItem()).isEqualTo(message(R.string.reader_toast_err_already_follow_this_blog))
+            assertThat(awaitItem()).isEqualTo(alreadySubscribedMessage())
         }
         assertThat(viewModel.uiState.value.entry).isEqualTo("example.wordpress.com")
         assertThat(viewModel.uiState.value.isAdding).isFalse()
@@ -351,6 +351,9 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     private fun string(resId: Int) = "string:$resId"
 
     private fun message(resId: Int) = ReaderSubsUiEvent.ShowMessage(string(resId))
+
+    private fun alreadySubscribedMessage() =
+        ReaderSubsUiEvent.ShowMessage(string(R.string.reader_toast_err_already_subscribed_to_site), isShort = true)
 
     private fun tag(slug: String) = ReaderTag(slug, slug, slug, null, ReaderTagType.FOLLOWED)
 
