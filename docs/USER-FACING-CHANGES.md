@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Select several items at once in the Media library**
+  Long-pressing a media item in the Media library starts a selection, and tapping other items adds them to it. A toolbar shows how many are selected and lets you delete them all at once. Before, media could only be deleted one item at a time, from its details screen.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → long-press an item
+  - **Notes:** Deleting asks for confirmation first. Items already being deleted can't be selected. Back, or the toolbar's X, leaves the selection. Media pickers opened from the editor are unaffected.
+
 - **Experimental block editor uploads follow the Media settings**
   Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
   - **Apps:** Both

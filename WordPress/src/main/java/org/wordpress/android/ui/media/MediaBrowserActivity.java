@@ -783,6 +783,11 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         deleteMedia(ids);
     }
 
+    @Override
+    public void onMediaRequestDelete(@NonNull List<Integer> localMediaIds) {
+        deleteMedia(new ArrayList<>(localMediaIds));
+    }
+
     private void showMediaSettings(@NonNull MediaModel media) {
         List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
         ArrayList<String> idList = new ArrayList<>();
@@ -831,7 +836,10 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                     int localMediaId = mediaModel.getId();
                     mMediaGridFragment.removeFromMultiSelect(localMediaId);
                 }
-                break;
+                // a deleted item comes back from the server without its local id, so the grid
+                // can't match it to a tile - reload the whole grid from the store instead
+                reloadMediaGrid();
+                return;
         }
 
         if (event.mediaList.size() == 1) {
@@ -876,7 +884,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         showQuota(true);
     }
 
-    // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
     private void deleteMedia(final ArrayList<Integer> ids) {
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         int processedItemCount = 0;
