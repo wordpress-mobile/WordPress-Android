@@ -834,19 +834,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     /**
      * Only More shows while the post loads, nothing once it fails, and More hides for a blocked post
      */
-    private fun topBarState(uiState: UiState?, isPostBlocked: Boolean): ReaderPostDetailTopBarState {
-        if (uiState is ErrorUiState) return ReaderPostDetailTopBarState(showMore = false)
-        if (uiState !is ReaderPostDetailsUiState) return ReaderPostDetailTopBarState(showMore = !isPostBlocked)
-        val postHasUrl = viewModel.post?.hasUrl() == true
-        return ReaderPostDetailTopBarState(
-            // reading preferences require the feature flag to be on
-            showReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
-            // browse requires the post to have a URL (some feed-based posts don't have one) or an intercepted URI
-            showBrowse = postHasUrl || viewModel.interceptedUri != null,
-            // share requires the post to have a URL
-            showShare = postHasUrl,
-            showMore = !isPostBlocked,
-        )
+    private fun topBarState(uiState: UiState?, isPostBlocked: Boolean): ReaderPostDetailTopBarState = when (uiState) {
+        is ErrorUiState -> ReaderPostDetailTopBarState(showMore = false)
+        is ReaderPostDetailsUiState -> {
+            val postHasUrl = viewModel.post?.hasUrl() == true
+            ReaderPostDetailTopBarState(
+                // reading preferences require the feature flag to be on
+                showReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
+                // browse requires the post to have a URL (some feed-based posts don't have one) or an intercepted URI
+                showBrowse = postHasUrl || viewModel.interceptedUri != null,
+                // share requires the post to have a URL
+                showShare = postHasUrl,
+                showMore = !isPostBlocked,
+            )
+        }
+        else -> ReaderPostDetailTopBarState(showMore = !isPostBlocked)
     }
 
     private fun onBrowseClicked() {
@@ -1004,8 +1006,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * returns True if the related posts section is showing and at least partly scrolled into view
      */
     private fun isScrolledIntoView(isGlobal: Boolean): Boolean {
-        val coordinates = relatedPostsCoordinates[isGlobal]?.takeIf { it.isAttached } ?: return false
-        if (view == null || !scrollView.isShown) return false
+        val coordinates = relatedPostsCoordinates[isGlobal]?.takeIf { it.isAttached }
+        if (coordinates == null || view == null || !scrollView.isShown) return false
         val bounds = coordinates.boundsInWindow()
         val location = IntArray(2)
         scrollView.getLocationInWindow(location)

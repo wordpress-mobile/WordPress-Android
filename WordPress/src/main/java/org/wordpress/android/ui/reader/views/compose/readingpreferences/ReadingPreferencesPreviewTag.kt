@@ -31,10 +31,10 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun ReadingPreferencesPreviewTag(
     text: String,
+    modifier: Modifier = Modifier,
     baseTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     fontSizeMultiplier: Float = 1f,
     fontFamily: FontFamily = FontFamily.Default,
-    modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
 ) {
     val minHeight = dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_height)

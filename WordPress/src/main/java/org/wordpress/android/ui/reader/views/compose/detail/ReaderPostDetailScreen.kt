@@ -97,6 +97,7 @@ class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
     val scrollConnection = ReaderTopBarScrollConnection(canScroll)
 }
 
+@Suppress("LongParameterList")
 class ReaderPostDetailScreenActions(
     val onNavigationClick: () -> Unit,
     val onReadingPreferencesClick: () -> Unit,
