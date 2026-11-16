@@ -16,6 +16,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → Subscriptions
   - **Notes:** It happened intermittently, depending on how fast the app started, and only when the feed had no posts saved on the device.
 
+- **Opening a WordPress.com post link no longer sticks on a spinner**
+  Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
+  - **Apps:** Jetpack
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** A WordPress.com post link opened in the app
+
 - **Swiping between media previews shows the next image right away**
   In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.
   - **Apps:** Both
