@@ -9,12 +9,12 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Plain-text (.txt) files can be uploaded as documents**
-  When choosing a document to upload from the device, .txt files can now be selected and uploaded. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
+  On self-hosted and plugin-enabled WordPress.com sites, .txt files can now be selected and uploaded when choosing a document from the device. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone
   - **Where:** My Site → Media → + → Choose from device; My Site → Media → Documents; editor → File block → Choose from device or Media Library
-  - **Notes:** WordPress.com only accepts .txt uploads on plugin-enabled sites with plan features activated; other WordPress.com sites reject the upload. A .txt file uploaded from the web shows under Documents once the Media library's All list has loaded it.
+  - **Notes:** Other WordPress.com sites still show .txt files greyed out, because WordPress.com only accepts .txt uploads on plugin-enabled sites with plan features activated. A .txt file uploaded from the web shows under Documents once the Media library's All list has loaded it.
 
 - **Swiping between media previews shows the next image right away**
   In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.

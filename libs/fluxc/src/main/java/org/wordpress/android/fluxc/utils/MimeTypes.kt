@@ -88,7 +88,7 @@ class MimeTypes {
      * Free MIME Types
      *
      * The WordPress supported image types based on https://wordpress.com/support/accepted-filetypes/ are:
-     * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .txt (Plain Text), .key (Apple Keynote Presentation), .zip (Archive File Format)
+     * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .key (Apple Keynote Presentation), .zip (Archive File Format)
      * This translates (based on https://android.googlesource.com/platform/frameworks/base/+/cd92588/media/java/android/media/MediaFile.java) to:
      * .pdf - "application/pdf"
      * .doc - "application/msword", "application/doc", "application/ms-doc"
@@ -100,18 +100,24 @@ class MimeTypes {
      * .odt - missing - "application/vnd.oasis.opendocument.text"
      * .xls - "application/excel", "application/x-excel", "application/x-msexcel", "application/vnd.ms-excel"
      * .xlsx - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-     * .txt - "text/plain"
      *
      * Paid / Self hosted MIME Types
      *
      * .key - missing - "application/keynote"
      * .zip (Archive File Format)
      *
+     * Self hosted MIME Types
+     *
+     * .txt - "text/plain". WP.com only accepts it on plugin-enabled (Atomic) sites, which the app treats as
+     * self-hosted, so Simple sites on any plan don't get it.
+     *
      * General comment about each of the properties below.
      *
      * wpComFreeDocumentTypes - all MIME types allowed in the free plans.
      *
-     * wpComPaidAndSelfHostedDocumentTypes - all MIME types allowed for paid plans and self hosted sites.
+     * wpComPaidDocumentTypes - all MIME types allowed for paid plans.
+     *
+     * selfHostedDocumentTypes - all MIME types allowed for self hosted (including Atomic) sites.
      *
      * documentTypes - all MIME types that are available.
      */
@@ -134,16 +140,17 @@ class MimeTypes {
                     listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
                     listOf("xls")
             ),
-            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
-            MimeType(TEXT, Subtype.PLAIN, listOf("txt"))
+            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
     )
 
-    private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes + listOf(
+    private val wpComPaidDocumentTypes = wpComFreeDocumentTypes + listOf(
             MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
             MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
     )
 
-    private val documentTypes = wpComPaidAndSelfHostedDocumentTypes
+    private val selfHostedDocumentTypes = wpComPaidDocumentTypes + MimeType(TEXT, Subtype.PLAIN, listOf("txt"))
+
+    private val documentTypes = selfHostedDocumentTypes
 
     fun isAudioType(type: String?): Boolean {
         return isExpectedMimeType(audioTypes, type)
@@ -219,7 +226,8 @@ class MimeTypes {
 
     private fun getDocumentMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
         return when (plan) {
-            WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> wpComPaidAndSelfHostedDocumentTypes
+            SELF_HOSTED, NO_PLAN_SPECIFIED -> selfHostedDocumentTypes
+            WP_COM_PAID -> wpComPaidDocumentTypes
             WP_COM_FREE -> wpComFreeDocumentTypes
         }
     }

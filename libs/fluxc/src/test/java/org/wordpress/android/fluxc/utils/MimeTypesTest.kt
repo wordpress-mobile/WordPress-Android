@@ -23,7 +23,8 @@ class MimeTypesTest {
     fun `returns all WP_COM_PAID mime types as strings`() {
         val allTypes = mimeTypes.getAllTypes(WP_COM_PAID)
 
-        assertThat(allTypes).isEqualTo(allMimeTypes)
+        // WP.com only accepts .txt on plugin-enabled (Atomic) sites, which use SELF_HOSTED
+        assertThat(allTypes).isEqualTo(allMimeTypes.filterNot { it == "text/plain" }.toTypedArray())
     }
 
     @Test
@@ -70,8 +71,7 @@ class MimeTypesTest {
                         "application/x-excel",
                         "application/vnd.ms-excel",
                         "application/x-msexcel",
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "text/plain"
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
         )
     }
@@ -210,8 +210,8 @@ class MimeTypesTest {
             "application/vnd.ms-excel",
             "application/x-msexcel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "text/plain",
             "application/keynote",
-            "application/zip"
+            "application/zip",
+            "text/plain"
     )
 }
