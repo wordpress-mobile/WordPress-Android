@@ -198,7 +198,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             relatedPostFeaturedImageWidth,
             relatedPostFeaturedImageHeight
         ),
-        featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
+        featuredImageVisibility = post.hasFeaturedImageUrl(),
         featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
         onItemClicked = onItemClicked
     )
