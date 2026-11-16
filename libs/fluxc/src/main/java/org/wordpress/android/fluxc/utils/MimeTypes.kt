@@ -152,6 +152,8 @@ class MimeTypes {
 
     private val documentTypes = selfHostedDocumentTypes
 
+    private val applicationDocumentTypes = documentTypes.filter { it.type == APPLICATION }
+
     fun isAudioType(type: String?): Boolean {
         return isExpectedMimeType(audioTypes, type)
     }
@@ -165,7 +167,7 @@ class MimeTypes {
     }
 
     fun isApplicationType(type: String?): Boolean {
-        return isExpectedMimeType(documentTypes, type)
+        return isExpectedMimeType(applicationDocumentTypes, type)
     }
 
     fun isSupportedAudioType(type: String?): Boolean {
@@ -210,6 +212,11 @@ class MimeTypes {
                 .toSet()
                 .toTypedArray()
     }
+
+    /**
+     * Document MIME types outside application/\*, such as text/plain, which an "application" prefix match misses.
+     */
+    fun getNonApplicationDocumentTypes(): List<String> = (documentTypes - applicationDocumentTypes).toStrings()
 
     fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) =
             (getAudioMimeTypesOnly(plan).toStrings()).toSet().toTypedArray()
