@@ -16,11 +16,17 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.utils.MimeType.Type;
+import org.wordpress.android.fluxc.utils.MimeTypes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MediaSqlUtils {
+    // Matched exactly, since a "text" substring would also match application/vnd.oasis.opendocument.text
+    private static final List<String> NON_APPLICATION_DOCUMENT_TYPES =
+            new MimeTypes().getNonApplicationDocumentTypes();
+
     @NonNull
     public static List<MediaModel> getAllSiteMedia(@NonNull SiteModel siteModel) {
         return getAllSiteMediaQuery(siteModel).getAsModel();
@@ -176,7 +182,9 @@ public class MediaSqlUtils {
     public static List<MediaModel> searchSiteDocuments(
             @NonNull SiteModel siteModel,
             @NonNull String searchTerm) {
-        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, Type.APPLICATION.getValue()).getAsModel();
+        return searchSiteMediaByMimeTypeQuery(
+                siteModel, searchTerm, Type.APPLICATION.getValue(), NON_APPLICATION_DOCUMENT_TYPES
+        ).getAsModel();
     }
 
     @NonNull
@@ -202,10 +210,18 @@ public class MediaSqlUtils {
             @NonNull SiteModel siteModel,
             @NonNull String searchTerm,
             @NonNull String mimeTypePrefix) {
-        return WellSql.select(MediaModel.class)
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, mimeTypePrefix, Collections.emptyList());
+    }
+
+    @NonNull
+    private static SelectQuery<MediaModel> searchSiteMediaByMimeTypeQuery(
+            @NonNull SiteModel siteModel,
+            @NonNull String searchTerm,
+            @NonNull String mimeTypePrefix,
+            @NonNull List<String> exactMimeTypes) {
+        return withMimeType(WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()), mimeTypePrefix, exactMimeTypes)
                 .beginGroup()
                     .contains(MediaModelTable.TITLE, searchTerm)
                     .or().contains(MediaModelTable.FILE_NAME, searchTerm)
@@ -273,19 +289,41 @@ public class MediaSqlUtils {
 
     @NonNull
     private static SelectQuery<MediaModel> getSiteDocumentsQuery(@NonNull SiteModel siteModel) {
-        return getSiteMediaByMimeTypeQuery(siteModel, Type.APPLICATION.getValue());
+        return getSiteMediaByMimeTypeQuery(siteModel, Type.APPLICATION.getValue(), NON_APPLICATION_DOCUMENT_TYPES);
     }
 
     @NonNull
     private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(
             @NonNull SiteModel siteModel,
             @NonNull String mimeTypePrefix) {
-        return WellSql.select(MediaModel.class)
+        return getSiteMediaByMimeTypeQuery(siteModel, mimeTypePrefix, Collections.emptyList());
+    }
+
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(
+            @NonNull SiteModel siteModel,
+            @NonNull String mimeTypePrefix,
+            @NonNull List<String> exactMimeTypes) {
+        return withMimeType(WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()), mimeTypePrefix, exactMimeTypes)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    /**
+     * Adds a MIME type condition: types containing [mimeTypePrefix], plus any of [exactMimeTypes].
+     */
+    @NonNull
+    private static ConditionClauseBuilder<SelectQuery<MediaModel>> withMimeType(
+            @NonNull ConditionClauseBuilder<SelectQuery<MediaModel>> builder,
+            @NonNull String mimeTypePrefix,
+            @NonNull List<String> exactMimeTypes) {
+        builder.beginGroup().contains(MediaModelTable.MIME_TYPE, mimeTypePrefix);
+        for (String mimeType : exactMimeTypes) {
+            builder.or().equals(MediaModelTable.MIME_TYPE, mimeType);
+        }
+        return builder.endGroup();
     }
 
     @NonNull

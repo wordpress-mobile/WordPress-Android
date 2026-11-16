@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → tap a post; Notifications → tap a new-post notification
   - **Notes:** The post body itself is unchanged.
 
+- **Plain-text (.txt) files can be uploaded as documents**
+  On self-hosted and plugin-enabled WordPress.com sites, .txt files can now be selected and uploaded when choosing a document from the device. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → + → Choose from device; My Site → Media → Documents; editor → File block → Choose from device or Media Library
+  - **Notes:** Other WordPress.com sites still show .txt files greyed out, because WordPress.com only accepts .txt uploads on plugin-enabled sites with plan features activated. A .txt file uploaded from the web shows under Documents once the Media library's All list has loaded it.
+
 - **Posts list shows posts that haven't been uploaded**
   Posts saved on the device that never reached the site, because they were written offline or their upload failed, are reachable from the Posts list again. A banner above the tabs says how many there are ("2 posts haven't been uploaded"); tapping it opens a sheet listing each one with its title and when it was last changed. Tapping a post opens it in the editor. A post whose upload failed reads "Upload failed" and offers Retry.
   - **Apps:** Both
