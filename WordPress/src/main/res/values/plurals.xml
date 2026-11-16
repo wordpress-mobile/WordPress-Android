@@ -12,8 +12,8 @@
 
     <!-- Posts list: banner above the tabs for posts saved on the device that never reached the site -->
     <plurals name="post_rs_local_drafts_banner">
-        <item quantity="one">%1$d draft hasn\'t been uploaded</item>
-        <item quantity="other">%1$d drafts haven\'t been uploaded</item>
+        <item quantity="one">%1$d post hasn\'t been uploaded</item>
+        <item quantity="other">%1$d posts haven\'t been uploaded</item>
     </plurals>
 
     <!-- AI Bot Support - Time formatting plurals -->
