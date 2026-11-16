@@ -7,7 +7,9 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -66,6 +68,9 @@ class ReaderPostRepository @Inject constructor(
     @Named(APPLICATION_SCOPE) private val applicationScope: CoroutineScope,
     private val siteStore: SiteStore,
 ) {
+    // runs on the app scope's dispatcher, under a supervisor of its own
+    private val outlivingScope = CoroutineScope(applicationScope.coroutineContext.minusKey(Job) + SupervisorJob())
+
     /**
      * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
      * It always fetches the most recent posts, saves them to the local DB and returns the latest from that cache.
@@ -309,13 +314,14 @@ class ReaderPostRepository @Inject constructor(
     }
 
     /**
-     * Requests the post at [path] with its site and likes. The request and the save run in the app scope, so a
-     * cancelled caller still leaves the post stored for next time.
+     * Requests the post at [path] with its site and likes. A cancelled caller still leaves the post stored for next
+     * time.
      */
-    private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult = applicationScope.async {
+    private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult = outlivingCaller {
         val result = getWithLocale(client, "$path/?meta=site,likes")
-        val json = result.response
-            ?: return@async FetchPostResult.Failure((result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0)
+        val json = result.response ?: return@outlivingCaller FetchPostResult.Failure(
+            (result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0
+        )
         withContext(ioDispatcher) {
             val post = ReaderPost.fromJson(json)
             // keep the stored publish date, so editorial dates (e.g. Freshly Pressed "displayed_on") aren't
@@ -325,17 +331,18 @@ class ReaderPostRepository @Inject constructor(
             savePostLikes(post, json)
             FetchPostResult.Success(post)
         }
-    }.await()
+    }
 
     /**
      * Fetches the latest version of the stored post and copies its counts, flags and text into [localPost] and
-     * the database. The post only counts as changed if those differ, or if its likes have changed.
+     * the database. The post only counts as changed if those differ, or if its likes have changed. A cancelled
+     * caller still leaves the changes stored.
      */
-    suspend fun refreshPost(localPost: ReaderPost): UpdateResult {
+    suspend fun refreshPost(localPost: ReaderPost): UpdateResult = outlivingCaller {
         val path = "read/sites/${localPost.blogId}/posts/${localPost.postId}/?meta=site,likes"
-        val json = getWithLocale(getRestClientUtilsV1_2(), path).response ?: return UpdateResult.FAILED
+        val json = getWithLocale(getRestClientUtilsV1_2(), path).response ?: return@outlivingCaller UpdateResult.FAILED
 
-        return withContext(ioDispatcher) {
+        withContext(ioDispatcher) {
             val serverPost = ReaderPost.fromJson(json)
             // this endpoint doesn't return the feed IDs, which would make isSamePost return false
             if (serverPost.feedId == 0L) serverPost.feedId = localPost.feedId
@@ -412,6 +419,13 @@ class ReaderPostRepository @Inject constructor(
         }
         WordPress.requestQueue?.add(request)
     }
+
+    /**
+     * Runs [block] to completion even if the caller is cancelled, so a response still gets saved. A failure only
+     * reaches the caller: [outlivingScope] is a supervisor, so it can't cancel the scope's other work.
+     */
+    private suspend fun <T> outlivingCaller(block: suspend CoroutineScope.() -> T): T =
+        outlivingScope.async(block = block).await()
 
     private suspend fun getWithLocale(client: RestClientUtils, path: String) =
         awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
