@@ -70,6 +70,7 @@ public class MediaPreviewFragment extends Fragment {
     private boolean mIsVideo;
     private boolean mIsAudio;
     private boolean mAutoPlay;
+    private boolean mImageLoadFailed;
     private int mPosition;
 
     private SiteModel mSite;
@@ -193,6 +194,10 @@ public class MediaPreviewFragment extends Fragment {
         super.onStart();
         if (showAudioOrVideo()) {
             initializePlayer();
+        } else {
+            // load the image as soon as the fragment is started rather than waiting for it to become
+            // the active page, so the pager's adjacent images are ready before the user swipes to them
+            loadImage(mContentUri, mImageView);
         }
     }
 
@@ -214,14 +219,18 @@ public class MediaPreviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (showAudioOrVideo()) {
-            if (mPlayer == null) initializePlayer();
+            if (mPlayer == null) {
+                initializePlayer();
+            }
             // the player is released when this page is stopped and rebuilt when it starts again,
             // and the rebuilt one shows its controls while the fragment isn't resumed yet - so the
             // activity is told where they stand now that the page is back in front of the user
             if (mIsVideo && mListener != null) {
                 mListener.onVideoControlsVisibilityChanged(mExoPlayerView.isControllerVisible());
             }
-        } else {
+        } else if (mImageLoadFailed) {
+            // the pre-load that ran while this page was offscreen failed, so try again now that
+            // the user has swiped to it
             loadImage(mContentUri, mImageView);
         }
     }
@@ -245,9 +254,9 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
-    private void showLoadingError() {
+    private void showLoadingError(boolean show) {
         if (isAdded()) {
-            getView().findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.text_error).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -259,9 +268,18 @@ public class MediaPreviewFragment extends Fragment {
             return;
         }
 
+        // the video thumbnail shares this method, but only the main image is retried on selection
+        final boolean isMainImage = imageView == mImageView;
+
         if (TextUtils.isEmpty(mediaUri)) {
-            showLoadingError();
+            // an empty URI won't start working on its own, so don't mark it for retry
+            showLoadingError(true);
             return;
+        }
+
+        if (isMainImage) {
+            mImageLoadFailed = false;
+            showLoadingError(false);
         }
 
         imageView.setVisibility(View.VISIBLE);
@@ -291,13 +309,16 @@ public class MediaPreviewFragment extends Fragment {
 
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        if (isMainImage) {
+                            mImageLoadFailed = true;
+                        }
                         if (isAdded()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);
                             }
                             showProgress(false);
                             if (!mIsVideo) {
-                                showLoadingError();
+                                showLoadingError(true);
                             }
                         }
                     }
