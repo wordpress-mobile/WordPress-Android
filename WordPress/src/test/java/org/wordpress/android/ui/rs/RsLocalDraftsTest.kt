@@ -234,17 +234,33 @@ class RsLocalDraftsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `a draft uploading or queued is reported as such`() {
+    fun `a draft uploading or queued reports its status`() {
         val post = localDraft()
         whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(post)
         whenever(uploadServiceFacade.isPostUploadingOrQueued(post)).thenReturn(true)
 
-        assertThat(localDrafts.isUploadingOrQueued(site, LOCAL_ID)).isTrue
+        assertThat(localDrafts.uploadingStatus(site, LOCAL_ID)).isEqualTo(PostStatus.DRAFT)
+    }
+
+    @Test
+    fun `a post published offline and uploading reports published`() {
+        val post = localDraft().apply { setStatus("publish") }
+        whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(post)
+        whenever(uploadServiceFacade.isPostUploadingOrQueued(post)).thenReturn(true)
+
+        assertThat(localDrafts.uploadingStatus(site, LOCAL_ID)).isEqualTo(PostStatus.PUBLISHED)
+    }
+
+    @Test
+    fun `a draft that is not uploading has no uploading status`() {
+        whenever(postStore.getPostByLocalPostId(LOCAL_ID)).thenReturn(localDraft())
+
+        assertThat(localDrafts.uploadingStatus(site, LOCAL_ID)).isNull()
     }
 
     @Test
     fun `a draft that is gone is not uploading`() {
-        assertThat(localDrafts.isUploadingOrQueued(site, LOCAL_ID)).isFalse
+        assertThat(localDrafts.uploadingStatus(site, LOCAL_ID)).isNull()
     }
 
     // endregion

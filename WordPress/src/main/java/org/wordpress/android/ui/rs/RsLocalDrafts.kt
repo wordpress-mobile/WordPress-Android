@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PostUtils
@@ -66,11 +67,14 @@ class RsLocalDrafts @Inject constructor(
     fun open(site: SiteModel, localId: Int): PostModel? = find(site, localId)
 
     /**
-     * Whether the draft is being sent to the server, or is queued to be. PostUploadHandler pushes its
-     * queued copy even after a cancel, so editing it then would race the push.
+     * The post's status while it's being sent to the server, or is queued to be; null otherwise.
+     * PostUploadHandler pushes its queued copy even after a cancel, so editing it then would race the
+     * push. The status lets the caller say "draft" or "post", as the editor's upload snackbar does.
      */
-    fun isUploadingOrQueued(site: SiteModel, localId: Int): Boolean =
-        find(site, localId)?.let { uploadServiceFacade.isPostUploadingOrQueued(it) } ?: false
+    fun uploadingStatus(site: SiteModel, localId: Int): PostStatus? =
+        find(site, localId)
+            ?.takeIf { uploadServiceFacade.isPostUploadingOrQueued(it) }
+            ?.let { PostStatus.fromPost(it) }
 
     /** Starts the upload again; the change listener reports the result. */
     fun retry(site: SiteModel, localId: Int) {

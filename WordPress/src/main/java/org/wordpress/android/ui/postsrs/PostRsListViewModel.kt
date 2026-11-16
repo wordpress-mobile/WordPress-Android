@@ -751,14 +751,14 @@ class PostRsListViewModel @Inject constructor(
             site,
             mapOf(TRACKS_ACTION to "edit", TRACKS_IS_LOCAL_DRAFT to true)
         )
-        val isUploading = localDraftsSource.isUploadingOrQueued(site, localId)
+        val uploadingStatus = localDraftsSource.uploadingStatus(site, localId)
         // Null when it was uploaded or removed since the sheet loaded.
-        val post = if (isUploading) null else localDraftsSource.open(site, localId)
+        val post = if (uploadingStatus != null) null else localDraftsSource.open(site, localId)
         if (post != null) {
             isOpeningLocalDraft = true
             _events.trySend(PostRsListEvent.EditPost(site, post))
         } else {
-            if (isUploading) showDraftUploading()
+            uploadingStatus?.let(::showUploading)
             reloadLocalDrafts()
         }
     }
@@ -777,9 +777,9 @@ class PostRsListViewModel @Inject constructor(
             site,
             mapOf(TRACKS_ACTION to "retry", TRACKS_IS_LOCAL_DRAFT to true)
         )
-        val isUploading = localDraftsSource.isUploadingOrQueued(site, localId)
-        if (isUploading) showDraftUploading()
-        val isStarted = !isUploading && checkNetwork()
+        val uploadingStatus = localDraftsSource.uploadingStatus(site, localId)
+        uploadingStatus?.let(::showUploading)
+        val isStarted = uploadingStatus == null && checkNetwork()
         if (isStarted) {
             localDraftsSource.retry(site, localId)
             reloadLocalDrafts()
@@ -787,8 +787,14 @@ class PostRsListViewModel @Inject constructor(
         return isStarted
     }
 
-    private fun showDraftUploading() {
-        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(R.string.editor_uploading_draft)))
+    /** Words it as the editor's upload snackbar does: a post published or scheduled offline isn't a draft. */
+    private fun showUploading(status: FluxCPostStatus) {
+        val messageResId = if (status == FluxCPostStatus.DRAFT) {
+            R.string.editor_uploading_draft
+        } else {
+            R.string.editor_uploading_post
+        }
+        _snackbarMessages.trySend(RsSnackbarMessage(resourceProvider.getString(messageResId)))
     }
 
     /** Reads the local drafts again, discarding any load still running. */

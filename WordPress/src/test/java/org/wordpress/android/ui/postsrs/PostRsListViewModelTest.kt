@@ -27,6 +27,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
@@ -823,7 +824,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `a local draft that is uploading or queued is not opened`() = test {
-        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(localDraftsSource.uploadingStatus(site, LOCAL_DRAFT_ID)).thenReturn(FluxCPostStatus.DRAFT)
         whenever(resourceProvider.getString(R.string.editor_uploading_draft)).thenReturn("Uploading")
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -882,7 +883,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `retry while the draft is already uploading is refused`() = test {
-        whenever(localDraftsSource.isUploadingOrQueued(site, LOCAL_DRAFT_ID)).thenReturn(true)
+        whenever(localDraftsSource.uploadingStatus(site, LOCAL_DRAFT_ID)).thenReturn(FluxCPostStatus.DRAFT)
         whenever(resourceProvider.getString(R.string.editor_uploading_draft)).thenReturn("Uploading")
         val viewModel = createViewModel()
 
@@ -892,6 +893,19 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             assertThat(awaitItem().message).isEqualTo("Uploading")
         }
         verify(localDraftsSource, never()).retry(any(), any())
+    }
+
+    @Test
+    fun `a post published offline that is uploading is called a post, not a draft`() = test {
+        whenever(localDraftsSource.uploadingStatus(site, LOCAL_DRAFT_ID)).thenReturn(FluxCPostStatus.PUBLISHED)
+        whenever(resourceProvider.getString(R.string.editor_uploading_post)).thenReturn("Post uploading")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.retryLocalDraft(LOCAL_DRAFT_ID)
+
+            assertThat(awaitItem().message).isEqualTo("Post uploading")
+        }
     }
 
     @Test
