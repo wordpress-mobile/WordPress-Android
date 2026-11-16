@@ -697,9 +697,8 @@ class ReaderPostListViewModel @Inject constructor(
         val target = ReaderPostListTarget.Tag(currentTag ?: return@launch)
         // update the current tag if it has no saved posts - this happens on first run. The saved posts are checked
         // rather than [posts] since that's empty until the first load ends
-        if (updateActions.isEmpty() && repository.getPostCount(target) == 0 &&
-            (repository.hasFollowedBlogs() || !hasUpdatedPosts)
-        ) {
+        if (updateActions.isNotEmpty() || repository.getPostCount(target) > 0) return@launch
+        if (repository.hasFollowedBlogs() || !hasUpdatedPosts) {
             requestPosts(target, UpdateAction.REQUEST_NEWER)
         }
     }
