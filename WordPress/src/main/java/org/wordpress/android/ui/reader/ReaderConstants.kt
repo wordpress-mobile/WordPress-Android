@@ -54,7 +54,6 @@ object ReaderConstants {
     const val ARG_SUBS_TAB_POSITION = "subs_tab_position"
     internal const val ARG_IS_FILTERABLE = "is_filterable"
 
-    internal const val KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway"
     internal const val KEY_ALREADY_UPDATED = "already_updated"
     internal const val KEY_ALREADY_REQUESTED = "already_requested"
     internal const val KEY_RESTORE_POSITION = "restore_position"

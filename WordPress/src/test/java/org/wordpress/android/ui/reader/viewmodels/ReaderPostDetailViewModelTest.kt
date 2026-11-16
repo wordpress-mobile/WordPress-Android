@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -81,6 +82,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -92,6 +94,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.PostRefreshed
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
@@ -108,7 +111,6 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
@@ -159,7 +161,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
 
     @Mock
-    private lateinit var eventBusWrapper: EventBusWrapper
+    private lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
     private lateinit var readerSimplePost: ReaderSimplePost
@@ -237,7 +239,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             siteStore,
             accountStore,
             readerTracker,
-            eventBusWrapper,
             wpUrlUtilsWrapper,
             testDispatcher(),
             testDispatcher(),
@@ -250,6 +251,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             commentsSnippetFeatureConfig,
             readerCommentTableWrapper,
             readerCommentRepository,
+            readerPostRepository,
             readingPreferencesFeatureConfig,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
@@ -1245,6 +1247,83 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.onRefreshCommentsData(1, 1)
 
         verify(readerCommentRepository, never()).fetchCommentsForSnippet(any(), any())
+    }
+
+    /* REFRESH POST */
+    @Test
+    fun `given no post, when the post is refreshed, then nothing is fetched`() = test {
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        verify(readerPostRepository, never()).refreshPost(any())
+        assertThat(refreshed).containsExactly(PostRefreshed(post = null, hasNewBody = false))
+    }
+
+    @Test
+    fun `given the server has a new body, when the post is refreshed, then the stored post replaces it`() = test {
+        val post = createDummyReaderPost(1)
+        val storedPost = createDummyReaderPost(1).apply { text = "<p>Edited</p>" }
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).thenReturn(UpdateResult.CHANGED)
+        whenever(readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false)).thenReturn(storedPost)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        assertThat(viewModel.post).isSameAs(storedPost)
+        assertThat(refreshed).containsExactly(PostRefreshed(post = storedPost, hasNewBody = true))
+    }
+
+    @Test
+    fun `given another post is shown by the time a refresh returns, when it returns, then it's dropped`() = test {
+        val post = createDummyReaderPost(1)
+        val relatedPost = createDummyReaderPost(2)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer {
+            viewModel.post = relatedPost
+            UpdateResult.CHANGED
+        }
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        assertThat(viewModel.post).isSameAs(relatedPost)
+        assertThat(refreshed).containsExactly(PostRefreshed(post = null, hasNewBody = false))
+    }
+
+    @Test
+    fun `given the post is unchanged, when the post is refreshed, then the post stays and has no new body`() = test {
+        val post = createDummyReaderPost(1)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).thenReturn(UpdateResult.UNCHANGED)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        assertThat(viewModel.post).isSameAs(post)
+        assertThat(refreshed).containsExactly(PostRefreshed(post = post, hasNewBody = false))
+    }
+
+    @Test
+    fun `given a refresh is running, when another starts, then only the newer one reports back`() = test {
+        val post = createDummyReaderPost(1)
+        val relatedPost = createDummyReaderPost(2)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer { awaitCancellation() }
+        whenever(readerPostRepository.refreshPost(relatedPost)).thenReturn(UpdateResult.UNCHANGED)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+        viewModel.post = relatedPost
+        viewModel.onRefreshPost()
+
+        assertThat(refreshed).containsExactly(PostRefreshed(post = relatedPost))
     }
 
     @Test

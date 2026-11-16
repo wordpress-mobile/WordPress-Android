@@ -86,8 +86,7 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository;
 import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -165,6 +164,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject ImageManager mImageManager;
     @Inject CommentsStore mCommentsStore;
     @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
+    @Inject ReaderPostRepository mReaderPostRepository;
 
     private boolean mIsSubmittingReply = false;
     @Nullable private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -948,35 +948,21 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions
-                        .requestBlogPost(
-                                site.getSiteId(),
-                                comment.getRemotePostId(),
-                                new ReaderActions.OnRequestListener<String>() {
-                                    @Override
-                                    public void onSuccess(String blogUrl) {
-                                        if (!isAdded()) {
-                                            return;
-                                        }
+                mReaderPostRepository.prefetchPost(site.getSiteId(), comment.getRemotePostId(), post -> {
+                    if (!isAdded()) {
+                        return;
+                    }
 
-                                        // update title if it wasn't set above
-                                        if (!hasTitle) {
-                                            String postTitle = ReaderPostTable.getPostTitle(
-                                                    site.getSiteId(),
-                                                    comment.getRemotePostId()
-                                            );
-                                            if (!TextUtils.isEmpty(postTitle)) {
-                                                setPostTitle(binding, comment, postTitle, true);
-                                            } else {
-                                                binding.textPostTitle.setText(R.string.untitled);
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(int statusCode) {
-                                    }
-                                });
+                    // update title if it wasn't set above
+                    if (!hasTitle) {
+                        String postTitle = post.getTitle();
+                        if (!TextUtils.isEmpty(postTitle)) {
+                            setPostTitle(binding, comment, postTitle, true);
+                        } else {
+                            binding.textPostTitle.setText(R.string.untitled);
+                        }
+                    }
+                });
             }
 
             binding.textPostTitle.setOnClickListener(v -> {

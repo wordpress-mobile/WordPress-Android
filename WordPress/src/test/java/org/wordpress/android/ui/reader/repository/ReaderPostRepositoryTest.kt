@@ -43,6 +43,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
             appPrefsWrapper = appPrefsWrapper,
             ioDispatcher = testDispatcher(),
             applicationScope = testScope(),
+            siteStore = mock(),
         )
     }
 

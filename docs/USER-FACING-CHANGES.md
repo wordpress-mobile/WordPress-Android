@@ -16,6 +16,29 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → Saved; the bookmark button on Reader posts
   - **Notes:** Needs a WordPress.com account; without one, posts are still saved only on the device. Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saves the account refuses (it holds at most 1,000) stay on the device, marked "On this device only". A one-time dialog on the first save says saved posts sync across devices; it shows even to people who already saw the old "only on this device" dialog. Signing out removes from the device the saved posts the account holds, and keeps those only on this device. A post saved elsewhere can't be opened offline.
 
+- **Opening a WordPress.com post link no longer sticks on a spinner**
+  Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
+  - **Apps:** Jetpack
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** A WordPress.com post link opened in the app
+
+- **Swiping between media previews shows the next image right away**
+  In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item → tap the image → swipe left or right
+  - **Notes:** Only affects images; audio and video were already prepared ahead of time. Pre-loading reaches one item either side, so a fast swipe through several items can still show a spinner.
+
+- **Experimental block editor uploads follow the Media settings**
+  Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Me → App Settings → Media (Optimize Images, Maximum Image Size, Image Quality, Remove location from media, Optimize Videos, Maximum Video Size, Video Quality); experimental block editor → Add media
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Video optimization stays off unless the user turns it on, as in the classic editors. GIFs always upload unchanged so they keep animating.
+
 - **Reblogging from a site's or tag's post list confirms the result**
   After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
   - **Apps:** Both

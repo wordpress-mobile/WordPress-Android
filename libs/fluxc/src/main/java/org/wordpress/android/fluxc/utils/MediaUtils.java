@@ -119,8 +119,10 @@ public class MediaUtils {
      * Removes location from the Exif information from an image
      *
      * @param imagePath image file path
+     * @return whether the location was removed. False when the file couldn't be rewritten, e.g. a format
+     * ExifInterface can't save or a full disk, in which case the file keeps its location.
      */
-    public static void stripLocation(@Nullable String imagePath) {
+    public static boolean stripLocation(@Nullable String imagePath) {
         if (imagePath != null) {
             try {
                 ExifInterface exifInterface = new ExifInterface(imagePath);
@@ -128,11 +130,13 @@ public class MediaUtils {
                     exifInterface.setAttribute(tag, null);
                 }
                 exifInterface.saveAttributes();
+                return true;
             } catch (IOException e) {
                 AppLog.e(T.MEDIA, "Removing of GPS info from image failed [IO Exception]");
             }
         } else {
             AppLog.e(T.MEDIA, "Removing of GPS info from image failed [Null Image Path]");
         }
+        return false;
     }
 }
