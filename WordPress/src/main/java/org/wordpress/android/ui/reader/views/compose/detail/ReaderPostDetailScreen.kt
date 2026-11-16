@@ -48,6 +48,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
@@ -59,8 +60,6 @@ import org.wordpress.android.ui.reader.views.compose.ReaderTopBarScrollConnectio
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostMoreMenuItem
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 
-private const val DISABLED_ALPHA = 0.38f
-private const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 private const val ACTION_MAX_WIDTH_DP = 80
 
 /**
@@ -79,8 +78,6 @@ data class ReaderPostDetailTopBarState(
  */
 @Stable
 class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
-    var topBar by mutableStateOf(ReaderPostDetailTopBarState())
-
     /** Whether the post's body and the bottom bar are showing, which they aren't while it loads or fails */
     var isPostShown by mutableStateOf(false)
 
@@ -118,6 +115,7 @@ class ReaderPostDetailScreenActions(
 fun ReaderPostDetailScreen(
     chrome: ReaderPostDetailChromeState,
     uiState: UiState?,
+    topBarState: ReaderPostDetailTopBarState,
     isRelatedPost: Boolean,
     actions: ReaderPostDetailScreenActions,
     body: View,
@@ -133,7 +131,7 @@ fun ReaderPostDetailScreen(
             scrollConnection = chrome.scrollConnection,
             topBar = {
                 if (!chrome.isCustomViewShowing) {
-                    TopBar(chrome.topBar, detailsState, isRelatedPost, actions)
+                    TopBar(topBarState, detailsState?.moreMenuItems, isRelatedPost, actions)
                 }
             },
             content = {
@@ -173,11 +171,11 @@ fun ReaderPostDetailScreen(
 @Composable
 private fun TopBar(
     state: ReaderPostDetailTopBarState,
-    detailsState: ReaderPostDetailsUiState?,
+    moreMenuItems: List<ReaderPostCardAction>?,
     isRelatedPost: Boolean,
     actions: ReaderPostDetailScreenActions,
 ) {
-    val iconColor = MaterialTheme.colorScheme.onSurface
+    val contentColor = MaterialTheme.colorScheme.onSurface
     TopAppBar(
         title = {
             if (isRelatedPost) {
@@ -189,20 +187,11 @@ private fun TopBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = actions.onNavigationClick) {
-                if (isRelatedPost) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_cross_white_24dp),
-                        contentDescription = stringResource(R.string.close),
-                        tint = iconColor,
-                    )
-                } else {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
-                        contentDescription = stringResource(R.string.navigate_up_desc),
-                        tint = iconColor,
-                    )
-                }
+            // a related post's X closes it, rather than going back through its post history
+            if (isRelatedPost) {
+                TopBarAction(R.drawable.ic_cross_white_24dp, R.string.close, actions.onNavigationClick)
+            } else {
+                TopBarAction(R.drawable.ic_arrow_left_white_24dp, R.string.navigate_up_desc, actions.onNavigationClick)
             }
         },
         actions = {
@@ -222,9 +211,8 @@ private fun TopBar(
             if (state.showMore) {
                 Box {
                     TopBarAction(R.drawable.ic_ellipsis_vertical_white_24dp, R.string.more, actions.onMoreClick)
-                    val items = detailsState?.moreMenuItems
-                    DropdownMenu(expanded = items != null, onDismissRequest = actions.onMoreDismiss) {
-                        items?.forEach { item ->
+                    DropdownMenu(expanded = moreMenuItems != null, onDismissRequest = actions.onMoreDismiss) {
+                        moreMenuItems?.forEach { item ->
                             ReaderPostMoreMenuItem(item) { actions.onMoreItemClick(it.type) }
                         }
                     }
@@ -233,7 +221,9 @@ private fun TopBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = iconColor,
+            titleContentColor = contentColor,
+            navigationIconContentColor = contentColor,
+            actionIconContentColor = contentColor,
         ),
     )
 }
@@ -241,11 +231,7 @@ private fun TopBar(
 @Composable
 private fun TopBarAction(@DrawableRes iconRes: Int, @StringRes labelRes: Int, onClick: () -> Unit) {
     IconButton(onClick = onClick) {
-        Icon(
-            painter = painterResource(iconRes),
-            contentDescription = stringResource(labelRes),
-            tint = MaterialTheme.colorScheme.onSurface,
-        )
+        Icon(painter = painterResource(iconRes), contentDescription = stringResource(labelRes))
     }
 }
 

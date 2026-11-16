@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -30,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,7 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
@@ -56,7 +54,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
@@ -75,19 +72,17 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.Comm
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.compose.comments.AuthorBadge
+import org.wordpress.android.ui.reader.views.compose.postcard.CircleAvatar
 import org.wordpress.android.ui.reader.views.compose.comments.FollowConversationActions
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesPreviewTag
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.WPAvatarUtils
-import org.wordpress.android.util.image.ImagePlaceholderManager
 import org.wordpress.android.util.image.ImageType
 
-private const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 private const val RELATED_POST_MAX_LINES = 3
 private const val RELATED_POST_IMAGE_RATIO = 16f / 9f
 
-private val avatarPlaceholders = ImagePlaceholderManager()
 
 class ReaderPostDetailFooterActions(
     val onExcerptFooterClick: (String) -> Unit,
@@ -189,10 +184,7 @@ private fun Tags(
     modifier: Modifier = Modifier,
 ) {
     var isExpanded by rememberSaveable(tags.map { it.slug }) { mutableStateOf(false) }
-    val context = LocalContext.current
-    val textColor = remember(readingPreferences.theme) {
-        Color(ReaderReadingPreferences.ThemeValues.from(context, readingPreferences.theme).intTextColor)
-    }
+    val textColor = LocalReadingTextColor.current
     val fontFamily = readingPreferences.fontFamily.toComposeFontFamily()
     val fontSizeMultiplier = readingPreferences.fontSize.multiplier
     val tagChip: @Composable (TagUiState) -> Unit = { tag ->
@@ -204,13 +196,11 @@ private fun Tags(
             baseTextColor = textColor,
             fontSizeMultiplier = fontSizeMultiplier,
             fontFamily = fontFamily,
-            modifier = Modifier
-                .clip(chipShape())
-                .clickable {
-                    isExpanded = !isExpanded
-                    onExpandToggled()
-                }
-                .semantics { description?.let { contentDescription = it } },
+            modifier = Modifier.semantics { description?.let { contentDescription = it } },
+            onClick = {
+                isExpanded = !isExpanded
+                onExpandToggled()
+            },
         )
     }
     if (isExpanded) {
@@ -224,9 +214,6 @@ private fun Tags(
         )
     }
 }
-
-@Composable
-private fun chipShape() = RoundedCornerShape(dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_radius))
 
 @Composable
 private fun expandTitle(hiddenCount: Int) = stringResource(
@@ -255,9 +242,8 @@ private fun TagChip(tag: TagUiState, textColor: Color, fontSizeMultiplier: Float
         baseTextColor = textColor,
         fontSizeMultiplier = fontSizeMultiplier,
         fontFamily = fontFamily,
-        modifier = widthModifier
-            .clip(chipShape())
-            .then(if (onClick != null) Modifier.clickable { onClick(tag.slug) } else Modifier),
+        modifier = widthModifier,
+        onClick = onClick?.let { { it(tag.slug) } },
     )
 }
 
@@ -291,9 +277,11 @@ private fun CollapsedTags(
     modifier: Modifier,
 ) {
     val spacing = with(LocalDensity.current) { Margin.Medium.value.roundToPx() }
+    // built here rather than in the measure block, so a remeasure reuses it and doesn't recompose every chip
+    val tagChips: @Composable () -> Unit = { tags.forEach { tagChip(it) } }
     SubcomposeLayout(modifier = modifier.fillMaxWidth()) { constraints ->
         val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
-        val chips = subcompose("tags") { tags.forEach { tagChip(it) } }.map { it.measure(looseConstraints) }
+        val chips = subcompose("tags", tagChips).map { it.measure(looseConstraints) }
         fun countFitting(availableWidth: Int): Int {
             var usedWidth = 0
             var count = 0
@@ -315,11 +303,11 @@ private fun CollapsedTags(
         } else {
             null
         }
-        val visibleChips = chips.take(visibleCount)
-        val height = (visibleChips + listOfNotNull(overflow)).maxOf { it.height }
+        val placeables = chips.take(visibleCount) + listOfNotNull(overflow)
+        val height = placeables.maxOf { it.height }
         layout(constraints.maxWidth, height) {
             var x = 0
-            (visibleChips + listOfNotNull(overflow)).forEach { placeable ->
+            placeables.forEach { placeable ->
                 placeable.placeRelative(x, (height - placeable.height) / 2)
                 x += placeable.width + spacing
             }
@@ -380,14 +368,16 @@ private fun Likers(state: TrainOfFacesUiState, onClick: () -> Unit) {
 
 @Composable
 private fun CommentSnippet(state: CommentSnippetUiState, followState: FollowConversationUiState?) {
-    val margin = dimensionResource(R.dimen.reader_detail_margin)
     val context = LocalContext.current
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(R.dimen.reader_detail_margin))
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 45.dp)
-                .padding(start = margin, end = margin),
+                .heightIn(min = 45.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -403,7 +393,7 @@ private fun CommentSnippet(state: CommentSnippetUiState, followState: FollowConv
             }
         }
         HorizontalDivider(
-            modifier = Modifier.padding(start = margin, end = margin, bottom = Margin.Large.value),
+            modifier = Modifier.padding(bottom = Margin.Large.value),
             color = colorResource(R.color.reader_separator),
         )
         state.snippetItems.forEach { item -> CommentSnippetItem(item) }
@@ -417,17 +407,15 @@ private fun CommentSnippetItem(item: CommentSnippetItemState) {
         is CommentSnippetItemState.LoadingState -> Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(margin),
+                .padding(vertical = margin),
             contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator()
         }
-        is CommentSnippetItemState.CommentState -> SnippetComment(item, Modifier.padding(horizontal = margin))
+        is CommentSnippetItemState.CommentState -> SnippetComment(item)
         is CommentSnippetItemState.ButtonState -> OutlinedButton(
             onClick = { item.onCommentSnippetClicked(item.postId, item.blogId) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = margin),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text(uiStringText(item.buttonText))
         }
@@ -435,7 +423,7 @@ private fun CommentSnippetItem(item: CommentSnippetItemState) {
             text = uiStringText(item.message),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(margin),
+                .padding(vertical = margin),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA),
             textAlign = TextAlign.Center,
@@ -444,22 +432,13 @@ private fun CommentSnippetItem(item: CommentSnippetItemState) {
 }
 
 @Composable
-private fun SnippetComment(comment: CommentSnippetItemState.CommentState, modifier: Modifier) {
-    Column(modifier = modifier.padding(bottom = Margin.Large.value)) {
+private fun SnippetComment(comment: CommentSnippetItemState.CommentState) {
+    Column(modifier = Modifier.padding(bottom = Margin.Large.value)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(comment.avatarUrl)
-                    .apply {
-                        val type = ImageType.AVATAR_WITH_BACKGROUND
-                        avatarPlaceholders.getPlaceholderResource(type)?.let { placeholder(it) }
-                        avatarPlaceholders.getErrorResource(type)?.let { error(it) }
-                    }
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.avatar_sz_medium))
-                    .clip(CircleShape),
+            CircleAvatar(
+                url = comment.avatarUrl,
+                imageType = ImageType.AVATAR_WITH_BACKGROUND,
+                size = dimensionResource(R.dimen.avatar_sz_medium),
             )
             Column(modifier = Modifier.padding(start = Margin.Large.value)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -497,7 +476,8 @@ private fun RelatedPosts(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .onGloballyPositioned { onPositioned(isGlobal, it) }
+                // not onGloballyPositioned, which runs on every frame the post scrolls
+                .onPlaced { onPositioned(isGlobal, it) }
         ) {
             state?.headerLabel?.let {
                 Text(

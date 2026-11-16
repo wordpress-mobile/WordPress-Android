@@ -19,9 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -44,8 +42,6 @@ import org.wordpress.android.util.image.ImageType
 private const val TITLE_MAX_LINES = 5
 private const val EXCERPT_MAX_LINES = 5
 private const val TITLE_FONT_SIZE_SP = 24
-private const val HIGH_EMPHASIS_ALPHA = 0.87f
-private const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 
 /**
  * The top of the post detail, above the post's body: the blog, title, author, featured image and excerpt
@@ -62,7 +58,7 @@ fun ReaderPostDetailHeader(
             Text(
                 text = uiStringText(title),
                 modifier = Modifier.padding(top = Margin.ExtraLarge.value),
-                color = readingThemeTextColor(readingPreferences),
+                color = LocalReadingTextColor.current,
                 fontFamily = readingPreferences.fontFamily.toComposeFontFamily(),
                 fontSize = (TITLE_FONT_SIZE_SP * readingPreferences.fontSize.multiplier).sp,
                 maxLines = TITLE_MAX_LINES,
@@ -89,21 +85,8 @@ fun ReaderPostDetailHeader(
         state.excerpt?.let { Excerpt(uiStringText(it)) }
         HorizontalDivider(
             modifier = Modifier.padding(top = Margin.Medium.value),
-            thickness = 1.dp,
             color = colorResource(R.color.reader_separator),
         )
-    }
-}
-
-/**
- * The title takes the reading theme's text color, as the WebView body does. The system theme's text color is the
- * app's own.
- */
-@Composable
-private fun readingThemeTextColor(readingPreferences: ReaderReadingPreferences): Color {
-    val context = LocalContext.current
-    return remember(readingPreferences.theme) {
-        Color(ReaderReadingPreferences.ThemeValues.from(context, readingPreferences.theme).intTextColor)
     }
 }
 
@@ -148,13 +131,12 @@ private fun AuthorRow(
             }
         }
         if (followState.isVisible) {
-            Box(modifier = Modifier.padding(start = Margin.Medium.value)) {
-                FollowButton(
-                    isFollowed = followState.isFollowed,
-                    isInProgress = followState.isFollowActionRunning,
-                    onClick = { followState.onFollowButtonClicked?.invoke() },
-                )
-            }
+            FollowButton(
+                isFollowed = followState.isFollowed,
+                isInProgress = followState.isFollowActionRunning,
+                onClick = { followState.onFollowButtonClicked?.invoke() },
+                modifier = Modifier.padding(start = Margin.Medium.value),
+            )
         }
     }
 }
@@ -201,7 +183,7 @@ private fun SecondaryText(text: String, isPrimary: Boolean = false) {
 @Composable
 private fun Excerpt(text: String) {
     var isExpanded by rememberSaveable(text) { mutableStateOf(false) }
-    var isTruncated by rememberSaveable(text) { mutableStateOf(false) }
+    var isTruncated by remember(text) { mutableStateOf(false) }
     Text(
         text = text,
         modifier = Modifier.padding(top = Margin.Medium.value),

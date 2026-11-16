@@ -59,6 +59,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -86,6 +87,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.PostRefreshed
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
@@ -179,8 +181,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
-    private var binding: ReaderPostDetailBodyBinding? = null
-
     /**
      * Hides fullscreen video, then steps back through the related posts opened in place, before back leaves the
      * screen. Only the page on screen is resumed - the pager holds its neighbours at STARTED - so the neighbours'
@@ -188,7 +188,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      */
     private val backCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            if (isCustomViewShowing) {
+            if (chrome.isCustomViewShowing) {
                 hideCustomView()
             } else {
                 goBackInPostHistory()
@@ -239,9 +239,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject
     lateinit var getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase
 
-    private val isCustomViewShowing: Boolean
-        get() = view != null && readerWebView.isCustomViewShowing
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -286,7 +283,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val themedContext = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
 
         val bodyBinding = ReaderPostDetailBodyBinding.inflate(inflater.cloneInContext(themedContext))
-            .also { binding = it }
         scrollView = bodyBinding.scrollViewReader
         scrollView.setScrollDirectionListener(this)
         readerWebView = bodyBinding.readerWebview
@@ -305,12 +301,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         bodyBinding.headerComposeView.setContent {
             ReaderPostDetailTheme(readingPreferences) { Header(readingPreferences) }
         }
+        val isLikesEnabled = likesEnhancementsFeatureConfig.isEnabled()
+        val isSnippetEnabled = commentsSnippetFeatureConfig.isEnabled()
         bodyBinding.footerComposeView.setContent {
-            ReaderPostDetailTheme(readingPreferences) { Footer(readingPreferences) }
+            ReaderPostDetailTheme(readingPreferences) { Footer(readingPreferences, isLikesEnabled, isSnippetEnabled) }
         }
 
-        // Fixes viewpager not displaying menu items for first fragment, and hides the toolbar of
-        // NotificationsDetailActivity, which this screen's own top bar replaces
+        // hides the toolbar of NotificationsDetailActivity, which this screen's own top bar replaces
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
 
         return ComposeView(themedContext).apply {
@@ -318,9 +315,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             setContent {
                 ReaderPostDetailTheme(readingPreferences) {
                     val uiState by viewModel.uiState.observeAsState()
+                    val isPostBlocked by viewModel.postBlocked.observeAsState(false)
                     ReaderPostDetailScreen(
                         chrome = chrome,
                         uiState = uiState,
+                        topBarState = topBarState(uiState, isPostBlocked),
                         isRelatedPost = isRelatedPost,
                         actions = screenActions,
                         body = bodyBinding.root,
@@ -340,14 +339,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     @Composable
-    private fun Footer(readingPreferences: ReaderReadingPreferences) {
+    private fun Footer(
+        readingPreferences: ReaderReadingPreferences,
+        isLikesEnabled: Boolean,
+        isSnippetEnabled: Boolean,
+    ) {
         val uiState by viewModel.uiState.observeAsState()
-        val likesState = if (likesEnhancementsFeatureConfig.isEnabled()) {
-            viewModel.likesUiState.observeAsState().value
-        } else {
-            null
-        }
-        val isSnippetEnabled = commentsSnippetFeatureConfig.isEnabled()
+        val likesState = if (isLikesEnabled) viewModel.likesUiState.observeAsState().value else null
         val commentSnippetState = if (isSnippetEnabled) viewModel.commentSnippetState.observeAsState().value else null
         val followState = if (isSnippetEnabled) {
             conversationViewModel.updateFollowUiState.observeAsState().value
@@ -386,8 +384,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
             viewModel.onMoreButtonClicked()
         },
+        // lambdas rather than bound references, which would read the view model before the fragment is attached
         onMoreDismiss = { viewModel.onMoreMenuDismissed() },
-        onMoreItemClick = { type: ReaderPostCardActionType -> viewModel.onMoreMenuItemClicked(type) },
+        onMoreItemClick = { type -> viewModel.onMoreMenuItemClicked(type) },
         onRefresh = {
             if (isAdded) {
                 chrome.isRefreshing = true
@@ -444,7 +443,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun updateBackCallback() {
-        backCallback.isEnabled = isResumed && (isCustomViewShowing || !postHistory.isEmpty())
+        backCallback.isEnabled = isResumed && (chrome.isCustomViewShowing || !postHistory.isEmpty())
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
@@ -465,14 +464,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             when (it) {
                 is LoadingUiState -> Unit // Do Nothing
                 is ReaderPostDetailsUiState -> onPostExecuteShowPost()
-                is ErrorUiState -> chrome.topBar = ReaderPostDetailTopBarState(showMore = false)
+                is ErrorUiState -> Unit // Do Nothing
             }
         }
 
         viewModel.postRefreshed.observeEvent(viewLifecycleOwner, ::onPostRefreshed)
 
-        viewModel.postBlocked.observe(viewLifecycleOwner) { postBlocked ->
-            chrome.topBar = chrome.topBar.copy(showMore = !postBlocked)
+        // the view model only refreshes the post's likes, comments and actions after a card action while this is
+        // observed
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner) {
+            // Do nothing
         }
 
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
@@ -615,9 +616,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     // TODO: Update using UiState/ NavigationEvent
     @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
-        // make sure the top bar reflects whether we now have a post
-        prepareTopBar()
-
         viewModel.post?.let {
             if (handleDirectOperation()) return
 
@@ -762,17 +760,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    /**
+     * Shows the snackbar in place of any already showing, as the View-based snackbars did, rather than queueing it
+     * behind that one
+     */
     private fun SnackbarMessageHolder.showSnackbar() {
-        showSnackbar(
-            message = uiHelpers.getTextOfUiString(requireContext(), message).toString(),
-            actionLabel = buttonTitle?.let { uiHelpers.getTextOfUiString(requireContext(), it).toString() },
-            action = buttonAction,
-        )
+        if (view == null) return
+        val hostState = chrome.snackbarHostState
+        val context = requireContext()
+        viewLifecycleOwner.lifecycleScope.launch {
+            hostState.currentSnackbarData?.dismiss()
+            hostState.showMessage(this@showSnackbar, context, uiHelpers)
+        }
     }
 
     /**
-     * Shows [message] in place of any snackbar already showing, as the View-based snackbars did, rather than queueing
-     * it behind that one
+     * Shows [message] in place of any snackbar already showing. An indefinite one gets a dismiss button, since a
+     * Compose snackbar can't be swiped away.
      */
     private fun showSnackbar(
         message: String,
@@ -798,7 +802,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         super.onDestroyView()
         removeWebViewLayoutListener()
         relatedPostsCoordinates.clear()
-        binding = null
     }
 
     override fun onDestroy() {
@@ -809,16 +812,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         bookmarksSavedLocallyDialog?.dismiss()
     }
 
-    private fun prepareTopBar() {
+    /**
+     * Only More shows while the post loads, nothing once it fails, and More hides for a blocked post
+     */
+    private fun topBarState(uiState: UiState?, isPostBlocked: Boolean): ReaderPostDetailTopBarState {
+        if (uiState is ErrorUiState) return ReaderPostDetailTopBarState(showMore = false)
+        if (uiState !is ReaderPostDetailsUiState) return ReaderPostDetailTopBarState(showMore = !isPostBlocked)
         val postHasUrl = viewModel.post?.hasUrl() == true
-        chrome.topBar = ReaderPostDetailTopBarState(
+        return ReaderPostDetailTopBarState(
             // reading preferences require the feature flag to be on
             showReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
             // browse requires the post to have a URL (some feed-based posts don't have one) or an intercepted URI
             showBrowse = postHasUrl || viewModel.interceptedUri != null,
             // share requires the post to have a URL
             showShare = postHasUrl,
-            showMore = viewModel.postBlocked.value != true,
+            showMore = !isPostBlocked,
         )
     }
 
@@ -1001,13 +1009,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     /*
      * if the fragment is maintaining a backstack of posts, navigate to the previous one
      */
-    private fun goBackInPostHistory(): Boolean {
-        return if (!postHistory.isEmpty()) {
+    private fun goBackInPostHistory() {
+        if (!postHistory.isEmpty()) {
             val ids = postHistory.pop()
             replacePost(ids.blogId, ids.postId, true)
-            true
-        } else {
-            false
         }
     }
 

@@ -218,8 +218,13 @@ internal fun ReaderTagHeader(item: ReaderPostListItem.TagHeader, onFollowClick: 
 }
 
 @Composable
-internal fun FollowButton(isFollowed: Boolean, isInProgress: Boolean, onClick: () -> Unit) {
-    Box(contentAlignment = Alignment.Center) {
+internal fun FollowButton(
+    isFollowed: Boolean,
+    isInProgress: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
         if (isFollowed) {
             OutlinedButton(onClick = onClick, enabled = !isInProgress) {
                 Text(stringResource(R.string.reader_btn_subscribed))

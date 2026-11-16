@@ -763,8 +763,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         val isSamePost = currentUiState.postId == newUiState.postId && currentUiState.blogId == newUiState.blogId
         return if (isSamePost) {
             withHeader.copy(
-                localRelatedPosts = withHeader.localRelatedPosts ?: currentUiState.localRelatedPosts,
-                globalRelatedPosts = withHeader.globalRelatedPosts ?: currentUiState.globalRelatedPosts,
+                localRelatedPosts = currentUiState.localRelatedPosts,
+                globalRelatedPosts = currentUiState.globalRelatedPosts,
             )
         } else {
             withHeader
