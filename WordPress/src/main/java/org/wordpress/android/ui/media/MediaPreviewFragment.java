@@ -215,6 +215,12 @@ public class MediaPreviewFragment extends Fragment {
         super.onResume();
         if (showAudioOrVideo()) {
             if (mPlayer == null) initializePlayer();
+            // the player is released when this page is stopped and rebuilt when it starts again,
+            // and the rebuilt one shows its controls while the fragment isn't resumed yet - so the
+            // activity is told where they stand now that the page is back in front of the user
+            if (mIsVideo && mListener != null) {
+                mListener.onVideoControlsVisibilityChanged(mExoPlayerView.isControllerVisible());
+            }
         } else {
             loadImage(mContentUri, mImageView);
         }
@@ -306,13 +312,15 @@ public class MediaPreviewFragment extends Fragment {
             if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
             }
-            mExoPlayerView.setPlayer(mPlayer);
+            // the listener must be registered before the player is set, otherwise setPlayer()
+            // shows the controls before anybody is listening and the toolbar is left out of sync
             mExoPlayerView.setControllerVisibilityListener(visibility -> {
                 // only the page the user is actually looking at may drive the activity's toolbar
                 if (mListener != null && isResumed()) {
                     mListener.onVideoControlsVisibilityChanged(visibility == View.VISIBLE);
                 }
             });
+            mExoPlayerView.setPlayer(mPlayer);
             mExoPlayerView.requestFocus();
         } else if (mIsAudio) {
             mExoPlayerControlsView.setPlayer(mPlayer);

@@ -14,7 +14,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Type:** Fixed
   - **Availability:** Everyone
   - **Where:** My Site → Media → tap a video → tap the preview; also the full-screen preview opened from the media picker and from Reader posts
-  - **Notes:** Audio files behave like video — the top bar stays as long as the audio controls are shown.
+  - **Notes:** Audio files no longer fade the top bar out either. It stays visible for the whole item, alongside the audio controls, which do not hide on their own.
 
 - **Experimental block editor uploads follow the Media settings**
   Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.

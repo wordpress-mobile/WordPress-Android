@@ -332,9 +332,10 @@ public class MediaPreviewActivity extends BaseAppCompatActivity
         }
 
         mFadeHandler.removeCallbacks(mFadeOutRunnable);
-        // audio & video keep the toolbar in sync with their playback controls rather than fading it
-        // out on a timer - the player swallows taps, so an auto-hidden back arrow could never be
-        // brought back (see onVideoControlsVisibilityChanged)
+        // video keeps the toolbar in sync with its playback controls rather than fading it out on a
+        // timer - the player swallows taps, so an auto-hidden back arrow could never be brought
+        // back (see onVideoControlsVisibilityChanged). audio has no such listener: its controls
+        // never auto-hide either, so the toolbar simply stays up for as long as the item is shown
         if (!isCurrentMediaAudioOrVideo()) {
             mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
         }
@@ -474,6 +475,11 @@ public class MediaPreviewActivity extends BaseAppCompatActivity
             Object item = super.instantiateItem(container, position);
             if (item instanceof Fragment) {
                 mFragmentMap.put(position, (Fragment) item);
+            }
+            // fragments restored after the activity is recreated don't come through getItem(),
+            // so this is the only place that can give them back their listener
+            if (item instanceof MediaPreviewFragment) {
+                ((MediaPreviewFragment) item).setMediaPreviewListener(MediaPreviewActivity.this);
             }
             return item;
         }
