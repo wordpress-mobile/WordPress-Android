@@ -6,12 +6,14 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -89,10 +91,14 @@ public class MediaDeleteService extends Service {
         }
 
         mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
-        // only replace the queue when the intent actually carries one - the activity restarts this
-        // service without a list on every resume, which would otherwise drop deletes still pending
+        // append rather than replace - the activity restarts this service without a list on every
+        // resume, and once it has lost its binding to a running service every later batch arrives
+        // here too, so replacing would strand the deletes still pending from an earlier batch
         if (intent.hasExtra(MEDIA_LIST_KEY)) {
-            mDeleteQueue = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+            List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+            if (mediaList != null) {
+                getDeleteQueue().addAll(mediaList);
+            }
         }
 
         // start deleting queued media
@@ -172,12 +178,15 @@ public class MediaDeleteService extends Service {
         switch (event.error.type) {
             case AUTHORIZATION_REQUIRED:
                 AppLog.v(T.MEDIA, "Authorization required. Stopping MediaDeleteService.");
+                // the rest of the queue is abandoned here, so release it along with the current item
+                restoreUploadState(getDeleteQueue());
                 // stop delete service until authorized to perform actions on site
                 stopSelf();
                 break;
             case NULL_MEDIA_ARG:
                 // shouldn't happen, get back to deleting the queue
                 AppLog.d(T.MEDIA, "Null media argument supplied, skipping current delete.");
+                restoreUploadState(mCurrentDelete);
                 completeCurrentDelete();
                 break;
             case NOT_FOUND:
@@ -190,11 +199,33 @@ public class MediaDeleteService extends Service {
                 break;
             case PARSE_ERROR:
                 AppLog.d(T.MEDIA, "Error parsing reponse to " + event.cause.toString() + ".");
+                restoreUploadState(mCurrentDelete);
                 completeCurrentDelete();
                 break;
             default:
+                restoreUploadState(mCurrentDelete);
                 completeCurrentDelete();
                 break;
+        }
+    }
+
+    /*
+     * the browser puts items into the DELETING state before starting this service, and nothing
+     * else ever takes them back out - so when a delete won't happen after all, restore the state
+     * the items had before, or their tiles keep a spinner and can't be selected again to retry.
+     * only media that already lives on the server is ever queued here, so that state is UPLOADED
+     */
+    private void restoreUploadState(@Nullable MediaModel media) {
+        if (media == null) {
+            return;
+        }
+        media.setUploadState(MediaUploadState.UPLOADED);
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+    }
+
+    private void restoreUploadState(@NonNull List<MediaModel> mediaList) {
+        for (MediaModel media : mediaList) {
+            restoreUploadState(media);
         }
     }
 
@@ -211,6 +242,7 @@ public class MediaDeleteService extends Service {
         // somehow lost our reference to the site, stop service
         if (mSite == null) {
             AppLog.i(T.MEDIA, "Unexpected state, site is null. Stopping MediaDeleteService.");
+            restoreUploadState(getDeleteQueue());
             stopSelf();
             return;
         }

@@ -404,8 +404,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     toggleItemSelected(GridViewHolder.this, position);
                 }
             } else {
-                // a multiselect picker starts selecting on a tap, the browser on a long press
-                boolean startsMultiSelect = mBrowserType.isBrowser() ? isLongClick : mBrowserType.canMultiselect();
+                // a multiselect picker starts selecting on a tap, the browser on a long press - a
+                // long press in a picker is left alone so it still opens the preview
+                boolean startsMultiSelect = mBrowserType.isBrowser()
+                        ? isLongClick
+                        : mBrowserType.canMultiselect() && !isLongClick;
                 if (startsMultiSelect && canSelectPosition(position)) {
                     setInMultiSelect(true);
                     toggleItemSelected(GridViewHolder.this, position);
