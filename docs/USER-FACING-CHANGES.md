@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **The back arrow stays put while you watch a video in the media viewer**
+  In the full-screen media viewer, the top bar with the back arrow now appears and disappears together with the video's playback controls, so it is always there while the controls are. Before, it faded out three seconds after you opened or swiped to a video and tapping the video only toggled the playback controls, which left no way back other than the system back gesture. Photos are unchanged: the top bar still fades out on its own and a tap brings it back.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap a video → tap the preview; also the full-screen preview opened from the media picker and from Reader posts
+  - **Notes:** Audio files behave like video — the top bar stays as long as the audio controls are shown.
+
 - **Experimental block editor uploads follow the Media settings**
   Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
   - **Apps:** Both

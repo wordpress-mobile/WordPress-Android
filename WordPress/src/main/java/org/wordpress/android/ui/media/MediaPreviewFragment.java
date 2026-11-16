@@ -54,8 +54,14 @@ public class MediaPreviewFragment extends Fragment {
     private static final String ARG_AUTOPLAY = "autoplay";
     private static final String ARG_VIDEO_THUMB = "video_thumb";
 
-    public interface OnMediaTappedListener {
+    public interface MediaPreviewListener {
         void onMediaTapped();
+
+        /**
+         * called when a video shows or hides its playback controls - the video swallows taps, so this
+         * is the only way the hosting activity hears about the user asking for the chrome to be shown
+         */
+        void onVideoControlsVisibilityChanged(boolean visible);
     }
 
     private String mContentUri;
@@ -72,7 +78,7 @@ public class MediaPreviewFragment extends Fragment {
     private PlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
     private ImageView mExoPlayerArtworkView;
-    private OnMediaTappedListener mMediaTapListener;
+    private MediaPreviewListener mListener;
 
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
@@ -171,8 +177,8 @@ public class MediaPreviewFragment extends Fragment {
 
         if (showAudioOrVideo()) {
             View.OnClickListener listener = v -> {
-                if (mMediaTapListener != null) {
-                    mMediaTapListener.onMediaTapped();
+                if (mListener != null) {
+                    mListener.onMediaTapped();
                 }
             };
             audioFrame.setOnClickListener(listener);
@@ -223,8 +229,8 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
-    void setOnMediaTappedListener(OnMediaTappedListener listener) {
-        mMediaTapListener = listener;
+    void setMediaPreviewListener(MediaPreviewListener listener) {
+        mListener = listener;
     }
 
     private void showProgress(boolean show) {
@@ -269,8 +275,8 @@ public class MediaPreviewFragment extends Fragment {
                         if (isAdded()) {
                             PhotoViewAttacher attacher = mImageView.getAttacher();
                             attacher.setOnViewTapListener((view, x, y) -> {
-                                if (mMediaTapListener != null) {
-                                    mMediaTapListener.onMediaTapped();
+                                if (mListener != null) {
+                                    mListener.onMediaTapped();
                                 }
                             });
                             showProgress(false);
@@ -301,6 +307,12 @@ public class MediaPreviewFragment extends Fragment {
                 loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
             }
             mExoPlayerView.setPlayer(mPlayer);
+            mExoPlayerView.setControllerVisibilityListener(visibility -> {
+                // only the page the user is actually looking at may drive the activity's toolbar
+                if (mListener != null && isResumed()) {
+                    mListener.onVideoControlsVisibilityChanged(visibility == View.VISIBLE);
+                }
+            });
             mExoPlayerView.requestFocus();
         } else if (mIsAudio) {
             mExoPlayerControlsView.setPlayer(mPlayer);
