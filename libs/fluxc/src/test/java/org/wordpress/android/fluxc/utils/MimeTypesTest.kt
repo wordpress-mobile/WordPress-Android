@@ -23,7 +23,8 @@ class MimeTypesTest {
     fun `returns all WP_COM_PAID mime types as strings`() {
         val allTypes = mimeTypes.getAllTypes(WP_COM_PAID)
 
-        assertThat(allTypes).isEqualTo(allMimeTypes)
+        // WP.com only accepts .txt on plugin-enabled (Atomic) sites, which use SELF_HOSTED
+        assertThat(allTypes).isEqualTo(allMimeTypes.filterNot { it == "text/plain" }.toTypedArray())
     }
 
     @Test
@@ -163,6 +164,17 @@ class MimeTypesTest {
         assertThat(allTypes).isEqualTo(allAudioMimeTypes)
     }
 
+    @Test
+    fun `returns document types that aren't application types`() {
+        assertThat(mimeTypes.getNonApplicationDocumentTypes()).containsExactly("text/plain")
+    }
+
+    @Test
+    fun `text types are not application types`() {
+        assertThat(mimeTypes.isApplicationType("application/pdf")).isTrue
+        assertThat(mimeTypes.isApplicationType("text/plain")).isFalse
+    }
+
     private val allAudioMimeTypes = arrayOf(
             "audio/mpeg",
             "audio/mp4",
@@ -210,6 +222,7 @@ class MimeTypesTest {
             "application/x-msexcel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "application/keynote",
-            "application/zip"
+            "application/zip",
+            "text/plain"
     )
 }

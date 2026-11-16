@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.utils.MimeType.Subtype
 import org.wordpress.android.fluxc.utils.MimeType.Type.APPLICATION
 import org.wordpress.android.fluxc.utils.MimeType.Type.AUDIO
 import org.wordpress.android.fluxc.utils.MimeType.Type.IMAGE
+import org.wordpress.android.fluxc.utils.MimeType.Type.TEXT
 import org.wordpress.android.fluxc.utils.MimeType.Type.VIDEO
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan.NO_PLAN_SPECIFIED
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan.SELF_HOSTED
@@ -105,11 +106,18 @@ class MimeTypes {
      * .key - missing - "application/keynote"
      * .zip (Archive File Format)
      *
+     * Self hosted MIME Types
+     *
+     * .txt - "text/plain". WP.com only accepts it on plugin-enabled (Atomic) sites, which the app treats as
+     * self-hosted, so Simple sites on any plan don't get it.
+     *
      * General comment about each of the properties below.
      *
      * wpComFreeDocumentTypes - all MIME types allowed in the free plans.
      *
-     * wpComPaidAndSelfHostedDocumentTypes - all MIME types allowed for paid plans and self hosted sites.
+     * wpComPaidDocumentTypes - all MIME types allowed for paid plans.
+     *
+     * selfHostedDocumentTypes - all MIME types allowed for self hosted (including Atomic) sites.
      *
      * documentTypes - all MIME types that are available.
      */
@@ -135,12 +143,16 @@ class MimeTypes {
             MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
     )
 
-    private val wpComPaidAndSelfHostedDocumentTypes = wpComFreeDocumentTypes + listOf(
+    private val wpComPaidDocumentTypes = wpComFreeDocumentTypes + listOf(
             MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
             MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
     )
 
-    private val documentTypes = wpComPaidAndSelfHostedDocumentTypes
+    private val selfHostedDocumentTypes = wpComPaidDocumentTypes + MimeType(TEXT, Subtype.PLAIN, listOf("txt"))
+
+    private val documentTypes = selfHostedDocumentTypes
+
+    private val applicationDocumentTypes = documentTypes.filter { it.type == APPLICATION }
 
     fun isAudioType(type: String?): Boolean {
         return isExpectedMimeType(audioTypes, type)
@@ -155,7 +167,7 @@ class MimeTypes {
     }
 
     fun isApplicationType(type: String?): Boolean {
-        return isExpectedMimeType(documentTypes, type)
+        return isExpectedMimeType(applicationDocumentTypes, type)
     }
 
     fun isSupportedAudioType(type: String?): Boolean {
@@ -201,6 +213,11 @@ class MimeTypes {
                 .toTypedArray()
     }
 
+    /**
+     * Document MIME types outside application/\*, such as text/plain, which an "application" prefix match misses.
+     */
+    fun getNonApplicationDocumentTypes(): List<String> = (documentTypes - applicationDocumentTypes).toStrings()
+
     fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) =
             (getAudioMimeTypesOnly(plan).toStrings()).toSet().toTypedArray()
 
@@ -216,7 +233,8 @@ class MimeTypes {
 
     private fun getDocumentMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
         return when (plan) {
-            WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> wpComPaidAndSelfHostedDocumentTypes
+            SELF_HOSTED, NO_PLAN_SPECIFIED -> selfHostedDocumentTypes
+            WP_COM_PAID -> wpComPaidDocumentTypes
             WP_COM_FREE -> wpComFreeDocumentTypes
         }
     }
