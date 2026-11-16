@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader: Subscriptions no longer opens on a blank page**
+  Opening the Reader on Subscriptions when no posts were saved on the device could show a blank page, with no posts, spinner or message, until you switched feeds. It now loads the latest posts. The Blogs and Tags filter chips could also be missing at startup, and now appear.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions
+  - **Notes:** It happened intermittently, depending on how fast the app started, and only when the feed had no posts saved on the device.
+
 - **Deleted media no longer stays stuck on "Deleting"**
   On self-hosted sites using the REST API, a deleted media item kept showing a "Deleting" spinner in the Media library even though it had already been removed from the site. It only disappeared after switching tabs or reopening the screen. It now disappears as soon as the delete finishes. A delete that fails part way through a batch no longer leaves the remaining items spinning either — they go back to normal and can be selected again to retry.
   - **Apps:** Both
