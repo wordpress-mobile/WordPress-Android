@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Adding a site you already subscribe to says so**
-  Entering the address of a site you already subscribe to in Manage subscriptions now briefly shows "You are already subscribed to this site" instead of subscribing again and saying "Subscribed". The address can be typed with or without http/https, "www." or a trailing slash, and a site's other address (such as its .wordpress.com address when it uses a custom domain) is recognised too.
+  Entering the address of a site you already subscribe to in Manage subscriptions now briefly shows "You are already subscribed to this blog" instead of subscribing again and saying "Subscribed". The address can be typed with or without http/https, "www." or a trailing slash, and a site's other address (such as its .wordpress.com address when it uses a custom domain) is recognised too.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone

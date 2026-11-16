@@ -355,7 +355,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     private fun message(resId: Int) = ReaderSubsUiEvent.ShowMessage(string(resId))
 
     private fun alreadySubscribedMessage() =
-        ReaderSubsUiEvent.ShowMessage(string(R.string.reader_toast_err_already_subscribed_to_site), isShort = true)
+        ReaderSubsUiEvent.ShowMessage(string(R.string.reader_toast_err_already_follow_this_blog), isShort = true)
 
     private fun tag(slug: String) = ReaderTag(slug, slug, slug, null, ReaderTagType.FOLLOWED)
 

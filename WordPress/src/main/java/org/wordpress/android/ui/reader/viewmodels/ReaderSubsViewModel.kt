@@ -345,7 +345,7 @@ class ReaderSubsViewModel @Inject constructor(
 
     // a quick heads-up rather than an error, so it doesn't linger like the other messages
     private fun showAlreadySubscribed() =
-        showMessage(resourceProvider.getString(R.string.reader_toast_err_already_subscribed_to_site), isShort = true)
+        showMessage(resourceProvider.getString(R.string.reader_toast_err_already_follow_this_blog), isShort = true)
 
     private fun trackTag(stat: Stat, slug: String) = readerTracker.trackTag(stat, slug, ReaderTracker.SOURCE_SETTINGS)
 
