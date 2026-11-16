@@ -110,9 +110,9 @@ class ReaderSubsRepository @Inject constructor(
          * it has no host. The query and the path's case are kept, since they can tell feeds apart.
          */
         internal fun urlKey(url: String): String? {
-            val uri = runCatching { URI(withScheme(url).trim()) }.getOrNull() ?: return null
-            val host = uri.host?.lowercase(Locale.ROOT)?.removePrefix("www.")?.takeIf { it.isNotEmpty() }
-                ?: return null
+            val uri = runCatching { URI(withScheme(url).trim()) }.getOrNull()
+            val host = uri?.host?.lowercase(Locale.ROOT)?.removePrefix("www.")?.takeIf { it.isNotEmpty() }
+            if (uri == null || host == null) return null
             val port = uri.port.takeIf { it != -1 && it != HTTP_PORT && it != HTTPS_PORT }?.let { ":$it" }.orEmpty()
             val query = uri.rawQuery?.let { "?$it" }.orEmpty()
             return host + port + uri.rawPath.orEmpty().trimEnd('/') + query
