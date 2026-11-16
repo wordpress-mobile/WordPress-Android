@@ -16,6 +16,29 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Posts → banner above the tabs
   - **Notes:** Before, such a post had no row in this list, so once the upload-failure notification was dismissed there was no way back to it. The list says "posts" rather than "drafts" because it also holds posts published or scheduled while offline, which go live once they upload. The banner is hidden while searching, and these posts aren't included in search results. A post being uploaded for the first time isn't counted or listed until the upload fails, so a post written online doesn't show here while it uploads. A post whose upload failed stays listed as failed while it's uploaded again, by Retry or automatically when the device reconnects; until that upload finishes, tapping the post or its Retry closes the sheet and says it's uploading. Retry while offline closes the sheet and says there's no connection. There is no way to delete one of these posts from the list. The sheet doesn't update live while an upload starts, only when one finishes. Pages are unchanged.
 
+- **Opening a WordPress.com post link no longer sticks on a spinner**
+  Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
+  - **Apps:** Jetpack
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** A WordPress.com post link opened in the app
+
+- **Swiping between media previews shows the next image right away**
+  In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item → tap the image → swipe left or right
+  - **Notes:** Only affects images; audio and video were already prepared ahead of time. Pre-loading reaches one item either side, so a fast swipe through several items can still show a spinner.
+
+- **Experimental block editor uploads follow the Media settings**
+  Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Me → App Settings → Media (Optimize Images, Maximum Image Size, Image Quality, Remove location from media, Optimize Videos, Maximum Video Size, Video Quality); experimental block editor → Add media
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Video optimization stays off unless the user turns it on, as in the classic editors. GIFs always upload unchanged so they keep animating.
+
 - **Reblogging from a site's or tag's post list confirms the result**
   After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
   - **Apps:** Both
