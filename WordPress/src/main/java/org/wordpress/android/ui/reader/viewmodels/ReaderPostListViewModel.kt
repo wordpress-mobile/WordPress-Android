@@ -766,14 +766,19 @@ class ReaderPostListViewModel @Inject constructor(
         val tag = currentTag ?: return
         val target = ReaderPostListTarget.Tag(tag)
         launch {
-            // a tag with no saved posts is updated even if it was updated recently, since otherwise it would show
-            // nothing - saved posts are local, so updating them wouldn't help
-            if (repository.shouldAutoUpdateTag(tag) || (!isBookmarksList && repository.getPostCount(target) == 0)) {
-                requestPosts(target, UpdateAction.REQUEST_NEWER)
-            } else if (isBookmarksList || tag.isListTopic) {
-                // there won't be an update, so show the empty state for these lists right away
-                autoUpdateSkipped = true
-                updateUiState()
+            when {
+                repository.shouldAutoUpdateTag(tag) -> requestPosts(target, UpdateAction.REQUEST_NEWER)
+
+                isBookmarksList || tag.isListTopic -> {
+                    // there won't be an update, so show the empty state for these lists right away
+                    autoUpdateSkipped = true
+                    updateUiState()
+                }
+
+                // until an update ends the list shows nothing rather than its empty state, so a tag with no saved
+                // posts is updated even if it was updated recently. Once one has ended the usual throttle applies
+                !hasUpdatedPosts && repository.getPostCount(target) == 0 ->
+                    requestPosts(target, UpdateAction.REQUEST_NEWER)
             }
         }
     }

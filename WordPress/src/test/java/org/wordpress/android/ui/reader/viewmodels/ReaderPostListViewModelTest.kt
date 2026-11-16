@@ -692,6 +692,15 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `starting doesn't request posts for a tag with no saved posts once the list has been updated`() = test {
+        whenever(repository.getPostCount(tagTarget)).thenReturn(0)
+
+        startAndLoad(args().copy(hasUpdatedPosts = true))
+
+        verify(repository, never()).requestPosts(tagTarget, UpdateAction.REQUEST_NEWER)
+    }
+
+    @Test
     fun `starting requests newer posts when it's time to update the tag`() = test {
         whenever(repository.shouldAutoUpdateTag(tag)).thenReturn(true)
 
