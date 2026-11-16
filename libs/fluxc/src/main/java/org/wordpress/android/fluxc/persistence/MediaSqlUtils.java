@@ -15,12 +15,15 @@ import com.yarolegovich.wellsql.WellSql;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.utils.MimeType.Subtype;
 import org.wordpress.android.fluxc.utils.MimeType.Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MediaSqlUtils {
+    private static final String PLAIN_TEXT_MIME_TYPE = Type.TEXT.getValue() + "/" + Subtype.PLAIN.getValue();
+
     @NonNull
     public static List<MediaModel> getAllSiteMedia(@NonNull SiteModel siteModel) {
         return getAllSiteMediaQuery(siteModel).getAsModel();
@@ -176,7 +179,18 @@ public class MediaSqlUtils {
     public static List<MediaModel> searchSiteDocuments(
             @NonNull SiteModel siteModel,
             @NonNull String searchTerm) {
-        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, Type.APPLICATION.getValue()).getAsModel();
+        return withDocumentMimeType(WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()))
+                .beginGroup()
+                    .contains(MediaModelTable.TITLE, searchTerm)
+                    .or().contains(MediaModelTable.FILE_NAME, searchTerm)
+                    .or().contains(MediaModelTable.CAPTION, searchTerm)
+                    .or().contains(MediaModelTable.DESCRIPTION, searchTerm)
+                .endGroup()
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
     }
 
     @NonNull
@@ -273,7 +287,24 @@ public class MediaSqlUtils {
 
     @NonNull
     private static SelectQuery<MediaModel> getSiteDocumentsQuery(@NonNull SiteModel siteModel) {
-        return getSiteMediaByMimeTypeQuery(siteModel, Type.APPLICATION.getValue());
+        return withDocumentMimeType(WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()))
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    /**
+     * Documents are application/* plus text/plain, matching the document types in MimeTypes. text/plain is
+     * matched exactly because a "text" substring would also match application/vnd.oasis.opendocument.text.
+     */
+    @NonNull
+    private static ConditionClauseBuilder<SelectQuery<MediaModel>> withDocumentMimeType(
+            @NonNull ConditionClauseBuilder<SelectQuery<MediaModel>> builder) {
+        return builder.beginGroup()
+                .contains(MediaModelTable.MIME_TYPE, Type.APPLICATION.getValue())
+                .or().equals(MediaModelTable.MIME_TYPE, PLAIN_TEXT_MIME_TYPE)
+                .endGroup();
     }
 
     @NonNull
