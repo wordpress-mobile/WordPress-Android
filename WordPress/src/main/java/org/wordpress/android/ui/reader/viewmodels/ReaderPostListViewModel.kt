@@ -694,9 +694,13 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onFollowedTagsFetched() = launch {
-        // update the current tag if the list is empty - this happens on first run
-        if (posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)) {
-            currentTag?.let { requestPosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_NEWER) }
+        val target = ReaderPostListTarget.Tag(currentTag ?: return@launch)
+        // update the current tag if it has no saved posts - this happens on first run. The saved posts are checked
+        // rather than [posts] since that's empty until the first load ends
+        if (updateActions.isEmpty() && repository.getPostCount(target) == 0 &&
+            (repository.hasFollowedBlogs() || !hasUpdatedPosts)
+        ) {
+            requestPosts(target, UpdateAction.REQUEST_NEWER)
         }
     }
 
@@ -761,9 +765,12 @@ class ReaderPostListViewModel @Inject constructor(
      */
     private fun updateCurrentTagIfTime() {
         val tag = currentTag ?: return
+        val target = ReaderPostListTarget.Tag(tag)
         launch {
-            if (repository.shouldAutoUpdateTag(tag)) {
-                requestPosts(ReaderPostListTarget.Tag(tag), UpdateAction.REQUEST_NEWER)
+            // a tag with no saved posts is updated even if it was updated recently, since otherwise it would show
+            // nothing - saved posts are local, so updating them wouldn't help
+            if (repository.shouldAutoUpdateTag(tag) || (!isBookmarksList && repository.getPostCount(target) == 0)) {
+                requestPosts(target, UpdateAction.REQUEST_NEWER)
             } else if (isBookmarksList || tag.isListTopic) {
                 // there won't be an update, so show the empty state for these lists right away
                 autoUpdateSkipped = true
