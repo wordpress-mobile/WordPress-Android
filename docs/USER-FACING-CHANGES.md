@@ -9,12 +9,11 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Adding a site you already subscribe to says so**
-  Entering the address of a site you already subscribe to in Manage subscriptions now briefly shows "You are already subscribed to this blog" instead of subscribing again and saying "Subscribed". The address can be typed with or without http/https, "www." or a trailing slash, and a site's other address (such as its .wordpress.com address when it uses a custom domain) is recognised too.
+  Entering a site you already subscribe to now shows "You are already subscribed to this blog" instead of subscribing again.
   - **Apps:** Both
   - **Type:** Fixed
   - **Availability:** Everyone
-  - **Where:** Reader → Subscriptions → site or tag filter → Manage → "Enter a URL or tag to follow"
-  - **Notes:** A site in a subfolder (example.com/blog) is treated as different from its domain (example.com). Recognising a site's other address needs a connection; the plain address check works offline.
+  - **Where:** Reader → Subscriptions → site or tag filter → Manage
 
 - **Plain-text (.txt) files can be uploaded as documents**
   On self-hosted and plugin-enabled WordPress.com sites, .txt files can now be selected and uploaded when choosing a document from the device. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
