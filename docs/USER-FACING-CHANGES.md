@@ -16,6 +16,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Media → + → Choose from device; My Site → Media → Documents; editor → File block → Choose from device or Media Library
   - **Notes:** Other WordPress.com sites still show .txt files greyed out, because WordPress.com only accepts .txt uploads on plugin-enabled sites with plan features activated. A .txt file uploaded from the web shows under Documents once the Media library's All list has loaded it.
 
+- **Deleted media no longer stays stuck on "Deleting"**
+  On self-hosted sites using the REST API, a deleted media item kept showing a "Deleting" spinner in the Media library even though it had already been removed from the site. It only disappeared after switching tabs or reopening the screen. It now disappears as soon as the delete finishes. A delete that fails part way through a batch no longer leaves the remaining items spinning either — they go back to normal and can be selected again to retry.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media
+  - **Notes:** Only self-hosted sites on the REST API were affected by the first problem. WordPress.com and XML-RPC sites already removed the item correctly. Items left spinning after a failed or interrupted delete affected all site types.
+
+- **Select several items at once in the Media library**
+  Long-pressing a media item in the Media library starts a selection, and tapping other items adds them to it. A toolbar shows how many are selected and lets you delete them all at once. Before, media could only be deleted one item at a time, from its details screen.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → long-press an item
+  - **Notes:** Deleting asks for confirmation first. Items already being deleted can't be selected. Back, or the toolbar's X, leaves the selection. The media type tabs are greyed out while a selection is active, so you finish or leave the selection before changing filter. Media pickers opened from the editor are unaffected.
+
 - **Opening a WordPress.com post link no longer sticks on a spinner**
   Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
   - **Apps:** Jetpack
