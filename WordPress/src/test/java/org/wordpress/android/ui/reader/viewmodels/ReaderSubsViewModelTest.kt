@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -28,7 +29,6 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.repository.FollowUrlResult
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
 import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -281,7 +281,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
                 ReaderSubsUiEvent.ShowMessage(string(R.string.reader_toast_err_unable_to_follow_blog) + " (500)")
             )
         }
-        verify(repository, never()).followUrl(any())
+        verify(repository, never()).followUrl(any(), anyOrNull())
         assertThat(viewModel.uiState.value.entry).isEqualTo("example.com")
     }
 
@@ -303,8 +303,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     fun `a url the lookup shows is already followed keeps the entry and reloads the sites`() = test {
         val url = "http://example.wordpress.com"
         whenever(repository.normalizeEntryUrl("example.wordpress.com")).thenReturn(url)
-        whenever(repository.checkUrlReachable(url)).thenReturn(null)
-        whenever(repository.followUrl(url)).thenReturn(FollowUrlResult.ALREADY_FOLLOWING)
+        whenever(repository.lookupUrl(url)).thenReturn(blog(1, "Example", url))
 
         viewModel.events.test {
             add("example.wordpress.com")
@@ -314,6 +313,9 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value.entry).isEqualTo("example.wordpress.com")
         assertThat(viewModel.uiState.value.isAdding).isFalse()
         verify(repository).getFollowedBlogs()
+        // a private site fails the unauthenticated reachability check, so it mustn't run first
+        verify(repository, never()).checkUrlReachable(any())
+        verify(repository, never()).followUrl(any(), anyOrNull())
     }
 
     @Test
@@ -321,7 +323,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         val url = "http://example.com"
         whenever(repository.normalizeEntryUrl("example.com")).thenReturn(url)
         whenever(repository.checkUrlReachable(url)).thenReturn(null)
-        whenever(repository.followUrl(url)).thenReturn(FollowUrlResult.FOLLOWED)
+        whenever(repository.followUrl(url, null)).thenReturn(true)
 
         viewModel.events.test {
             add("example.com")

@@ -40,19 +40,22 @@ class ReaderSubsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `urlKey ignores the scheme, www, case and a trailing slash`() {
+    fun `urlKey ignores the scheme, www, host case, default port, trailing slash and fragment`() {
         val key = urlKey("http://example.com")
         assertThat(key).isEqualTo("example.com")
         assertThat(urlKey("https://www.Example.com/")).isEqualTo(key)
         assertThat(urlKey("example.com")).isEqualTo(key)
-        assertThat(urlKey("https://example.com/?ref=1#top")).isEqualTo(key)
-        assertThat(urlKey("https://example.com/Blog/")).isEqualTo(urlKey("http://example.com/blog"))
+        assertThat(urlKey("https://example.com:443/#top")).isEqualTo(key)
+        assertThat(urlKey("https://example.com/blog/")).isEqualTo(urlKey("http://example.com/blog"))
     }
 
     @Test
-    fun `urlKey keeps the path, so a site in a subfolder doesn't match its domain`() {
+    fun `urlKey keeps the path, port and query, so different sites and feeds don't match`() {
         assertThat(urlKey("example.com/blog")).isNotEqualTo(urlKey("example.com"))
-        assertThat(urlKey("example.com/feed")).isNotEqualTo(urlKey("example.com"))
+        assertThat(urlKey("example.com/Feed")).isNotEqualTo(urlKey("example.com/feed"))
+        assertThat(urlKey("example.com:8080")).isNotEqualTo(urlKey("example.com"))
+        assertThat(urlKey("youtube.com/feeds/videos.xml?channel_id=A"))
+            .isNotEqualTo(urlKey("youtube.com/feeds/videos.xml?channel_id=B"))
     }
 
     @Test

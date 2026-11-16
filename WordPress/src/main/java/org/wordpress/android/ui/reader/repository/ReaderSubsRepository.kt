@@ -87,8 +87,13 @@ class ReaderSubsRepository @Inject constructor(
      * Follows the passed URL as a feed, since typed URLs are more likely to point to a feed than a
      * WordPress site (and the endpoint follows it as a site if it is one)
      */
-    suspend fun followUrl(url: String): FollowUrlResult =
-        blogRepository.followFeedUrl(url, ReaderTracker.SOURCE_SETTINGS)
+    suspend fun followUrl(url: String, blogInfo: ReaderBlog?): Boolean =
+        blogRepository.followFeedUrl(url, blogInfo, ReaderTracker.SOURCE_SETTINGS)
+
+    /**
+     * Returns the site or feed for the passed URL, saving it locally, or null if it can't be found
+     */
+    suspend fun lookupUrl(url: String): ReaderBlog? = blogRepository.lookupFeedUrl(url)
 
     /**
      * Returns null if the URL is reachable, otherwise the status code. The follow endpoint accepts any
@@ -97,15 +102,20 @@ class ReaderSubsRepository @Inject constructor(
     suspend fun checkUrlReachable(url: String): Int? = blogRepository.checkUrlReachable(url)
 
     companion object {
+        private const val HTTP_PORT = 80
+        private const val HTTPS_PORT = 443
+
         /**
-         * Returns the host without "www." plus the path without a trailing slash, lowercased, or null if the
-         * URL has no host
+         * Returns the URL without its scheme, "www.", default port, trailing slash or fragment, or null if
+         * it has no host. The query and the path's case are kept, since they can tell feeds apart.
          */
         internal fun urlKey(url: String): String? {
             val uri = runCatching { URI(withScheme(url).trim()) }.getOrNull() ?: return null
             val host = uri.host?.lowercase(Locale.ROOT)?.removePrefix("www.")?.takeIf { it.isNotEmpty() }
                 ?: return null
-            return host + uri.path.orEmpty().trimEnd('/').lowercase(Locale.ROOT)
+            val port = uri.port.takeIf { it != -1 && it != HTTP_PORT && it != HTTPS_PORT }?.let { ":$it" }.orEmpty()
+            val query = uri.rawQuery?.let { "?$it" }.orEmpty()
+            return host + port + uri.rawPath.orEmpty().trimEnd('/') + query
         }
 
         private fun withScheme(url: String) = if (url.contains("://")) url else "http://$url"

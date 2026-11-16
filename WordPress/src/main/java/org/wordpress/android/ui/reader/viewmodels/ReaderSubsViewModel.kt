@@ -18,7 +18,6 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.repository.FollowUrlResult
 import org.wordpress.android.ui.reader.repository.ReaderSubsEvent
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
 import org.wordpress.android.ui.reader.repository.UpdateTask
@@ -214,25 +213,27 @@ class ReaderSubsViewModel @Inject constructor(
     }
 
     private suspend fun followNewUrl(url: String) {
+        // looked up before the reachability check, which fails for private sites the user already follows
+        val blogInfo = repository.lookupUrl(url)
+        if (blogInfo?.isFollowing == true) {
+            // followed under another URL, which the lookup just saved, so it shows up even if the list was stale
+            showAlreadySubscribed()
+            loadSites()
+            return
+        }
         val failedStatusCode = repository.checkUrlReachable(url)
         if (failedStatusCode != null) {
             showMessage(getUrlErrorMessage(failedStatusCode))
             return
         }
-        when (repository.followUrl(url)) {
-            FollowUrlResult.FOLLOWED -> {
-                clearEntry()
-                showMessage(R.string.reader_label_blog_subscribed)
-                loadSites()
-                // the site may belong to a tag we don't have yet, and the filter sheet lists the followed sites
-                requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
-            }
-            // followed under another URL, which the lookup just saved, so it shows up even if the list was stale
-            FollowUrlResult.ALREADY_FOLLOWING -> {
-                showAlreadySubscribed()
-                loadSites()
-            }
-            FollowUrlResult.FAILED -> showMessage(R.string.reader_toast_err_unable_to_follow_blog)
+        if (repository.followUrl(url, blogInfo)) {
+            clearEntry()
+            showMessage(R.string.reader_label_blog_subscribed)
+            loadSites()
+            // the site may belong to a tag we don't have yet, and the filter sheet lists the followed sites
+            requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
+        } else {
+            showMessage(R.string.reader_toast_err_unable_to_follow_blog)
         }
     }
 
