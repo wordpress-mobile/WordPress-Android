@@ -693,7 +693,8 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `starting doesn't request posts for a tag with no saved posts once the list has been updated`() = test {
-        whenever(repository.getPostCount(tagTarget)).thenReturn(0)
+        // lenient since an updated list doesn't need to check for saved posts
+        lenient().`when`(repository.getPostCount(tagTarget)).thenReturn(0)
 
         startAndLoad(args().copy(hasUpdatedPosts = true))
 
