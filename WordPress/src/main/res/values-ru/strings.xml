@@ -1355,6 +1355,7 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Нажмите дважды для выбора размера шрифта</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Нажмите дважды для выбора размера шрифта по умолчанию</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Обратиться в службу поддержки</string>
+    <string name="reader_comments_follow_conversation">Подписаться на беседу</string>
     <string name="reader_comments_be_first_to_comment">Будьте первым, кто оставит комментарий</string>
     <string name="reader_comments_view_all">Посмотреть все комментарии</string>
     <string name="reader_comments_post_fetch_failure">При получении данных записи возникла ошибка</string>

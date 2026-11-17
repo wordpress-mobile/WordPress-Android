@@ -1291,6 +1291,7 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque duas vezes para selecionar o tamanho da fonte</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque duas vezes para selecionar o tamanho padrão da fonte</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Entre em contato com o suporte</string>
+    <string name="reader_comments_follow_conversation">Seguir conversa</string>
     <string name="reader_comments_be_first_to_comment">Seja o primeiro a comentar</string>
     <string name="reader_comments_view_all">Ver todos os comentários</string>
     <string name="reader_comments_post_fetch_failure">Ocorreu um erro ao carregar os dados do post</string>

@@ -1355,6 +1355,7 @@ Language: cs_CZ
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dvojitým klepnutím vyberte velikost písma</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dvojitým klepnutím vyberte výchozí velikost písma</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kontaktovat podporu</string>
+    <string name="reader_comments_follow_conversation">Sledovat konverzaci</string>
     <string name="reader_comments_be_first_to_comment">Buďte první! Přidejte komentář</string>
     <string name="reader_comments_view_all">Zobrazit všechny komentáře</string>
     <string name="reader_comments_post_fetch_failure">Došlo k chybě při získávání dat příspěvku</string>

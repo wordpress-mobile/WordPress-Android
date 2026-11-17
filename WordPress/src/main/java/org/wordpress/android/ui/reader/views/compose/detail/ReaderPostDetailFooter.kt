@@ -407,7 +407,7 @@ private fun CommentSnippet(
                 overflow = TextOverflow.Ellipsis,
             )
             if (state.showFollowConversation && followState != null) {
-                FollowConversationActions(followState)
+                FollowConversationActions(followState, R.string.reader_comments_follow_conversation)
             }
         }
         HorizontalDivider(

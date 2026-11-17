@@ -1007,8 +1007,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * The details state, unless it's still that of a post replaced in place, whose related posts and other details
      * mustn't show below the new post or be tracked for it
      */
-    private fun currentDetailsState(uiState: UiState?) =
-        (uiState as? ReaderPostDetailsUiState)?.takeUnless { it === chrome.replacedState }
+    private fun currentDetailsState(uiState: UiState?): ReaderPostDetailsUiState? {
+        val replaced = chrome.replacedState as? ReaderPostDetailsUiState
+        // by ids rather than identity: a late update of the replaced post emits a copy of its state
+        return (uiState as? ReaderPostDetailsUiState)?.takeUnless {
+            replaced != null && it.postId == replaced.postId && it.blogId == replaced.blogId
+        }
+    }
 
     /*
      * returns True if the related posts section is showing and at least partly scrolled into view
@@ -1446,16 +1451,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onCustomViewShown() {
-        // full screen video has just been shown so hide the AppBar
+        // full screen video has just been shown, which hides the top and bottom bars
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_CUSTOM_VIEW_SHOWN)
         chrome.isCustomViewShowing = true
         updateBackCallback()
     }
 
     override fun onCustomViewHidden() {
-        // user returned from full screen video so re-display the AppBar
+        // user returned from full screen video, so show the bars again - including if scrolling had hidden them
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_CUSTOM_VIEW_HIDDEN)
         chrome.isCustomViewShowing = false
+        chrome.scrollConnection.reset()
         updateBackCallback()
     }
 

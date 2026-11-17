@@ -1351,6 +1351,7 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">두 번 눌러 글꼴 크기 선택</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">두 번 눌러 기본 글꼴 크기 선택</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">지원팀에 문의</string>
+    <string name="reader_comments_follow_conversation">대화 팔로우</string>
     <string name="reader_comments_be_first_to_comment">첫 번째 댓글 달기</string>
     <string name="reader_comments_view_all">모든 댓글 보기</string>
     <string name="reader_comments_post_fetch_failure">글 데이터를 가져오는 중 오류가 발생했습니다.</string>

@@ -1355,6 +1355,7 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Yazı boyutunu seçmek için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Varsayılan yazı boyutunu seçmek için iki kez dokunun</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Destek ekibi ile görüşün</string>
+    <string name="reader_comments_follow_conversation">Yazışmayı takip et</string>
     <string name="reader_comments_be_first_to_comment">İlk yorumu siz yapın</string>
     <string name="reader_comments_view_all">Tüm yorumları görüntüle</string>
     <string name="reader_comments_post_fetch_failure">Yazı verileri alınırken bir sorun çıktı</string>

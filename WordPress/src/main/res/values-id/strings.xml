@@ -1353,6 +1353,7 @@ Language: id
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih ukuran font</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih ukuran font default</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hubungi dukungan</string>
+    <string name="reader_comments_follow_conversation">Ikuti Percakapan</string>
     <string name="reader_comments_be_first_to_comment">Jadilah yang pertama memberi komentar</string>
     <string name="reader_comments_view_all">Lihat semua komentar</string>
     <string name="reader_comments_post_fetch_failure">Terjadi error saat memuat data pos</string>

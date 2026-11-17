@@ -1354,6 +1354,7 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij dwukrotnie aby wybrać rozmiar czcionki</string>
     <string name="gutenberg_native_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wielkość liter</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij dwukrotnie aby wybrać domyślny rozmiar czcionki</string>
+    <string name="reader_comments_follow_conversation">Obserwuj konwersację</string>
     <string name="reader_comments_be_first_to_comment">Napisz pierwszy komentarz</string>
     <string name="reader_comments_view_all">Zobacz wszystkie komentarze</string>
     <string name="reader_comments_post_fetch_failure">Wystąpił błąd podczas pobierania danych wpisu</string>

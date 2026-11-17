@@ -1328,6 +1328,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Prekeni dy herë që të përzgjidhet madhësi shkronjash</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Prekeni dyfish që të përzgjidhet madhësi parazgjedhje shkronjash</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lidhuni me asistencën</string>
+    <string name="reader_comments_follow_conversation">Ndiqe Bisedën</string>
     <string name="reader_comments_be_first_to_comment">Jini i pari që komentoni</string>
     <string name="reader_comments_view_all">Shihini krejt komentet</string>
     <string name="reader_comments_post_fetch_failure">Pati një gabim teksa merreshin të dhëna postimi</string>

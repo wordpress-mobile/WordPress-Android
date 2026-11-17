@@ -1345,6 +1345,7 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Appuyez deux fois pour sélectionner la taille de la police</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Appuyez deux fois pour sélectionner la taille de police par défaut</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Contacter le service support</string>
+    <string name="reader_comments_follow_conversation">S’abonner à la conversation</string>
     <string name="reader_comments_be_first_to_comment">Écrivez le premier commentaire</string>
     <string name="reader_comments_view_all">Voir tous les commentaires</string>
     <string name="reader_comments_post_fetch_failure">Une erreur s’est produite lors de la récupération des données de l’article</string>

@@ -1347,6 +1347,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">יש להקיש פעמיים כדי לבחור את גודל הגופן</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">יש להקיש פעמיים כדי לבחור את גודל הגופן שבברירת מחדל</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">לפנות לתמיכה</string>
+    <string name="reader_comments_follow_conversation">מעקב אחר השיחה</string>
     <string name="reader_comments_be_first_to_comment">יש לך אפשרות לרשום את התגובה הראשונה</string>
     <string name="reader_comments_view_all">להציג את כל התגובות</string>
     <string name="reader_comments_post_fetch_failure">אירעה שגיאה בקבלת הנתונים של הפוסט</string>

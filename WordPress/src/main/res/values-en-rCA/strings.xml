@@ -981,6 +981,7 @@ Language: en_CA
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Contact support</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Double tap to select default font size</string>
     <string name="reader_comments_be_first_to_comment">Be the first to comment</string>
+    <string name="reader_comments_follow_conversation">Follow Conversation</string>
     <string name="reader_comments_post_fetch_failure">There was an error getting post data</string>
     <string name="reader_comments_view_all">View all comments</string>
     <string name="reader_btn_follow_conversation_settings">Follow conversation settings</string>

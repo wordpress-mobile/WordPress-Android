@@ -1342,6 +1342,7 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ダブルタップしてフォントサイズを選択</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ダブルタップしてデフォルトのフォントサイズを選択</string>
     <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">サポートに問い合わせる</string>
+    <string name="reader_comments_follow_conversation">会話をフォロー</string>
     <string name="reader_comments_be_first_to_comment">最初のコメントを投稿</string>
     <string name="reader_comments_view_all">すべてのコメントを表示</string>
     <string name="reader_comments_post_fetch_failure">投稿データ取得中にエラーが発生しました</string>
