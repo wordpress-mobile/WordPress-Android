@@ -38,11 +38,10 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -162,18 +161,13 @@ public class MediaPreviewFragment extends Fragment {
      * rather than silently counting as an image.
      */
     private void resolveMediaType() {
-        if (!TextUtils.isEmpty(mContentUri) && UrlUtils.isContentUri(mContentUri)) {
-            String mimeType = requireContext().getContentResolver().getType(Uri.parse(mContentUri));
-            if (!TextUtils.isEmpty(mimeType)) {
-                String normalizedMimeType = mimeType.toLowerCase(Locale.ROOT);
-                if (normalizedMimeType.startsWith("image/")
-                    || normalizedMimeType.startsWith("video/")
-                    || normalizedMimeType.startsWith("audio/")) {
-                    mIsVideo = normalizedMimeType.startsWith("video/");
-                    mIsAudio = normalizedMimeType.startsWith("audio/");
-                    return;
-                }
-            }
+        String mimeType = WPMediaUtils.resolveMimeType(requireContext(), mContentUri);
+        if (mimeType != null && (mimeType.startsWith("image/")
+                                 || mimeType.startsWith("video/")
+                                 || mimeType.startsWith("audio/"))) {
+            mIsVideo = mimeType.startsWith("video/");
+            mIsAudio = mimeType.startsWith("audio/");
+            return;
         }
 
         mIsVideo = MediaUtils.isVideo(mContentUri);
