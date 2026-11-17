@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → tap a post; Notifications → tap a new-post notification
   - **Notes:** The post body itself is unchanged.
 
+- **The back arrow stays put while you watch a video in the media viewer**
+  In the full-screen media viewer, the top bar with the back arrow now appears and disappears together with the video's playback controls, so it is always there while the controls are. Before, it faded out three seconds after you opened or swiped to a video and tapping the video only toggled the playback controls, which left no way back other than the system back gesture. Photos are unchanged: the top bar still fades out on its own and a tap brings it back.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap a video → tap the preview; also the full-screen preview opened from the media picker and from Reader posts
+  - **Notes:** Audio files no longer fade the top bar out either. It stays visible for the whole item, alongside the audio controls, which do not hide on their own.
+
 - **Plain-text (.txt) files can be uploaded as documents**
   On self-hosted and plugin-enabled WordPress.com sites, .txt files can now be selected and uploaded when choosing a document from the device. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
   - **Apps:** Both
