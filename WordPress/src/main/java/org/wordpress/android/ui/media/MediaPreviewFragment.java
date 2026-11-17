@@ -38,6 +38,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -145,12 +146,32 @@ public class MediaPreviewFragment extends Fragment {
         mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
         mVideoThumbnailUrl = args.getString(ARG_VIDEO_THUMB);
 
-        mIsVideo = MediaUtils.isVideo(mContentUri);
-        mIsAudio = MediaUtils.isAudio(mContentUri);
+        resolveMediaType();
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);
         }
+    }
+
+    /*
+     * decides whether this is a video, an audio file or an image. The MediaUtils checks look at the file
+     * extension, which a content:// URI doesn't have - every local item would be treated as an image - so
+     * ask the content provider for the MIME type when we have one of those. Only a type we recognize is
+     * trusted: anything else (application/octet-stream and the like) falls through to the extension checks
+     * rather than silently counting as an image.
+     */
+    private void resolveMediaType() {
+        String mimeType = WPMediaUtils.resolveMimeType(requireContext(), mContentUri);
+        if (mimeType != null && (mimeType.startsWith("image/")
+                                 || mimeType.startsWith("video/")
+                                 || mimeType.startsWith("audio/"))) {
+            mIsVideo = mimeType.startsWith("video/");
+            mIsAudio = mimeType.startsWith("audio/");
+            return;
+        }
+
+        mIsVideo = MediaUtils.isVideo(mContentUri);
+        mIsAudio = MediaUtils.isAudio(mContentUri);
     }
 
     @Override
