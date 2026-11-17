@@ -364,6 +364,22 @@ public class WPMediaUtils {
         return Arrays.asList(new MimeTypes().getAllTypes(getSitePlanForMimeTypes(site))).contains(mimeType);
     }
 
+    /**
+     * Returns the MIME type a content:// URI resolves to, lower-cased, or null when this isn't a content
+     * URI or the provider doesn't know the type. A content URI carries no file extension, so asking the
+     * provider is the only way to tell an image from a video or an audio file - the extension checks in
+     * MediaUtils can't answer that. Callers hand the result a prefix check and fall back to those
+     * extension checks when it is null.
+     */
+    @Nullable public static String resolveMimeType(@NonNull Context context, @Nullable String uri) {
+        if (uri == null || uri.isEmpty() || !UrlUtils.isContentUri(uri)) {
+            return null;
+        }
+
+        String mimeType = context.getContentResolver().getType(Uri.parse(uri));
+        return mimeType == null || mimeType.isEmpty() ? null : mimeType.toLowerCase(Locale.ROOT);
+    }
+
     public static void launchChooserWithContext(
             Activity activity,
             OpenSystemPicker openSystemPicker,
