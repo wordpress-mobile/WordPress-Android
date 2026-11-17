@@ -33,12 +33,6 @@
     <attr name="mlpDividerColor" format="reference|color" />
 
     <!-- Reader attributes -->
-    <attr name="readerFollowButtonBackground" format="reference|color" />
-    <attr name="readerFollowButtonForeground" format="reference|color" />
-    <attr name="readerFollowButtonSelectedBackground" format="reference|color" />
-    <attr name="readerFollowButtonSelectedForeground" format="reference|color" />
-    <attr name="readerFollowButtonSelectedTextAlpha" format="float" />
-    <attr name="readerFollowButtonSelectedStrokeAlpha" format="reference|float" />
 
     <!-- Snackbar colors -->
     <attr name="snackbarActionColor" format="reference|color" />
@@ -98,28 +92,6 @@
     <declare-styleable name="WPLinearLayoutSizeBound">
         <attr name="maxWidth" format="dimension" />
         <attr name="maxHeight" format="dimension" />
-    </declare-styleable>
-
-    <!--
-        ReaderIconCountView attributes
-    -->
-    <declare-styleable name="ReaderIconCountView">
-        <attr name="readerIcon" format="enum">
-            <enum name="like" value="0" />
-            <enum name="comment" value="1" />
-            <enum name="reblog" value="2" />
-        </attr>
-    </declare-styleable>
-
-    <!--
-        ReaderFollowButton attributes
-    -->
-    <declare-styleable name="ReaderFollowButton">
-        <attr name="wpShowFollowButtonCaption" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="ReaderFollowButtonStyle">
-        <attr name="followButtonStyle" format="reference"/>
     </declare-styleable>
 
     <!--

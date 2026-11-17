@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader post screen's bars and sections rebuilt**
+  The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → tap a post; Notifications → tap a new-post notification
+  - **Notes:** The post body itself is unchanged.
+
 - **Adding a site you already subscribe to says so**
   Entering a site you already subscribe to now shows "You are already subscribed to this blog" instead of subscribing again.
   - **Apps:** Both
