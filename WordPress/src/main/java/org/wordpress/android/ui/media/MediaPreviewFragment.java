@@ -139,12 +139,30 @@ public class MediaPreviewFragment extends Fragment {
         mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
         mVideoThumbnailUrl = args.getString(ARG_VIDEO_THUMB);
 
-        mIsVideo = MediaUtils.isVideo(mContentUri);
-        mIsAudio = MediaUtils.isAudio(mContentUri);
+        resolveMediaType();
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);
         }
+    }
+
+    /*
+     * decides whether this is a video, an audio file or an image. The MediaUtils checks look at the file
+     * extension, which a content:// URI doesn't have - every local item would be treated as an image - so
+     * ask the content provider for the MIME type when we have one of those.
+     */
+    private void resolveMediaType() {
+        if (!TextUtils.isEmpty(mContentUri) && UrlUtils.isContentUri(mContentUri)) {
+            String mimeType = requireContext().getContentResolver().getType(Uri.parse(mContentUri));
+            if (!TextUtils.isEmpty(mimeType)) {
+                mIsVideo = mimeType.startsWith("video/");
+                mIsAudio = mimeType.startsWith("audio/");
+                return;
+            }
+        }
+
+        mIsVideo = MediaUtils.isVideo(mContentUri);
+        mIsAudio = MediaUtils.isAudio(mContentUri);
     }
 
     @Override

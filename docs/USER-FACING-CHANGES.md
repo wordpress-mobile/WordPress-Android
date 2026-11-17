@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Previewing a photo picked from the device works again**
+  Long-pressing a photo in the device media picker opens a full-screen preview that now shows the image, and it can be pinched to zoom. Before, the preview was a black screen reading "Unable to load media" for every photo.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → + → Choose from device → long-press an item; also the editor's media picker, and the play overlay on a video
+  - **Notes:** Videos and audio from the device preview as before. Documents still show "Unable to load media" in this preview - that is unchanged, there is no document viewer here. The same "Unable to load media" screen reached from long-press in media search (CMM-2379) is a different screen and is not addressed by this.
+
 - **Plain-text (.txt) files can be uploaded as documents**
   On self-hosted and plugin-enabled WordPress.com sites, .txt files can now be selected and uploaded when choosing a document from the device. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
   - **Apps:** Both
