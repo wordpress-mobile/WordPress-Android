@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
@@ -258,8 +259,12 @@ class ReaderPostListViewModel @Inject constructor(
             }
         }
 
-        launch {
-            repository.events.collect { onRepositoryEvent(it) }
+        // subscribe now since these events aren't replayed
+        launch(start = CoroutineStart.UNDISPATCHED) {
+            repository.updateEvents.collect { onRepositoryEvent(it) }
+        }
+        launch(start = CoroutineStart.UNDISPATCHED) {
+            repository.followEvents.collect { onRepositoryEvent(it) }
         }
 
         updateUiState()
@@ -689,9 +694,12 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun onFollowedTagsFetched() = launch {
-        // update the current tag if the list is empty - this happens on first run
-        if (posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)) {
-            currentTag?.let { requestPosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_NEWER) }
+        val target = currentTarget() ?: return@launch
+        // fetch if nothing's saved and no update is running - checks the saved posts since [posts] is empty until
+        // the first load ends
+        if (updateActions.isNotEmpty() || repository.getPostCount(target) > 0) return@launch
+        if (repository.hasFollowedBlogs() || !hasUpdatedPosts) {
+            requestPosts(target, UpdateAction.REQUEST_NEWER)
         }
     }
 
@@ -756,13 +764,21 @@ class ReaderPostListViewModel @Inject constructor(
      */
     private fun updateCurrentTagIfTime() {
         val tag = currentTag ?: return
+        val target = ReaderPostListTarget.Tag(tag)
         launch {
-            if (repository.shouldAutoUpdateTag(tag)) {
-                requestPosts(ReaderPostListTarget.Tag(tag), UpdateAction.REQUEST_NEWER)
-            } else if (isBookmarksList || tag.isListTopic) {
-                // there won't be an update, so show the empty state for these lists right away
-                autoUpdateSkipped = true
-                updateUiState()
+            when {
+                repository.shouldAutoUpdateTag(tag) -> requestPosts(target, UpdateAction.REQUEST_NEWER)
+
+                isBookmarksList || tag.isListTopic -> {
+                    // there won't be an update, so show the empty state for these lists right away
+                    autoUpdateSkipped = true
+                    updateUiState()
+                }
+
+                // until an update ends the list shows nothing rather than its empty state, so a tag with no saved
+                // posts is updated even if it was updated recently. Once one has ended the usual throttle applies
+                !hasUpdatedPosts && repository.getPostCount(target) == 0 ->
+                    requestPosts(target, UpdateAction.REQUEST_NEWER)
             }
         }
     }
