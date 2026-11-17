@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -217,6 +221,9 @@ private fun TopBar(
         // the other colors default to the surface's, but action icons default to onSurfaceVariant, which the reading
         // theme makes translucent
         colors = TopAppBarDefaults.topAppBarColors(actionIconContentColor = MaterialTheme.colorScheme.onSurface),
+        // only the status bar, which the pager hides, rather than M3's default of the bars plus the display cutout:
+        // that would leave a gap above the bar on a device with a camera cutout, where the old toolbar had none
+        windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Top),
     )
 }
 
