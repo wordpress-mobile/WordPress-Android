@@ -129,11 +129,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
-import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
-import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -281,13 +277,7 @@ public interface AppComponent {
 
 
 
-    void inject(ReaderPostDetailHeaderView object);
-
-    void inject(ReaderExpandableTagsView object);
-
     void inject(ReaderWebView object);
-
-    void inject(ReaderSimplePostContainerView object);
 
     void inject(ReaderPostPagerActivity object);
 
@@ -474,8 +464,6 @@ public interface AppComponent {
     void inject(UnifiedCommentDetailsFragment object);
 
     void inject(UnifiedAboutActivity object);
-
-    void inject(CommentSnippetAdapter object);
 
     void inject(BloggingPromptsOnboardingDialogFragment object);
 

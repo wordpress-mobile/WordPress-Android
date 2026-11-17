@@ -14,5 +14,4 @@
     </item>
 
     <!-- Reader Follow Button -->
-    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_dark</dimen>
 </resources>

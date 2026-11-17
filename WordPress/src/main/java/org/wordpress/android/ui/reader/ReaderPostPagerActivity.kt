@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.activity.addCallback
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -87,7 +86,6 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
-import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.widgets.WPSwipeSnackbar
 import org.wordpress.android.widgets.WPViewPager2Transformer
 import java.io.UnsupportedEncodingException
@@ -328,17 +326,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 lastSelectedPosition = position
             }
         })
-
-        onBackPressedDispatcher.addCallback(this) {
-            // there's no page yet while a post slug is being looked up
-            val fragment = pagerAdapter?.getFragmentAtPosition(lastSelectedPosition)
-            when {
-                // if full screen video is showing, hide the custom view rather than navigate back
-                fragment?.isCustomViewShowing == true -> fragment.hideCustomView()
-                fragment?.goBackInPostHistory() == true -> Unit
-                else -> onBackPressedDispatcher.onBackPressedCompat(this)
-            }
-        }
 
         viewPager.setPageTransformer(
             WPViewPager2Transformer(WPViewPager2Transformer.TransformType.SlideOver)
@@ -1139,7 +1126,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        private const val OFFSCREEN_PAGE_LIMIT = 2
+        private const val OFFSCREEN_PAGE_LIMIT = 1
         private const val GENERATION_OFFSET = 100_000L
         private const val KEY_PAGER_GENERATION = "pager_generation"
     }

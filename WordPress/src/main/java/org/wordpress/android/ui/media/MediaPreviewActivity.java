@@ -33,7 +33,9 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
@@ -41,7 +43,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class MediaPreviewActivity extends BaseAppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
+public class MediaPreviewActivity extends BaseAppCompatActivity
+        implements MediaPreviewFragment.MediaPreviewListener {
     private static final String ARG_ID_OR_URL_LIST = "id_list";
     private static final String ARG_PREVIEW_TYPE = "preview_type";
 
@@ -62,6 +65,8 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
     // initial media item to show, based either on ID or URI
     private int mMediaId;
     private String mContentUri;
+    // resolved once per item: showToolbar() asks on every tap, and the content provider shouldn't
+    private String mContentUriMimeType;
 
     private int mLastPosition;
     private PreviewType mPreviewType;
@@ -75,6 +80,7 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
 
     private static final long FADE_DELAY_MS = 3000;
     private final Handler mFadeHandler = new Handler();
+    private boolean mIsFadingOutToolbar;
 
     @Inject MediaStore mMediaStore;
 
@@ -193,6 +199,8 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
             return;
         }
 
+        mContentUriMimeType = WPMediaUtils.resolveMimeType(this, mContentUri);
+
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -215,8 +223,8 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
             showPreviewFragment();
         }
 
+        // showToolbar() takes care of scheduling the fade-out when the media allows it
         showToolbar();
-        mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
     }
 
     @Override
@@ -273,64 +281,94 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
-        fragment.setOnMediaTappedListener(this);
+        fragment.setMediaPreviewListener(this);
     }
 
     private final Runnable mFadeOutRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
-                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mToolbar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-            }
+            hideToolbar();
         }
     };
 
-    private void showToolbar() {
-        if (!isFinishing()) {
-            if (getPreviewType().isMulti()) {
-                int position = mViewPager.getCurrentItem();
-                int count = mPagerAdapter.getCount();
-                if (count > 1) {
-                    String title = String.format(
-                            getString(R.string.media_preview_title),
-                            position + 1,
-                            count);
-                    mToolbar.setTitle(title);
+    private void hideToolbar() {
+        if (isFinishing() || mIsFadingOutToolbar || mToolbar.getVisibility() != View.VISIBLE) {
+            return;
+        }
+
+        mFadeHandler.removeCallbacks(mFadeOutRunnable);
+        mIsFadingOutToolbar = true;
+        AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // showToolbar() may have interrupted this animation, in which case the toolbar
+                // is being shown again and must not be hidden here
+                if (mIsFadingOutToolbar) {
+                    mIsFadingOutToolbar = false;
+                    mToolbar.setVisibility(View.GONE);
                 }
             }
 
-            mFadeHandler.removeCallbacks(mFadeOutRunnable);
-            mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
-            if (mToolbar.getVisibility() != View.VISIBLE) {
-                AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        mToolbar.setVisibility(View.VISIBLE);
-                    }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                    }
+    private void showToolbar() {
+        if (isFinishing()) {
+            return;
+        }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
+        if (getPreviewType().isMulti()) {
+            int position = mViewPager.getCurrentItem();
+            int count = mPagerAdapter.getCount();
+            if (count > 1) {
+                String title = String.format(
+                        getString(R.string.media_preview_title),
+                        position + 1,
+                        count);
+                mToolbar.setTitle(title);
             }
         }
+
+        mFadeHandler.removeCallbacks(mFadeOutRunnable);
+        // video keeps the toolbar in sync with its playback controls rather than fading it out on a
+        // timer - the player swallows taps, so an auto-hidden back arrow could never be brought
+        // back (see onVideoControlsVisibilityChanged). audio has no such listener: its controls
+        // never auto-hide either, so the toolbar simply stays up for as long as the item is shown
+        if (!isCurrentMediaAudioOrVideo()) {
+            mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
+        }
+
+        boolean wasFadingOut = mIsFadingOutToolbar;
+        mIsFadingOutToolbar = false;
+        if (mToolbar.getVisibility() != View.VISIBLE || wasFadingOut) {
+            mToolbar.clearAnimation();
+            mToolbar.setVisibility(View.VISIBLE);
+            AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down);
+        }
+    }
+
+    /*
+     * the media currently shown by the pager (or by the single preview fragment) is played back by
+     * ExoPlayer rather than simply displayed
+     */
+    private boolean isCurrentMediaAudioOrVideo() {
+        String url = mContentUri;
+        if (getPreviewType() == PreviewType.MULTI_MEDIA_IDS) {
+            MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+            url = media != null ? media.getUrl() : null;
+        } else if (mContentUriMimeType != null) {
+            // a local item arrives as a content:// URI with no extension for MediaUtils to match, so
+            // the MIME type the provider gave us decides - the same answer MediaPreviewFragment acts on
+            return mContentUriMimeType.startsWith("video/") || mContentUriMimeType.startsWith("audio/");
+        }
+        return MediaUtils.isVideo(url) || MediaUtils.isAudio(url);
     }
 
     private PreviewType getPreviewType() {
@@ -384,6 +422,19 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
         showToolbar();
     }
 
+    /*
+     * a video swallows taps to toggle its own playback controls, so the toolbar follows those
+     * controls instead - this keeps the back arrow reachable for as long as the controls are shown
+     */
+    @Override
+    public void onVideoControlsVisibilityChanged(boolean visible) {
+        if (visible) {
+            showToolbar();
+        } else {
+            hideToolbar();
+        }
+    }
+
     class MediaPagerAdapter extends FragmentStatePagerAdapter {
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
         private boolean mDidAutoPlay;
@@ -418,7 +469,7 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
                     throw new RuntimeException("Unhandled preview type");
             }
 
-            fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
+            fragment.setMediaPreviewListener(MediaPreviewActivity.this);
             return fragment;
         }
 
@@ -433,6 +484,11 @@ public class MediaPreviewActivity extends BaseAppCompatActivity implements Media
             Object item = super.instantiateItem(container, position);
             if (item instanceof Fragment) {
                 mFragmentMap.put(position, (Fragment) item);
+            }
+            // fragments restored after the activity is recreated don't come through getItem(),
+            // so this is the only place that can give them back their listener
+            if (item instanceof MediaPreviewFragment) {
+                ((MediaPreviewFragment) item).setMediaPreviewListener(MediaPreviewActivity.this);
             }
             return item;
         }

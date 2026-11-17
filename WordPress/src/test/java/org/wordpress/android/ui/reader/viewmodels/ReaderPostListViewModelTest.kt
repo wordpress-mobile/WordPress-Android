@@ -7,6 +7,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -87,9 +88,11 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(actionsHandler.refreshPosts).thenReturn(MutableLiveData())
         whenever(actionsHandler.followStatusUpdated).thenReturn(followStatusUpdated)
         whenever(actionsHandler.scrollToSiteId).thenReturn(scrollToSiteId)
-        whenever(repository.events).thenReturn(repositoryEvents)
+        whenever(repository.updateEvents).thenReturn(repositoryEvents)
+        whenever(repository.followEvents).thenReturn(emptyFlow())
         whenever(repository.getPosts(any())).thenReturn(ReaderPostList())
-        whenever(repository.getPostCount(any())).thenReturn(0)
+        // the tag has saved posts, so starting doesn't request any unless it's time to update the tag
+        whenever(repository.getPostCount(any())).thenReturn(1)
         whenever(repository.shouldAutoUpdateTag(any())).thenReturn(false)
         whenever(repository.isFollowedTag(any())).thenReturn(false)
         whenever(repository.isTimeToUpdateBlogInfo(any())).thenReturn(false)
@@ -404,7 +407,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.onLoadMore()
         advanceUntilIdle()
 
-        verify(repository, never()).getPostCount(any())
+        verify(repository, never()).requestPosts(tagTarget, UpdateAction.REQUEST_OLDER)
     }
 
     @Test
@@ -676,6 +679,25 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         advanceUntilIdle()
 
         verify(repository, times(2)).getPosts(tagTarget)
+    }
+
+    @Test
+    fun `starting requests newer posts for a tag with no saved posts, even if it was updated recently`() = test {
+        whenever(repository.getPostCount(tagTarget)).thenReturn(0)
+
+        startAndLoad()
+
+        verify(repository).requestPosts(tagTarget, UpdateAction.REQUEST_NEWER)
+    }
+
+    @Test
+    fun `starting doesn't request posts for a tag with no saved posts once the list has been updated`() = test {
+        // lenient since an updated list doesn't need to check for saved posts
+        lenient().`when`(repository.getPostCount(tagTarget)).thenReturn(0)
+
+        startAndLoad(args().copy(hasUpdatedPosts = true))
+
+        verify(repository, never()).requestPosts(tagTarget, UpdateAction.REQUEST_NEWER)
     }
 
     @Test

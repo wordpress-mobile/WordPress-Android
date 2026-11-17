@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
 import org.wordpress.android.datasets.ReaderBlockedBlogTable
 import org.wordpress.android.datasets.ReaderBlogTable
@@ -23,8 +22,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 /**
- * Data access for the Reader post list. Reads run on the IO dispatcher, and post updates plus changes to
- * the followed tags and sites are exposed as a single [Flow].
+ * Data access for the Reader post list. Reads run on the IO dispatcher, and post updates and changes to
+ * the followed tags and sites are exposed as [Flow]s.
  */
 class ReaderPostListRepository @Inject constructor(
     private val readerPostUpdater: ReaderPostUpdater,
@@ -32,17 +31,17 @@ class ReaderPostListRepository @Inject constructor(
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    val events: Flow<ReaderPostListEvent> = merge(
-        readerPostUpdater.events,
-        tagsAndSitesUpdater.events.map { event ->
-            when (event) {
-                is ReaderTagsAndSitesEvent.FollowedTagsChanged -> ReaderPostListEvent.FollowedTagsFetched
+    // not merged, since merge() subscribes late and these don't replay, so events sent in between would be lost
+    val updateEvents: Flow<ReaderPostListEvent> = readerPostUpdater.events
 
-                is ReaderTagsAndSitesEvent.FollowedBlogsChanged ->
-                    ReaderPostListEvent.FollowedBlogsFetched(event.didChange, event.didClearBlocks)
-            }
+    val followEvents: Flow<ReaderPostListEvent> = tagsAndSitesUpdater.events.map { event ->
+        when (event) {
+            is ReaderTagsAndSitesEvent.FollowedTagsChanged -> ReaderPostListEvent.FollowedTagsFetched
+
+            is ReaderTagsAndSitesEvent.FollowedBlogsChanged ->
+                ReaderPostListEvent.FollowedBlogsFetched(event.didChange, event.didClearBlocks)
         }
-    )
+    }
 
     suspend fun getPosts(target: ReaderPostListTarget): ReaderPostList = withContext(ioDispatcher) {
         when (target) {
