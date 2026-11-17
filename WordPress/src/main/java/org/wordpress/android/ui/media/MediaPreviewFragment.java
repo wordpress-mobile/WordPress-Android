@@ -38,6 +38,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -54,8 +55,14 @@ public class MediaPreviewFragment extends Fragment {
     private static final String ARG_AUTOPLAY = "autoplay";
     private static final String ARG_VIDEO_THUMB = "video_thumb";
 
-    public interface OnMediaTappedListener {
+    public interface MediaPreviewListener {
         void onMediaTapped();
+
+        /**
+         * called when a video shows or hides its playback controls - the video swallows taps, so this
+         * is the only way the hosting activity hears about the user asking for the chrome to be shown
+         */
+        void onVideoControlsVisibilityChanged(boolean visible);
     }
 
     private String mContentUri;
@@ -73,7 +80,7 @@ public class MediaPreviewFragment extends Fragment {
     private PlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
     private ImageView mExoPlayerArtworkView;
-    private OnMediaTappedListener mMediaTapListener;
+    private MediaPreviewListener mListener;
 
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
@@ -139,12 +146,32 @@ public class MediaPreviewFragment extends Fragment {
         mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
         mVideoThumbnailUrl = args.getString(ARG_VIDEO_THUMB);
 
-        mIsVideo = MediaUtils.isVideo(mContentUri);
-        mIsAudio = MediaUtils.isAudio(mContentUri);
+        resolveMediaType();
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);
         }
+    }
+
+    /*
+     * decides whether this is a video, an audio file or an image. The MediaUtils checks look at the file
+     * extension, which a content:// URI doesn't have - every local item would be treated as an image - so
+     * ask the content provider for the MIME type when we have one of those. Only a type we recognize is
+     * trusted: anything else (application/octet-stream and the like) falls through to the extension checks
+     * rather than silently counting as an image.
+     */
+    private void resolveMediaType() {
+        String mimeType = WPMediaUtils.resolveMimeType(requireContext(), mContentUri);
+        if (mimeType != null && (mimeType.startsWith("image/")
+                                 || mimeType.startsWith("video/")
+                                 || mimeType.startsWith("audio/"))) {
+            mIsVideo = mimeType.startsWith("video/");
+            mIsAudio = mimeType.startsWith("audio/");
+            return;
+        }
+
+        mIsVideo = MediaUtils.isVideo(mContentUri);
+        mIsAudio = MediaUtils.isAudio(mContentUri);
     }
 
     @Override
@@ -172,8 +199,8 @@ public class MediaPreviewFragment extends Fragment {
 
         if (showAudioOrVideo()) {
             View.OnClickListener listener = v -> {
-                if (mMediaTapListener != null) {
-                    mMediaTapListener.onMediaTapped();
+                if (mListener != null) {
+                    mListener.onMediaTapped();
                 }
             };
             audioFrame.setOnClickListener(listener);
@@ -216,6 +243,12 @@ public class MediaPreviewFragment extends Fragment {
             if (mPlayer == null) {
                 initializePlayer();
             }
+            // the player is released when this page is stopped and rebuilt when it starts again,
+            // and the rebuilt one shows its controls while the fragment isn't resumed yet - so the
+            // activity is told where they stand now that the page is back in front of the user
+            if (mIsVideo && mListener != null) {
+                mListener.onVideoControlsVisibilityChanged(mExoPlayerView.isControllerVisible());
+            }
         } else if (mImageLoadFailed) {
             // the pre-load that ran while this page was offscreen failed, so try again now that
             // the user has swiped to it
@@ -232,8 +265,8 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
-    void setOnMediaTappedListener(OnMediaTappedListener listener) {
-        mMediaTapListener = listener;
+    void setMediaPreviewListener(MediaPreviewListener listener) {
+        mListener = listener;
     }
 
     private void showProgress(boolean show) {
@@ -287,8 +320,8 @@ public class MediaPreviewFragment extends Fragment {
                         if (isAdded()) {
                             PhotoViewAttacher attacher = mImageView.getAttacher();
                             attacher.setOnViewTapListener((view, x, y) -> {
-                                if (mMediaTapListener != null) {
-                                    mMediaTapListener.onMediaTapped();
+                                if (mListener != null) {
+                                    mListener.onMediaTapped();
                                 }
                             });
                             showProgress(false);
@@ -321,6 +354,14 @@ public class MediaPreviewFragment extends Fragment {
             if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
             }
+            // the listener must be registered before the player is set, otherwise setPlayer()
+            // shows the controls before anybody is listening and the toolbar is left out of sync
+            mExoPlayerView.setControllerVisibilityListener(visibility -> {
+                // only the page the user is actually looking at may drive the activity's toolbar
+                if (mListener != null && isResumed()) {
+                    mListener.onVideoControlsVisibilityChanged(visibility == View.VISIBLE);
+                }
+            });
             mExoPlayerView.setPlayer(mPlayer);
             mExoPlayerView.requestFocus();
         } else if (mIsAudio) {

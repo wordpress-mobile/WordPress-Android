@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.reader.repository.ReaderSubsRepository.Companion.urlKey
 
 @ExperimentalCoroutinesApi
 class ReaderSubsRepositoryTest : BaseUnitTest() {
@@ -36,5 +37,31 @@ class ReaderSubsRepositoryTest : BaseUnitTest() {
             assertThat(awaitItem()).isEqualTo(ReaderSubsEvent.FollowedBlogsFetched(didChange = true))
             assertThat(awaitItem()).isEqualTo(ReaderSubsEvent.FollowedBlogsFetched(didChange = false))
         }
+    }
+
+    @Test
+    fun `urlKey ignores the scheme, www, host case, default port, trailing slash and fragment`() {
+        val key = urlKey("http://example.com")
+        assertThat(key).isEqualTo("example.com")
+        assertThat(urlKey("https://www.Example.com/")).isEqualTo(key)
+        assertThat(urlKey("example.com")).isEqualTo(key)
+        assertThat(urlKey("https://example.com:443/#top")).isEqualTo(key)
+        assertThat(urlKey("https://example.com/blog/")).isEqualTo(urlKey("http://example.com/blog"))
+    }
+
+    @Test
+    fun `urlKey keeps the path, port and query, so different sites and feeds don't match`() {
+        assertThat(urlKey("example.com/blog")).isNotEqualTo(urlKey("example.com"))
+        assertThat(urlKey("example.com/Feed")).isNotEqualTo(urlKey("example.com/feed"))
+        assertThat(urlKey("example.com:8080")).isNotEqualTo(urlKey("example.com"))
+        assertThat(urlKey("youtube.com/feeds/videos.xml?channel_id=A"))
+            .isNotEqualTo(urlKey("youtube.com/feeds/videos.xml?channel_id=B"))
+    }
+
+    @Test
+    fun `urlKey returns null for a url without a host`() {
+        assertThat(urlKey("")).isNull()
+        assertThat(urlKey("http://")).isNull()
+        assertThat(urlKey("not a url")).isNull()
     }
 }

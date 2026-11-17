@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
@@ -93,7 +94,8 @@ class SubFilterViewModel @Inject constructor(
             subfilterJson = it.getString(ARG_CURRENT_SUBFILTER_JSON)
         }
 
-        launch(mainDispatcher) {
+        // subscribe now since these events aren't replayed
+        launch(mainDispatcher, start = CoroutineStart.UNDISPATCHED) {
             tagsAndSitesUpdater.events.collect { event ->
                 when (event) {
                     is ReaderTagsAndSitesEvent.FollowedTagsChanged -> {

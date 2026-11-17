@@ -14,6 +14,8 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.UrlUtils
+import java.net.URI
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -45,7 +47,16 @@ class ReaderSubsRepository @Inject constructor(
 
     fun isFollowedTagName(name: String): Boolean = ReaderTagTable.isFollowedTagName(name)
 
-    fun isFollowedUrl(url: String) = ReaderBlogTable.isFollowedBlogUrl(url) || ReaderBlogTable.isFollowedFeedUrl(url)
+    /**
+     * Returns true if the passed URL matches a followed site's URL or feed URL by [urlKey], since the stored
+     * URLs are spelled however the server returned them
+     */
+    suspend fun isFollowedUrl(url: String): Boolean {
+        val key = urlKey(url) ?: return false
+        return withContext(ioDispatcher) {
+            ReaderBlogTable.getFollowedBlogs().any { urlKey(it.url) == key || urlKey(it.feedUrl) == key }
+        }
+    }
 
     fun createFollowedTag(name: String): ReaderTag = ReaderUtils.createTagFromTagName(name, ReaderTagType.FOLLOWED)
 
@@ -54,7 +65,7 @@ class ReaderSubsRepository @Inject constructor(
      * it isn't a valid network URL
      */
     fun normalizeEntryUrl(entry: String): String? {
-        val url = UrlUtils.normalizeUrl(if (entry.contains("://")) entry else "http://$entry")
+        val url = UrlUtils.normalizeUrl(withScheme(entry))
         return url.takeIf { URLUtil.isNetworkUrl(it) }
     }
 
@@ -76,13 +87,39 @@ class ReaderSubsRepository @Inject constructor(
      * Follows the passed URL as a feed, since typed URLs are more likely to point to a feed than a
      * WordPress site (and the endpoint follows it as a site if it is one)
      */
-    suspend fun followUrl(url: String): Boolean = blogRepository.followFeedUrl(url, ReaderTracker.SOURCE_SETTINGS)
+    suspend fun followUrl(url: String, blogInfo: ReaderBlog?): Boolean =
+        blogRepository.followFeedUrl(url, blogInfo, ReaderTracker.SOURCE_SETTINGS)
+
+    /**
+     * Returns the site or feed for the passed URL, saving it locally, or null if it can't be found
+     */
+    suspend fun lookupUrl(url: String): ReaderBlog? = blogRepository.lookupFeedUrl(url)
 
     /**
      * Returns null if the URL is reachable, otherwise the status code. The follow endpoint accepts any
      * URL, even one that doesn't exist, so this is checked first.
      */
     suspend fun checkUrlReachable(url: String): Int? = blogRepository.checkUrlReachable(url)
+
+    companion object {
+        private const val HTTP_PORT = 80
+        private const val HTTPS_PORT = 443
+
+        /**
+         * Returns the URL without its scheme, "www.", default port, trailing slash or fragment, or null if
+         * it has no host. The query and the path's case are kept, since they can tell feeds apart.
+         */
+        internal fun urlKey(url: String): String? {
+            val uri = runCatching { URI(withScheme(url).trim()) }.getOrNull()
+            val host = uri?.host?.lowercase(Locale.ROOT)?.removePrefix("www.")?.takeIf { it.isNotEmpty() }
+            if (uri == null || host == null) return null
+            val port = uri.port.takeIf { it != -1 && it != HTTP_PORT && it != HTTPS_PORT }?.let { ":$it" }.orEmpty()
+            val query = uri.rawQuery?.let { "?$it" }.orEmpty()
+            return host + port + uri.rawPath.orEmpty().trimEnd('/') + query
+        }
+
+        private fun withScheme(url: String) = if (url.contains("://")) url else "http://$url"
+    }
 }
 
 sealed class ReaderSubsEvent {

@@ -887,6 +887,27 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given related posts are shown, when the same post is re-rendered, then its related posts are kept`() =
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(
+                    FetchRelatedPostsState.Success(
+                        localRelatedPosts = relatedPosts,
+                        globalRelatedPosts = relatedPosts
+                    )
+                )
+            val uiStates = init().uiStates
+            viewModel.onRelatedPostsRequested(readerPost)
+            val shownState = uiStates.last() as ReaderPostDetailsUiState
+
+            viewModel.onUpdatePost(readerPost)
+
+            val uiState = uiStates.last() as ReaderPostDetailsUiState
+            assertThat(uiState.localRelatedPosts).isEqualTo(shownState.localRelatedPosts).isNotNull
+            assertThat(uiState.globalRelatedPosts).isEqualTo(shownState.globalRelatedPosts).isNotNull
+        }
+
+    @Test
     fun `given global related posts fetch succeeds, when related posts requested, then global related posts shown`() =
         test {
             val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)

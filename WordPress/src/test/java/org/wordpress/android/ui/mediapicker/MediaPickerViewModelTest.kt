@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
+import android.net.Uri
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flow
@@ -13,6 +14,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -24,6 +26,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.ShowSystemPickerTypeMenu
@@ -326,15 +329,21 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `navigates to preview on item click`() = test {
-        whenever(mediaUtilsWrapper.getRealPathFromURI(anyOrNull())).thenReturn(firstItem.url)
+    fun `navigates to preview with the content uri on item click`() = test {
+        val localUri = mock<Uri>()
+        whenever(uriWrapper1.uri).thenReturn(localUri)
         setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
 
         viewModel.refreshData(false)
 
         assertThat(navigateEvents).isEmpty()
         clickItem()
-        assertThat(navigateEvents).isNotEmpty
+
+        // the preview has to get the content:// URI itself - a raw filesystem path converted out
+        // of it has no scheme, and Glide can't load that
+        assertThat(navigateEvents).hasSize(1)
+        assertThat(navigateEvents.first().peekContent()).isEqualTo(PreviewUrl(localUri.toString()))
+        verify(mediaUtilsWrapper, never()).getRealPathFromURI(anyOrNull())
         verify(mediaPickerTracker).trackPreview(
             firstItem.type == VIDEO,
             firstItem.identifier,
