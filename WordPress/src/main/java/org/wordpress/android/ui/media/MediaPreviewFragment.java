@@ -42,6 +42,8 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 public class MediaPreviewFragment extends Fragment {
@@ -149,15 +151,22 @@ public class MediaPreviewFragment extends Fragment {
     /*
      * decides whether this is a video, an audio file or an image. The MediaUtils checks look at the file
      * extension, which a content:// URI doesn't have - every local item would be treated as an image - so
-     * ask the content provider for the MIME type when we have one of those.
+     * ask the content provider for the MIME type when we have one of those. Only a type we recognize is
+     * trusted: anything else (application/octet-stream and the like) falls through to the extension checks
+     * rather than silently counting as an image.
      */
     private void resolveMediaType() {
         if (!TextUtils.isEmpty(mContentUri) && UrlUtils.isContentUri(mContentUri)) {
             String mimeType = requireContext().getContentResolver().getType(Uri.parse(mContentUri));
             if (!TextUtils.isEmpty(mimeType)) {
-                mIsVideo = mimeType.startsWith("video/");
-                mIsAudio = mimeType.startsWith("audio/");
-                return;
+                String normalizedMimeType = mimeType.toLowerCase(Locale.ROOT);
+                if (normalizedMimeType.startsWith("image/")
+                    || normalizedMimeType.startsWith("video/")
+                    || normalizedMimeType.startsWith("audio/")) {
+                    mIsVideo = normalizedMimeType.startsWith("video/");
+                    mIsAudio = normalizedMimeType.startsWith("audio/");
+                    return;
+                }
             }
         }
 
