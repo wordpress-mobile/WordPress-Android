@@ -24,6 +24,7 @@ import org.wordpress.android.ui.rs.contentlist.ContentDisplayState
 import org.wordpress.android.ui.rs.contentlist.ContentListEmptyState
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorRow
 import org.wordpress.android.ui.rs.contentlist.ContentListErrorState
+import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentDateGrouper
 import org.wordpress.android.ui.rs.contentlist.ContentListGroupHeader
@@ -49,7 +50,6 @@ fun PostRsTabListScreen(
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit,
-    onCreatePost: () -> Unit,
     onRowsVisible: (List<Long>) -> Unit,
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
@@ -77,10 +77,7 @@ fun PostRsTabListScreen(
                         R.string.post_list_search_nothing_found
                     } else {
                         emptyMessageResId
-                    },
-                    // No "write a post" shortcut on an empty search result.
-                    actionLabelResId = R.string.posts_empty_list_button.takeIf { !isSearching },
-                    onAction = if (isSearching) null else onCreatePost
+                    }
                 )
             }
             else -> PostListContent(
@@ -136,7 +133,8 @@ private fun PostListContent(
 
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = ContentListDefaults.FabClearancePadding
     ) {
         items(
             items = entries,

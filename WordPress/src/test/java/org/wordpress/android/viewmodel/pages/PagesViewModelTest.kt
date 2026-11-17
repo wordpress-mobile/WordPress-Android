@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.network.rest.wpapi.post.PostRsApiRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
@@ -140,6 +141,7 @@ class PagesViewModelTest : BaseUnitTest() {
         postStore = PostStore(
             dispatcher,
             Mockito.mock(PostRestClient::class.java),
+            Mockito.mock(PostRsApiRestClient::class.java),
             Mockito.mock(PostXMLRPCClient::class.java),
             postSqlUtils
         )

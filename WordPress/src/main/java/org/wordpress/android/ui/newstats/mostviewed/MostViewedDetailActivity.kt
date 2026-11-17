@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,9 +29,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +54,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -71,11 +75,17 @@ private const val EXTRA_PERIOD_CUSTOM_START = "extra_period_custom_start"
 private const val EXTRA_PERIOD_CUSTOM_END = "extra_period_custom_end"
 private const val NO_EPOCH_DAY = -1L
 
+// Thumbnails are resolved a batch of rows at a time, rounded up past the last row reached, so
+// scrolling finds the next screenful's images already on their way.
+private const val THUMBNAIL_BATCH = 25
+
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
     @Inject lateinit var activityNavigator: ActivityNavigator
 
     @Inject lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    @Inject lateinit var newStatsTracker: NewStatsTracker
 
     private val viewModel: MostViewedDetailViewModel by viewModels()
 
@@ -86,6 +96,12 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             ?: StatsCardType.MOST_VIEWED_POSTS_AND_PAGES
         val valueHeaderResId = intent.getIntExtra(EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views)
         val selfFetch = readSelfFetchArgs()
+
+        // Only on a fresh launch, for the same reason NewStatsActivity guards its open event: a
+        // rotation recreates this activity from the same Intent and would inflate the count.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(cardType)
+        }
 
         if (selfFetch != null) {
             viewModel.load(selfFetch.source, selfFetch.period)
@@ -101,13 +117,18 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                 MostViewedDetailScreen(
                     cardType = cardType,
                     uiState = uiState,
+                    thumbnails = viewModel.postThumbnails.collectAsState().value,
+                    onRowsVisible = viewModel::loadPostThumbnails,
                     valueHeaderResId = valueHeaderResId,
                     onBackPressed = onBackPressedDispatcher::onBackPressed,
                     onRetry = { viewModel.retry() },
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
                     },
-                    onUrlClick = { url -> activityNavigator.openInCustomTab(this, url) },
+                    onUrlClick = { url ->
+                        newStatsTracker.trackTopListItemTapped(cardType)
+                        activityNavigator.openInCustomTab(this, url)
+                    },
                     onItemClick = if (cardType == StatsCardType.MOST_VIEWED_POSTS_AND_PAGES) {
                         ::openPostDetailStats
                     } else {
@@ -119,7 +140,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedDetailItem) {
-        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, viewModel.getSite())
+        newStatsTracker.trackTopListItemTapped(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         PostStatsDetailActivity.start(this, item.id, item.title)
     }
 
@@ -218,6 +240,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 private fun MostViewedDetailScreen(
     cardType: StatsCardType,
     uiState: MostViewedDetailUiState,
+    thumbnails: Map<Long, String> = emptyMap(),
+    onRowsVisible: (List<MostViewedDetailItem>) -> Unit = {},
     valueHeaderResId: Int = R.string.stats_views,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
@@ -255,6 +279,9 @@ private fun MostViewedDetailScreen(
             )
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
                 state = uiState,
+                showThumbnails = cardType == StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
+                thumbnails = thumbnails,
+                onRowsVisible = onRowsVisible,
                 valueHeaderResId = valueHeaderResId,
                 onUrlClick = onUrlClick,
                 onItemClick = onItemClick,
@@ -265,14 +292,36 @@ private fun MostViewedDetailScreen(
 }
 
 @Composable
+@Suppress("LongParameterList")
 private fun DetailLoadedContent(
     state: MostViewedDetailUiState.Loaded,
+    showThumbnails: Boolean,
+    thumbnails: Map<Long, String>,
+    onRowsVisible: (List<MostViewedDetailItem>) -> Unit,
     valueHeaderResId: Int,
     onUrlClick: (String) -> Unit,
     onItemClick: ((MostViewedDetailItem) -> Unit)?,
     modifier: Modifier = Modifier
 ) {
+    val listState = rememberLazyListState()
+    // Thumbnails are resolved for the rows reached so far, a batch at a time. This list is not the
+    // ten rows the card shows -- the stats API bounds each day's results rather than the summary,
+    // so a busy site's detail screen runs to several hundred posts, and resolving all of them on
+    // entry would be a dozen requests for rows nobody has looked at. Rounding up to a whole batch
+    // keeps it from being the opposite problem, a request per row scrolled past; the ViewModel
+    // drops ids it has already asked for, so each batch is paid for once.
+    if (showThumbnails) {
+        LaunchedEffect(listState, state.items) {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0 }
+                .collect { lastVisible ->
+                    val reached = lastVisible + 1
+                    val batched = (reached + THUMBNAIL_BATCH - 1) / THUMBNAIL_BATCH * THUMBNAIL_BATCH
+                    onRowsVisible(state.items.take(batched))
+                }
+        }
+    }
     LazyColumn(
+        state = listState,
         modifier = modifier.padding(horizontal = 16.dp)
     ) {
         item {
@@ -311,7 +360,14 @@ private fun DetailLoadedContent(
                 url = item.url,
                 onItemClick = onItemClick?.let { { it(item) } },
                 position = index + 1,
-                childStartPadding = 32.dp
+                childStartPadding = 32.dp,
+                // Referrers and clicks carry a favicon; Posts & Pages draws a thumbnail instead.
+                // No source has both, so whichever is present is the row's leading content.
+                leadingContent = faviconSlot(item.iconUrl) ?: if (showThumbnails) {
+                    { StatsPostThumbnail(thumbnails[item.id], item.postType) }
+                } else {
+                    null
+                }
             )
             if (index < state.items.lastIndex) {
                 Spacer(modifier = Modifier.height(4.dp))

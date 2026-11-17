@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
+import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -39,7 +41,6 @@ class MostPopularDayViewModel @Inject constructor(
 
     companion object {
         private val INPUT_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE
-        private const val DISPLAY_PATTERN = "MMMM d"
         private const val PERCENTAGE_MULTIPLIER = 100.0
 
         internal fun mapToUiState(data: StatsSummaryData): MostPopularDayCardUiState {
@@ -66,10 +67,9 @@ class MostPopularDayViewModel @Inject constructor(
         private fun parseBestDay(bestDay: String): Pair<String, String> {
             return try {
                 val date = LocalDate.parse(bestDay, INPUT_FORMAT)
-                val displayFormat = DateTimeFormatter.ofPattern(
-                    DISPLAY_PATTERN, Locale.getDefault()
-                )
-                val dayMonth = date.format(displayFormat).replaceFirstChar { it.uppercase() }
+                val displayFormat = statsDateFormatter(StatsDateSkeleton.DAY_FULL_MONTH)
+                val dayMonth = date.format(displayFormat)
+                    .replaceFirstChar { it.titlecase(Locale.getDefault()) }
                 dayMonth to date.year.toString()
             } catch (
                 @Suppress("TooGenericExceptionCaught")

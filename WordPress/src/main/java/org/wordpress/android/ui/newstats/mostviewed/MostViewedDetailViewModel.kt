@@ -7,11 +7,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.datasource.StatsPostThumbnailsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsThumbnailRequest
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -22,20 +26,35 @@ import javax.inject.Inject
  * only show the first N items, so the detail screen re-requests the full, unbounded list (max = 0)
  * itself — via [MostViewedDetailFetcher] — instead of receiving it through the Intent, which could
  * exceed the Binder transaction limit for sources with many entries.
+ *
+ * Posts are the exception: they arrive through the Intent, so for them this backs only
+ * [loadPostThumbnails] and the two site lookups, not the list itself.
  */
 @HiltViewModel
 class MostViewedDetailViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val detailFetcher: MostViewedDetailFetcher,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val postThumbnailsDataSource: StatsPostThumbnailsDataSource
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MostViewedDetailUiState>(MostViewedDetailUiState.Loading)
     val uiState: StateFlow<MostViewedDetailUiState> = _uiState.asStateFlow()
 
+    private val _postThumbnails = MutableStateFlow<Map<Long, String>>(emptyMap())
+
+    /**
+     * Featured image URLs for the posts on screen, keyed by post id, filled in after the list is
+     * already drawn. A post missing from the map has no thumbnail and keeps its type glyph.
+     */
+    val postThumbnails: StateFlow<Map<Long, String>> = _postThumbnails.asStateFlow()
+
     private var source: MostViewedDetailSource? = null
     private var period: StatsPeriod? = null
     private var hasStartedLoading = false
+
+    /** Posts a thumbnail has already been asked for, so scrolling never re-requests one. */
+    private val requestedPostIds = mutableSetOf<Long>()
 
     /**
      * Loads the detail data for [source] and [period]. Safe to call on every
@@ -52,10 +71,59 @@ class MostViewedDetailViewModel @Inject constructor(
     fun retry() = fetch()
 
     /**
+     * Loads the featured image thumbnails for [items], which the screen grows as it is scrolled.
+     *
+     * Called with the rows scrolled into view rather than the whole list, because the list is not
+     * the ten rows the card shows: the stats API's `max` bounds each day's results, not the
+     * summary, so a busy site's detail screen routinely carries several hundred posts. Resolving
+     * all of them on entry would be a dozen requests for rows nobody has looked at.
+     *
+     * Each post is only ever asked for once -- ids already requested are dropped, so scrolling
+     * back over resolved rows costs nothing and a rotation keeps what it had.
+     *
+     * Deliberately fire-and-forget: the rows are already drawn with their type glyphs, and a
+     * failure just leaves them that way.
+     */
+    fun loadPostThumbnails(items: List<MostViewedDetailItem>) {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val requests = items
+            .filter { requestedPostIds.add(it.id) }
+            .map { StatsThumbnailRequest(postId = it.id, postType = it.postType) }
+        if (requests.isEmpty()) return
+        viewModelScope.launch {
+            val resolved = fetchPostThumbnails(site, requests)
+            if (resolved.isNotEmpty()) {
+                _postThumbnails.update { it + resolved }
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchPostThumbnails(
+        site: SiteModel,
+        requests: List<StatsThumbnailRequest>
+    ): Map<Long, String> =
+        try {
+            postThumbnailsDataSource.fetchThumbnails(site, requests)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.w(AppLog.T.STATS, "Error fetching post thumbnails: ${e.message}")
+            emptyMap()
+        }
+
+    /**
      * The WP-Admin URL of the selected site, used to offer a re-authentication action when the
      * fetch fails with an auth error (mirrors the cards and the UTM detail screen).
      */
     fun getAdminUrl(): String? = selectedSiteRepository.getSelectedSite()?.adminUrl
+
+    /**
+     * The site this detail screen belongs to, so its Tracks events can carry a blog_id. New Stats
+     * always selects the site it was opened for before rendering, so the selected site is the
+     * viewed one.
+     */
+    fun getSite(): SiteModel? = selectedSiteRepository.getSelectedSite()
 
     private fun fetch() {
         val source = source
@@ -71,6 +139,24 @@ class MostViewedDetailViewModel @Inject constructor(
         _uiState.value = MostViewedDetailUiState.Loading
         viewModelScope.launch {
             _uiState.value = fetchDetail(source, site.siteId, period)
+            revalidateIfNeeded(source, site.siteId, period)
+        }
+    }
+
+    /**
+     * Refreshes a list served from an earlier visit to the stats screen, once. The screen already
+     * shows it, so this runs without a loading state and only applies a successful result — a
+     * failed refresh leaves the list in place rather than replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(
+        source: MostViewedDetailSource,
+        siteId: Long,
+        period: StatsPeriod
+    ) {
+        if (!detailFetcher.needsRevalidation(source, siteId, period)) return
+        val refreshed = fetchDetail(source, siteId, period, forceRefresh = true)
+        if (refreshed is MostViewedDetailUiState.Loaded) {
+            _uiState.value = refreshed
         }
     }
 
@@ -78,10 +164,11 @@ class MostViewedDetailViewModel @Inject constructor(
     private suspend fun fetchDetail(
         source: MostViewedDetailSource,
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        forceRefresh: Boolean = false
     ): MostViewedDetailUiState =
         try {
-            when (val result = detailFetcher.fetch(source, siteId, period)) {
+            when (val result = detailFetcher.fetch(source, siteId, period, forceRefresh)) {
                 is StatsCardFetchResult.Success -> MostViewedDetailUiState.Loaded(
                     items = result.items,
                     maxViewsForBar = result.items.firstOrNull()?.views ?: 0L,

@@ -1131,11 +1131,13 @@ class PostRsSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
+                // A failed lookup resolves no names, which shows the
+                // field's error state below rather than a short list.
                 val names = withContext(Dispatchers.IO) {
                     restClient.fetchTermNames(
                         site, ids, endpointType
                     )
-                }
+                } ?: emptyMap()
                 val resolved = ids.mapNotNull { names[it] }
                 update(
                     if (resolved.isNotEmpty()) {

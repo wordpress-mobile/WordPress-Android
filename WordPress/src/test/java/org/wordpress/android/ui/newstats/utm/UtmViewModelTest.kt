@@ -7,6 +7,8 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -14,6 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmPostItemData
@@ -33,6 +36,9 @@ class UtmViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var newStatsTracker: NewStatsTracker
 
     private lateinit var viewModel: UtmViewModel
 
@@ -58,7 +64,8 @@ class UtmViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            newStatsTracker
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
@@ -72,7 +79,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -96,7 +103,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -116,7 +123,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -136,7 +143,7 @@ class UtmViewModelTest : BaseUnitTest() {
         )
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -196,7 +203,7 @@ class UtmViewModelTest : BaseUnitTest() {
         val result = createSuccessResult(items)
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -221,7 +228,7 @@ class UtmViewModelTest : BaseUnitTest() {
         val result = createSuccessResult(listOf(item))
         whenever(
             statsRepository.fetchUtm(
-                eq(TEST_SITE_ID), any(), any()
+                eq(TEST_SITE_ID), any(), any(), any()
             )
         ).thenReturn(result)
 
@@ -257,6 +264,31 @@ class UtmViewModelTest : BaseUnitTest() {
         totalViews = items.sumOf { it.views }
     )
 
+
+    // region Tracking
+    @Test
+    fun `when the grouping changes, then the grouping moved from and to are reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onCategoryChanged(UtmCategory.CAMPAIGN)
+
+        verify(newStatsTracker).trackUtmParamGroupingChanged(
+            from = UtmCategory.SOURCE_MEDIUM,
+            to = UtmCategory.CAMPAIGN
+        )
+    }
+
+    @Test
+    fun `when the grouping already shown is re-selected, then nothing is reported`() = test {
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onCategoryChanged(UtmCategory.SOURCE_MEDIUM)
+
+        verify(newStatsTracker, never()).trackUtmParamGroupingChanged(any(), any())
+    }
+    // endregion
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_token"

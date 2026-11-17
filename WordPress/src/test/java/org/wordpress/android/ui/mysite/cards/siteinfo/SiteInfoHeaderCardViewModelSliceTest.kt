@@ -24,6 +24,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -136,6 +137,36 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
         viewModelSlice.initialize(testScope())
+    }
+
+    @Test
+    fun `a fresh observer never sees a null card while a site is selected`() {
+        whenever(siteInfoHeaderCardBuilder.buildSiteInfoCard(any())).thenReturn(
+            SiteInfoHeaderCard(
+                title = siteName,
+                url = siteUrl,
+                iconState = SiteInfoHeaderCard.IconState.Visible(),
+                onIconClick = ListItemInteraction.create { },
+                onUrlClick = ListItemInteraction.create { },
+                onSwitchSiteClick = ListItemInteraction.create { }
+            )
+        )
+        val freshSlice = SiteInfoHeaderCardViewModelSlice(
+            testDispatcher(),
+            selectedSiteRepository,
+            analyticsTrackerWrapper,
+            networkUtilsWrapper,
+            wpMediaUtilsWrapper,
+            mediaUtilsWrapper,
+            fluxCUtilsWrapper,
+            contextProvider,
+            siteInfoHeaderCardBuilder
+        )
+        val emitted = mutableListOf<SiteInfoHeaderCard?>()
+
+        freshSlice.uiModel.observeForever { emitted.add(it) }
+
+        Assertions.assertThat(emitted).isNotEmpty.doesNotContainNull()
     }
 
     /* SITE INFO CARD */

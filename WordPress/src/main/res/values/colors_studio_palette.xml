@@ -35,12 +35,7 @@
     <color name="blue_100">#001621</color>
 
     <color name="purple">#984a9c</color>
-    <color name="purple_0">#f2e9ed</color>
-    <color name="purple_5">#ebcee0</color>
-    <color name="purple_40">#b35eb1</color>
     <color name="purple_50">#984a9c</color>
-    <color name="purple_90">#35163b</color>
-    <color name="purple_100">#1e0c21</color>
 
     <color name="pink_30">#eb6594</color>
     <color name="pink_40">#e34c84</color>
@@ -56,32 +51,22 @@
     <color name="red_60">#b32d2e</color>
     <color name="red_80">#691c1c</color>
 
-    <color name="orange_0">#f5ece6</color>
-    <color name="orange_5">#f7dcc6</color>
     <color name="orange_30">#e68b28</color>
-    <color name="orange_40">#d67709</color>
     <color name="orange_50">#b26200</color>
-    <color name="orange_90">#361f00</color>
-    <color name="orange_100">#1f1200</color>
 
     <color name="yellow_0">#f5f1e1</color>
-    <color name="yellow_5">#f5e6b3</color>
     <color name="yellow_10">#f2d76b</color>
     <color name="yellow_20">#f0c930</color>
     <color name="yellow_40">#c08c00</color>
     <color name="yellow_50">#9d6e00</color>
     <color name="yellow_60">#7d5600</color>
     <color name="yellow_90">#320</color>
-    <color name="yellow_100">#1c1300</color>
 
-    <color name="green_0">#e6f2e8</color>
     <color name="green_5">#b8e6bf</color>
     <color name="green_20">#1ed15a</color>
     <color name="green_30">#00ba37</color>
     <color name="green_40">#00a32a</color>
     <color name="green_50">#008a20</color>
-    <color name="green_90">#003008</color>
-    <color name="green_100">#001c05</color>
 
 
     <color name="wordpress_blue_90" tools:ignore="UnusedResources">#001d2d</color>

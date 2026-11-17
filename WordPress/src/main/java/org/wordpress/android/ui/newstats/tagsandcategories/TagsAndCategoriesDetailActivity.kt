@@ -44,6 +44,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.InsightsCardType
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import javax.inject.Inject
@@ -61,8 +63,19 @@ class TagsAndCategoriesDetailActivity :
     @Inject
     lateinit var activityNavigator: ActivityNavigator
 
+    @Inject
+    lateinit var newStatsTracker: NewStatsTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Only on a fresh launch: a rotation recreates this activity from the same Intent, and
+        // re-reporting there would inflate the count. Same guard as NewStatsActivity's.
+        if (savedInstanceState == null) {
+            newStatsTracker.trackDetailScreenShown(
+                InsightsCardType.TAGS_AND_CATEGORIES
+            )
+        }
 
         viewModel.loadData()
 
@@ -77,6 +90,11 @@ class TagsAndCategoriesDetailActivity :
                             ::onBackPressed,
                     onRetry = { viewModel.loadData() },
                     onUrlClick = { url ->
+                        newStatsTracker
+                            .trackTopListItemTapped(
+                                InsightsCardType
+                                    .TAGS_AND_CATEGORIES
+                            )
                         activityNavigator
                             .openInCustomTab(this, url)
                     }

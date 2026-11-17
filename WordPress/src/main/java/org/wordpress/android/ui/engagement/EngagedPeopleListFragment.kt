@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
@@ -29,8 +31,8 @@ import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeo
 import org.wordpress.android.ui.engagement.UserProfileViewModel.Companion.USER_PROFILE_VM_KEY
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
-import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
+import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -66,6 +68,12 @@ class EngagedPeopleListFragment : Fragment() {
 
     @Inject
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Inject
+    lateinit var readerCommentRepository: ReaderCommentRepository
+
+    @Inject
+    lateinit var readerPostRepository: ReaderPostRepository
 
     private lateinit var viewModel: EngagedPeopleListViewModel
     private lateinit var userProfileViewModel: UserProfileViewModel
@@ -212,17 +220,14 @@ class EngagedPeopleListFragment : Fragment() {
             if (this.isFinishing) return@with
 
             when (serviceRequest) {
-                is RequestBlogPost -> ReaderPostActions.requestBlogPost(
-                    serviceRequest.siteId,
-                    serviceRequest.postId,
-                    null
-                )
-                is RequestComment -> ReaderCommentService.startServiceForComment(
-                    this,
-                    serviceRequest.siteId,
-                    serviceRequest.postId,
-                    serviceRequest.commentId
-                )
+                is RequestBlogPost -> readerPostRepository.prefetchPost(serviceRequest.siteId, serviceRequest.postId)
+                is RequestComment -> this@EngagedPeopleListFragment.lifecycleScope.launch {
+                    readerCommentRepository.fetchCommentsUntil(
+                        serviceRequest.siteId,
+                        serviceRequest.postId,
+                        serviceRequest.commentId
+                    )
+                }
             }
         }
     }

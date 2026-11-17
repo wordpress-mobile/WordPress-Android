@@ -3,9 +3,7 @@ package org.wordpress.android.ui.reader.usecases
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
-import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
-import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
@@ -14,21 +12,17 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * This class handles reader blog follow click events.
  */
 class ReaderSiteFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
+    private val readerBlogRepository: ReaderBlogRepository,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
-    private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val readerTracker: ReaderTracker
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
-    private val continuations: MutableMap<Param, Continuation<Boolean>?> = mutableMapOf()
+    private val runningRequests = mutableSetOf<Param>()
 
     suspend fun toggleFollow(
         param: Param,
@@ -39,7 +33,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
             emit(NoNetwork)
         } else {
             // There is already an action running for this request
-            if (continuations[param] != null) {
+            if (param in runningRequests) {
                 emit(AlreadyRunning)
                 return@flow
             }
@@ -81,21 +75,11 @@ class ReaderSiteFollowUseCase @Inject constructor(
         isAskingToFollow: Boolean,
         source: String
     ): Boolean {
-        val actionListener = ActionListener { succeeded ->
-            continuations[param]?.resume(succeeded)
-            continuations[param] = null
-        }
-
-        return suspendCoroutine { cont ->
-            continuations[param] = cont
-            readerBlogActionsWrapper.followBlog(
-                param.blogId,
-                param.feedId,
-                isAskingToFollow,
-                actionListener,
-                source,
-                readerTracker
-            )
+        runningRequests += param
+        return try {
+            readerBlogRepository.followSite(param.blogId, param.feedId, isAskingToFollow, source)
+        } finally {
+            runningRequests -= param
         }
     }
 

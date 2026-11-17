@@ -98,6 +98,7 @@ class GutenbergEditorPreloaderTest :
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
+                source = any(),
             )
         ).thenReturn(stubEditorConfiguration())
     }
@@ -235,6 +236,7 @@ class GutenbergEditorPreloaderTest :
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
+                source = any(),
             )
         ).thenThrow(RuntimeException("network error"))
 
@@ -419,6 +421,7 @@ class GutenbergEditorPreloaderTest :
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
+                source = any(),
             )
         ).thenThrow(RuntimeException("refresh failed"))
 

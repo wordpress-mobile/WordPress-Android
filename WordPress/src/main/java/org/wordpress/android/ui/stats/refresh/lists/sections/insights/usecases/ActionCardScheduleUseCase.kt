@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemActionCard
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class ActionCardScheduleUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val actionCardHandler: ActionCardHandler,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : StatelessUseCase<Boolean>(InsightType.ACTION_SCHEDULE, mainDispatcher, backgroundDispatcher, listOf()) {
     override suspend fun loadCachedData() = true
@@ -42,13 +44,13 @@ class ActionCardScheduleUseCase @Inject constructor(
     }
 
     private fun onSchedule() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_SCHEDULE_POST_CONFIRMED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_SCHEDULE_POST_CONFIRMED, statsSiteProvider.siteModel)
         navigateTo(SchedulePost)
         actionCardHandler.dismiss(InsightType.ACTION_SCHEDULE)
     }
 
     private fun onDismiss() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_SCHEDULE_POST_DISMISSED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_ACTION_SCHEDULE_POST_DISMISSED, statsSiteProvider.siteModel)
         actionCardHandler.dismiss(InsightType.ACTION_SCHEDULE)
     }
 }

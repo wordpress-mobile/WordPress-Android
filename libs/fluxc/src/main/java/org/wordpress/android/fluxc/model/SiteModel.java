@@ -437,15 +437,12 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mXmlRpcUrl = xmlRpcUrl;
     }
 
+    /**
+     * The site's own REST API root, or null when discovery hasn't found one. Never derive a value
+     * here: the generated WellSql mapper persists this getter on insert, so it would become permanent.
+     * Callers needing the WP.com proxy route through WpComUrlResolver instead.
+     */
     public String getWpApiRestUrl() {
-        // WP.com simple sites don't have a stored wpApiRestUrl (the WP.com REST API
-        // response never sets it, and no other code path populates it for these sites).
-        // Return the public-api proxy URL so all callers get the correct endpoint
-        // without needing site-type checks at every call site.
-        if (isWPComSimpleSite()) {
-            return "https://public-api.wordpress.com/wp/v2/sites/"
-                    + mSiteId;
-        }
         return mWpApiRestUrl;
     }
 

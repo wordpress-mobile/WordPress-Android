@@ -7,7 +7,7 @@ import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
+import org.wordpress.android.ui.reader.repository.UpdateAction
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ class ReaderPostLocalSource @Inject constructor(
      */
     fun saveUpdatedPosts(
         serverPosts: ReaderPostList,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         requestedTag: ReaderTag?,
     ): ReaderActions.UpdateResult {
         val updateResult = readerPostTableWrapper.comparePosts(serverPosts)
@@ -36,19 +36,19 @@ class ReaderPostLocalSource @Inject constructor(
             var postWithGap: ReaderPost? = null
             if (requestedTag != null) {
                 when (updateAction) {
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER -> {
+                    UpdateAction.REQUEST_NEWER -> {
                         postWithGap = handleRequestNewerResult(serverPosts, requestedTag)
                     }
 
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP -> {
+                    UpdateAction.REQUEST_OLDER_THAN_GAP -> {
                         handleRequestOlderThanGapResult(requestedTag)
                     }
 
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> readerPostTableWrapper.deletePostsWithTag(
+                    UpdateAction.REQUEST_REFRESH -> readerPostTableWrapper.deletePostsWithTag(
                         requestedTag
                     )
 
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER -> {
+                    UpdateAction.REQUEST_OLDER -> {
                         /* noop */
                     }
                 }
@@ -68,7 +68,7 @@ class ReaderPostLocalSource @Inject constructor(
                 AppLog.d(AppLog.T.READER, "added gap marker to tag " + requestedTag.tagNameForLog)
             }
         } else if (updateResult == ReaderActions.UpdateResult.UNCHANGED
-            && updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
+            && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP
             && requestedTag != null
         ) {
             // edge case - request to fill gap returned nothing new, so remove the gap marker

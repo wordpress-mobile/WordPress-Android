@@ -9,6 +9,7 @@ import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_NOTIFICATION_LIST
 import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_READER_LIST
+import org.wordpress.android.ui.engagement.EngagementNavigationSource.LIKE_STATS_LIST
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.GENERIC
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -164,5 +165,6 @@ fun ListScenario.generatesEquivalentLikedItem(likedItem: LikedItem): Boolean {
             likedItem.blogPreviewSource == when (this.source) {
         LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIFICATION
         LIKE_READER_LIST -> ReaderTracker.SOURCE_READER_LIKE_LIST
+        LIKE_STATS_LIST -> ReaderTracker.SOURCE_STATS_LIKE_LIST
     }
 }

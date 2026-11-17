@@ -9,7 +9,6 @@ import androidx.work.Configuration
 import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
-import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.main.EdgeToEdgeActivityLifecycleCallbacks
@@ -53,16 +52,10 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration
      * This returns a singleton Coil ImageLoader that's accessed with context.imageLoader
      */
     override fun newImageLoader(): coil.ImageLoader {
-        val authUtils = component().authenticationUtils()
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val request = chain.request()
-                val authHeaders = authUtils.getAuthHeaders(request.url.toString())
-                val newRequest = request.newBuilder().apply {
-                    authHeaders.forEach { (name, value) -> header(name, value) }
-                }.build()
-                chain.proceed(newRequest)
-            }
+        // Same HTTP stack as Glide (WordPressGlideModule): the custom SSL trust for self-hosted sites, and
+        // the auth interceptor with its http→https upgrade for WordPress.com URLs
+        val okHttpClient = component().customSslOkHttpClient().newBuilder()
+            .addInterceptor(component().glideAuthInterceptor())
             .build()
         return coil.ImageLoader.Builder(this)
             .okHttpClient(okHttpClient)

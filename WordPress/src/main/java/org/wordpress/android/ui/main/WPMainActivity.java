@@ -69,6 +69,7 @@ import org.wordpress.android.push.GCMRegistrationScheduler;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ActivityNavigator;
@@ -110,14 +111,13 @@ import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
+import org.wordpress.android.ui.reader.repository.UpdateTask;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -267,6 +267,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Inject ActivityNavigator mActivityNavigator;
 
+    @Inject SupportRouting mSupportRouting;
+
     @Inject SnackbarSequencer mSnackbarSequencer;
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
@@ -274,6 +276,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
 
     @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
+    @Inject ReaderTagsAndSitesUpdater mReaderTagsAndSitesUpdater;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -604,8 +607,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         // Setup Observers
         mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
-        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen(null));
-        mViewModel.getShowPrivacySettingsWithError().observe(this, this::showPrivacySettingsScreen);
+        mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen());
+        mViewModel.getShowPrivacySettingsWithError().observe(this, action -> showPrivacySettingsScreen());
         mViewModel.getFabUiState().observe(this, fabUiState -> {
             String message = getResources().getString(fabUiState.getCreateContentMessageId());
 
@@ -872,7 +875,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // init selected site, this is the same as in onResume
         initSelectedSite();
 
-        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite(), mSupportRouting);
     }
 
     /*
@@ -1328,7 +1331,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 }
                 break;
             case RequestCodes.APP_SETTINGS:
-                if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
+                if (resultCode == AppSettingsActivity.LANGUAGE_CHANGED) {
                     appLanguageChanged();
                 }
                 break;
@@ -1375,7 +1378,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void startWithNewAccount() {
         mGCMRegistrationScheduler.scheduleRegistration();
-        ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+        mReaderTagsAndSitesUpdater.update(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     private MySiteFragment getMySiteFragment() {
@@ -1517,23 +1520,25 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             }
         }
 
-        // Try to select the primary wpcom site
-        long siteId = mAccountStore.getAccount().getPrimarySiteId();
-        SiteModel primarySite = mSiteStore.getSiteBySiteId(siteId);
-        // Primary site found, select it
-        if (primarySite != null) {
-            setSelectedSite(primarySite);
-            return;
-        }
-
-        // Else select the first site in the list
-        List<SiteModel> sites = mSiteStore.getSites();
-        if (!sites.isEmpty()) {
-            setSelectedSite(sites.get(0));
+        SiteModel fallbackSite = getFallbackSite();
+        if (fallbackSite != null) {
+            setSelectedSite(fallbackSite);
         } else {
-            // No site selected
             AppLog.w(T.MAIN, "No site selected");
         }
+    }
+
+    /**
+     * @return the primary wpcom site if it exists, else the first site in the list, else null
+     */
+    @Nullable
+    private SiteModel getFallbackSite() {
+        SiteModel primarySite = mSiteStore.getSiteBySiteId(mAccountStore.getAccount().getPrimarySiteId());
+        if (primarySite != null) {
+            return primarySite;
+        }
+        List<SiteModel> sites = mSiteStore.getSites();
+        return sites.isEmpty() ? null : sites.get(0);
     }
 
     // FluxC events
@@ -1602,6 +1607,21 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             SiteModel site = mSiteStore.getSiteByLocalId(selectedSite.getId());
             if (site != null) {
                 mSelectedSiteRepository.updateSite(site);
+            } else {
+                // The selected site was deleted by the fetch (e.g. it's no longer returned by /me/sites
+                // because it's inactive), so switch to another site the way the site picker does. Only
+                // clear the selection when no site is left, so My Site doesn't flash its "no sites" view.
+                SiteModel fallbackSite = getFallbackSite();
+                if (fallbackSite != null) {
+                    mPrivateAtomicCookie.clearCookie();
+                    setSelectedSite(fallbackSite);
+                } else {
+                    mSelectedSiteRepository.removeSite();
+                }
+                MySiteFragment mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onSelectedSiteReplaced();
+                }
             }
         }
     }
@@ -1706,15 +1726,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    private void showPrivacySettingsScreen(@Nullable Boolean requestedAnalyticsValue) {
+    private void showPrivacySettingsScreen() {
         Intent intent = new Intent(this, AppSettingsActivity.class);
         intent.putExtra(AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS, true);
-        if (requestedAnalyticsValue != null) {
-            intent.putExtra(
-                    AppSettingsActivity.EXTRA_REQUESTED_ANALYTICS_VALUE_FROM_ERROR,
-                    requestedAnalyticsValue
-            );
-        }
 //        startActivityForResult(intent, RequestCodes.SETTINGS); // TODO: do we need to handle the result?
         startActivity(intent);
     }

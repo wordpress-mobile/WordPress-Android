@@ -29,6 +29,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
 
     public static final String PUSH_ARG_NOTE_ID = "note_id";
+    public static final String PUSH_ARG_BLOG_ID = "blog_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
     private static final String PUSH_ARG_ZENDESK_REQUEST_ID = "zendesk_sdk_request_id";
 
@@ -43,12 +44,13 @@ public class GCMMessageService extends FirebaseMessagingService {
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
-        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START);
+        Long blogId = GCMMessageHandler.parsePushBlogId(data.get(PUSH_ARG_BLOG_ID));
+        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START, blogId);
         synchronized (GCMMessageService.class) {
             mGCMMessageHandler.handleDefaultPush(
                     this, convertMapToBundle(data), mAccountStore.getAccount().getUserId());
         }
-        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END);
+        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END, blogId);
     }
 
     // convert FCM RemoteMessage's Map into legacy GCM Bundle to keep code changes to a minimum

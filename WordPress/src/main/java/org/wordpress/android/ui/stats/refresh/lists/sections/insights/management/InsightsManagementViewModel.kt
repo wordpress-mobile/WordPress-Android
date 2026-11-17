@@ -74,7 +74,11 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun onSaveInsights() {
-        analyticsTrackerWrapper.trackWithTypes(Stat.STATS_INSIGHTS_MANAGEMENT_SAVED, addedInsightTypes)
+        analyticsTrackerWrapper.trackWithTypes(
+            Stat.STATS_INSIGHTS_MANAGEMENT_SAVED,
+            siteProvider.siteModel,
+            addedInsightTypes
+        )
         insightsUseCase.launch(defaultDispatcher) {
             statsStore.updateTypes(siteProvider.siteModel, addedInsightTypes.toList())
 
@@ -87,12 +91,14 @@ class InsightsManagementViewModel @Inject constructor(
         if (addedInsightTypes.contains(insight)) {
             analyticsTrackerWrapper.trackWithType(
                 Stat.STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED,
+                siteProvider.siteModel,
                 insight
             )
             addedInsightTypes.removeAll { it == insight }
         } else {
             analyticsTrackerWrapper.trackWithType(
                 Stat.STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED,
+                siteProvider.siteModel,
                 insight
             )
             addedInsightTypes.add(insight)
@@ -102,7 +108,7 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun onBackPressed() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_DISMISSED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_DISMISSED, siteProvider.siteModel)
         _closeInsightsManagement.call()
     }
 

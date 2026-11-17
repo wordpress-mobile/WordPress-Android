@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Image
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -26,6 +27,7 @@ class ManagementNewsCardUseCase
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val resourceProvider: ResourceProvider,
     private val newsCardHandler: NewsCardHandler,
+    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : StatelessUseCase<Boolean>(ManagementType.NEWS_CARD, mainDispatcher, backgroundDispatcher, listOf()) {
     override suspend fun loadCachedData() = true
@@ -52,12 +54,12 @@ class ManagementNewsCardUseCase
     }
 
     private fun onEditInsights() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED, statsSiteProvider.siteModel)
         newsCardHandler.goToEdit()
     }
 
     private fun onDismiss() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED, statsSiteProvider.siteModel)
         newsCardHandler.dismiss()
     }
 }

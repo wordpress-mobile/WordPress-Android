@@ -71,7 +71,7 @@ class SubscribersChartUseCase @Inject constructor(
     private fun buildTitle() = Title(R.string.stats_view_subscriber_growth)
 
     private fun onLineSelected() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_SUBSCRIBERS_CHART_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_SUBSCRIBERS_CHART_TAPPED, statsSiteProvider.siteModel)
     }
 
     class SubscribersUseCaseFactory @Inject constructor(

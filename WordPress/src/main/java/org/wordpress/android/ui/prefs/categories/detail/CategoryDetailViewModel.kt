@@ -62,7 +62,6 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         dispatcher.unregister(this)
     }
 

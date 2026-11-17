@@ -3,7 +3,7 @@ package org.wordpress.android.ui.reader.utils
 import dagger.Reusable
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
+import org.wordpress.android.ui.reader.repository.TagUpdateClientUtilsProvider
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 

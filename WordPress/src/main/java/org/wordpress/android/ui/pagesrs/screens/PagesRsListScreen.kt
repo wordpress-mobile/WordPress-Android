@@ -101,6 +101,7 @@ internal fun PagesRsListScreen(
     onAddNewPage: () -> Unit,
     onRowsVisible: (PageRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PageRsListTab) -> Unit,
+    onCancelOpeningPage: () -> Unit,
     density: ContentListDensity = ContentListDensity.COMFORTABLE
 ) {
     val tabs = PageRsListTab.entries
@@ -256,6 +257,8 @@ internal fun PagesRsListScreen(
         )
     }
 
+    // Back abandons the page being opened rather than leaving the list behind the spinner.
+    BackHandler(enabled = isOpeningPage, onBack = onCancelOpeningPage)
     if (isOpeningPage) {
         Box(
             modifier = Modifier

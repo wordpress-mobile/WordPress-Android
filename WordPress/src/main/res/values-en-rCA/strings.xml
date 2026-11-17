@@ -283,9 +283,6 @@ Language: en_CA
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. %s</string>
     <string name="notifications_action_mark_all_as_read">Mark all as read</string>
     <string name="notifications_unread_content_description">Unread</string>
-    <string name="gravatar_info_description">Updating your avatar, name, and about info here will also update it across all sites that use Gravatar profiles.</string>
-    <string name="gravatar_info_learn_more_link">What is Gravatar?</string>
-    <string name="gravatar_info_title">Your WordPress.com profile is powered by Gravatar</string>
     <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
     <string name="error_media_could_not_share_media_from_device">Unable to load the media for sharing. Please check the app\'s permissions\n        or use the app\'s media library.</string>
     <string name="site_monitoring_cannot_be_started">We cannot open site monitoring at the moment. Please try again later</string>
@@ -297,7 +294,6 @@ Language: en_CA
     <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
     <string name="reader_no_posts_with_this_tag">No posts with this tag</string>
-    <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">You are not authorized to access this blog</string>
     <string name="reader_toast_err_unable_to_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
@@ -306,7 +302,6 @@ Language: en_CA
     <string name="reader_label_choose_interests">Choose your interests</string>
     <string name="reader_label_subscribers_count_single">1 subscriber</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
-    <string name="reader_toast_err_show_blog">Unable to show this blog</string>
     <string name="reader_activity_title_blog_preview">Reader Blog</string>
     <string name="reader_activity_title_manage_tags_blogs">Manage Tags &amp; Blogs</string>
     <string name="reader_activity_title_tag_preview">Tag</string>
@@ -319,7 +314,6 @@ Language: en_CA
     <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
     <string name="reader_subscribed_display_name">Subscribed</string>
     <string name="reader_title_tags">Follow tags</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Subscribe to tags</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_discover">Discover</string>
     <string name="reader_dropdown_menu_liked">Liked</string>
@@ -425,7 +419,6 @@ Language: en_CA
     <string name="account_and_settings">Account and Settings</string>
     <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="site_creation_plans_selection_title">Select a plan</string>
-    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="reader_secondary_bookmark">Save</string>
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deeply nested block</string>
@@ -1507,8 +1500,6 @@ Language: en_CA
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_retry_error">Please check your internet connection and retry.</string>
     <string name="hpp_choose_error">There was an error while selecting the theme.</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Try following more topics to broaden the search</string>
-    <string name="reader_discover_no_posts_title">No recent posts</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="scan">Scan</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Scrollable block menu opened. Select a block.</string>
@@ -1634,7 +1625,6 @@ Language: en_CA
     <string name="publish_date">Publish Date</string>
     <string name="ccpa_privacy_notice_caption">The California Consumer Privacy Act (\"CCPA\") requires us to provide California residents with some additional information about the categories of personal information we collect and share, where we get that personal information, and how and why we use it.</string>
     <string name="reader_choose_interests_tags_content_description">Choose your tags</string>
-    <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="update_now">Update Now</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2340,11 +2330,8 @@ Language: en_CA
     <string name="activity_log">Activity Log</string>
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
-    <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalize your WordPress.com experience, and more as detailed in our privacy policy.</string>
-    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
     <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
-    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="reader_btn_blog_notifications_off">Turn off blog notifications</string>
@@ -2396,7 +2383,6 @@ Language: en_CA
     <string name="reader_photo_view_desc">photo</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
-    <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
@@ -2734,8 +2720,6 @@ Language: en_CA
     <string name="media_all">All</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your media files. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="reader_view_comments">View comments</string>
-    <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
-    <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
     <string name="site_settings_optimize_videos">Optimize Videos</string>
     <string name="draft_uploaded">Draft uploaded</string>
@@ -2819,7 +2803,6 @@ Language: en_CA
     <string name="photo_picker_title">Choose photo</string>
     <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
     <string name="editor_post_saved_online">Post saved online</string>
-    <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
     <string name="media_encoder_quality_high">High</string>
@@ -3071,7 +3054,6 @@ Language: en_CA
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
-    <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_password_hint">Change your password</string>

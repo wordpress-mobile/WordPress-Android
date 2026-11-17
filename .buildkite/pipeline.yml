@@ -30,7 +30,8 @@ steps:
       - label: ":danger: Danger - PR Check"
         command: danger
         key: danger
-        if: "build.pull_request.id != null"
+        # Also runs (as a no-op) on merge queue branches, which have no PR but require this check's status.
+        if: "build.pull_request.id != null || build.branch =~ /^gh-readonly-queue\\//"
         retry:
           manual:
             permit_on_passed: true

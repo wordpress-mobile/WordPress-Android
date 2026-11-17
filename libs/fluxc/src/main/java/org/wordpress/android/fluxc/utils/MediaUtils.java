@@ -119,26 +119,24 @@ public class MediaUtils {
      * Removes location from the Exif information from an image
      *
      * @param imagePath image file path
+     * @return whether the location was removed. False when the file couldn't be rewritten, e.g. a format
+     * ExifInterface can't save or a full disk, in which case the file keeps its location.
      */
-    public static void stripLocation(@Nullable String imagePath) {
+    public static boolean stripLocation(@Nullable String imagePath) {
         if (imagePath != null) {
             try {
                 ExifInterface exifInterface = new ExifInterface(imagePath);
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, "0/0");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF, "0");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE, "0/0,0/0000,00000000/00000");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF, "0");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, "0/0,0/0,000000/00000 ");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, "0");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_TIMESTAMP, "00:00:00");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0");
-                exifInterface.setAttribute(ExifInterface.TAG_GPS_DATESTAMP, " ");
+                for (String tag : ExifUtils.GPS_TAGS) {
+                    exifInterface.setAttribute(tag, null);
+                }
                 exifInterface.saveAttributes();
+                return true;
             } catch (IOException e) {
                 AppLog.e(T.MEDIA, "Removing of GPS info from image failed [IO Exception]");
             }
         } else {
             AppLog.e(T.MEDIA, "Removing of GPS info from image failed [Null Image Path]");
         }
+        return false;
     }
 }

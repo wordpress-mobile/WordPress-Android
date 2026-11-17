@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Fixed "You're chatting with AI from WordPress.com Support." line for the AI support chat
+    (EU AI Act Art. 50). Hidden by default; the hosting screen fills in the text and makes it
+    visible. The text is not set here because it takes the organisation name as a placeholder.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ai_disclosure_banner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <TextView
+        android:id="@+id/ai_disclosure_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/wpColorSurfaceSecondary"
+        android:gravity="center_horizontal"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_large"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/wpColorTextPrimary"
+        tools:text="You're chatting with AI from WordPress.com Support." />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider" />
+
+</LinearLayout>

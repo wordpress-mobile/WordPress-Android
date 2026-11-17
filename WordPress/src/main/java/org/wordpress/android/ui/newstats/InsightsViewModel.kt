@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
+import org.wordpress.android.ui.newstats.analytics.cardMoveIndices
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
@@ -38,7 +40,8 @@ class InsightsViewModel @Inject constructor(
     private val statsSummaryUseCase: StatsSummaryUseCase,
     private val statsInsightsUseCase: StatsInsightsUseCase,
     private val statsTagsUseCase: StatsTagsUseCase,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _visibleCards =
         MutableStateFlow<List<InsightsCardType>>(
@@ -289,6 +292,7 @@ class InsightsViewModel @Inject constructor(
 
     fun removeCard(cardType: InsightsCardType) {
         val currentSiteId = resolvedSiteId() ?: return
+        newStatsTracker.trackCardRemoved(cardType)
         viewModelScope.launch {
             cardConfigurationRepository
                 .removeCard(currentSiteId, cardType)
@@ -297,6 +301,7 @@ class InsightsViewModel @Inject constructor(
 
     fun addCard(cardType: InsightsCardType) {
         val currentSiteId = resolvedSiteId() ?: return
+        newStatsTracker.trackCardAdded(cardType)
         viewModelScope.launch {
             cardConfigurationRepository
                 .addCard(currentSiteId, cardType)
@@ -305,6 +310,10 @@ class InsightsViewModel @Inject constructor(
 
     fun moveCardUp(cardType: InsightsCardType) {
         val currentSiteId = resolvedSiteId() ?: return
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.UP
+        )
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardUp(currentSiteId, cardType)
@@ -313,6 +322,10 @@ class InsightsViewModel @Inject constructor(
 
     fun moveCardToTop(cardType: InsightsCardType) {
         val currentSiteId = resolvedSiteId() ?: return
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.TOP
+        )
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardToTop(currentSiteId, cardType)
@@ -321,6 +334,10 @@ class InsightsViewModel @Inject constructor(
 
     fun moveCardDown(cardType: InsightsCardType) {
         val currentSiteId = resolvedSiteId() ?: return
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.DOWN
+        )
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardDown(currentSiteId, cardType)
@@ -329,10 +346,27 @@ class InsightsViewModel @Inject constructor(
 
     fun moveCardToBottom(cardType: InsightsCardType) {
         val currentSiteId = resolvedSiteId() ?: return
+        trackCardMoved(
+            cardType,
+            NewStatsTracker.CardMoveDirection.BOTTOM
+        )
         viewModelScope.launch {
             cardConfigurationRepository
                 .moveCardToBottom(currentSiteId, cardType)
         }
+    }
+
+    private fun trackCardMoved(
+        cardType: InsightsCardType,
+        direction: NewStatsTracker.CardMoveDirection
+    ) {
+        _visibleCards.value
+            .cardMoveIndices(cardType, direction)
+            ?.let { (from, to) ->
+                newStatsTracker.trackCardMoved(
+                    cardType, direction, from, to
+                )
+            }
     }
 
     // endregion

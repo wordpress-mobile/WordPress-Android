@@ -32,7 +32,6 @@ class SupportWebViewActivityViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SUPPORT_CHATBOT_ENDED, chatIdProp)
     }
 }

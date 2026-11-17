@@ -1,10 +1,16 @@
 package org.wordpress.android.ui.reader.repository
 
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
 import com.wordpress.rest.RestRequest
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -12,34 +18,44 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
+import org.wordpress.android.datasets.ReaderLikeTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.datasets.ReaderUserTable
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.models.ReaderUserList
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.actions.ReaderActions
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
+import org.wordpress.android.ui.reader.models.ReaderSimplePost
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.JSONUtils
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.UrlUtils
-import java.util.Locale
+import org.wordpress.android.util.VolleyUtils
+import java.util.Date
+import java.util.function.Consumer
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.random.Random
 
 @Reusable
 class ReaderPostRepository @Inject constructor(
@@ -50,7 +66,11 @@ class ReaderPostRepository @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     @Named(APPLICATION_SCOPE) private val applicationScope: CoroutineScope,
+    private val siteStore: SiteStore,
 ) {
+    // runs on the app scope's dispatcher, under a supervisor of its own
+    private val outlivingScope = CoroutineScope(applicationScope.coroutineContext.minusKey(Job) + SupervisorJob())
+
     /**
      * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
      * It always fetches the most recent posts, saves them to the local DB and returns the latest from that cache.
@@ -58,7 +78,7 @@ class ReaderPostRepository @Inject constructor(
     suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 10): ReaderPostList = withContext(ioDispatcher) {
         suspendCancellableCoroutine { cont ->
             val resultListener = UpdateResultListener { result ->
-                if (result == ReaderActions.UpdateResult.FAILED) {
+                if (result == UpdateResult.FAILED) {
                     cont.resumeWithException(
                         ReaderPostFetchException("Failed to fetch newer posts for tag: ${tag.tagSlug}")
                     )
@@ -67,19 +87,19 @@ class ReaderPostRepository @Inject constructor(
                     cont.resume(posts)
                 }
             }
-            requestPostsWithTag(tag, ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER, resultListener)
+            requestPostsWithTag(tag, UpdateAction.REQUEST_NEWER, resultListener)
         }
     }
 
     fun requestPostsWithTag(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         if (routeDiscoverSubTab(tag, updateAction, resultListener)) return
         val path = getRelativeEndpointForTag(tag)
         if (path.isNullOrBlank()) {
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
             return
         }
         val sb = StringBuilder(path)
@@ -91,18 +111,18 @@ class ReaderPostRepository @Inject constructor(
         sb.append("&order=DESC")
 
         val beforeDate: String? = when (updateAction) {
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER -> {
+            UpdateAction.REQUEST_OLDER -> {
                 // request posts older than the oldest existing post with this tag
                 ReaderPostTable.getOldestDateWithTag(tag)
             }
 
-            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP -> {
+            UpdateAction.REQUEST_OLDER_THAN_GAP -> {
                 // request posts older than the post with the gap marker for this tag
                 ReaderPostTable.getGapMarkerDateForTag(tag)
             }
 
-            ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER,
-            ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> null
+            UpdateAction.REQUEST_NEWER,
+            UpdateAction.REQUEST_REFRESH -> null
         }
 
         if (!beforeDate.isNullOrBlank()) {
@@ -113,8 +133,8 @@ class ReaderPostRepository @Inject constructor(
 
         val listener = RestRequest.Listener { jsonObject: JSONObject? ->
             // remember when this tag was updated if newer posts were requested
-            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+            if (updateAction == UpdateAction.REQUEST_NEWER ||
+                updateAction == UpdateAction.REQUEST_REFRESH
             ) {
                 applicationScope.launch(ioDispatcher) { ReaderTagTable.setTagLastUpdated(tag) }
             }
@@ -123,7 +143,7 @@ class ReaderPostRepository @Inject constructor(
 
         val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
             AppLog.e(AppLog.T.READER, volleyError)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
 
         getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener)
@@ -131,13 +151,13 @@ class ReaderPostRepository @Inject constructor(
 
     fun requestPostsForBlog(
         blogId: Long,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         var path = "read/sites/$blogId/posts/?meta=site,likes"
 
         // append the date of the oldest cached post in this blog when requesting older posts
-        if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
             val dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId)
             if (!dateOldest.isNullOrBlank()) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest)
@@ -148,7 +168,7 @@ class ReaderPostRepository @Inject constructor(
         }
         val errorListener = RestRequest.ErrorListener { volleyError ->
             AppLog.e(AppLog.T.READER, volleyError)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
         AppLog.d(AppLog.T.READER, "updating posts in blog $blogId")
         getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
@@ -156,11 +176,11 @@ class ReaderPostRepository @Inject constructor(
 
     fun requestPostsForFeed(
         feedId: Long,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         var path = "read/feed/$feedId/posts/?meta=site,likes"
-        if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
             val dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId)
             if (!dateOldest.isNullOrBlank()) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest)
@@ -171,11 +191,268 @@ class ReaderPostRepository @Inject constructor(
         }
         val errorListener = RestRequest.ErrorListener { volleyError ->
             AppLog.e(AppLog.T.READER, volleyError)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
         AppLog.d(AppLog.T.READER, "updating posts in feed $feedId")
         getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
     }
+
+    /**
+     * Searches WordPress.com for posts matching the passed query, saves the results under the
+     * query's search tag and returns whether the search succeeded
+     */
+    suspend fun searchPosts(query: String, offset: Int): Boolean {
+        val path = "read/search?q=" + UrlUtils.urlEncode(query) +
+                "&number=" + ReaderConstants.READER_MAX_SEARCH_RESULTS_TO_REQUEST +
+                "&offset=" + offset +
+                "&meta=site,likes" +
+                "&lang=" + perAppLocaleManager.getCurrentLocaleLanguageCode()
+
+        AppLog.d(AppLog.T.READER, "reader search > starting search for $query")
+        val jsonObject = awaitRestRequest { listener, errorListener ->
+            getRestClientUtilsV1_2().get(path, null, null, listener, errorListener)
+        }.response ?: return false
+
+        withContext(ioDispatcher) {
+            val serverPosts = ReaderPostList.fromJson(jsonObject)
+            ReaderPostTable.addOrUpdatePosts(ReaderUtils.getTagForSearchQuery(query), serverPosts)
+        }
+        return true
+    }
+
+    /**
+     * Likes or unlikes the post locally and returns whether that changed anything
+     */
+    suspend fun likePostLocal(post: ReaderPost, like: Boolean, wpComUserId: Long): Boolean =
+        withContext(ioDispatcher) {
+            if (ReaderPostTable.isPostLikedByCurrentUser(post) == like) {
+                AppLog.w(AppLog.T.READER, "post like unchanged")
+                return@withContext false
+            }
+            val numLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId)
+            val newNumLikes = (if (like) numLikes + 1 else numLikes - 1).coerceAtLeast(0)
+            ReaderPostTable.setLikesForPost(post, newNumLikes, like)
+            ReaderLikeTable.setCurrentUserLikesPost(post, like, wpComUserId)
+            true
+        }
+
+    /**
+     * Likes or unlikes the post on the server and returns whether it succeeded. If it fails, the local like
+     * is reverted to the passed post's state, if there is one. This finishes even if the caller is cancelled.
+     */
+    suspend fun likePostRemote(
+        post: ReaderPost?,
+        blogId: Long,
+        postId: Long,
+        like: Boolean,
+        wpComUserId: Long
+    ): Boolean = withContext(ioDispatcher + NonCancellable) {
+        val actionName = if (like) "like" else "unlike"
+        val path = "sites/$blogId/posts/$postId/likes/" + if (like) "new" else "mine/delete"
+        val result = awaitRestRequest { listener, errorListener ->
+            WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
+        }
+        if (result is RestResult.Failure) {
+            val error = result.errorString
+            AppLog.w(AppLog.T.READER, "post $actionName failed" + if (error.isEmpty()) "" else " ($error)")
+            // restore the post's state from before the action. Without the post there's nothing to restore,
+            // and writing the like table anyway would add a like for a caller that never applied one locally
+            if (!result.isCancelled) {
+                post?.let {
+                    ReaderPostTable.setLikesForPost(it, it.numLikes, it.isLikedByCurrentUser)
+                    ReaderLikeTable.setCurrentUserLikesPost(it, it.isLikedByCurrentUser, wpComUserId)
+                }
+            }
+        } else {
+            AppLog.d(AppLog.T.READER, "post $actionName succeeded")
+        }
+        result is RestResult.Success
+    }
+
+    /**
+     * Adds the post to, or removes it from, the bookmarks
+     */
+    suspend fun setBookmarked(post: ReaderPost, bookmarked: Boolean) = withContext(ioDispatcher) {
+        if (bookmarked) {
+            val posts = ReaderPostList().apply { add(post) }
+            post.dateTagged = DateTimeUtils.iso8601UTCFromDate(Date())
+            ReaderTagTable.getBookmarkTags().forEach { tag -> ReaderPostTable.addOrUpdatePosts(tag, posts) }
+        }
+        ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, bookmarked)
+    }
+
+    /**
+     * Fetches the post and saves it. Use this when the post may not be stored yet; [refreshPost] updates one
+     * that is.
+     */
+    suspend fun fetchPost(blogId: Long, postId: Long, isFeed: Boolean = false): FetchPostResult =
+        if (isFeed) {
+            requestPost(WordPress.getRestClientUtilsV1_3(), "read/feed/$blogId/posts/$postId")
+        } else {
+            requestPost(WordPress.getRestClientUtilsV1_1(), "read/sites/$blogId/posts/$postId")
+        }
+
+    suspend fun fetchPostBySlug(blogSlug: String, postSlug: String): FetchPostResult =
+        // the blog slug can come from an app link host, so encode it as a single path segment
+        requestPost(
+            WordPress.getRestClientUtilsV1_1(),
+            "sites/" + UrlUtils.urlEncode(blogSlug) + "/posts/slug:$postSlug"
+        )
+
+    /**
+     * Fetches the post in the background, outliving the caller, and passes it to [onFetched] on the main thread
+     * if that succeeded
+     */
+    @JvmOverloads
+    fun prefetchPost(blogId: Long, postId: Long, onFetched: Consumer<ReaderPost>? = null) {
+        applicationScope.launch {
+            val result = fetchPost(blogId, postId)
+            if (result is FetchPostResult.Success && onFetched != null) {
+                withContext(Dispatchers.Main) { onFetched.accept(result.post) }
+            }
+        }
+    }
+
+    /**
+     * Requests the post at [path] with its site and likes. A cancelled caller still leaves the post stored for next
+     * time.
+     */
+    private suspend fun requestPost(client: RestClientUtils, path: String): FetchPostResult = outlivingCaller {
+        val result = getWithLocale(client, "$path/?meta=site,likes")
+        val json = result.response ?: return@outlivingCaller FetchPostResult.Failure(
+            (result as? RestResult.Failure)?.let { statusCode(it.error) } ?: 0
+        )
+        withContext(ioDispatcher) {
+            val post = ReaderPost.fromJson(json)
+            // keep the stored publish date, so editorial dates (e.g. Freshly Pressed "displayed_on") aren't
+            // overwritten by this endpoint, which lacks the editorial section
+            ReaderPostTable.getBlogPost(post.blogId, post.postId, true)?.let { post.datePublished = it.datePublished }
+            ReaderPostTable.addPost(post)
+            savePostLikes(post, json)
+            FetchPostResult.Success(post)
+        }
+    }
+
+    /**
+     * Fetches the latest version of the stored post and copies its counts, flags and text into [localPost] and
+     * the database. The post only counts as changed if those differ, or if its likes have changed. A cancelled
+     * caller still leaves the changes stored.
+     */
+    suspend fun refreshPost(localPost: ReaderPost): UpdateResult = outlivingCaller {
+        val path = "read/sites/${localPost.blogId}/posts/${localPost.postId}/?meta=site,likes"
+        val json = getWithLocale(getRestClientUtilsV1_2(), path).response ?: return@outlivingCaller UpdateResult.FAILED
+
+        withContext(ioDispatcher) {
+            val serverPost = ReaderPost.fromJson(json)
+            // this endpoint doesn't return the feed IDs, which would make isSamePost return false
+            if (serverPost.feedId == 0L) serverPost.feedId = localPost.feedId
+            if (serverPost.feedItemId == 0L) serverPost.feedItemId = localPost.feedItemId
+
+            var hasChanges = !serverPost.isSamePost(localPost)
+            if (hasChanges) {
+                // copy the changes rather than storing the server post, since this endpoint is missing some
+                // information: https://github.com/wordpress-mobile/WordPress-Android/issues/3164
+                localPost.numReplies = serverPost.numReplies
+                localPost.numLikes = serverPost.numLikes
+                localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser
+                localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser
+                localPost.isCommentsOpen = serverPost.isCommentsOpen
+                localPost.useExcerpt = serverPost.useExcerpt
+                localPost.title = serverPost.title
+                localPost.text = serverPost.text
+                localPost.excerpt = serverPost.excerpt
+                ReaderPostTable.updatePost(localPost)
+            }
+            // always update the liking users, so post detail has their avatars straight away
+            if (savePostLikes(serverPost, json)) hasChanges = true
+            if (hasChanges) UpdateResult.CHANGED else UpdateResult.UNCHANGED
+        }
+    }
+
+    /**
+     * Fetches the posts related to the passed one, and returns those from its site and those from across
+     * WordPress.com, or null if the request failed
+     */
+    suspend fun fetchRelatedPosts(sourcePost: ReaderPost): Pair<ReaderSimplePostList, ReaderSimplePostList>? {
+        val path = "/read/site/${sourcePost.blogId}/post/${sourcePost.postId}/related" +
+            "?size_local=$NUM_RELATED_POSTS_TO_REQUEST" +
+            "&size_global=$NUM_RELATED_POSTS_TO_REQUEST" +
+            "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS
+        val jsonPosts = getWithLocale(getRestClientUtilsV1_2(), path).response?.optJSONArray("posts") ?: return null
+
+        return withContext(ioDispatcher) {
+            val local = ReaderSimplePostList()
+            val global = ReaderSimplePostList()
+            ReaderSimplePostList.fromJsonPosts(jsonPosts).forEach {
+                if (it.siteId == sourcePost.blogId) local.add(it) else global.add(it)
+            }
+            local to global
+        }
+    }
+
+    /**
+     * Counts a view of the post, unless the user is a member of its site and it's public
+     */
+    fun bumpPageView(post: ReaderPost) {
+        // views of private posts by the site's owner or members do count
+        if (siteStore.getSiteBySiteId(post.blogId) != null && !post.isPrivate) {
+            AppLog.d(AppLog.T.READER, "skipped bump page view - user is admin")
+            return
+        }
+        val url = "https://pixel.wp.com/g.gif?v=wpcom&reader=1" +
+            "&blog=" + post.blogId +
+            "&post=" + post.postId +
+            "&host=" + UrlUtils.urlEncode(UrlUtils.getHost(post.blogUrl)) +
+            "&ref=" + UrlUtils.urlEncode(TRACKING_REFERRER) +
+            "&t=" + Random.nextInt()
+        val request = object : StringRequest(
+            Method.GET,
+            url,
+            { AppLog.d(AppLog.T.READER, "bump page view succeeded") },
+            { error ->
+                AppLog.e(AppLog.T.READER, error)
+                AppLog.w(AppLog.T.READER, "bump page view failed")
+            }
+        ) {
+            // the request fails without the referrer
+            override fun getHeaders() = mapOf("Referer" to TRACKING_REFERRER)
+        }
+        WordPress.requestQueue?.add(request)
+    }
+
+    /**
+     * Runs [block] to completion even if the caller is cancelled, so a response still gets saved. A failure only
+     * reaches the caller: [outlivingScope] is a supervisor, so it can't cancel the scope's other work.
+     */
+    private suspend fun <T> outlivingCaller(block: suspend CoroutineScope.() -> T): T =
+        outlivingScope.async(block = block).await()
+
+    private suspend fun getWithLocale(client: RestClientUtils, path: String) =
+        awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
+            client.getWithLocale(path, null, null, listener, errorListener)
+        }
+
+    /**
+     * Stores the users who like the post, from the "likes" meta of its JSON, and returns whether they changed
+     */
+    private fun savePostLikes(post: ReaderPost, jsonPost: JSONObject): Boolean {
+        val jsonLikes = JSONUtils.getJSONChild(jsonPost, "meta/data/likes") ?: return false
+        val likingUsers = ReaderUserList.fromJsonLikes(jsonLikes)
+        val likingUserIds = likingUsers.userIds
+        val changed = !likingUserIds.isSameList(ReaderLikeTable.getLikesForPost(post))
+        if (changed) {
+            ReaderUserTable.addOrUpdateUsers(likingUsers)
+            ReaderLikeTable.setLikesForPost(post, likingUserIds)
+        }
+        return changed
+    }
+
+    /**
+     * The error's status code, preferring the one in its JSON body, e.g. {"code":403,"body":{"error":"unauthorized"}}
+     */
+    private fun statusCode(error: VolleyError?): Int =
+        VolleyUtils.volleyErrorToJSON(error)?.optInt("code")?.takeIf { it != 0 }
+            ?: VolleyUtils.statusCodeFromVolleyError(error)
 
     /**
      * called after requesting posts with a specific tag or in a specific blog/feed
@@ -187,12 +464,12 @@ class ReaderPostRepository @Inject constructor(
     private fun handleUpdatePostsResponse(
         tag: ReaderTag?,
         jsonObject: JSONObject?,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener,
         requestedFeedId: Long? = null
     ) {
         if (jsonObject == null) {
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
             return
         }
 
@@ -223,7 +500,7 @@ class ReaderPostRepository @Inject constructor(
      */
     private fun routeDiscoverSubTab(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener,
     ): Boolean {
         if (tag.tagType != ReaderTagType.DEFAULT) return false
@@ -251,7 +528,7 @@ class ReaderPostRepository @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForDiscoverStream(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         applicationScope.launch(ioDispatcher) {
@@ -264,9 +541,9 @@ class ReaderPostRepository @Inject constructor(
                 // the cursor-based streams endpoint has no equivalent to ReaderPostTable's
                 // gap markers, so starting fresh is the safest recovery path.
                 val isFirstPage =
-                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
+                    updateAction == UpdateAction.REQUEST_NEWER ||
+                        updateAction == UpdateAction.REQUEST_REFRESH ||
+                        updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP
 
                 if (isFirstPage) {
                     // Clear the stored cursor so the next "load more" starts from the new first
@@ -280,7 +557,7 @@ class ReaderPostRepository @Inject constructor(
                     val pageHandle =
                         appPrefsWrapper.getReaderDiscoverStreamPageHandle(tag.tagSlug)
                     if (pageHandle.isNullOrEmpty()) {
-                        resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
+                        resultListener.onUpdateResult(UpdateResult.UNCHANGED)
                         return@launch
                     }
                     params["page_handle"] = pageHandle
@@ -297,7 +574,7 @@ class ReaderPostRepository @Inject constructor(
                 }
                 val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
                     AppLog.e(AppLog.T.READER, volleyError)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                    resultListener.onUpdateResult(UpdateResult.FAILED)
                 }
 
                 WordPress.getRestClientUtilsV2().get(
@@ -309,7 +586,7 @@ class ReaderPostRepository @Inject constructor(
                 )
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.READER, "Discover stream request failed", e)
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                resultListener.onUpdateResult(UpdateResult.FAILED)
             }
         }
     }
@@ -324,7 +601,7 @@ class ReaderPostRepository @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForLatestStream(
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         applicationScope.launch(ioDispatcher) {
@@ -337,9 +614,9 @@ class ReaderPostRepository @Inject constructor(
                 params["number"] = ReaderConstants.READER_MAX_POSTS_TO_REQUEST.toString()
 
                 val beforeDate = when (updateAction) {
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER ->
+                    UpdateAction.REQUEST_OLDER ->
                         ReaderPostTable.getOldestDateWithTag(tag)
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP ->
+                    UpdateAction.REQUEST_OLDER_THAN_GAP ->
                         ReaderPostTable.getGapMarkerDateForTag(tag)
                     else -> null
                 }
@@ -349,8 +626,8 @@ class ReaderPostRepository @Inject constructor(
                 params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
 
                 val listener = RestRequest.Listener { jsonObject: JSONObject? ->
-                    if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+                    if (updateAction == UpdateAction.REQUEST_NEWER ||
+                        updateAction == UpdateAction.REQUEST_REFRESH
                     ) {
                         applicationScope.launch(ioDispatcher) { ReaderTagTable.setTagLastUpdated(tag) }
                     }
@@ -358,7 +635,7 @@ class ReaderPostRepository @Inject constructor(
                 }
                 val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
                     AppLog.e(AppLog.T.READER, volleyError)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                    resultListener.onUpdateResult(UpdateResult.FAILED)
                 }
 
                 WordPress.getRestClientUtilsV2().get(
@@ -370,7 +647,7 @@ class ReaderPostRepository @Inject constructor(
                 )
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.READER, "Latest stream request failed", e)
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                resultListener.onUpdateResult(UpdateResult.FAILED)
             }
         }
     }
@@ -386,11 +663,11 @@ class ReaderPostRepository @Inject constructor(
     private fun handleDiscoverStreamResponse(
         tag: ReaderTag,
         jsonObject: JSONObject?,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
         resultListener: UpdateResultListener
     ) {
         if (jsonObject == null) {
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
             return
         }
         try {
@@ -398,8 +675,8 @@ class ReaderPostRepository @Inject constructor(
 
             // Remember when the tag was last updated for first-page requests, matching the
             // behavior of the regular tag-based flow in requestPostsWithTag.
-            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+            if (updateAction == UpdateAction.REQUEST_NEWER ||
+                updateAction == UpdateAction.REQUEST_REFRESH
             ) {
                 ReaderTagTable.setTagLastUpdated(tag)
             }
@@ -418,7 +695,7 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(updateResult)
         } catch (e: JSONException) {
             AppLog.e(AppLog.T.READER, e)
-            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            resultListener.onUpdateResult(UpdateResult.FAILED)
         }
     }
 
@@ -445,12 +722,12 @@ class ReaderPostRepository @Inject constructor(
     private fun stampServerOrderOnPosts(
         serverPosts: ReaderPostList,
         tag: ReaderTag,
-        updateAction: ReaderPostServiceStarter.UpdateAction,
+        updateAction: UpdateAction,
     ) {
         if (serverPosts.isEmpty()) return
         val nowSeconds = System.currentTimeMillis() / MILLIS_PER_SECOND
         val baseTimestampSeconds: Long =
-            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+            if (updateAction == UpdateAction.REQUEST_OLDER) {
                 // Read the raw date_tagged column rather than SELECT datetime(date_tagged),
                 // since SQLite's datetime() returns a normalized "YYYY-MM-DD HH:MM:SS" string
                 // that DateTimeUtils can't parse back to a Date.
@@ -511,7 +788,7 @@ class ReaderPostRepository @Inject constructor(
                 // never hand craft the endpoint for default tags, since these MUST be updated using their endpoints
                 null
             } else {
-                formatRelativeEndpointForTag(tag.tagSlug)
+                ReaderUtils.getTagApiPath(tag.tagSlug, "posts")
             }
     }
 
@@ -543,13 +820,19 @@ class ReaderPostRepository @Inject constructor(
 
     companion object {
         private const val MILLIS_PER_SECOND = 1000L
+        private const val NUM_RELATED_POSTS_TO_REQUEST = 2
+        private const val TRACKING_REFERRER = "https://wordpress.com/"
 
-        private fun formatRelativeEndpointForTag(tagSlug: String): String {
-            return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))
-        }
-
-        fun formatFullEndpointForTag(tagSlug: String): String {
-            return (getRestClientUtilsV1_2().restClient.endpointURL + formatRelativeEndpointForTag(tagSlug))
-        }
+        fun formatFullEndpointForTag(tagSlug: String): String? =
+            ReaderUtils.getTagApiPath(tagSlug, "posts")?.let { getRestClientUtilsV1_2().restClient.endpointURL + it }
     }
+}
+
+sealed interface FetchPostResult {
+    data class Success(val post: ReaderPost) : FetchPostResult
+
+    /**
+     * [statusCode] is 0 if the request didn't reach the server
+     */
+    data class Failure(val statusCode: Int) : FetchPostResult
 }

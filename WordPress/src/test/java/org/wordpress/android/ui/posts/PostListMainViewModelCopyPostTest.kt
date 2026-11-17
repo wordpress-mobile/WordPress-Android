@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.network.rest.wpapi.post.PostRsApiRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
@@ -55,6 +56,7 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
         postStore = PostStore(
             dispatcher,
             Mockito.mock(PostRestClient::class.java),
+            Mockito.mock(PostRsApiRestClient::class.java),
             Mockito.mock(PostXMLRPCClient::class.java),
             postSqlUtils
         )

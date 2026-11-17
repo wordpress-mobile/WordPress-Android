@@ -65,6 +65,7 @@
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
+    <string name="web_view_log_in_to_site">Log in to this site</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="page_not_found">An error occurred when loading the page. Refresh your pages and try again.</string>
@@ -211,6 +212,8 @@
 
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
+    <string name="confirm_delete_single_media">Delete %1$d media item?</string>
+    <string name="confirm_delete_multi_media">Delete %1$d media items?</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
     <string name="media_empty_list">You don\'t have any media - yet!</string>
     <string name="media_empty_list_subtitle">Why not upload something?</string>
@@ -863,10 +866,6 @@
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="site_settings_format_hint">Sets new post format</string>
-    <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
-    <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
-    <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>
-    <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
@@ -940,14 +939,10 @@
     <string name="preference_crash_reports">Crash reports</string>
     <string name="preference_crash_reports_summary">Allow automatic crash reports to help us improve the app\'s performance.</string>
     <string name="preference_privacy_settings">Privacy settings</string>
-    <string name="cookie_policy_learn_more_header">Cookie Policy</string>
     <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
-    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
     <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalize your WordPress.com experience, and more as detailed in our privacy policy.</string>
-    <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
-    <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
     <string name="ccpa_privacy_notice_caption">The California Consumer Privacy Act ("CCPA") requires us to provide California residents with some additional information about the categories of personal information we collect and share, where we get that personal information, and how and why we use it.</string>
     <string name="ccpa_privacy_notice_read">Read CCPA privacy notice</string>
     <string name="preference_strip_image_location">Remove location from media</string>
@@ -958,7 +953,6 @@
     <string name="app_theme_entry_value_light" translatable="false">light</string>
     <string name="app_theme_entry_value_dark" translatable="false">dark</string>
     <string name="app_theme_entry_value_default" translatable="false">default</string>
-    <string name="app_theme_entry_value_default_key" translatable="false">@string/app_theme_entry_value_light</string>
     <string-array name="app_theme_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/app_theme_light</item>
         <item>@string/app_theme_dark</item>
@@ -1018,6 +1012,12 @@
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
     <!-- Timespan shown in the rs posts, pages and comments lists for anything under a minute old -->
     <string name="rs_date_now">Now</string>
+    <!-- Date shown on rs Drafts list rows, which are sorted by when they were last modified. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_modified">Modified: %s</string>
+    <!-- Date shown on rs Trashed list rows, which are sorted by when they were trashed. %s is the
+         formatted date, e.g. "2 days ago", "Yesterday", "Now" or "Dec 15, 2025" -->
+    <string name="rs_date_trashed">Trashed: %s</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="page_rs_copy_url">Copy URL</string>
@@ -1028,6 +1028,10 @@
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_trashed">Post moved to trash</string>
     <string name="post_rs_deleted">Post permanently deleted</string>
+    <string name="post_rs_local_drafts_title">Not uploaded</string>
+    <string name="post_rs_local_drafts_subtitle">These posts are only on this device.</string>
+    <string name="post_rs_local_drafts_upload_failed">Upload failed</string>
+    <string name="post_rs_local_drafts_retry_description">Retry uploading \"%s\"</string>
     <string name="post_rs_published">Post published</string>
     <string name="post_rs_moved_to_draft">Post moved to drafts</string>
     <string name="post_rs_error_trash">Failed to trash post</string>
@@ -1622,6 +1626,13 @@
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
     <string name="stats_post_detail_title">Post Stats</string>
+    <string name="stats_post_detail_published">Published %1$s</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_activity_less">Less</string>
+    <string name="stats_post_detail_activity_more">More</string>
+    <string name="stats_post_detail_total">Total</string>
+    <!-- Row under the Avg. Views Per Day grid, giving the item's average over its whole life -->
+    <string name="stats_post_detail_average">Average</string>
     <string name="stats_previous_day">Previous day</string>
     <string name="stats_next_day">Next day</string>
 
@@ -1728,6 +1739,19 @@
     <string name="stats_utm_source">Source</string>
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_campaign">Campaign</string>
+
+    <!-- Archive Stats Card -->
+    <string name="stats_archives_title">Archives</string>
+    <string name="stats_archives_title_label">Archive pages</string>
+    <string name="stats_archives_section_search">Search terms</string>
+    <string name="stats_archives_section_categories">Categories</string>
+    <string name="stats_archives_section_tags">Tags</string>
+    <string name="stats_archives_section_authors">Authors</string>
+    <string name="stats_archives_section_dates">Dates</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_aggregated">Aggregated</string>
+    <string name="stats_archives_section_other">Other</string>
+    <string name="stats_archives_section_taxonomies">Taxonomies</string>
 
     <!-- Subscribers Stats Cards -->
     <string name="stats_subscribers_all_time">All-time Subscribers</string>
@@ -1929,6 +1953,8 @@
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="get_likes_unknown_error">An unknown error occurred while getting likes.</string>
     <string name="get_likes_empty_state_title">An error occurred while getting likes data</string>
+    <!-- Shown when the likes list loads successfully but nobody has liked the item -->
+    <string name="get_likes_empty_state_no_likes">No likes yet</string>
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
@@ -1952,14 +1978,10 @@
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title_new" translatable="false">+%1$s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
-    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="reader_discover_empty_subtitle_follow">Follow tags to discover new blogs</string>
-    <string name="reader_discover_no_posts_title">No recent posts</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Try following more tags to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Follow tags</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
@@ -2528,7 +2550,6 @@
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_show_blog">Unable to show this blog</string>
     <string name="reader_toast_err_blog_not_found">Error: Unable to find the blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
@@ -2566,7 +2587,6 @@
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
     <string name="reader_no_followed_tags_text_title">No followed tags</string>
-    <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
     <string name="reader_no_followed_blogs_description" translatable="false">@string/reader_filter_empty_blogs_list_text</string>
@@ -3211,9 +3231,6 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
-    <string name="gravatar_info_title">Your WordPress.com profile is powered by Gravatar</string>
-    <string name="gravatar_info_description">Updating your avatar, name, and about info here will also update it across all sites that use Gravatar profiles.</string>
-    <string name="gravatar_info_learn_more_link">What is Gravatar?</string>
 
 
     <!-- Self-hosted Users -->
@@ -3284,6 +3301,12 @@
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="editor_saving_locked_title">Your post isn\'t ready yet</string>
+    <string name="editor_saving_locked_save_message">Something in the editor, like a media upload, is still in progress. If you continue, it may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_leave_message">If you leave now, anything still in progress, like a media upload, stops and may be missing or broken in your post.</string>
+    <string name="editor_saving_locked_keep_editing">Keep editing</string>
+    <string name="editor_saving_locked_continue">Continue</string>
+    <string name="editor_saving_locked_leave">Leave</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
@@ -3443,7 +3466,6 @@
     <string name="photo_picker_wpmedia_desc">pick from WordPress media</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
-    <string name="reader_cardview_post_play_video_desc">play featured video</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
@@ -4602,6 +4624,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
     <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
     <string name="unified_support_related_label">Related:</string>
+
+    <!-- AI disclosure shown at the top of the AI support chat (EU AI Act Art. 50 compliance).
+         %1$s is the name of the organisation the AI acts for, supplied by
+         ai_support_disclosure_product_name. Support is provided by WordPress.com in both apps, so
+         this is not flavour-specific. -->
+    <string name="ai_support_disclosure">You\'re chatting with AI from %1$s Support.</string>
+    <string name="ai_support_disclosure_product_name" translatable="false">WordPress.com</string>
     <string name="support_screen_unified_support_title">Get help</string>
     <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s is %3$s %4$s.</string>
@@ -4994,6 +5023,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="content_list_group_this_week">This week</string>
     <string name="content_list_group_earlier_in">Earlier in %1$s</string>
     <string name="content_list_fab_write">Write</string>
+    <string name="content_list_view_count_singular">%1$s view</string>
+    <string name="content_list_view_count_plural">%1$s views</string>
+    <string name="content_list_comment_count_singular">%1$s comment</string>
+    <string name="content_list_comment_count_plural">%1$s comments</string>
     <string name="content_list_density_show_condensed">Show condensed list</string>
     <string name="content_list_density_show_comfortable">Show expanded list</string>
     <string name="comment_trash_has_replies">This comment has replies. They won’t be moved to the trash with it.</string>
@@ -5013,4 +5046,22 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="comment_author_info_registered">Registered user</string>
     <string name="comment_author_info_guest">Guest</string>
     <string name="comment_detail_in_reply_to">In reply to %1$s:</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Most used</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Suggested</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unable to display the block inserter.</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Search blocks</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Add block</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Close</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recent</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Clear search</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No results</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No blocks match “%1$s”</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Photos</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera not available on this device</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Failed to load editor</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Unknown error</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">The editor stopped working</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload the editor to continue editing.</string>
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload Editor</string>
 </resources>

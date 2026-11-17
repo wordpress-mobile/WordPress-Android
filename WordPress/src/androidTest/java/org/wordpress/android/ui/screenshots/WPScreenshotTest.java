@@ -146,11 +146,9 @@ public class WPScreenshotTest extends BaseTest {
         // Click on the "Reader" tab and take a screenshot
         clickOn(R.id.nav_reader);
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.interests_fragment_container);
+        waitForElementToBeDisplayedWithoutFailure(R.id.fragment_container);
 
         idleFor(2000);
-
-        swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
 
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 

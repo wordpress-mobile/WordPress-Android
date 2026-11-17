@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,10 +23,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,9 +39,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
@@ -51,16 +53,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.util.extensions.getColorResIdFromAttribute
-import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
+import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostMoreMenuItem
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 private const val CONTENT_TOTAL_LINES = 3
 
@@ -237,33 +237,36 @@ fun ReaderTagsFeedPostListItem(
                 )
             }
             Spacer(Modifier.weight(1f))
-            // More menu ("…"). It's an AndroidView because we must have a way to get the view and inflate the existing
-            // menu, which is a ListPopupWindow and requires an achor.
-            AndroidView(
-                factory = { context ->
-                    ImageView(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon),
-                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon)
-                        )
-                        setImageResource(R.drawable.ic_more_ellipsis_horizontal_squares)
-                        contentDescription = context.resources.getString(R.string.show_more_desc)
-                        setBackgroundResource(
-                            context.getDrawableResIdFromAttribute(
-                                android.R.attr.selectableItemBackgroundBorderless
-                            )
-                        )
-                        setColorFilter(
-                            ContextCompat.getColor(
-                                context,
-                                context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
-                            )
-                        )
-                        tag = "${item.blogId}${item.postId}"
-                        setOnClickListener { onPostMoreMenuClick(item) }
-                    }
+            MoreMenu(item)
+        }
+    }
+}
+
+@Composable
+private fun MoreMenu(item: TagsFeedPostItem) {
+    Box {
+        Icon(
+            painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
+            contentDescription = stringResource(R.string.show_more_desc),
+            tint = Color(LocalContext.current.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)),
+            modifier = Modifier
+                .size(dimensionResource(R.dimen.reader_post_card_new_more_icon))
+                .clickable(
+                    interactionSource = null,
+                    indication = ripple(bounded = false),
+                    role = Role.Button,
+                    onClick = { item.onPostMoreMenuClick(item) },
+                ),
+        )
+        // set once the post has been read, just after the tap
+        val moreMenu = item.moreMenu
+        DropdownMenu(expanded = moreMenu != null, onDismissRequest = { moreMenu?.onDismiss() }) {
+            moreMenu?.items?.forEach { action ->
+                ReaderPostMoreMenuItem(action) {
+                    moreMenu.onDismiss()
+                    it.onClicked(item.postId, item.blogId, it.type)
                 }
-            )
+            }
         }
     }
 }

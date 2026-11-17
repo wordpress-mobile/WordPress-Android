@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main.analytics
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.WPMainNavigationView
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Locale
@@ -10,6 +11,7 @@ import javax.inject.Inject
 
 class MainCreateSheetTracker @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
 ) {
     fun trackActionTapped(page: WPMainNavigationView.PageType, actionType: MainActionListItem.ActionType) {
         val stat = when (page) {
@@ -50,12 +52,17 @@ class MainCreateSheetTracker @Inject constructor(
     }
 
     fun trackFabShown(page: WPMainNavigationView.PageType) {
-        val stat = when (page) {
-            WPMainNavigationView.PageType.MY_SITE -> AnalyticsTracker.Stat.MY_SITE_CREATE_FAB_SHOWN
-            WPMainNavigationView.PageType.READER -> AnalyticsTracker.Stat.READER_CREATE_FAB_SHOWN
-            else -> return
+        when (page) {
+            // The My Site FAB always acts on the selected site, so this event is site-scoped.
+            WPMainNavigationView.PageType.MY_SITE -> analyticsTracker.track(
+                AnalyticsTracker.Stat.MY_SITE_CREATE_FAB_SHOWN,
+                selectedSiteRepository.getSelectedSite()
+            )
+            WPMainNavigationView.PageType.READER -> analyticsTracker.track(
+                AnalyticsTracker.Stat.READER_CREATE_FAB_SHOWN
+            )
+            else -> Unit
         }
-        analyticsTracker.track(stat)
     }
 
     fun trackCreateActionsSheetCard(actions: List<MainActionListItem>) {

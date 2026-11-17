@@ -51,7 +51,7 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                 )
                 .build()
             notificationManagerWrapper.notify(notificationId, notificationCompat)
-            systemNotificationsTracker.trackShownNotification(notificationType)
+            systemNotificationsTracker.trackShownNotification(notificationType, blogId = null)
         }
     }
 

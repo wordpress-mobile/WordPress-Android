@@ -48,7 +48,6 @@ public class ReaderPost {
     private String mUrl;
     private String mShortUrl;
     private String mFeaturedImage;
-    private String mFeaturedVideo;
     private String mAuthorBlogUrl;
 
     public int numReplies; // includes comments, trackbacks & pingbacks
@@ -433,14 +432,6 @@ public class ReaderPost {
         this.mFeaturedImage = StringUtils.notNullStr(featuredImage);
     }
 
-    public String getFeaturedVideo() {
-        return StringUtils.notNullStr(mFeaturedVideo);
-    }
-
-    public void setFeaturedVideo(String featuredVideo) {
-        this.mFeaturedVideo = StringUtils.notNullStr(featuredVideo);
-    }
-
     public String getBlogName() {
         return StringUtils.notNullStr(mBlogName);
     }
@@ -605,10 +596,6 @@ public class ReaderPost {
         return !TextUtils.isEmpty(mFeaturedImage);
     }
 
-    public boolean hasFeaturedVideo() {
-        return !TextUtils.isEmpty(mFeaturedVideo);
-    }
-
     public boolean hasBlogName() {
         return !TextUtils.isEmpty(mBlogName);
     }
@@ -754,17 +741,5 @@ public class ReaderPost {
             mDateDisplay = dateTimeUtilsWrapper.dateFromIso8601(this.mDatePublished);
         }
         return mDateDisplay;
-    }
-
-    /*
-     * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
-     */
-    private transient long mStableId;
-
-    public long getStableId() {
-        if (mStableId == 0) {
-            mStableId = (mPseudoId != null ? mPseudoId.hashCode() : 0);
-        }
-        return mStableId;
     }
 }

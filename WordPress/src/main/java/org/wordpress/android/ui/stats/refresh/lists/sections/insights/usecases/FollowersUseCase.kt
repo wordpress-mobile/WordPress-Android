@@ -233,7 +233,7 @@ class FollowersUseCase(
     }
 
     private fun onLinkClick(selectedTab: Int) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWERS_VIEW_MORE_TAPPED, statsSiteProvider.siteModel)
         navigateTo(ViewFollowersStats(selectedTab))
     }
 

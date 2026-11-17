@@ -180,6 +180,37 @@ public final class AnalyticsTracker {
         STATS_NEW_STATS_ENABLED,
         STATS_NEW_STATS_DISABLED,
         STATS_FEATURE_GATE_EXPLORE_PLANS_TAPPED,
+        // New Stats (ui/newstats). A namespace of its own, mirroring the iOS JetpackStats event
+        // set (StatsEvent.swift there) so both platforms report the same names and property keys.
+        // The pre-existing stats_* events New Stats also emits stay as they are, so the rollout
+        // can still be compared against old Stats.
+        JETPACK_STATS_MAIN_SCREEN_SHOWN,
+        JETPACK_STATS_TRAFFIC_TAB_SHOWN,
+        JETPACK_STATS_INSIGHTS_TAB_SHOWN,
+        JETPACK_STATS_SUBSCRIBERS_TAB_SHOWN,
+        JETPACK_STATS_TAB_SELECTED,
+        JETPACK_STATS_POST_DETAILS_SCREEN_SHOWN,
+        // Android-only: the "show all" screens iOS reaches through one generic TopListScreenView,
+        // told apart by a `screen` property rather than by one event name each.
+        JETPACK_STATS_DETAIL_SCREEN_SHOWN,
+        JETPACK_STATS_DATE_RANGE_PRESET_SELECTED,
+        JETPACK_STATS_CUSTOM_DATE_RANGE_SELECTED,
+        JETPACK_STATS_DATE_NAVIGATION_BUTTON_TAPPED,
+        JETPACK_STATS_CARD_ADDED,
+        JETPACK_STATS_CARD_REMOVED,
+        JETPACK_STATS_CARD_MOVED,
+        JETPACK_STATS_CHART_TYPE_CHANGED,
+        JETPACK_STATS_CHART_METRIC_SELECTED,
+        JETPACK_STATS_CHART_BAR_SELECTED,
+        // Reports `item_type` only. iOS also sends a `metric` on this event, since its top lists
+        // are ranked by a metric the reader picks and Android's are not.
+        JETPACK_STATS_TOP_LIST_ITEM_TAPPED,
+        JETPACK_STATS_LOCATION_LEVEL_CHANGED,
+        JETPACK_STATS_DEVICE_BREAKDOWN_CHANGED,
+        JETPACK_STATS_UTM_PARAM_GROUPING_CHANGED,
+        // Android-only, like the Subscribers chart it belongs to: the range selector above it is
+        // the card's only interaction, so without this the whole card reports nothing.
+        JETPACK_STATS_SUBSCRIBERS_CHART_RANGE_CHANGED,
         EDITOR_CREATED_POST("editor_post_created"),
         EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY("editor_photo_added"),
         EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY("editor_video_added"),

@@ -217,7 +217,8 @@ private fun LoadedContent(
                         percentage = percentage,
                         onUrlClick = onUrlClick,
                         url = item.url,
-                        onItemClick = onItemClick?.let { { it(item) } }
+                        onItemClick = onItemClick?.let { { it(item) } },
+                        leadingContent = faviconSlot(item.iconUrl)
                     )
                 }
                 if (index < state.items.lastIndex) {
@@ -273,6 +274,7 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
         StatsCardType.VIDEO_PLAYS -> R.string.stats_videos_title_label
         StatsCardType.FILE_DOWNLOADS ->
             R.string.stats_file_downloads_title_label
+        StatsCardType.ARCHIVES -> R.string.stats_archives_title_label
         else -> cardType.displayNameResId
     }
 

@@ -3,24 +3,15 @@ package org.wordpress.android.ui.reader.utils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
-import org.wordpress.android.ui.FilteredRecyclerView
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderUtilsTest {
-    @Mock
-    lateinit var currentTag: ReaderTag
-
-    @Mock
-    lateinit var filteredRecyclerView: FilteredRecyclerView
-
     private fun getShuffledTagList(): ReaderTagList {
         val tagList = ReaderTagList()
         tagList.addAll(
@@ -60,28 +51,6 @@ class ReaderUtilsTest {
         val shuffledList = getShuffledTagList()
         val orederList = ReaderUtils.getOrderedTagsList(shuffledList, ReaderUtils.getDefaultTagInfo())
         assertThat(orederList).isEqualTo(getExpectedTagList())
-    }
-
-    @Test
-    fun `isFollowing is based on currentTag status if is not top level reader`() {
-        whenever(currentTag.isFollowedSites).thenReturn(true)
-        assertThat(ReaderUtils.isTagManagedInFollowingTab(currentTag, false, filteredRecyclerView)).isEqualTo(true)
-        whenever(currentTag.isFollowedSites).thenReturn(false)
-        assertThat(ReaderUtils.isTagManagedInFollowingTab(currentTag, false, filteredRecyclerView)).isEqualTo(false)
-    }
-
-    @Test
-    fun `isFollowing is based on FilteredRecyclerView when is top level reader`() {
-        whenever(currentTag.isFollowedSites).thenReturn(true)
-        whenever(filteredRecyclerView.currentFilter).thenReturn(currentTag)
-        whenever(filteredRecyclerView.isValidFilter(currentTag)).thenReturn(true)
-        var result = ReaderUtils.isTagManagedInFollowingTab(currentTag, true, filteredRecyclerView)
-        assertThat(result).isEqualTo(true)
-
-        whenever(currentTag.isFollowedSites).thenReturn(false)
-        whenever(filteredRecyclerView.currentFilter).thenReturn(currentTag)
-        result = ReaderUtils.isTagManagedInFollowingTab(currentTag, true, filteredRecyclerView)
-        assertThat(result).isEqualTo(false)
     }
 
     @Test
@@ -135,6 +104,48 @@ class ReaderUtilsTest {
         val nonUrlEncodedString = "non%url*encoded<?string"
         val result = ReaderUtils.sanitizeWithDashes(nonUrlEncodedString)
         assertThat(result).isEqualTo("nonurlencodedstring")
+    }
+
+    @Test
+    fun `given slug with invalid characters, when sanitize string is invoked, then they are removed`() {
+        listOf(
+            "some/tag.name?x=1&y=2#z",
+            "a%2Fb",
+            "a%2eb",
+            "a%3Fb%23c%25"
+        ).forEach {
+            assertThat(ReaderUtils.sanitizeWithDashes(it)).doesNotContain("/", ".", "?", "#", "&", "%")
+        }
+    }
+
+    @Test
+    fun `given unicode or underscore slug, when sanitize string is invoked, then string is not sanitized`() {
+        listOf("日本", "हिंदी", "my_tag", "✨", "🎉", "ハリー・ポッター", "می\u200Cخواهم").forEach {
+            assertThat(ReaderUtils.sanitizeWithDashes(it)).isEqualTo(it)
+        }
+    }
+
+    @Test
+    fun `given tag slug, when tag api path is built, then slug is a single encoded segment`() {
+        assertThat(ReaderUtils.getTagApiPath("dogs", "posts")).isEqualTo("read/tags/dogs/posts")
+        assertThat(ReaderUtils.getTagApiPath("日本", "mine", "delete"))
+            .isEqualTo("read/tags/%E6%97%A5%E6%9C%AC/mine/delete")
+        assertThat(ReaderUtils.getTagApiPath("%e7%be%8e%e9%a3%9f", "posts"))
+            .isEqualTo("read/tags/%e7%be%8e%e9%a3%9f/posts")
+        assertThat(ReaderUtils.getTagApiPath("   ", "posts")).isNull()
+    }
+
+    @Test
+    fun `given segment that url builder would resolve, when api path is built, then returns null`() {
+        listOf("..", ".", "%2e%2e", "%2E", ".%2e", ".\t.", "").forEach {
+            assertThat(ReaderUtils.buildApiPath(listOf("read", "tags", it, "posts"))).describedAs(it).isNull()
+        }
+    }
+
+    @Test
+    fun `given segment with path or query characters, when api path is built, then they are encoded`() {
+        assertThat(ReaderUtils.buildApiPath(listOf("read", "tags", "a/b?x#y\\z", "posts")))
+            .isEqualTo("read/tags/a%2Fb%3Fx%23y%5Cz/posts")
     }
 
     @Test

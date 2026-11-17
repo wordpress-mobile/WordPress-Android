@@ -18,7 +18,7 @@ class ReaderPage {
 
     fun openBlogOrPost(postTitle: String): ReaderViewPage {
         val post = Espresso.onView(ViewMatchers.withChild(ViewMatchers.withText(postTitle)))
-        WPSupportUtils.scrollIntoView(R.id.reader_recycler_view, post, 1f)
+        WPSupportUtils.scrollIntoView(R.id.reader_post_list, post, 1f)
         WPSupportUtils.clickOn(postTitle)
         return ReaderViewPage().waitUntilLoaded()
     }

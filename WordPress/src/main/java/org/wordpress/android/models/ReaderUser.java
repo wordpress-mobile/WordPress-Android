@@ -89,7 +89,7 @@ public class ReaderUser {
     }
 
     /*
-     * not stored - used by ReaderUserAdapter for performance
+     * not stored - cached for performance
      */
     private transient String mUrlDomain;
 

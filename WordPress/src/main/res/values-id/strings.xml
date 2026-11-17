@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-16 20:25:24+0000
+Translation-Revision-Date: 2026-10-23 09:56:04+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: id
@@ -30,6 +30,7 @@ Language: id
     <string name="reader_reading_time">Bacaan %s mnt</string>
     <string name="reader_discover_tab_latest">Terbaru</string>
     <string name="reader_discover_tab_recommended">Rekomendasi</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">hari ini</string>
     <string name="stats_subscribers_graph_years">Tahun</string>
     <string name="stats_subscribers_graph_months">Bulan</string>
@@ -52,9 +53,11 @@ Language: id
     <string name="stats_utm_source">Sumber</string>
     <string name="stats_utm_campaign_source_medium">Kampanye / Sumber / Sedang</string>
     <string name="stats_utm_source_medium">Sumber / Sedang</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Tidak terautentikasi.</string>
     <string name="stats_collapse_group">Ciutkan</string>
     <string name="stats_expand_group">Bentangkan</string>
+    <string name="stats_tag_type_tag">Tag</string>
     <string name="stats_tag_type_category">Kategori</string>
     <string name="stats_insights_tags_empty">Tidak ada tag atau kategori yang ditemukan</string>
     <string name="stats_insights_views_percent">%1$s%% kunjungan</string>
@@ -114,6 +117,8 @@ Language: id
     <string name="stats_try_new_stats">Coba statistik baru</string>
     <string name="stats_devices_percentage_header">Persentase</string>
     <string name="stats_devices_device_header">Perangkat</string>
+    <string name="stats_devices_platform">Platform</string>
+    <string name="stats_devices_browser">Browser</string>
     <string name="stats_devices_screensize">Ukuran</string>
     <string name="stats_devices_title">Perangkat</string>
     <string name="show_less">Tampilkan sedikit</string>
@@ -123,6 +128,7 @@ Language: id
     <string name="post_rs_settings_clear_excerpt">Hapus kutipan</string>
     <string name="post_rs_settings_format_dialog_title">Format Pos</string>
     <string name="post_rs_settings_excerpt_dialog_title">Kutipan</string>
+    <string name="post_rs_settings_slug_dialog_title">Slug</string>
     <string name="post_rs_settings_discard_message">Anda memiliki perubahan yang belum disimpan. Buang?</string>
     <string name="post_rs_settings_discard_title">Buang perubahan</string>
     <string name="post_rs_settings_status_dialog_title">Status Pos</string>
@@ -141,6 +147,7 @@ Language: id
     <string name="post_rs_sync_failed">Sinkronisasi gagal</string>
     <string name="post_rs_error_auth">Autentikasi Anda telah kedaluwarsa. Harap login lagi.</string>
     <string name="post_rs_error_load_more">Tidak dapat memuat lebih banyak pos</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">Level%1$d, %2$s, %3$s</string>
     <string name="menu_item_reorder_failed">Gagal menyusun ulang item menu</string>
     <string name="menu_item_invalid_url">Masukkan URL yang valid</string>
@@ -267,6 +274,7 @@ Language: id
     <string name="error_browser_no_network">Tidak dapat memuat halaman ini</string>
     <string name="history_empty_subtitle_post">Anda akan melihat riwayat pos ini saat melakukan perubahan</string>
     <string name="history_empty_subtitle_page">Anda akan melihat riwayat halaman ini saat melakukan perubahan</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">Bergabung dalam percakapan! Komentari pos di Pembaca.</string>
     <string name="notifications_empty_action_all">Aktiflah! Komentari pos di Pembaca.</string>
     <string name="more_options">Pilihan lainnya</string>
@@ -331,6 +339,7 @@ Language: id
     <string name="ai_bot_time_just_now">Baru saja</string>
     <string name="ai_bot_welcome_message">Saya asisten AI pribadi Anda. Saya bisa menjawab segala pertanyaan tentang situs atau akun Anda.</string>
     <string name="ai_bot_welcome_greeting">Apa kabar %1$s 👋</string>
+    <string name="unified_support_generic_error">Terjadi kesalahan. Coba lagi nanti.</string>
     <string name="create">Buat</string>
     <string name="logs_screen_general_error">Terjadi masalah …</string>
     <string name="logs_screen_empty_state">Tidak ada log</string>
@@ -646,9 +655,6 @@ Language: id
     <string name="notifications_action_mark_all_as_read">Tandai semua sebagai sudah dibaca</string>
     <string name="notifications_unread_content_description">Belum dibaca</string>
     <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
-    <string name="gravatar_info_learn_more_link">Apa itu Gravatar?</string>
-    <string name="gravatar_info_description">Jika avatar, nama, dan deskripsi tentang Anda di sini diubah, perubahan tersebut juga akan muncul di semua situs yang menggunakan profil Gravatar.</string>
-    <string name="gravatar_info_title">Profil WordPress.com Anda kini berbasis Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Tidak dapat memuat media untuk dibagikan. Harap periksa perizinan aplikasi\n        atau gunakan pustaka media aplikasi.</string>
     <string name="site_monitoring_cannot_be_started">Saat ini kami tidak dapat membuka pemantauan situs. Coba lagi nanti</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log Server web</string>
@@ -658,7 +664,6 @@ Language: id
     <string name="reader_empty_followed_blogs_button_subscriptions">Buka langganan</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blog langganan Anda belum mengeposkan apa pun akhir-akhir ini</string>
     <string name="reader_no_followed_blogs_description_subs">Langganan blog di Temukan atau cari blog yang sudah Anda sukai.</string>
-    <string name="reader_no_recommended_blogs_title">Tidak ada blog rekomendasi</string>
     <string name="reader_no_posts_with_this_tag">Belum ada pos dengan tag ini</string>
     <string name="reader_toast_err_unable_to_block_blog">Tidak dapat memblokir blog ini</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Pos dari blog ini tidak akan ditampilkan lagi</string>
@@ -666,7 +671,6 @@ Language: id
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Anda tidak memiliki izin untuk mengakses blog ini</string>
     <string name="reader_toast_err_unable_to_follow_blog">Tidak dapat berlangganan blog ini</string>
     <string name="reader_toast_err_already_follow_this_blog">Anda sudah berlangganan blog ini</string>
-    <string name="reader_toast_err_show_blog">Tidak dapat menampilkan blog ini</string>
     <string name="reader_label_choose_interests">Pilih minat Anda</string>
     <string name="reader_label_subscribers_count_single">1 pelanggan</string>
     <string name="reader_label_subscribers_count">%s pelanggan</string>
@@ -694,7 +698,6 @@ Language: id
     <string name="reader_dropdown_menu_subscriptions">Langganan</string>
     <string name="reader_dropdown_menu_discover">Temukan</string>
     <string name="reader_search_content_description">Pencarian</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Ikuti tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag yang diusulkan</string>
     <string name="reader_filter_empty_blogs_action_search">Cari blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Ikuti tag dan Anda akan dapat melihat pos dengan tag terbaik di sini.</string>
@@ -789,7 +792,6 @@ Language: id
     <string name="site_creation_domain_free_with_annual_plan">Gratis selama satu tahun pertama dengan paket berbayar tahunan</string>
     <string name="reader_secondary_bookmarked">Tersimpan</string>
     <string name="reader_secondary_bookmark">Simpan</string>
-    <string name="reader_discover_recommended_header_new">Anda mungkin suka</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Batalkan pengelompokan blok</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk di sini untuk menampilkan detail selengkapnya.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pola tersinkron</string>
@@ -1874,8 +1876,6 @@ Language: id
     <string name="hpp_retry_error">Harap periksa koneksi internet Anda lalu coba lagi.</string>
     <string name="hpp_error_subtitle">Ketuk coba lagi saat  Anda kembali online.</string>
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Coba ikuti lebih banyak tag untuk memperluas pencarian</string>
-    <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
     <string name="reader_discover_empty_title">Selamat datang!</string>
     <string name="scan">Pindai</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
@@ -2001,7 +2001,6 @@ Language: id
     <string name="publish_date">Tanggal Publikasi</string>
     <string name="ccpa_privacy_notice_read">Baca pemberitahuan privasi CCPA</string>
     <string name="ccpa_privacy_notice_caption">Undang-Undang Privasi Konsumen California (CCPA) meminta kami untuk menyediakan kepada warga negara California informasi tambahan tentang kategori informasi pribadi yang kami kumpulkan dan bagikan, di mana kami mendapatkan informasi tersebut, dan bagaimana dan mengapa kami menggunakannya.</string>
-    <string name="ccpa_privacy_notice_header">Pemberitahuan privasi untuk pengguna di California</string>
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2716,11 +2715,8 @@ Language: id
     <string name="activity_log">Log Aktivitas</string>
     <string name="privacy_policy_read">Baca kebijakan privasi</string>
     <string name="third_party_policy_learn_more_caption">Kami menggunakan alat pelacakan lainnya, termasuk beberapa dari pihak ketiga. Baca tentang hal ini dan cara mengontrolnya.</string>
-    <string name="third_party_policy_learn_more_header">Kebijakan Pihak Ketiga</string>
     <string name="privacy_policy_learn_more_caption">Informasi ini membantu kami menyempurnakan produk, membuat pemasaran kepada Anda jadi lebih relevan, menyesuaikan pengalaman WordPress.com Anda, dan lainnya seperti yang dijelaskan dalam kebijakan privasi kami.</string>
-    <string name="privacy_policy_learn_more_header">Kebijakan Privasi</string>
     <string name="cookie_policy_learn_more_caption">Berbagi informasi dengan alat analitik kami tentang penggunaan layanan Anda saat sudah login ke akun WordPress.com Anda.</string>
-    <string name="cookie_policy_learn_more_header">Kebijakan Cookie</string>
     <string name="preference_privacy_settings">Pengaturan privasi</string>
     <string name="preference_collect_information">Kumpulkan informasi</string>
     <string name="post_submitted">Pos telah dikirim</string>
@@ -2771,7 +2767,6 @@ Language: id
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">hapus</string>
     <string name="photo_picker_thumbnail_desc">putar video</string>
-    <string name="reader_cardview_post_play_video_desc">putar video andalan</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">pilih dari media WordPress</string>
@@ -3114,8 +3109,6 @@ Language: id
     <string name="media_all">Semua</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s ditolak untuk mengakses berkas media Anda. Untuk memperbaiki ini, edit perizinan Anda dan aktifkan %2$s.</string>
     <string name="reader_view_comments">Lihat komentar</string>
-    <string name="site_settings_video_quality_hint">Kualitas video. Semakin tinggi nilainya, semakin bagus kualitas videonya.</string>
-    <string name="site_settings_video_width_hint">Ubah ukuran video dalam pos menjadi ukuran ini</string>
     <string name="site_settings_optimize_video_summary">Memungkinkan pengubahan ukuran dan kompresi video</string>
     <string name="site_settings_optimize_videos">Optimalkan Video</string>
     <string name="draft_uploaded">Konsep diunggah</string>
@@ -3199,7 +3192,6 @@ Language: id
     <string name="photo_picker_title">Pilih foto</string>
     <string name="error_publish_no_network">Perangkat offline. Pos disimpan secara lokal.</string>
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
-    <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
     <string name="media_encoder_quality_maximum">Maksimum</string>
     <string name="media_encoder_quality_high">Tinggi</string>
@@ -3451,7 +3443,6 @@ Language: id
     <string name="site_settings_discussion_hint">Tampilkan dan ubah pengaturan diskusi situs</string>
     <string name="site_settings_more_hint">Tampilkan semua pengaturan Diskusi yang ada</string>
     <string name="site_settings_related_posts_hint">Tampilkan atau sembunyikan pos terkait di pembaca</string>
-    <string name="site_settings_image_width_hint">Ubah ukuran gambar dalam pos ke lebar berikut</string>
     <string name="site_settings_format_hint">Tentukan format pos baru</string>
     <string name="site_settings_category_hint">Tentukan kategori pos baru</string>
     <string name="site_settings_password_hint">Ubah kata sandi Anda</string>

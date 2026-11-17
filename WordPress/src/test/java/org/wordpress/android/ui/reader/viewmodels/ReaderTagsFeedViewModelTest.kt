@@ -33,7 +33,6 @@ import org.wordpress.android.ui.reader.ReaderTestUtils
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
-import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
@@ -44,7 +43,6 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
-import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import kotlin.test.assertIs
@@ -69,12 +67,6 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
-
-    @Mock
-    lateinit var readerPostUiStateBuilder: ReaderPostUiStateBuilder
-
-    @Mock
-    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Mock
     lateinit var readerTracker: ReaderTracker
@@ -114,8 +106,6 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             readerPostTableWrapper = readerPostTableWrapper,
             postLikeUseCase = postLikeUseCase,
             readerPostMoreButtonUiStateBuilder = readerPostMoreButtonUiStateBuilder,
-            readerPostUiStateBuilder = readerPostUiStateBuilder,
-            displayUtilsWrapper = displayUtilsWrapper,
             readerTracker = readerTracker,
             networkUtilsWrapper = networkUtilsWrapper,
         )

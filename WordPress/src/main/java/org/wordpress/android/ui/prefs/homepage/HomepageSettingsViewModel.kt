@@ -170,7 +170,6 @@ class HomepageSettingsViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     private fun List<PageModel>.isValid(

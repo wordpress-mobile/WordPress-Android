@@ -176,6 +176,9 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
 
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
             ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+        // Read before start() below so the screen underneath can be put back on its own site when this one is
+        // cleared, rather than on whichever site happens to be selected.
+        val previousSiteId = statsSiteProvider.siteModel.id
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
@@ -188,7 +191,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
         }
         setupObservers(activity)
 
-        viewModel.start(selectedDate)
+        viewModel.start(selectedDate, previousSiteId)
     }
 
     private fun StatsViewAllFragmentBinding.setupObservers(activity: FragmentActivity) {

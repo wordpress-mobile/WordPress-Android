@@ -35,6 +35,7 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            statsResultCache = StatsResultCache(),
             appLogWrapper = appLogWrapper,
             clock = Clock.systemDefaultZone(),
             ioDispatcher = testDispatcher()
@@ -133,6 +134,25 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
             val success = result as ClicksResult.Success
             assertThat(success.totalClicks)
                 .isEqualTo(TEST_CLICK_CLICKS_1 + TEST_CLICK_CLICKS_2)
+        }
+
+    @Test
+    fun `given a click icon, when fetchClicks, then it propagates`() =
+        test {
+            val items = listOf(
+                ClickDataItem(name = "Link 1", url = null, clicks = 150, iconUrl = TEST_ICON_URL),
+                ClickDataItem(name = "Link 2", url = null, clicks = 100)
+            )
+            whenever(statsDataSource.fetchClicks(any(), any(), any()))
+                .thenReturn(ClicksDataResult.Success(items))
+                .thenReturn(ClicksDataResult.Success(emptyList()))
+
+            val result = repository.fetchClicks(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            val success = result as ClicksResult.Success
+            assertThat(success.items[0].iconUrl).isEqualTo(TEST_ICON_URL)
+            // The API knows no icon for this one, and the row shows none rather than a placeholder.
+            assertThat(success.items[1].iconUrl).isNull()
         }
 
     @Test
@@ -441,5 +461,6 @@ class StatsRepositoryClicksTest : BaseUnitTest() {
         private const val TEST_CLICK_URL_2 = "https://wordpress.org/"
         private const val TEST_CLICK_CLICKS_1 = 500L
         private const val TEST_CLICK_CLICKS_2 = 300L
+        private const val TEST_ICON_URL = "https://example.com/favicon.ico"
     }
 }

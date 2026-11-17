@@ -35,8 +35,11 @@ import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.newstats.NewStatsRouting
+import org.wordpress.android.ui.newstats.poststats.PostStatsDetailActivity
 import org.wordpress.android.ui.newstats.toNewStatsTarget
+import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
@@ -82,6 +85,49 @@ class ActivityNavigator @Inject constructor(
             .addNextIntent(getMainActivityInNewStack(context))
             .addNextIntent(NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id))
             .startActivities()
+    }
+
+    /**
+     * Opens the per-item Stats screen for a single post, honouring the New Stats rollout. Used by
+     * the Posts lists, whose overflow menu offers Stats for a published post.
+     */
+    fun openPostStats(context: Context, site: SiteModel, postId: Long, postTitle: String, postUrl: String?) =
+        openItemStats(context, site, postId, postTitle, postUrl, StatsConstants.ITEM_TYPE_POST)
+
+    /**
+     * The Pages list's equivalent. The old screen is given ITEM_TYPE_HOME_PAGE for every page,
+     * which is what that list has always passed it; New Stats takes no item type and reads the
+     * item's kind from the response, so both lists can share one gate.
+     */
+    fun openPageStats(context: Context, site: SiteModel, pageId: Long, pageTitle: String, pageUrl: String?) =
+        openItemStats(context, site, pageId, pageTitle, pageUrl, StatsConstants.ITEM_TYPE_HOME_PAGE)
+
+    /**
+     * [itemUrl] and [itemType] reach only the old screen: New Stats takes the item's URL, type and
+     * status from the stats/post/<id> response instead, which is what lets it keep the header
+     * inert for an item that is no longer public. [itemTitle] is a placeholder there, used until
+     * that response arrives.
+     *
+     * The site travels as a local id rather than a SiteModel because New Stats always renders the
+     * currently selected site - see selectNewStatsSiteIfNeeded.
+     *
+     * Both branches report the open as [StatsLaunchedFrom.POSTS]: that is the tap source the old
+     * screen hardcodes for every per-item open, pages included, so the two stay comparable.
+     */
+    @Suppress("LongParameterList")
+    private fun openItemStats(
+        context: Context,
+        site: SiteModel,
+        itemId: Long,
+        itemTitle: String,
+        itemUrl: String?,
+        itemType: String
+    ) {
+        if (newStatsRouting.isNewStatsEnabled()) {
+            PostStatsDetailActivity.start(context, itemId, itemTitle, site.id, StatsLaunchedFrom.POSTS)
+        } else {
+            StatsDetailActivity.start(context, site, itemId, itemType, itemTitle, itemUrl)
+        }
     }
 
     fun navigateToCampaignListingPage(context: Context, campaignListingPageSource: CampaignListingPageSource) {

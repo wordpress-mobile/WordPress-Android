@@ -1,0 +1,362 @@
+# User-Facing Changes
+
+A rolling log of changes a customer could notice. Newest entries at the top.
+
+What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION.md`](USER-FACING-CHANGES-DOCUMENTATION.md).
+
+---
+
+<!-- Add new entries directly below this line. -->
+
+- **Reader post screen's bars and sections rebuilt**
+  The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → tap a post; Notifications → tap a new-post notification
+  - **Notes:** The post body itself is unchanged.
+
+- **Adding a site you already subscribe to says so**
+  Entering a site you already subscribe to now shows "You are already subscribed to this blog" instead of subscribing again.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → site or tag filter → Manage
+
+- **Previewing a photo picked from the device works again**
+  Long-pressing a photo in the device media picker opens a full-screen preview that now shows the image, and it can be pinched to zoom. Before, the preview was a black screen reading "Unable to load media" for every photo.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → + → Choose from device → long-press an item; also the editor's media picker, and the play overlay on a video
+  - **Notes:** Videos and audio from the device preview as before. Documents still show "Unable to load media" in this preview - that is unchanged, there is no document viewer here. The same "Unable to load media" screen reached from long-press in media search (CMM-2379) is a different screen and is not addressed by this.
+
+- **The back arrow stays put while you watch a video in the media viewer**
+  In the full-screen media viewer, the top bar with the back arrow now appears and disappears together with the video's playback controls, so it is always there while the controls are. Before, it faded out three seconds after you opened or swiped to a video and tapping the video only toggled the playback controls, which left no way back other than the system back gesture. Photos are unchanged: the top bar still fades out on its own and a tap brings it back.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap a video → tap the preview; also the full-screen preview opened from the media picker and from Reader posts
+  - **Notes:** Audio files no longer fade the top bar out either. It stays visible for the whole item, alongside the audio controls, which do not hide on their own.
+
+- **Plain-text (.txt) files can be uploaded as documents**
+  On self-hosted and plugin-enabled WordPress.com sites, .txt files can now be selected and uploaded when choosing a document from the device. Before, the file picker showed them greyed out. Uploaded .txt files are also listed with the other documents, so they can be picked again from the media library.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → + → Choose from device; My Site → Media → Documents; editor → File block → Choose from device or Media Library
+  - **Notes:** Other WordPress.com sites still show .txt files greyed out, because WordPress.com only accepts .txt uploads on plugin-enabled sites with plan features activated. A .txt file uploaded from the web shows under Documents once the Media library's All list has loaded it.
+
+- **Posts list shows posts that haven't been uploaded**
+  Posts saved on the device that never reached the site, because they were written offline or their upload failed, are reachable from the Posts list again. A banner above the tabs says how many there are ("2 posts haven't been uploaded"); tapping it opens a sheet listing each one with its title and when it was last changed. Tapping a post opens it in the editor. A post whose upload failed reads "Upload failed" and offers Retry.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Sites added with an Application Password; WordPress.com sites behind `Flag: android_wp_rs_wpcom`
+  - **Where:** My Site → Posts → banner above the tabs
+  - **Notes:** Before, such a post had no row in this list, so once the upload-failure notification was dismissed there was no way back to it. The list says "posts" rather than "drafts" because it also holds posts published or scheduled while offline, which go live once they upload. The banner is hidden while searching, and these posts aren't included in search results. A post being uploaded for the first time isn't counted or listed until the upload fails, so a post written online doesn't show here while it uploads. A post whose upload failed stays listed as failed while it's uploaded again, by Retry or automatically when the device reconnects; until that upload finishes, tapping the post or its Retry closes the sheet and says it's uploading. Retry while offline closes the sheet and says there's no connection. There is no way to delete one of these posts from the list. The sheet doesn't update live while an upload starts, only when one finishes. Pages are unchanged.
+
+- **Reader: Subscriptions no longer opens on a blank page**
+  Opening the Reader on Subscriptions when no posts were saved on the device could show a blank page, with no posts, spinner or message, until you switched feeds. It now loads the latest posts. The Blogs and Tags filter chips could also be missing at startup, and now appear.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions
+  - **Notes:** It happened intermittently, depending on how fast the app started, and only when the feed had no posts saved on the device.
+
+- **Deleted media no longer stays stuck on "Deleting"**
+  On self-hosted sites using the REST API, a deleted media item kept showing a "Deleting" spinner in the Media library even though it had already been removed from the site. It only disappeared after switching tabs or reopening the screen. It now disappears as soon as the delete finishes. A delete that fails part way through a batch no longer leaves the remaining items spinning either — they go back to normal and can be selected again to retry.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media
+  - **Notes:** Only self-hosted sites on the REST API were affected by the first problem. WordPress.com and XML-RPC sites already removed the item correctly. Items left spinning after a failed or interrupted delete affected all site types.
+
+- **Select several items at once in the Media library**
+  Long-pressing a media item in the Media library starts a selection, and tapping other items adds them to it. A toolbar shows how many are selected and lets you delete them all at once. Before, media could only be deleted one item at a time, from its details screen.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → long-press an item
+  - **Notes:** Deleting asks for confirmation first. Items already being deleted can't be selected. Back, or the toolbar's X, leaves the selection. The media type tabs are greyed out while a selection is active, so you finish or leave the selection before changing filter. Media pickers opened from the editor are unaffected.
+
+- **Opening a WordPress.com post link no longer sticks on a spinner**
+  Opening a link to a WordPress.com post that isn't already in the Reader (for example `example.wordpress.com/2026/11/01/a-post`) now always shows the post, or an error if it can't be loaded. Before, the post sometimes never appeared and the screen showed a spinner until you left it.
+  - **Apps:** Jetpack
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** A WordPress.com post link opened in the app
+
+- **Swiping between media previews shows the next image right away**
+  In the full-screen media preview, the images either side of the one you are looking at now start loading before you swipe, so the next one is usually on screen as soon as the swipe finishes. Previously each image only began loading once it became the visible page, showing a spinner first.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item → tap the image → swipe left or right
+  - **Notes:** Only affects images; audio and video were already prepared ahead of time. Pre-loading reaches one item either side, so a fast swipe through several items can still show a spinner.
+
+- **Experimental block editor uploads follow the Media settings**
+  Photos and videos added from the device in the experimental block editor are now resized, compressed, and stripped of location as set in App Settings, as they already were in the classic editors. Before, they uploaded unchanged.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Me → App Settings → Media (Optimize Images, Maximum Image Size, Image Quality, Remove location from media, Optimize Videos, Maximum Video Size, Video Quality); experimental block editor → Add media
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Video optimization stays off unless the user turns it on, as in the classic editors. GIFs always upload unchanged so they keep animating.
+
+- **Reblogging from a site's or tag's post list confirms the result**
+  After you reblog a post from a site's or a tag's post list and leave the editor, the post list now shows the editor's result snackbar (for example, that the post was published or saved as a draft), and another when the upload finishes. Previously neither appeared there, though the reblog itself worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → tap a site name or a tag → a post's Reblog button → editor → back
+
+- **Reader: a site unblocked on the web shows its posts again in the app**
+  If you blocked a site in the app's Reader and later unblocked it on the web, the site's posts now come back the next time the app refreshes the sites you follow. Before, the site was back in your subscriptions but its stream stayed at "This blog is empty" until you logged out and back in.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions, and the unblocked site's stream
+  - **Notes:** Unblocking a site on the web subscribes you to it again, and that is how the app finds out. A site you blocked without being subscribed to it comes back only after you subscribe to it, or log out and back in.
+
+- **Reader search reports a subscribe that couldn't start**
+  On the Sites tab of Reader search, tapping Subscribe on a site that can't be subscribed to from there now shows the "Unable to subscribe to this blog" message, the same one shown when the request fails. Previously the button just flipped back without saying anything.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Search → Sites → Subscribe
+  - **Notes:** Rare: it happens when the app has the site's feed on record but no feed address for it. Unsubscribing from the same place shows the matching "Unable to unsubscribe from blog" message.
+
+- **AI support chat says up front that you are chatting with AI**
+  The support chat now shows a fixed line above the conversation: "You're chatting with AI from WordPress.com Support." It sits outside the scrolling messages, so it stays visible however long the conversation gets, and it is there from the moment the chat opens, before the first reply. It appears in every AI chat, whether newly started or reopened from the list. Once a conversation has been handed to a Happiness Engineer and become a ticket, the ticket view does not show it.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Me → Help & Support → Get help → any AI Assistant conversation; also the older Contact Support chat reached from the post editor
+  - **Notes:** Required by the EU AI Act (Art. 50), which asks for this label at the top of the chat rather than in a footer, everywhere in the world. The wording is written by the app, never by the bot, and is translated like any other string; "WordPress.com" in it is not translated. Both apps name WordPress.com, because that is who provides the support, so the Jetpack app says WordPress.com too. It is announced by screen readers along with the rest of the screen, and it wraps onto more lines rather than being cut off at larger text sizes.
+
+- **Inactive sites no longer appear in the site list**
+  Sites that WordPress.com reports as inactive, such as a self-hosted Jetpack site whose domain has expired, are no longer listed. Previously they stayed in the list, and removing one with the X button only lasted until the next refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → site switcher
+  - **Notes:** Inactive sites already on the device are removed on the next site refresh. A site that still has unsynced local posts is kept until those are dealt with. This matches what the iOS app and the WordPress.com web dashboard already show.
+
+- **Referrers and Clicks in Stats show each source's icon**
+  Rows in the redesigned Stats' Referrers and Clicks cards, and their full lists, now show the site icon the Stats API already reports for the referrer or link, matching the web version. A row the API has no icon for shows none, and its title stays where it was. Expanding a referrer group, such as Search Engines, shows an icon for each entry under it too.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Referrers card and Clicks card, and each card's View all
+  - **Notes:** The icons come from the existing Stats response, so nothing extra is fetched. The Search Engines group uses the app's own magnifying-glass icon rather than the one the API points at, which is a web-sized image; this is what the old Stats did too. Entries nested under a link in Clicks have no icon, because the API does not report one for them. When the API does name an icon that then can't be loaded, the row shows a plain globe rather than an empty square.
+
+- **Posts & Pages in Stats shows a thumbnail per row**
+  The full Posts & Pages list in the redesigned Stats now draws a small square at the start of each row: the post's featured image, or a glyph telling a post apart from a page when there is no featured image. The old Stats used the same two glyphs, and the web version of this screen shows featured images, so the list now reads the way both of those do. The Posts & Pages card on the main Stats screen is unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Posts & Pages card → View all
+  - **Notes:** The glyph appears immediately and the featured images fill in a moment later, so a row can briefly show a glyph for a post that does have an image. The list can run to hundreds of rows, so images are resolved for the rows you have scrolled to rather than all of them at once. A post whose featured image can't be loaded keeps its glyph rather than showing an empty square. Only posts and pages are looked up; a site's homepage and attachments have no featured image of their own and always show the page glyph. Images are fetched from the site's own REST API, not from Stats, so a site the app can't reach for posts shows glyphs throughout.
+
+- **Post preview works on sites connected with an Application Password**
+  On a self-hosted site added with an Application Password, previewing a post no longer fails with "Incorrect username or password". A published post opens straight away, as a visitor sees it; if the site doesn't serve it to visitors, the login page follows. A draft, or any other post the site doesn't serve publicly, shows the site's own login page first; after logging in there the preview loads, and later previews open directly while that login lasts.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Post editor → ⋮ → Preview; Posts → View
+  - **Notes:** WordPress only accepts Application Passwords for API requests, so a preview that needs a logged-in reader asks for the account's real password once. Ticking "Remember Me" keeps the login for 14 days; without it, the login lasts until the session ends. Sites added with the account password are unchanged and still log in automatically.
+
+- **Reader comments: replies are written in a sheet**
+  The Reader's comments screen was rebuilt. The always-visible comment box at the bottom is now a bar that opens a reply sheet, the same one site comments use, with @-mention suggestions; the full-screen expand button is gone. Closing the sheet with text typed asks whether to save the draft, delete it or keep editing. Tapping Reply under a comment opens the sheet for that comment.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → any post → Comments
+  - **Notes:** Drafts typed in the old comment box aren't carried over. Moderating a comment (unapprove, spam, trash) still offers Undo; leaving the screen while Undo is showing now completes the moderation.
+
+- **App Settings grouped into cards**
+  App Settings now groups its rows into outlined cards, matching the Me screen.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings; Me → App Settings → Privacy settings
+
+- **Tag and category names no longer come from the wrong site**
+  Opening a post or page could show another site's tag and category names, because the names were remembered by term ID alone and those IDs are per site — on a self-hosted site they start at 1, so two sites routinely share them. Saving such a post applied the name that was shown and removed the tag the post really had. Names are now remembered per site.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts (or Pages) → open a post → the editor, and Post settings → Tags / Categories
+  - **Notes:** Needed two sites that share a term ID and a session that had already opened a post on the first of them, since the names are only cached for the session. Switching sites did not clear that cache; pull-to-refresh did, which is why it could look intermittent.
+
+- **Saving posts on a self-hosted site uses the REST API**
+  Creating, opening, saving, trashing and restoring a post or page on a self-hosted site added with an application password now goes through the site's own REST API instead of XML-RPC. Sites whose host blocks password-authenticated logins on `xmlrpc.php` — a two-factor plugin is the usual cause — could not save a draft or publish at all; they can now. Media uploads on these sites already worked this way.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts (or Pages) → the editor → Save/Publish
+  - **Notes:** Only affects self-hosted sites signed in with an application password. WordPress.com and Jetpack sites are unchanged, and a self-hosted site without an application password still uses XML-RPC. A conflict with a newer copy on the server is now detected by reading the server's modified date just before saving, rather than by the server refusing the write, so a conflict created in the moment between that read and the save is no longer caught. New tags typed in the editor are created on the site before the post is saved; a tag the site refuses to create, such as one typed by an author whose role cannot add tags, is dropped rather than failing the save, and the post's other tag changes are still saved, while a tag the site reports as already existing is matched to the existing one instead of being dropped. If a tag request fails outright, so the app cannot tell whether the tag exists, the save leaves the post's tags on the site as they were rather than risk removing them. On a site that has turned the trash off, trashing a post deletes it permanently, which is what the site does with any delete and what the app did here before. A tag whose name contains `&`, `<` or `>` now shows the way it was typed rather than in its encoded form, and keeps its place on the post across saves. A child page opened from the Pages list also keeps its parent when saved, instead of moving to the top level. When the app cannot read a post's tag names, it no longer stores the post without them, which would have removed every tag from the post on the next save: opening the post reports an error you can retry, and a list refresh leaves the post showing as it was until a later refresh succeeds.
+
+- **Reader's tabs, filter sheet and interests picker restyled**
+  The Reader's Discover sub-tabs (Freshly Pressed, Recommended, Latest), the blog and tag filter sheet, the "Choose your interests" picker, and the author, login-required and comment-notification sheets now use Material 3 components. They work as before: the top bar still hides as you scroll and comes back when you scroll up, the filter sheet still marks the current blog or tag and offers Manage, and the selected Discover tab is still remembered.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader (top bar, Discover tabs, the blog/tag filter); Reader → Discover or Tags → choose interests; Reader → a post → author name (author sheet), or the comments' follow bell (notification sheet); Reader → Reblog with no site of your own
+  - **Notes:** Site icons in the filter sheet are now rounded squares, matching Reader search and Manage subscriptions, instead of circles. The "Reblog needs a site" screen keeps its illustration, text and button.
+
+- **Experimental block editor warns before saving while something is still in progress**
+  While the experimental block editor has saving locked, most often during a media upload, publishing, updating, submitting, saving a draft or previewing first asks "Your post isn't ready yet", with Keep editing and Continue. Leaving the editor asks the same question, with Keep editing and Leave; Leave closes the editor and saves as usual. If the editor stops working, undo, redo, Code Editor and the Publish or Update button are disabled until it reloads.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → Publish, Update, Submit for review, Save, Preview, back arrow
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. Continuing or leaving mid-upload can save an empty Image block, or a Cover or Media & Text block whose media is a temporary link that doesn't work for readers. Some blocks also lock saving, so the warning can appear with no upload running: the Jetpack Donations block keeps it locked for the session if it can't reach Stripe, for example while offline. Uploads the app tracks itself still show the "You are currently uploading media" toast. The default block editor and the classic editor are unchanged.
+
+- **Related posts are back at the bottom of a Reader post**
+  Opening a post in the Reader shows its related posts again — a "More from that blog" list and a "More on WordPress.com" list below the comments — instead of the post ending at the comments. Opening a post also refreshes it from the server again, so its like and comment counts are up to date without pulling to refresh.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → open a post → scroll to the bottom
+  - **Notes:** The section has been missing since 26.3.1, so documentation written since then may describe the post detail as having no related posts. It only ever appears for WordPress.com posts — never for RSS/feed posts — and only when WordPress.com has related content to suggest, so a post with no related posts is still normal.
+
+- **Reader's likers list and photo viewer redesigned**
+  The Reader's list of people who liked a post has a Material 3 top bar and rows; tapping a liker with a site still opens that site. The full-screen photo viewer still swipes between a post's images, pinches and double-taps to zoom, shows the "1 of 5" count, and hides its toolbar after a few seconds. Pages now slide rather than using the old flow animation, and double-tap zooms straight in to 2.5× and back out instead of stepping through two zoom levels.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Notifications or Activity Log → tap a "like" link in an entry's text, for a post already loaded in the Reader (the likers list); Reader → a post → tap an image (the photo viewer)
+  - **Notes:** A zoomed photo pages to the next one only when a drag starts at the photo's edge; a drag that starts by panning stops at the edge. The full-screen video player is unchanged apart from now sending the app's user agent.
+
+- **A post's Stats menu item opens the redesigned Stats**
+  Posts → a published post's ⋯ menu → Stats now opens the per-item screen of the redesigned Stats, the same screen a row in Posts & pages opens, instead of the old per-post stats screen. The post's title, chart, totals and calendars are the ones the redesigned Stats shows everywhere else, and its header opens the post itself. A page's Stats menu item, where the Pages list offers one, opens the same screen.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Posts → a published post's ⋯ menu → Stats
+  - **Notes:** Only for people on the redesigned Stats; anyone who has switched back to the old Stats keeps the old screen here too. The menu item itself is unchanged, and where it appears differs by app: in Jetpack it still shows only for a published post with no unsynced changes, on a site whose stats you can view; in WordPress it shows only on the newer Posts screen, for a published post on a WordPress.com-connected site whose stats you can view, with no unsynced-changes condition. Opening it for a site other than the one currently selected switches the selected site, as the Stats widgets already do. The Pages list offers a Stats menu item only on sites using the newer Pages screen, so most people see no change there yet.
+
+- **Reader's Manage subscriptions screen redesigned**
+  The screen for managing followed tags and blogs has a Material 3 look. The Followed tags and Subscribed blogs tabs still swipe, each row has a Subscribe/Subscribed button, the field for following a tag or URL stays at the bottom, and the + button still opens the topic picker. Searching subscribed blogs now uses a search icon in the top bar on the blogs tab. Errors from the Subscribe buttons in the lists now show as a snackbar instead of a toast.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → the Blogs or Tags chip → Manage
+  - **Notes:** Unsubscribing from a row leaves it in place so it can be re-followed, but only until the list refreshes: the row goes once the screen reloads its lists, for example on returning from a blog preview, after adding a tag or blog, or when a background sync finishes. The old screen behaved the same way.
+
+- **Open a post's likes or comments from its Stats totals**
+  The Likes and Comments totals on the top card of the per-item screen in the redesigned Stats screen are now tappable. Likes opens the full list of likers — the same list the likers row above it opens, and the one the Reader and notifications open. Comments opens that post's comments, the threaded comments screen the Reader and notifications open, where you can read, like and reply to them. A total you can open is shown in the same colour as the item's title, so the ones that lead somewhere are visible at a glance.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** A total of zero stays a plain figure and does nothing, since there is nothing to open. Comments is tappable only for the items whose title opens in the Reader: pages and attachments have no Reader representation, and an item that is a draft, scheduled or trashed has no public permalink to open. The Views total is never tappable.
+
+- **Avg. Views Per Day is a calendar grid**
+  The Avg. Views Per Day card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded by the item's average daily views that month — the same grid the two cards above it use. An Average row under the grid gives the item's average over its whole life. This replaces the list of yearly averages, and it is what wordpress.com shows under "Average per day".
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The monthly averages are the server's own figures, and they are whole numbers — a month that averaged less than one view a day shows as an empty square, even where Months and Years above shows views for it. Average is the server's figure for an item that spans a single year; over several years the server reports one per year only, so it is worked out as the views the item has had over the days it has existed.
+
+- **Months and Years is a calendar grid**
+  The Months and Years card on the per-item screen in the redesigned Stats screen now draws each year as twelve squares, January to December, shaded from pale to solid by how many views that month got — the same grid the Recent Weeks card above it uses. The current year is always shown, even for an item that has had no views this year. A Total row under the grid adds the years up. This replaces the list of year totals.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The twelve months are drawn as two rows of six, because twelve across leaves each square too narrow to write a figure in on a phone. Months the server left out — including the ones that have not happened yet — are drawn as empty squares, so the columns mean the same month in every year. Each square with views names its month, year and count to a screen reader. The shading scale is shared with Recent Weeks but the two grids are scaled separately, each against its own busiest period.
+
+- **Recent Weeks is a calendar grid**
+  The Recent Weeks card on the per-item screen in the redesigned Stats screen now draws each week as a row of seven squares, one per day, shaded from pale to solid by how many views that day got. The busiest day of the range is the darkest square, a "Less … More" key sits under the grid, and a Total row under that adds the weeks up. Each square names its date and view count to a screen reader. This replaces the list of week totals with their week-on-week percentages.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The weeks start on whichever day your language starts the week on — Sunday in US English, Monday in most of Europe — not on the Monday the server buckets its weeks from. Days that have not happened yet, in the week still running, are drawn as empty squares so the columns line up by weekday; the days at the far end, before the range the server sent, are left blank instead, since the item may well have been read on them. The grid no longer shows each week's own total or its change against the week before; it shows per-day counts, plus one total for the whole range.
+
+- **See who liked a post from its Stats screen**
+  The top card of the per-item screen in the redesigned Stats screen now shows the faces of the people who liked the item, with a "46 Likes" row beside them. Tapping that row opens the full list of likers — the same list the Reader and notifications open — where tapping someone shows their profile. The card also now reads "Published <date>" with a small link icon, and the views, likes and comments totals sit under a rule in larger type.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The likes row appears only for items with at least one like, so never for the site's home page. The faces arrive in a second request after the screen loads; if it fails the row still shows the count, which comes from the stats response. Opened this way the likers list has no post header at the top, because Stats knows only the item's id and like count — the Reader and notifications still show theirs.
+
+- **Per-item Stats screen is laid out in cards**
+  The per-item screen in the redesigned Stats screen is now built from the same cards as the rest of Stats, instead of being one flat list on the window background. It has five cards: the item's title, date and totals; the selected day's views with its chart; Recent Weeks; Months and Years; and Avg. Views Per Day. The information shown and what you can do with it are unchanged.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+
+- **Reader articles no longer get stuck on a spinner**
+  Opening a post in the Reader shows the article text without waiting on a network request for its stylesheet, so a slow or stalled connection no longer leaves a blank body behind a spinner that never stops. The comments snippet, tags and likers below the article also appear as soon as the article itself is on screen, instead of waiting for every embed and iframe in the post to finish loading.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → any post
+  - **Notes:** The stylesheet is now bundled with the app rather than fetched from wordpress.com, so the article body renders identically offline and online. Posts that were affected needed the app restarting or the post reopening to recover; that workaround is no longer documented behaviour.
+
+- **Open the post or picture from its Stats screen**
+  On the per-item screen in the redesigned Stats screen, the title is shown in the link colour with an arrow icon after it, and tapping anywhere across the title and the publication date below it opens the item: a post opens in the Reader, and a page or a media attachment opens in the browser. Attachments are usually titled with bare numbers, so this is what tells you which picture a row is about.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Posts & pages → tap a row (or Show all → tap a row); My Site → Stats → Insights → Latest post
+  - **Notes:** The old Stats screen offered the same thing by making the "Showing stats for:" header tappable. The title stays plain and inert, with no arrow, for the site's home page, when WordPress.com supplies no link for the item, and when the item is no longer public — a post that was published, picked up views and was later moved back to a draft or to the trash keeps its view history here, but its link would no longer open.
+
+- **Re-arranged items in the settings screen.**
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Me
+
+- **Stats dates follow the device language, and the date selector names the dates on screen**
+  Every date in the redesigned Stats screen is now written in the order the device's language uses — "Aug 11" in US English, "11 Aug" in British English, "2026年8月11日" in Japanese — instead of always day-then-month. This covers the date selector at the top of Traffic, the Views chart's legend and axis labels, the Subscribers chart, the detail screens' subtitles, and the "Best day" and "Today" cards. The date selector also shows the dates a preset covers on a second line, so "Last 7 days" now reads with "Oct 21 - Oct 27, 2026" underneath it.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic (date selector, Views card) and Insights; My Site → Stats → Subscribers
+  - **Notes:** A refresh still keeps the period that is selected rather than jumping to today — that is deliberate, and the dates on the selector now make it visible. A span inside one month names the month once where the language allows it ("Jul 28-30", "28-30 Jul") and spells both ends out where it does not ("7月28日 - 7月30日"). Bare years stay as digits in every language.
+
+- **Reader post lists restyled**
+  Reader post lists keep their content and actions, but the pieces around the posts have a Material 3 look: the "New posts" pill, the empty-state messages and their buttons, and the Subscribe buttons in the site and tag headers at the top of a blog or tag preview. When a blog or tag preview has no posts, its message now shows below the header instead of over it. A failed Subscribe or Unsubscribe from a site header now shows a snackbar instead of a toast.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions, Discover, Saved, Liked, Lists; tag and blog previews; Reader → Search → Posts
+  - **Notes:** Subscribing from a site header shows the same "enable notifications" snackbar as subscribing from a post card. Older posts start loading a few rows before the end of the list rather than at the last row.
+
+- **Archives card in Stats**
+  A new Archives card lists the views a site's archive pages received, grouped by what they archive: search terms, categories, tags, authors, dates, errors, aggregated, "other", and one "Taxonomies" group for the site's custom taxonomies. Each group expands to show the individual pages, and tapping one opens it in the browser. Taxonomies expands one level further — a row per custom taxonomy, which expands to that taxonomy's terms. The card is not shown by default — add it from "Add card" at the bottom of the Traffic tab.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Add card → Archives
+  - **Notes:** Groups are ranked by total views, as are the pages within a group. The card lists ten pages under each group; "Show All" opens the full Archives screen, where every group can be expanded to its whole list, itself capped at 100 pages per group — a site with thousands of search terms sees its busiest ones, not all of them. The card requests the same amount of data as the Traffic page on the web, so its numbers match what a customer sees there; "Show All" asks for everything and so can report a higher total for the same group and period.
+
+- **Referrers card shown by default in Stats**
+  The redesigned Stats screen shows the Referrers card under Posts & pages without having to add it. Sites that already had the new Stats screen customised get the card added once, in the same position; removing it afterwards sticks.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic
+  - **Notes:** Anyone who had already added Referrers themselves keeps it where they put it, and no other card is moved or restored.
+
+- **"Remove location from media" removes all GPS EXIF data**
+  With the setting on, uploaded images no longer keep any GPS EXIF data. Previously it blanked only latitude, longitude, altitude and GPS time, so tags such as destination coordinates, place name, compass direction and speed still reached the server.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Me → App Settings → Remove location from media
+  - **Notes:** Doesn't yet cover images added with the block editor's Upload button, or HEIC/HEIF files. Location stored in XMP metadata, as written by apps like Lightroom and Photoshop, is not removed.
+
+- **Reader search redesigned**
+  Reader search has a new layout: the search field sits in the top bar, recent searches show as one list as you type (each with a delete button, plus "Clear search history" at the end), and the Posts and Sites tabs appear as soon as a search is submitted. A failed post search now shows "Unable to perform search" in the Posts tab instead of a blank screen.
+  - **Apps:** Jetpack
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Reader → Search
+  - **Notes:** Recent searches are filtered by what has been typed so far. Clearing the search field returns to the recent searches. The Posts and Sites tabs each keep their scroll position when switching between them.

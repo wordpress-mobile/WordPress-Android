@@ -20,16 +20,21 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
-import org.wordpress.android.ui.newstats.util.RangeYearPlacement
-import org.wordpress.android.ui.newstats.util.rangeYearPlacement
+import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
+import org.wordpress.android.ui.newstats.util.formatDayRangeWithYear
+import org.wordpress.android.ui.newstats.util.formatMonthRangeWithYear
+import org.wordpress.android.ui.newstats.util.formatPresetRange
+import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -60,7 +65,8 @@ class ViewsStatsViewModel @Inject constructor(
     private val statsRepository: StatsRepository,
     private val resourceProvider: ResourceProvider,
     private val savedStateHandle: SavedStateHandle,
-    private val cardsConfigurationRepository: StatsCardsConfigurationRepository
+    private val cardsConfigurationRepository: StatsCardsConfigurationRepository,
+    private val newStatsTracker: NewStatsTracker
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ViewsStatsCardUiState>(ViewsStatsCardUiState.Loading)
     val uiState: StateFlow<ViewsStatsCardUiState> = _uiState.asStateFlow()
@@ -85,6 +91,37 @@ class ViewsStatsViewModel @Inject constructor(
     val effectivePeriod: StateFlow<StatsPeriod> =
         combine(_selectedPeriod, _selectedBarPeriod) { base, bar -> bar ?: base }
             .stateIn(viewModelScope, SharingStarted.Eagerly, _selectedPeriod.value)
+
+    /**
+     * The dates [effectivePeriod] resolves to, shown beneath a preset's name in the Traffic
+     * selector so the label names the window the cards were loaded for. A preset's name on its own
+     * ("Last 7 days") never changes, which is what made a still-selected period look like stats
+     * that had stopped updating when a user refreshed them (CMM-2540).
+     *
+     * Null for a Custom range — including a soft-selected bar, which is one — whose label is
+     * already made of those dates; repeating them would only double the line.
+     *
+     * Recomputed on every [_uiState] emission as well as on a period change, and the window is read
+     * off the clock each time. The [_uiState] leg is what keeps the dates right after a same-period
+     * pull-to-refresh, which moves neither [_selectedPeriod] nor [effectivePeriod] and so would
+     * otherwise leave the label untouched.
+     *
+     * The cost of reading the clock there is that emissions which do *no* fetch — [onMetricSelected],
+     * [onChartTypeChanged], [onBarTapped] — also relabel. A session left open across local midnight
+     * therefore shows today's window above data loaded yesterday until the next load. Accepted
+     * rather than fixed: it takes a session spanning midnight plus a tap on one of those controls,
+     * and dates a day ahead of the chart read as a prompt to refresh rather than as stalled stats.
+     * Deriving the label from the loaded result instead would remove the gap entirely.
+     */
+    val effectivePeriodDates: StateFlow<String?> =
+        combine(effectivePeriod, _uiState) { period, _ -> formatPeriodDates(period) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, formatPeriodDates(_selectedPeriod.value))
+
+    private fun formatPeriodDates(period: StatsPeriod): String? {
+        if (period is StatsPeriod.Custom) return null
+        val (start, end) = statsRepository.periodWindow(period)
+        return formatPresetRange(start, end, monthGranularity = period.isMonthBucketed())
+    }
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
 
@@ -188,6 +225,26 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
+     * A preset picked from the period selector. Separate from [onPeriodChanged] so only a pick made
+     * in the menu is reported - paging and bar drill-downs reach the same range through their own
+     * entry points, and each has its own event.
+     *
+     * Reports the tap even when [period] is already the committed range: that tap is how the user
+     * returns the screen to the whole period after soft-selecting a bar, so it is a real choice
+     * rather than a no-op.
+     */
+    fun onPresetSelected(period: StatsPeriod) {
+        newStatsTracker.trackDateRangePresetSelected(period)
+        onPeriodChanged(period)
+    }
+
+    /** A range picked in the date-range picker dialog. */
+    fun onCustomRangeSelected(startDate: LocalDate, endDate: LocalDate) {
+        newStatsTracker.trackCustomDateRangeSelected(startDate, endDate)
+        onPeriodChanged(StatsPeriod.Custom(startDate, endDate))
+    }
+
+    /**
      * Commits [period] as the screen's range. An explicit pick — the selector, a custom range, a bar
      * drill-down — also becomes the origin future navigation resolves ties against; paging passes
      * [keepOrigin] so the ranges it produces don't overwrite the preset the user chose.
@@ -225,6 +282,11 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigatePrevious() {
         if (!statsRepository.canNavigateBackward(currentPeriod)) return
+        // Reported before the move, so the event names the range being left.
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.PREVIOUS,
+            currentPeriod
+        )
         navigateTo(statsRepository.previousPeriod(currentPeriod, origin = periodOrigin))
     }
 
@@ -234,6 +296,10 @@ class ViewsStatsViewModel @Inject constructor(
      */
     fun onNavigateNext() {
         if (!statsRepository.canNavigateForward(currentPeriod)) return
+        newStatsTracker.trackDateNavigationButtonTapped(
+            NewStatsTracker.NavigationDirection.NEXT,
+            currentPeriod
+        )
         navigateTo(statsRepository.nextPeriod(currentPeriod, origin = periodOrigin))
     }
 
@@ -380,6 +446,10 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun onChartTypeChanged(chartType: ChartType) {
+        // Re-picking the type already on screen changes nothing visible, so it isn't reported.
+        if (chartType != currentChartType) {
+            newStatsTracker.trackChartTypeChanged(from = currentChartType, to = chartType)
+        }
         currentChartType = chartType
         saveChartType(chartType)
         // The bar highlight is BAR-only and the header overlay is tied to a selection, so a chart-type
@@ -441,6 +511,7 @@ class ViewsStatsViewModel @Inject constructor(
         // fallback is up: the rebuilt state is identical, so nothing would change on screen, but the
         // user's real preference would be silently overwritten with views.
         if (metric == chartedMetric()) return
+        newStatsTracker.trackChartMetricSelected(metric)
         currentSelectedMetric = metric
         metricPickedOnCurrentPeriod = true
         saveMetric(metric)
@@ -543,6 +614,16 @@ class ViewsStatsViewModel @Inject constructor(
         if (content.selectedBar?.index == index) {
             clearSoftSelection()
             return
+        }
+
+        // Only a bar becoming selected is reported; the branch above that clears a selection is the
+        // same tap undone, and would otherwise double every bar interaction.
+        lastChartResult?.let { result ->
+            newStatsTracker.trackChartBarSelected(
+                metric = chartedMetric(),
+                unit = result.unit,
+                value = dataPoint.value
+            )
         }
 
         // drillDownPeriod is null for hourly buckets: no sub-period to broadcast and no arrow, but the
@@ -758,7 +839,7 @@ class ViewsStatsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                loadDataInternal(site)
+                loadDataInternal(site, forceRefresh = true)
             } finally {
                 _isRefreshing.value = false
             }
@@ -788,6 +869,7 @@ class ViewsStatsViewModel @Inject constructor(
             return
         }
 
+        val targetPeriod = currentPeriod
         val current = _uiState.value
         // While switching to a new period we keep the previous content on screen (dimmed, with a
         // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.
@@ -796,11 +878,21 @@ class ViewsStatsViewModel @Inject constructor(
             // regain, or a no-connection Retry). Clear its effective period in lockstep with dropping
             // selectedBar below, so effectivePeriod can't stay stuck on the bar's sub-period.
             _selectedBarPeriod.value = null
-            _uiState.value = ViewsStatsCardUiState.Content(
-                chart = ChartUiState.Loading,
-                bottomStats = BottomStatsUiState.Loading,
-                selectedMetric = chartedMetric()
-            )
+            if (isCached(site.siteId, targetPeriod)) {
+                // A period already in memory repaints in the same frame, so resetting to
+                // placeholders would only flash a skeleton over data the card is about to render.
+                // The bar selection still has to go: updateChart keeps the overlay while one is set,
+                // so leaving it would freeze the card on the previous period's chart.
+                _uiState.update { state ->
+                    if (state is ViewsStatsCardUiState.Content) state.copy(selectedBar = null) else state
+                }
+            } else {
+                _uiState.value = ViewsStatsCardUiState.Content(
+                    chart = ChartUiState.Loading,
+                    bottomStats = BottomStatsUiState.Loading,
+                    selectedMetric = chartedMetric()
+                )
+            }
         }
 
         // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
@@ -809,7 +901,33 @@ class ViewsStatsViewModel @Inject constructor(
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             loadDataInternal(site)
+            revalidateIfNeeded(site, targetPeriod)
         }
+    }
+
+    /**
+     * Whether everything this card shows for [period] is already in memory: the chart, plus the
+     * bottom row for the single-day periods that fetch it separately.
+     */
+    private fun isCached(siteId: Long, period: StatsPeriod): Boolean =
+        statsRepository.isCached(StatsCacheBucket.CHART, siteId, period) &&
+            (fillsBottomFromChart(period) ||
+                statsRepository.isCached(StatsCacheBucket.BOTTOM_STATS, siteId, period))
+
+    /**
+     * Refreshes a period served from a previous visit to the stats screen, once. The card already
+     * shows those numbers, so this reloads without the placeholders or the dim, and a failure leaves
+     * what's on screen alone instead of replacing it with an error.
+     */
+    private suspend fun revalidateIfNeeded(site: SiteModel, period: StatsPeriod) {
+        if (isStale(period)) return
+        val needsRevalidation =
+            statsRepository.needsRevalidation(StatsCacheBucket.CHART, site.siteId, period) ||
+                (!fillsBottomFromChart(period) && statsRepository.needsRevalidation(
+                    StatsCacheBucket.BOTTOM_STATS, site.siteId, period
+                ))
+        if (!needsRevalidation) return
+        loadDataInternal(site, forceRefresh = true, applyErrors = false)
     }
 
     /**
@@ -817,21 +935,29 @@ class ViewsStatsViewModel @Inject constructor(
      * own region of the [ViewsStatsCardUiState.Content] state as it completes, so the chart can
      * appear before (or without) the bottom row and vice versa.
      */
-    private suspend fun loadDataInternal(site: SiteModel) {
+    private suspend fun loadDataInternal(
+        site: SiteModel,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ) {
         val targetPeriod = currentPeriod
         try {
             val loaded = if (fillsBottomFromChart(targetPeriod)) {
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
-                loadChart(site, targetPeriod, fillBottomFromChart = true)
+                loadChart(site, targetPeriod, true, forceRefresh, applyErrors)
             } else {
                 // Single-day periods fetch the bottom row from a dedicated day-level call (run in
                 // parallel with the chart), the same way the web app does it: their chart is hourly and
                 // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
-                    val chart = async { loadChart(site, targetPeriod, fillBottomFromChart = false) }
-                    val bottom = async { loadBottomStats(site, targetPeriod) }
+                    val chart = async {
+                        loadChart(site, targetPeriod, false, forceRefresh, applyErrors)
+                    }
+                    val bottom = async {
+                        loadBottomStats(site, targetPeriod, forceRefresh, applyErrors)
+                    }
                     val chartLoaded = chart.await()
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
@@ -874,12 +1000,18 @@ class ViewsStatsViewModel @Inject constructor(
      * from the same response (its per-bucket data already carries all five metrics); when false the
      * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel, period: StatsPeriod, fillBottomFromChart: Boolean): Boolean {
+    @Suppress("TooGenericExceptionCaught", "LongParameterList", "ReturnCount")
+    private suspend fun loadChart(
+        site: SiteModel,
+        period: StatsPeriod,
+        fillBottomFromChart: Boolean,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         // Fetch first and apply afterwards, so the staleness check sits between the two and every write
         // below it is known to belong to the period still on screen.
         val result = try {
-            statsRepository.fetchStatsForPeriod(site.siteId, period)
+            statsRepository.fetchStatsForPeriod(site.siteId, period, forceRefresh)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -896,8 +1028,10 @@ class ViewsStatsViewModel @Inject constructor(
                 buildChartState(result)
             }
             // An API error or a thrown call: both show the error state and drop the row rather than
-            // leaving the previous period's numbers under a new range.
+            // leaving the previous period's numbers under a new range. A background revalidation
+            // instead leaves the cached numbers it was refreshing on screen.
             else -> {
+                if (!applyErrors) return false
                 if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden, period)
                 ChartUiState.Error
             }
@@ -954,11 +1088,16 @@ class ViewsStatsViewModel @Inject constructor(
     )
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel, period: StatsPeriod): Boolean {
+    @Suppress("TooGenericExceptionCaught", "ReturnCount")
+    private suspend fun loadBottomStats(
+        site: SiteModel,
+        period: StatsPeriod,
+        forceRefresh: Boolean = false,
+        applyErrors: Boolean = true
+    ): Boolean {
         var success = false
         val bottomState = try {
-            when (val result = statsRepository.fetchBottomStats(site.siteId, period)) {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, period, forceRefresh)) {
                 is BottomStatsResult.Success -> {
                     success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
@@ -972,6 +1111,7 @@ class ViewsStatsViewModel @Inject constructor(
             BottomStatsUiState.Hidden
         }
         if (isStale(period)) return false
+        if (!success && !applyErrors) return false
         updateBottom(bottomState, period)
         return success
     }
@@ -1164,15 +1304,15 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun formatDataPointLabel(period: String, unit: StatsUnit): String = when {
         period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
-        else -> parsePeriodDate(period)
-            ?.format(DateTimeFormatter.ofPattern(labelPatternFor(unit), Locale.getDefault()))
-            ?: period
-    }
-
-    private fun labelPatternFor(unit: StatsUnit): String = when (unit) {
-        StatsUnit.YEAR -> "yyyy"
-        StatsUnit.MONTH -> "MMM"
-        else -> "MMM d"
+        else -> parsePeriodDate(period)?.let { date ->
+            when (unit) {
+                // A bare four-digit year reads the same everywhere; the localized form ("2026年")
+                // would only cost axis width.
+                StatsUnit.YEAR -> date.year.toString()
+                StatsUnit.MONTH -> date.format(statsDateFormatter(StatsDateSkeleton.MONTH))
+                else -> date.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH))
+            }
+        } ?: period
     }
 
     /** Parses a bucket's period string, tolerating both the "yyyy-MM" and "yyyy-MM-dd" shapes. */
@@ -1210,21 +1350,26 @@ class ViewsStatsViewModel @Inject constructor(
         if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
-            is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
-            // ThisYear takes its granularity from the whole calendar year, so it is always charted in
-            // month buckets -- twelve of them on 5 January just as in December.
-            is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
-            is StatsPeriod.Custom -> {
+            is StatsPeriod.Custom ->
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)
-            }
-            else -> formatDayRange(startDate, endDate)
+            else ->
+                if (period.isMonthBucketed()) formatMonthRange(startDate, endDate)
+                else formatDayRange(startDate, endDate)
         }
     }
 
+    /**
+     * Whether a preset period is charted — and so named — in whole months rather than days. Last 12
+     * Months is twelve month buckets by definition, and This Year takes its granularity from the
+     * whole calendar year, so it is twelve of them on 5 January just as in December.
+     */
+    private fun StatsPeriod.isMonthBucketed(): Boolean =
+        this is StatsPeriod.Last12Months || this is StatsPeriod.ThisYear
+
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
-        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
+        return parsedDate.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH_YEAR))
     }
 
     @Suppress("ReturnCount")
@@ -1239,37 +1384,14 @@ class ViewsStatsViewModel @Inject constructor(
     private fun formatMonthRange(startDate: String, endDate: String): String {
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
-        val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
-        val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
-
-        return when (rangeYearPlacement(start.year, end.year)) {
-            // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
-            RangeYearPlacement.BOTH -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
-            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
-            RangeYearPlacement.TRAILING ->
-                if (start.month == end.month) start.format(monthYearFormat)
-                else "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
-        }
+        return formatMonthRangeWithYear(start, end)
     }
 
     @Suppress("ReturnCount")
     private fun formatDayRange(startDate: String, endDate: String): String {
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
-        val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
-        val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
-        val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
-
-        return when (rangeYearPlacement(start.year, end.year)) {
-            // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
-            RangeYearPlacement.BOTH ->
-                "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
-            // Same year: show the year once, on the trailing date. Collapse the leading month when
-            // both ends share it ("14-20 Jan 2024" vs "28 Jul - 3 Aug 2024").
-            RangeYearPlacement.TRAILING ->
-                if (start.month == end.month) "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
-                else "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
-        }
+        return formatDayRangeWithYear(start, end)
     }
 
     fun onRetry() {

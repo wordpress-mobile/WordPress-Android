@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +49,7 @@ import org.wordpress.android.ui.postsrs.PostRsListTab
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostRsUiModel
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
+import org.wordpress.android.ui.rs.RsLocalDraftUiModel
 import org.wordpress.android.ui.rs.RsReveal
 import org.wordpress.android.ui.rs.RsSnackbarMessage
 import org.wordpress.android.ui.rs.RsTabUiState
@@ -56,6 +59,8 @@ import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.rs.contentlist.ContentListDensity
 import org.wordpress.android.ui.rs.contentlist.ContentListDensityToggle
+import org.wordpress.android.ui.rs.contentlist.ContentListLocalDraftsBanner
+import org.wordpress.android.ui.rs.contentlist.ContentListLocalDraftsSheet
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.ReportSettledTab
@@ -89,7 +94,11 @@ fun PostRsListScreen(
     onCreatePost: () -> Unit,
     onRowsVisible: (PostRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PostRsListTab) -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE
+    onCancelOpeningPost: () -> Unit,
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    localDrafts: List<RsLocalDraftUiModel> = emptyList(),
+    onOpenLocalDraft: (Int) -> Unit = {},
+    onRetryLocalDraft: (Int) -> Boolean = { true },
 ) {
     val tabs = PostRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -101,6 +110,13 @@ fun PostRsListScreen(
     // rather than acted on in the collector below so that the tab switch, which the user can win,
     // can be cancelled without taking the collector down with it.
     var pendingReveal by remember { mutableStateOf<RsReveal<PostRsListTab>?>(null) }
+    var isLocalDraftsSheetShown by rememberSaveable { mutableStateOf(false) }
+    val canShowLocalDrafts = localDrafts.isNotEmpty() && !isSearchActive
+    // The sheet closes once the last draft is uploaded rather than lingering empty, and stays
+    // closed when another draft turns up later.
+    LaunchedEffect(canShowLocalDrafts) {
+        if (!canShowLocalDrafts) isLocalDraftsSheetShown = false
+    }
 
     LaunchedEffect(revealRequests) {
         revealRequests.collect { pendingReveal = it }
@@ -205,6 +221,15 @@ fun PostRsListScreen(
                 )
             }
 
+            // Above the pager rather than in it: local drafts aren't on the server, so they belong to
+            // no tab, and the server list stays exactly as the server reports it.
+            if (canShowLocalDrafts) {
+                ContentListLocalDraftsBanner(
+                    count = localDrafts.size,
+                    onClick = { isLocalDraftsSheetShown = true }
+                )
+            }
+
             ReportSettledTab(
                 pagerState = pagerState,
                 onTabSettled = { page -> onInitTab(tabs[page]) },
@@ -230,13 +255,27 @@ fun PostRsListScreen(
                     onLoadMore = { onLoadMore(tab) },
                     onPostClick = { postId -> onPostClick(postId, tab) },
                     onPostMenuAction = onPostMenuAction,
-                    onCreatePost = onCreatePost,
                     onRowsVisible = { ids -> onRowsVisible(tab, ids) },
                     density = density,
                     showDateGroups = tab != PostRsListTab.SCHEDULED
                 )
             }
         }
+    }
+
+    if (isLocalDraftsSheetShown && canShowLocalDrafts) {
+        ContentListLocalDraftsSheet(
+            drafts = localDrafts,
+            onOpen = { localId ->
+                isLocalDraftsSheetShown = false
+                onOpenLocalDraft(localId)
+            },
+            onRetry = { localId ->
+                // The snackbar explaining a refused retry is drawn behind the sheet, so close it.
+                if (!onRetryLocalDraft(localId)) isLocalDraftsSheetShown = false
+            },
+            onDismiss = { isLocalDraftsSheetShown = false }
+        )
     }
 
     when (confirmationDialog.pending) {
@@ -264,6 +303,8 @@ fun PostRsListScreen(
         null -> {}
     }
 
+    // Back abandons the post being opened rather than leaving the list behind the spinner.
+    BackHandler(enabled = isOpeningPost, onBack = onCancelOpeningPost)
     if (isOpeningPost) {
         Box(
             modifier = Modifier

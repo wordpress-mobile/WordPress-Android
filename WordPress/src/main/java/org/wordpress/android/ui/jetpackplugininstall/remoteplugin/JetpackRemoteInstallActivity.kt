@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.support.SupportRouting
 import org.wordpress.android.ui.accounts.LoginFlow
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource
@@ -26,7 +27,6 @@ import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteI
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.onBackPressedCompat
@@ -36,7 +36,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
     @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
+    lateinit var supportRouting: SupportRouting
     private val viewModel: JetpackRemoteInstallViewModel by viewModels()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +128,7 @@ class JetpackRemoteInstallActivity : BaseAppCompatActivity() {
             origin,
             result.site,
             null,
-            experimentalFeatures
+            supportRouting
         )
     }
 

@@ -7,6 +7,7 @@ import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,11 +17,13 @@ class DetailListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(BLOCK_DETAIL_USE_CASE) private val detailUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    statsSiteProvider: StatsSiteProvider
 ) : StatsListViewModel(
     mainDispatcher,
     detailUseCase,
     analyticsTracker,
+    statsSiteProvider,
     dateSelectorFactory.build(StatsGranularity.DAYS)
 ) {
     override fun onCleared() {

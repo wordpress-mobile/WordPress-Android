@@ -162,7 +162,6 @@ class MenuViewModel @Inject constructor(
 
     override fun onCleared() {
         jetpackCapabilitiesUseCase.clear()
-        super.onCleared()
     }
 
     fun handleSiteRemoved() {

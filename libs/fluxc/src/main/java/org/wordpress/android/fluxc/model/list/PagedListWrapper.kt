@@ -3,10 +3,10 @@ package org.wordpress.android.fluxc.model.list
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import androidx.paging.PagedList
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -24,7 +24,10 @@ import kotlin.coroutines.CoroutineContext
 /**
  * This is a wrapper class to consume lists from `ListStore`.
  *
- * @property data A [LiveData] instance that provides the [PagedList] for the given item type [T].
+ * @property data A [LiveData] instance that provides the [PagingData] for the given item type [T]. It's cached in
+ * this wrapper's scope, so it can be re-collected after a configuration change.
+ * @property isEmpty A [LiveData] instance that tells whether the list is empty. It's `null` until the first load
+ * completes.
  * @property isFetchingFirstPage A [LiveData] instance that tells the client whether the first page is currently being
  * fetched. It can be directly used in the UI.
  * @property isLoadingMore A [LiveData] instance that tells the client whether more data is currently being fetched. It
@@ -33,8 +36,9 @@ import kotlin.coroutines.CoroutineContext
  * to either let the user know of each error or present the error in the empty view when it's visible.
  */
 @Suppress("LongParameterList")
-class PagedListWrapper<T>(
-    val data: LiveData<PagedList<T>>,
+class PagedListWrapper<T : Any>(
+    data: LiveData<PagingData<T>>,
+    val isEmpty: LiveData<Boolean>,
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
     private val lifecycle: Lifecycle,
@@ -56,28 +60,24 @@ class PagedListWrapper<T>(
     private val _listError = MutableLiveData<ListError?>()
     val listError: LiveData<ListError?> = _listError
 
-    private val _isEmpty = MediatorLiveData<Boolean>()
-    val isEmpty: LiveData<Boolean> = _isEmpty
+    val data: LiveData<PagingData<T>> = data.cachedIn(this)
 
     /**
      * Register the dispatcher so we can handle `ListStore` events and add an observer for the lifecycle so we can
      * cleanup properly in `onDestroy`.
      */
     init {
-        _isEmpty.addSource(data) {
-            _isEmpty.value = it?.isEmpty()
-        }
         dispatcher.register(this)
         lifecycle.addObserver(this)
     }
 
     /**
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
-     * observer for lifecycle.
+     * observer for lifecycle. Clients that replace this wrapper before their lifecycle ends should call it directly,
+     * so the cached [data] stops loading.
      */
-    @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun onDestroy() {
+    fun close() {
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
         job.cancel()

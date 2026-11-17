@@ -124,7 +124,6 @@ class PluginBrowserViewModel @Inject constructor(
 
     override fun onCleared() {
         mDispatcher.unregister(this)
-        super.onCleared()
     }
 
     fun writeToBundle(outState: Bundle) {

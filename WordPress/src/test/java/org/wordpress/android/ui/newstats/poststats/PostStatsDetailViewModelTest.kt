@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.poststats
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -12,13 +13,19 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.engagement.GetLikesUseCase
+import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
+import org.wordpress.android.ui.newstats.datasource.PostViewsPost
 import org.wordpress.android.ui.newstats.repository.PostViewsResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -35,6 +42,9 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var getLikesUseCase: GetLikesUseCase
 
     private lateinit var viewModel: PostStatsDetailViewModel
 
@@ -68,7 +78,8 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             statsRepository,
             accountStore,
-            resourceProvider
+            resourceProvider,
+            getLikesUseCase
         )
     }
 
@@ -223,6 +234,144 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
 
     private fun loadedState() =
         viewModel.uiState.value as PostStatsDetailUiState.Loaded
+
+    @Test
+    fun `when the item has likes, then their faces are added to the loaded state`() =
+        test {
+            val post = createPost(likeCount = 46L)
+            whenever(
+                getLikesUseCase.getLikesForPost(any(), any())
+            ).thenReturn(
+                flowOf(
+                    GetLikesState.LikesData(
+                        likes = listOf(
+                            createLike("avatar-1", "liker one"),
+                            createLike("avatar-2", "liker two")
+                        ),
+                        expectedNumLikes = 46,
+                        pageInfo = PagingInfo(
+                            pageLength = 10,
+                            page = 1
+                        )
+                    )
+                )
+            )
+            givenFetchReturns(
+                PostViewsResult.Success(
+                    createPostViewsData(1).copy(post = post)
+                )
+            )
+
+            viewModel.loadData(TEST_POST_ID)
+
+            assertThat(loadedState().likerAvatarUrls)
+                .containsExactly("avatar-1", "avatar-2")
+        }
+
+    @Test
+    fun `when a liker has no avatar, then no face is drawn for them`() =
+        test {
+            whenever(
+                getLikesUseCase.getLikesForPost(any(), any())
+            ).thenReturn(
+                flowOf(
+                    GetLikesState.LikesData(
+                        likes = listOf(
+                            createLike("", "no avatar"),
+                            createLike("avatar-2", "liker two")
+                        ),
+                        expectedNumLikes = 2,
+                        pageInfo = PagingInfo(
+                            pageLength = 10,
+                            page = 1
+                        )
+                    )
+                )
+            )
+            givenFetchReturns(
+                PostViewsResult.Success(
+                    createPostViewsData(1)
+                        .copy(post = createPost(likeCount = 2L))
+                )
+            )
+
+            viewModel.loadData(TEST_POST_ID)
+
+            assertThat(loadedState().likerAvatarUrls)
+                .containsExactly("avatar-2")
+        }
+
+    @Test
+    fun `when the item has no likes, then the likers are not fetched`() =
+        test {
+            givenFetchReturns(
+                PostViewsResult.Success(
+                    createPostViewsData(1)
+                        .copy(post = createPost(likeCount = 0L))
+                )
+            )
+
+            viewModel.loadData(TEST_POST_ID)
+
+            verify(getLikesUseCase, never())
+                .getLikesForPost(any(), any())
+            assertThat(loadedState().likerAvatarUrls)
+                .isEmpty()
+        }
+
+    @Test
+    fun `when the likers request fails, then whatever was cached is still shown`() =
+        test {
+            whenever(
+                getLikesUseCase.getLikesForPost(any(), any())
+            ).thenReturn(
+                flowOf(
+                    GetLikesState.Failure(
+                        failureType = GetLikesUseCase
+                            .FailureType.GENERIC,
+                        error = UiStringText(ERROR),
+                        cachedLikes = listOf(
+                            createLike("avatar-1", "liker one")
+                        ),
+                        emptyStateData = GetLikesState.Failure
+                            .EmptyStateData(false),
+                        expectedNumLikes = 46,
+                        hasMore = false,
+                        pageInfo = PagingInfo(
+                            pageLength = 10,
+                            page = 1
+                        )
+                    )
+                )
+            )
+            givenFetchReturns(
+                PostViewsResult.Success(
+                    createPostViewsData(1)
+                        .copy(post = createPost(likeCount = 46L))
+                )
+            )
+
+            viewModel.loadData(TEST_POST_ID)
+
+            assertThat(loadedState().likerAvatarUrls)
+                .containsExactly("avatar-1")
+        }
+
+    private fun createPost(likeCount: Long) = PostViewsPost(
+        title = "A post",
+        date = "2026-08-01 10:00:00",
+        likeCount = likeCount,
+        commentCount = 0L,
+        url = "https://example.com/a-post",
+        type = "post",
+        status = "publish"
+    )
+
+    private fun createLike(avatarUrl: String, name: String) =
+        LikeModel().apply {
+            likerAvatarUrl = avatarUrl
+            likerName = name
+        }
 
     private suspend fun givenLoaded(days: Int) {
         givenFetchReturns(

@@ -192,8 +192,6 @@ Language: el_GR
     <string name="reader_followed_blog_notifications_action">Ενεργοποίηση</string>
     <string name="my_site_icon_content_description">Αλλαγή εικονιδίου ιστότοπου</string>
     <string name="my_site_icon_dialog_add_message">Θα θέλατε να προσθέσετε ένα εικονίδιο ιστότοπου;</string>
-    <string name="cookie_policy_learn_more_header">Πολιτική Cookies</string>
-    <string name="privacy_policy_learn_more_header">Πολιτική Απορρήτου</string>
     <string name="activity_log_jetpack_icon">Εικονίδιο Jetpack</string>
     <string name="activity_log_icon">Εικονίδιο δραστηριότητας</string>
     <string name="activity_log">Αρχείο καταγραφής δραστηριότητας</string>
@@ -478,7 +476,6 @@ Language: el_GR
     <string name="photo_picker_title">Επιλέξτε φωτογραφία</string>
     <string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Το άρθρο αποθηκεύτηκε τοπικά.</string>
     <string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
-    <string name="site_settings_image_quality_hint">Ποιότητα εικόνων. Υψηλότερες τιμές σημαίνουν εικόνες καλύτερης ποιότητας.</string>
     <string name="site_settings_optimize_images_summary">Ενεργοποιήστε για αλλαγή μεγέθους και συμπίεσης εικόνων</string>
     <string name="media_encoder_quality_maximum">Μέγιστο</string>
     <string name="media_encoder_quality_high">Υψηλό</string>
@@ -730,7 +727,6 @@ Language: el_GR
     <string name="site_settings_discussion_hint">Προβολή και αλλαγή των ρυθμίσεων συζήτησης των ιστοτόπων σας</string>
     <string name="site_settings_more_hint">Προβολή όλων των διαθέσιμων ρυθμίσεων Συζητήσεων</string>
     <string name="site_settings_related_posts_hint">Εμφάνιση ή απόκρυψη σχετικών άρθρων στον αναγνώστη</string>
-    <string name="site_settings_image_width_hint">Αλλαγή μεγέθους των εικόνων στα άρθρα σε αυτό το πλάτος</string>
     <string name="site_settings_format_hint">Ορίζει τη μορφή του νέου άρθρου</string>
     <string name="site_settings_category_hint">Ορίζει την κατηγορία του νέου άρθρου</string>
     <string name="site_settings_password_hint">Αλλαγή του συνθηματικού σας</string>

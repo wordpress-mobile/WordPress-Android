@@ -56,13 +56,10 @@ fun ContentListErrorState(
     }
 }
 
-/** [actionLabelResId] and [onAction] go together; the button shows only when both are set. */
 @Composable
 fun ContentListEmptyState(
     @StringRes messageResId: Int,
     modifier: Modifier = Modifier,
-    @StringRes actionLabelResId: Int? = null,
-    onAction: (() -> Unit)? = null,
 ) {
     ContentListMessageColumn(modifier) {
         Text(
@@ -70,12 +67,6 @@ fun ContentListEmptyState(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        if (actionLabelResId != null && onAction != null) {
-            Spacer(modifier = Modifier.height(BUTTON_GAP))
-            Button(onClick = onAction) {
-                Text(text = stringResource(actionLabelResId))
-            }
-        }
     }
 }
 

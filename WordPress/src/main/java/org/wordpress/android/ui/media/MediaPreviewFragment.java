@@ -38,6 +38,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -54,8 +55,14 @@ public class MediaPreviewFragment extends Fragment {
     private static final String ARG_AUTOPLAY = "autoplay";
     private static final String ARG_VIDEO_THUMB = "video_thumb";
 
-    public interface OnMediaTappedListener {
+    public interface MediaPreviewListener {
         void onMediaTapped();
+
+        /**
+         * called when a video shows or hides its playback controls - the video swallows taps, so this
+         * is the only way the hosting activity hears about the user asking for the chrome to be shown
+         */
+        void onVideoControlsVisibilityChanged(boolean visible);
     }
 
     private String mContentUri;
@@ -64,6 +71,7 @@ public class MediaPreviewFragment extends Fragment {
     private boolean mIsVideo;
     private boolean mIsAudio;
     private boolean mAutoPlay;
+    private boolean mImageLoadFailed;
     private int mPosition;
 
     private SiteModel mSite;
@@ -72,7 +80,7 @@ public class MediaPreviewFragment extends Fragment {
     private PlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
     private ImageView mExoPlayerArtworkView;
-    private OnMediaTappedListener mMediaTapListener;
+    private MediaPreviewListener mListener;
 
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
@@ -138,12 +146,32 @@ public class MediaPreviewFragment extends Fragment {
         mAutoPlay = args.getBoolean(ARG_AUTOPLAY);
         mVideoThumbnailUrl = args.getString(ARG_VIDEO_THUMB);
 
-        mIsVideo = MediaUtils.isVideo(mContentUri);
-        mIsAudio = MediaUtils.isAudio(mContentUri);
+        resolveMediaType();
 
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(ARG_POSITION, 0);
         }
+    }
+
+    /*
+     * decides whether this is a video, an audio file or an image. The MediaUtils checks look at the file
+     * extension, which a content:// URI doesn't have - every local item would be treated as an image - so
+     * ask the content provider for the MIME type when we have one of those. Only a type we recognize is
+     * trusted: anything else (application/octet-stream and the like) falls through to the extension checks
+     * rather than silently counting as an image.
+     */
+    private void resolveMediaType() {
+        String mimeType = WPMediaUtils.resolveMimeType(requireContext(), mContentUri);
+        if (mimeType != null && (mimeType.startsWith("image/")
+                                 || mimeType.startsWith("video/")
+                                 || mimeType.startsWith("audio/"))) {
+            mIsVideo = mimeType.startsWith("video/");
+            mIsAudio = mimeType.startsWith("audio/");
+            return;
+        }
+
+        mIsVideo = MediaUtils.isVideo(mContentUri);
+        mIsAudio = MediaUtils.isAudio(mContentUri);
     }
 
     @Override
@@ -171,8 +199,8 @@ public class MediaPreviewFragment extends Fragment {
 
         if (showAudioOrVideo()) {
             View.OnClickListener listener = v -> {
-                if (mMediaTapListener != null) {
-                    mMediaTapListener.onMediaTapped();
+                if (mListener != null) {
+                    mListener.onMediaTapped();
                 }
             };
             audioFrame.setOnClickListener(listener);
@@ -187,6 +215,10 @@ public class MediaPreviewFragment extends Fragment {
         super.onStart();
         if (showAudioOrVideo()) {
             initializePlayer();
+        } else {
+            // load the image as soon as the fragment is started rather than waiting for it to become
+            // the active page, so the pager's adjacent images are ready before the user swipes to them
+            loadImage(mContentUri, mImageView);
         }
     }
 
@@ -208,8 +240,18 @@ public class MediaPreviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (showAudioOrVideo()) {
-            if (mPlayer == null) initializePlayer();
-        } else {
+            if (mPlayer == null) {
+                initializePlayer();
+            }
+            // the player is released when this page is stopped and rebuilt when it starts again,
+            // and the rebuilt one shows its controls while the fragment isn't resumed yet - so the
+            // activity is told where they stand now that the page is back in front of the user
+            if (mIsVideo && mListener != null) {
+                mListener.onVideoControlsVisibilityChanged(mExoPlayerView.isControllerVisible());
+            }
+        } else if (mImageLoadFailed) {
+            // the pre-load that ran while this page was offscreen failed, so try again now that
+            // the user has swiped to it
             loadImage(mContentUri, mImageView);
         }
     }
@@ -223,8 +265,8 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
-    void setOnMediaTappedListener(OnMediaTappedListener listener) {
-        mMediaTapListener = listener;
+    void setMediaPreviewListener(MediaPreviewListener listener) {
+        mListener = listener;
     }
 
     private void showProgress(boolean show) {
@@ -233,9 +275,9 @@ public class MediaPreviewFragment extends Fragment {
         }
     }
 
-    private void showLoadingError() {
+    private void showLoadingError(boolean show) {
         if (isAdded()) {
-            getView().findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.text_error).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -247,9 +289,18 @@ public class MediaPreviewFragment extends Fragment {
             return;
         }
 
+        // the video thumbnail shares this method, but only the main image is retried on selection
+        final boolean isMainImage = imageView == mImageView;
+
         if (TextUtils.isEmpty(mediaUri)) {
-            showLoadingError();
+            // an empty URI won't start working on its own, so don't mark it for retry
+            showLoadingError(true);
             return;
+        }
+
+        if (isMainImage) {
+            mImageLoadFailed = false;
+            showLoadingError(false);
         }
 
         imageView.setVisibility(View.VISIBLE);
@@ -269,8 +320,8 @@ public class MediaPreviewFragment extends Fragment {
                         if (isAdded()) {
                             PhotoViewAttacher attacher = mImageView.getAttacher();
                             attacher.setOnViewTapListener((view, x, y) -> {
-                                if (mMediaTapListener != null) {
-                                    mMediaTapListener.onMediaTapped();
+                                if (mListener != null) {
+                                    mListener.onMediaTapped();
                                 }
                             });
                             showProgress(false);
@@ -279,13 +330,16 @@ public class MediaPreviewFragment extends Fragment {
 
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        if (isMainImage) {
+                            mImageLoadFailed = true;
+                        }
                         if (isAdded()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);
                             }
                             showProgress(false);
                             if (!mIsVideo) {
-                                showLoadingError();
+                                showLoadingError(true);
                             }
                         }
                     }
@@ -300,6 +354,14 @@ public class MediaPreviewFragment extends Fragment {
             if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
             }
+            // the listener must be registered before the player is set, otherwise setPlayer()
+            // shows the controls before anybody is listening and the toolbar is left out of sync
+            mExoPlayerView.setControllerVisibilityListener(visibility -> {
+                // only the page the user is actually looking at may drive the activity's toolbar
+                if (mListener != null && isResumed()) {
+                    mListener.onVideoControlsVisibilityChanged(visibility == View.VISIBLE);
+                }
+            });
             mExoPlayerView.setPlayer(mPlayer);
             mExoPlayerView.requestFocus();
         } else if (mIsAudio) {

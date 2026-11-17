@@ -31,13 +31,17 @@ class StatsCardsConfigurationRepository @Inject constructor(
         _configurationFlow.asStateFlow()
 
     suspend fun getConfiguration(siteId: Long): StatsCardsConfiguration = withContext(ioDispatcher) {
-        loadConfiguration(siteId)
+        loadAndMigrate(siteId)
     }
 
     suspend fun saveConfiguration(
         siteId: Long,
         configuration: StatsCardsConfiguration
     ): Unit = withContext(ioDispatcher) {
+        persistConfiguration(siteId, configuration)
+    }
+
+    private fun persistConfiguration(siteId: Long, configuration: StatsCardsConfiguration) {
         appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(configuration))
         _configurationFlow.value = siteId to configuration
     }
@@ -100,11 +104,67 @@ class StatsCardsConfigurationRepository @Inject constructor(
         saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
     }
 
+    /**
+     * Loads the configuration and brings its card list up to the default set this build ships,
+     * persisting it when that changes anything so the migration only runs once per site.
+     */
+    private fun loadAndMigrate(siteId: Long): StatsCardsConfiguration {
+        val config = loadConfiguration(siteId)
+        val migrated = addNewDefaultCards(config)
+        if (migrated != config) {
+            persistConfiguration(siteId, migrated)
+        }
+        return migrated
+    }
+
+    /**
+     * Pure function: returns a configuration carrying the cards added to the defaults since it was
+     * written, or the configuration itself when it is already up to date.
+     *
+     * Referrers became a default card in CMM-2583, and sites configured before that - which is any
+     * site whose owner has picked a period, metric or chart type, since those are stored alongside
+     * the card list - would otherwise keep a list without it and have to discover the card in the
+     * add-card list.
+     *
+     * Each step is gated on its own revision, so that adding a step for a later revision cannot
+     * re-run an earlier one. Stamping the version keeps every step a one-off: removing a card
+     * once its step has run sticks, and no card other than the one a step adds is ever added,
+     * moved or restored. The stored data cannot tell "never had this card" apart from "had it and
+     * removed it", so a user who had removed Referrers themselves does get it back - once.
+     */
+    private fun addNewDefaultCards(config: StatsCardsConfiguration): StatsCardsConfiguration {
+        if (config.defaultCardsVersion >= StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION) {
+            return config
+        }
+        var visibleCards = config.visibleCards
+        if (config.defaultCardsVersion < StatsCardsConfiguration.VERSION_REFERRERS) {
+            visibleCards = withReferrers(visibleCards)
+        }
+        return config.copy(
+            visibleCards = visibleCards,
+            defaultCardsVersion = StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION
+        )
+    }
+
+    /** [visibleCards] with Referrers added, or unchanged when the card is already visible. */
+    private fun withReferrers(visibleCards: List<StatsCardType>): List<StatsCardType> {
+        if (StatsCardType.MOST_VIEWED_REFERRERS in visibleCards) {
+            return visibleCards
+        }
+        val updated = visibleCards.toMutableList()
+        // Under Posts & pages, as in the defaults, falling back to the end of the list when the
+        // user has removed that card.
+        val anchorIndex = updated.indexOf(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
+        val insertIndex = if (anchorIndex >= 0) anchorIndex + 1 else updated.size
+        updated.add(insertIndex, StatsCardType.MOST_VIEWED_REFERRERS)
+        return updated
+    }
+
     @Suppress("TooGenericExceptionCaught")
     private fun loadConfiguration(siteId: Long): StatsCardsConfiguration {
         val json = appPrefsWrapper.getStatsCardsConfigurationJson(siteId)
         if (json == null) {
-            return StatsCardsConfiguration()
+            return defaultConfiguration()
         }
         return try {
             val config = gson.fromJson(json, StatsCardsConfiguration::class.java)
@@ -136,8 +196,13 @@ class StatsCardsConfigurationRepository @Inject constructor(
     }
 
     private fun resetToDefault(siteId: Long): StatsCardsConfiguration {
-        val defaultConfig = StatsCardsConfiguration()
-        appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(defaultConfig))
+        val defaultConfig = defaultConfiguration()
+        persistConfiguration(siteId, defaultConfig)
         return defaultConfig
     }
+
+    /** A fresh configuration, already carrying the default cards this build ships. */
+    private fun defaultConfiguration() = StatsCardsConfiguration(
+        defaultCardsVersion = StatsCardsConfiguration.CURRENT_DEFAULT_CARDS_VERSION
+    )
 }

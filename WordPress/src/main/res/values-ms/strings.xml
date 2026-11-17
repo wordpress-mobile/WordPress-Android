@@ -149,9 +149,7 @@ Language: ms
     <string name="media_images">Imej</string>
     <string name="media_videos">Video</string>
     <string name="reader_view_comments">Lihat ulasan</string>
-    <string name="site_settings_video_quality_hint">Kualiti video. Nilai lebih tinggi bermakna kualiti video yang lebih baik.</string>
     <string name="site_settings_optimize_video_summary">Bolehkan untuk saiz semula dan mempatkan video</string>
-    <string name="site_settings_video_width_hint">Saiz semula video dalam kiriman-kiriman ke saiz ini</string>
     <string name="site_settings_optimize_videos">Optimumkan Video</string>
     <string name="draft_uploaded">Darf dimuat naik</string>
     <string name="video_quality">Kualiti Video</string>
@@ -232,7 +230,6 @@ Language: ms
     <string name="editor_post_saved_locally_failed_media">Kiriman mempunyai muat naik media yang telah gagal dan telah disimpan secara setempat</string>
     <string name="photo_picker_title">Pilih gambar</string>
     <string name="editor_post_saved_online">Kiriman disimpan atas talian</string>
-    <string name="site_settings_image_quality_hint">Kualiti gambar. Nilai lebih tinggi bermakna kualiti gambar yang lebih baik.</string>
     <string name="site_settings_optimize_images_summary">Bolehkan untuk saiz semula dan mampatkan gambar</string>
     <string name="media_upload_state_uploaded">Dimuat naik</string>
     <string name="media_upload_state_deleted">Dihapuskan</string>
@@ -461,7 +458,6 @@ Language: ms
     <string name="site_settings_discussion_hint">Lihat dan ubah tetapan perbincangan laman anda</string>
     <string name="site_settings_more_hint">Lihat semua tetapan Perbincangan yang ada</string>
     <string name="site_settings_related_posts_hint">Tunjukkan atau sembunyikan kiriman berkaitan dalam pembaca</string>
-    <string name="site_settings_image_width_hint">Saiz semula imej dalam kiriman ke lebar ini</string>
     <string name="site_settings_format_hint">Tetapkan format kiriman baharu</string>
     <string name="site_settings_category_hint">Tetapkan kategori kiriman baharu</string>
     <string name="site_settings_password_hint">Tukar kata laluan anda</string>

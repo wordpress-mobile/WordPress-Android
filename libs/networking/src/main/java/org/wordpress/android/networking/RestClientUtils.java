@@ -300,15 +300,15 @@ public class RestClientUtils {
     /**
      * Make POST request
      */
-    public void post(String path, Listener listener, ErrorListener errorListener) {
-        post(path, (Map<String, String>) null, null, listener, errorListener);
+    public Request<JSONObject> post(String path, Listener listener, ErrorListener errorListener) {
+        return post(path, (Map<String, String>) null, null, listener, errorListener);
     }
 
     /**
      * Make POST request with params
      */
-    public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
-                     ErrorListener errorListener) {
+    public Request<JSONObject> post(final String path, Map<String, String> params, RetryPolicy retryPolicy,
+                                    Listener listener, ErrorListener errorListener) {
         final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient
                         .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
         if (retryPolicy == null) {
@@ -318,14 +318,15 @@ public class RestClientUtils {
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
+        return request;
     }
 
 
     /**
      * Make a JSON POST request
      */
-    public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
-                     ErrorListener errorListener) {
+    public Request<JSONObject> post(final String path, JSONObject params, RetryPolicy retryPolicy,
+                                    Listener listener, ErrorListener errorListener) {
         final JsonRestRequest request = mRestClient.makeRequest(mRestClient
                         .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
         if (retryPolicy == null) {
@@ -335,6 +336,7 @@ public class RestClientUtils {
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
+        return request;
     }
 
     /**

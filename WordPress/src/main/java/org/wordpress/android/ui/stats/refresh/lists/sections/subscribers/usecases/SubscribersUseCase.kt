@@ -145,7 +145,7 @@ class SubscribersUseCase @Inject constructor(
     }
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_SUBSCRIBERS_VIEW_MORE_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_SUBSCRIBERS_VIEW_MORE_TAPPED, statsSiteProvider.siteModel)
         navigateTo(NavigationTarget.SubscribersStats)
     }
 

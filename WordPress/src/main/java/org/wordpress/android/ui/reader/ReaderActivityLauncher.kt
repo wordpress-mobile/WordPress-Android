@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -406,14 +405,6 @@ object ReaderActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE)
     }
 
-    /*
-     * show followed tags & blogs
-     */
-    fun showReaderSubs(context: Context) {
-        val intent = Intent(context, ReaderSubsActivity::class.java)
-        context.startActivity(intent)
-    }
-
     fun createIntentShowReaderSubs(context: Context, selectPosition: Int): Intent {
         val intent = Intent(context, ReaderSubsActivity::class.java)
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition)
@@ -422,26 +413,14 @@ object ReaderActivityLauncher {
 
     @JvmStatic
     fun showReaderInterests(activity: Activity) {
-        val intent = Intent(activity, ReaderInterestsActivity::class.java)
-        intent.putExtra(
+        activity.startActivityForResult(createReaderInterestsIntent(activity), RequestCodes.READER_INTERESTS)
+    }
+
+    fun createReaderInterestsIntent(context: Context): Intent =
+        Intent(context, ReaderInterestsActivity::class.java).putExtra(
             ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT,
             ReaderInterestsFragment.EntryPoint.SETTINGS
         )
-        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS)
-    }
-
-    /*
-     * play an external video
-     */
-    @JvmStatic
-    fun showReaderVideoViewer(context: Context, videoUrl: String) {
-        if (TextUtils.isEmpty(videoUrl)) {
-            return
-        }
-        val intent = Intent(context, ReaderVideoViewerActivity::class.java)
-        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl)
-        context.startActivity(intent)
-    }
 
     @JvmStatic
     @JvmOverloads

@@ -2,6 +2,7 @@ package org.wordpress.android.modules;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.JetpackConnectionResultActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -102,12 +103,10 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapte
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.EditorLauncher;
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment;
-import org.wordpress.android.ui.utils.AuthenticationUtils;
+import org.wordpress.android.networking.GlideAuthInterceptor;
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
-import org.wordpress.android.ui.prefs.AppSettingsActivity;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -126,28 +125,11 @@ import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.reader.CommentNotificationsBottomSheetFragment;
-import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.reader.ReaderSearchActivity;
-import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
-import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
-import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
-import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
-import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -176,9 +158,12 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 import org.wordpress.android.workers.WordPressWorkersFactory;
 
+import javax.inject.Named;
+
 import dagger.hilt.EntryPoint;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import okhttp3.OkHttpClient;
 
 @InstallIn(SingletonComponent.class)
 @EntryPoint
@@ -217,7 +202,6 @@ public interface AppComponent {
 
     void inject(BlogPreferencesActivity object);
 
-    void inject(AppSettingsFragment object);
 
     void inject(PeopleListFragment object);
 
@@ -287,41 +271,16 @@ public interface AppComponent {
 
     void inject(NotificationsDetailListFragment object);
 
-    void inject(ReaderSubsActivity object);
-
-    void inject(ReaderUpdateLogic object);
-
     void inject(ReaderPostDetailFragment object);
 
     void inject(ReaderPostListFragment object);
 
-    void inject(ReaderCommentAdapter object);
 
-    void inject(ReaderPostAdapter object);
-
-    void inject(ReaderTagAdapter object);
-
-    void inject(ReaderSiteHeaderView object);
-
-    void inject(ReaderSiteSearchResultView object);
-
-    void inject(ReaderTagHeaderView object);
-
-    void inject(ReaderPostDetailHeaderView object);
-
-    void inject(ReaderExpandableTagsView object);
 
     void inject(ReaderWebView object);
 
-    void inject(ReaderSimplePostContainerView object);
-
     void inject(ReaderPostPagerActivity object);
 
-    void inject(ReaderBlogFragment object);
-
-    void inject(ReaderBlogAdapter object);
-
-    void inject(ReaderCommentsPostHeaderView object);
 
     void inject(WPWebViewActivity object);
 
@@ -334,8 +293,6 @@ public interface AppComponent {
     void inject(ThemeBrowserFragment object);
 
     void inject(SelectCategoriesActivity object);
-
-    void inject(ReaderUserAdapter object);
 
     void inject(AddCategoryFragment object);
 
@@ -431,13 +388,9 @@ public interface AppComponent {
 
     void inject(PrepublishingPublishSettingsFragment object);
 
-    void inject(AppSettingsActivity object);
-
     void inject(FeatureAnnouncementDialogFragment object);
 
     void inject(FeatureAnnouncementListAdapter object);
-
-    void inject(ReaderSearchActivity object);
 
     void inject(ReaderInterestsFragment object);
 
@@ -512,8 +465,6 @@ public interface AppComponent {
 
     void inject(UnifiedAboutActivity object);
 
-    void inject(CommentSnippetAdapter object);
-
     void inject(BloggingPromptsOnboardingDialogFragment object);
 
     void inject(DismissNotificationReceiver object);
@@ -533,6 +484,9 @@ public interface AppComponent {
     // Provide access to EditorLauncher for static utility classes
     EditorLauncher editorLauncher();
 
-    // Provide access to AuthenticationUtils for Coil image auth
-    AuthenticationUtils authenticationUtils();
+    // Provide access to the image HTTP client and auth interceptor, shared by Glide and Coil
+    @Named(OkHttpClientQualifiers.CUSTOM_SSL_CUSTOM_REDIRECTS)
+    OkHttpClient customSslOkHttpClient();
+
+    GlideAuthInterceptor glideAuthInterceptor();
 }

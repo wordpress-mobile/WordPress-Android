@@ -4,14 +4,11 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
-import okhttp3.Call
-import okhttp3.Connection
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import java.util.concurrent.TimeUnit
 
 /**
  * Retention period options for tracked network requests.
@@ -133,7 +130,7 @@ class TrackNetworkRequestsInterceptor(
      */
     private class RedactedBodyChain(
         private val delegate: Interceptor.Chain
-    ) : Interceptor.Chain {
+    ) : Interceptor.Chain by delegate {
         private val redactedRequest: Request by lazy {
             val original = delegate.request()
             // Falls back to plain text if original has no body;
@@ -150,30 +147,6 @@ class TrackNetworkRequestsInterceptor(
         override fun proceed(request: Request): Response {
             return delegate.proceed(delegate.request())
         }
-
-        override fun connection(): Connection? = delegate.connection()
-        override fun call(): Call = delegate.call()
-        override fun connectTimeoutMillis(): Int =
-            delegate.connectTimeoutMillis()
-        override fun withConnectTimeout(
-            timeout: Int,
-            unit: TimeUnit
-        ): Interceptor.Chain =
-            RedactedBodyChain(delegate.withConnectTimeout(timeout, unit))
-        override fun readTimeoutMillis(): Int =
-            delegate.readTimeoutMillis()
-        override fun withReadTimeout(
-            timeout: Int,
-            unit: TimeUnit
-        ): Interceptor.Chain =
-            RedactedBodyChain(delegate.withReadTimeout(timeout, unit))
-        override fun writeTimeoutMillis(): Int =
-            delegate.writeTimeoutMillis()
-        override fun withWriteTimeout(
-            timeout: Int,
-            unit: TimeUnit
-        ): Interceptor.Chain =
-            RedactedBodyChain(delegate.withWriteTimeout(timeout, unit))
     }
 
     companion object {

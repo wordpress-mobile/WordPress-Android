@@ -15,8 +15,11 @@ import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaWithEditContext
+import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
+import uniffi.wp_api.PostListParams
 import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.SparseAnyPostFieldWithViewContext
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
@@ -63,8 +66,15 @@ class RsSiteRestClient @Inject constructor(
     )
     /** Keyed by site and user ID, since self-hosted user IDs are per site (user 1 is every admin). */
     private val userNameCache = ConcurrentHashMap<String, String>()
-    private val categoryNameCache = ConcurrentHashMap<Long, String>()
-    private val tagNameCache = ConcurrentHashMap<Long, String>()
+    /**
+     * Keyed by site and term ID, since term IDs are per site:
+     * on a self-hosted site they start at 1, so the same ID
+     * names a different tag on every site. Sharing a key would
+     * hand one site's tag name to another, and saving the post
+     * would then resolve that name and drop the real tag.
+     */
+    private val categoryNameCache = ConcurrentHashMap<String, String>()
+    private val tagNameCache = ConcurrentHashMap<String, String>()
 
     private val displayMetrics get() = context.resources.displayMetrics
 
@@ -177,6 +187,51 @@ class RsSiteRestClient @Inject constructor(
     }
 
     /**
+     * The featured image id of each post in [ids], for posts that have one. Ids missing from the
+     * result either have no featured image, don't exist on [endpointType], or couldn't be fetched -
+     * the caller can't tell those apart and shouldn't need to, since all three mean "no image".
+     *
+     * [PostListParams.perPage] is set explicitly, because the server's default of 10 would silently
+     * truncate a larger batch, and ids are chunked to the server's per_page maximum of 100, above
+     * which the request is rejected outright with `rest_invalid_param`.
+     *
+     * Posts and pages live on separate endpoints, so a caller holding a mix of both calls this once
+     * per [endpointType].
+     */
+    suspend fun fetchFeaturedMediaIds(
+        site: SiteModel,
+        endpointType: PostEndpointType,
+        ids: List<Long>,
+    ): Map<Long, Long> {
+        if (ids.isEmpty()) return emptyMap()
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val result = mutableMapOf<Long, Long>()
+        for (chunk in ids.distinct().chunked(PER_PAGE.toInt())) {
+            val response = client.request {
+                it.posts().filterListWithViewContext(
+                    endpointType,
+                    PostListParams(include = chunk, perPage = chunk.size.toUInt()),
+                    listOf(
+                        SparseAnyPostFieldWithViewContext.ID,
+                        SparseAnyPostFieldWithViewContext.FEATURED_MEDIA,
+                    ),
+                )
+            }
+            if (response is WpRequestResult.Success) {
+                result += response.response.data.mapNotNull { post ->
+                    val mediaId = post.featuredMedia?.takeIf { it != NO_FEATURED_MEDIA }
+                    post.id?.let { id -> mediaId?.let { id to it } }
+                }
+            } else {
+                // The wordpress-rs client already logged the status, method and URL through
+                // wpRsErrorLogger; this only names which call it was.
+                AppLog.w(AppLog.T.POSTS, "fetchFeaturedMediaIds ($endpointType) failed")
+            }
+        }
+        return result
+    }
+
+    /**
      * Whether a second attempt could plausibly succeed: a 5xx, a timeout or a network failure -
      * wordpress-rs reports a connection dropped mid-response as `GenericError` and an unreachable
      * route as `HttpError`. Auth, permission, not-found, parse and rate-limit failures don't clear.
@@ -248,17 +303,22 @@ class RsSiteRestClient @Inject constructor(
      * call using the `include` parameter, returning a map of term ID
      * to name. IDs already in the local cache are returned immediately
      * without a network round-trip.
+     *
+     * Returns `null` if a page failed, rather than the names it did
+     * manage to read: a short map otherwise reads as "the site no
+     * longer has those terms", and a caller that stores it would drop
+     * tags the post really has.
      */
     suspend fun fetchTermNames(
         site: SiteModel,
         termIds: List<Long>,
         endpointType: TermEndpointType,
-    ): Map<Long, String> {
+    ): Map<Long, String>? {
         val cache = termCache(endpointType)
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in termIds) {
-            val cached = cache[id]
+            val cached = cache[termCacheKey(site, id)]
             if (cached != null) result[id] = cached else uncached.add(id)
         }
         if (uncached.isEmpty()) return result
@@ -272,6 +332,7 @@ class RsSiteRestClient @Inject constructor(
             include = uncached,
             perPage = PER_PAGE,
         )
+        var failed = false
         while (params != null) {
             val currentParams = params
             val response = client.request {
@@ -282,7 +343,7 @@ class RsSiteRestClient @Inject constructor(
             when (response) {
                 is WpRequestResult.Success -> {
                     for (term in response.response.data) {
-                        cache[term.id] = term.name
+                        cache[termCacheKey(site, term.id)] = term.name
                         result[term.id] = term.name
                     }
                     params = response.response.nextPageParams
@@ -295,11 +356,12 @@ class RsSiteRestClient @Inject constructor(
                         AppLog.T.POSTS,
                         "fetchTermNames failed: $msg"
                     )
+                    failed = true
                     params = null
                 }
             }
         }
-        return result
+        return if (failed) null else result
     }
 
     /**
@@ -405,7 +467,7 @@ class RsSiteRestClient @Inject constructor(
             is WpRequestResult.Success -> {
                 val terms = response.response.data
                 for (term in terms) {
-                    cache[term.id] = term.name
+                    cache[termCacheKey(site, term.id)] = term.name
                 }
                 TermsPageResult(
                     terms = terms,
@@ -458,7 +520,7 @@ class RsSiteRestClient @Inject constructor(
         return when (response) {
             is WpRequestResult.Success -> {
                 val term = response.response.data
-                cache[term.id] = term.name
+                cache[termCacheKey(site, term.id)] = term.name
                 term.id
             }
             else -> {
@@ -537,6 +599,8 @@ class RsSiteRestClient @Inject constructor(
 
     private fun userCacheKey(site: SiteModel, userId: Long): String = "${site.id}:$userId"
 
+    private fun termCacheKey(site: SiteModel, termId: Long): String = "${site.id}:$termId"
+
     /**
      * Reads the source URL and the available renders off the media
      * object. The `mediaDetails` handle is owned by the response, so
@@ -564,7 +628,7 @@ class RsSiteRestClient @Inject constructor(
 
     private fun termCache(
         endpointType: TermEndpointType,
-    ): ConcurrentHashMap<Long, String> =
+    ): ConcurrentHashMap<String, String> =
         if (endpointType is TermEndpointType.Categories) {
             categoryNameCache
         } else {
@@ -574,6 +638,9 @@ class RsSiteRestClient @Inject constructor(
     companion object {
         internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
+
+        /** How the REST API spells "this post has no featured image". */
+        private const val NO_FEATURED_MEDIA = 0L
 
         private const val MEDIA_CACHE_MAX_ENTRIES = 500
         private const val MEDIA_CACHE_CAPACITY = 64

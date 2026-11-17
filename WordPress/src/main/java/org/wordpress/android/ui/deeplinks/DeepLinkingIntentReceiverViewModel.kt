@@ -201,7 +201,6 @@ class DeepLinkingIntentReceiverViewModel
     override fun onCleared() {
         serverTrackingHandler.clear()
         uriWrapper = null
-        super.onCleared()
     }
 
     companion object {

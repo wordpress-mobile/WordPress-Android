@@ -287,7 +287,6 @@ class MySiteViewModel @Inject constructor(
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
         gutenbergEditorPreloader.clear()
-        super.onCleared()
     }
 
     fun onSitePicked() {

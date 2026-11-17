@@ -198,7 +198,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                 PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), context);
-        mSystemNotificationsTracker.trackShownNotification(NotificationType.PENDING_DRAFTS);
+        mSystemNotificationsTracker.trackShownNotification(NotificationType.PENDING_DRAFTS, null);
     }
 
     private void addOpenDraftActionForNotification(Context context, NotificationCompat.Builder builder, int postId,

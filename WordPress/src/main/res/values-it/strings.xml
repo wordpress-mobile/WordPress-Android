@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-28 16:12:19+0000
+Translation-Revision-Date: 2026-11-04 18:07:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: it
@@ -44,7 +44,7 @@ Language: it
     <string name="stats_subscribers_60_days_ago">60 giorni fa</string>
     <string name="stats_subscribers_30_days_ago">30 giorni fa</string>
     <string name="stats_subscribers_current">Attuale</string>
-    <string name="stats_subscribers_emails">E-mail</string>
+    <string name="stats_subscribers_emails">Email</string>
     <string name="stats_subscribers_list">Iscritti</string>
     <string name="stats_subscribers_graph">Grafico iscritti</string>
     <string name="stats_subscribers_all_time">Iscritti di sempre</string>
@@ -452,7 +452,7 @@ Language: it
     <string name="subscribers_newsletter_label">Abbonamento alla newsletter</string>
     <string name="subscribers_clicked_label">Clic effettuato</string>
     <string name="subscribers_opened_label">Aperta</string>
-    <string name="subscribers_emails_sent_label">E-mail</string>
+    <string name="subscribers_emails_sent_label">Email</string>
     <string name="subscribers_error_title">Si è verificato un problema</string>
     <string name="subscribers_empty_search">Nessun risultato trovato</string>
     <string name="subscribers_empty">Non ci sono abbonati</string>
@@ -583,7 +583,7 @@ Language: it
     <string name="notifications_tab_title_subscribers">Iscritti</string>
     <string name="subscribers">Iscritti</string>
     <string name="notifications_empty_subscribers">Ancora nessun abbonato</string>
-    <string name="stats_view_emails">E-mail</string>
+    <string name="stats_view_emails">Email</string>
     <string name="stats_view_subscribers">Iscritti</string>
     <string name="stats_view_total_subscribers">Totale abbonati</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -657,9 +657,6 @@ Language: it
     <string name="notifications_action_mark_all_as_read">Contrassegna tutte come lette</string>
     <string name="notifications_unread_content_description">Non lette</string>
     <string name="qrcode_media_deeplink_error">Nessun sito trovato. Assicurati di aver effettuato l\'accesso all\'account corretto.</string>
-    <string name="gravatar_info_learn_more_link">Cos\'è Gravatar?</string>
-    <string name="gravatar_info_description">Aggiornando il tuo avatar, il nome e le informazioni personali qui, verranno aggiornati anche su tutti i siti che utilizzano i profili Gravatar.</string>
-    <string name="gravatar_info_title">Il tuo profilo WordPress.com è gestito da Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Impossibile caricare i media per la condivisione. Verifica le autorizzazioni dell\'app\n        o utilizza la libreria multimediale dell\'app.</string>
     <string name="site_monitoring_cannot_be_started">Al momento non è possibile aprire il monitoraggio del sito. Riprova più tardi</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log del server web</string>
@@ -669,7 +666,6 @@ Language: it
     <string name="reader_empty_followed_blogs_button_subscriptions">Vai agli abbonamenti</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">I blog che segui non hanno pubblicato articoli di recente</string>
     <string name="reader_no_followed_blogs_description_subs">Segui i blog in Scopri, oppure cerca un blog che già ti piace.</string>
-    <string name="reader_no_recommended_blogs_title">Nessun blog consigliato</string>
     <string name="reader_no_posts_with_this_tag">Nessun articolo con questo tag</string>
     <string name="reader_toast_err_unable_to_block_blog">Non è possibile bloccare questo blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Gli articoli di questo blog non verranno più mostrati</string>
@@ -677,7 +673,6 @@ Language: it
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Non hai l\'autorizzazione per accedere a questo blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Non è possibile seguire questo blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Segui già questo blog</string>
-    <string name="reader_toast_err_show_blog">Impossibile mostrare questo blog</string>
     <string name="reader_label_choose_interests">Scegli i tuoi interessi</string>
     <string name="reader_label_subscribers_count_single">1 abbonato</string>
     <string name="reader_label_subscribers_count">%s abbonati</string>
@@ -705,7 +700,6 @@ Language: it
     <string name="reader_dropdown_menu_subscriptions">Abbonamenti</string>
     <string name="reader_dropdown_menu_discover">Scopri</string>
     <string name="reader_search_content_description">Cerca</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Segui tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag suggeriti</string>
     <string name="reader_filter_empty_blogs_action_search">Cerca un blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Segui un tag e potrai vedere qui i migliori articoli correlati.</string>
@@ -800,7 +794,6 @@ Language: it
     <string name="site_creation_domain_free_with_annual_plan">Gratis per il primo anno con piani annuali a pagamento</string>
     <string name="reader_secondary_bookmarked">Salvato</string>
     <string name="reader_secondary_bookmark">Salva</string>
-    <string name="reader_discover_recommended_header_new">Potrebbe piacerti</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Separa blocco</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tocca qui per visualizzare ulteriori dettagli.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pattern sincronizzati</string>
@@ -1885,8 +1878,6 @@ Language: it
     <string name="hpp_retry_error">Controlla la tua connessione a internet e riprova.</string>
     <string name="hpp_error_subtitle">Tocca \"riprova\" quando torni online.</string>
     <string name="hpp_error_title">Layout non disponibili in modalità offline</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Prova a seguire più tag per estendere la ricerca</string>
-    <string name="reader_discover_no_posts_title">Nessun articolo recente</string>
     <string name="reader_discover_empty_title">Benvenuto!</string>
     <string name="scan">Scansiona</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu del blocco a scorrimento aperto. Seleziona un blocco.</string>
@@ -2012,7 +2003,6 @@ Language: it
     <string name="publish_date">Data di pubblicazione</string>
     <string name="ccpa_privacy_notice_read">Leggi la nota sulla privacy del CCPA</string>
     <string name="ccpa_privacy_notice_caption">Il California Consumer Privacy Act (\"CCPA\") ci impone di fornire ai residenti in California alcune informazioni aggiuntive sulle categorie di informazioni personali che raccogliamo e condividiamo, dove otteniamo tali informazioni personali e come e perché le usiamo.</string>
-    <string name="ccpa_privacy_notice_header">Nota sulla privacy per utenti in California</string>
     <string name="status_and_visibility">Stato e visibilità</string>
     <string name="update_now">Aggiorna ora</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2727,11 +2717,8 @@ Language: it
     <string name="activity_log">Log attività</string>
     <string name="privacy_policy_read">Leggi l’informativa sulla privacy</string>
     <string name="third_party_policy_learn_more_caption">Utilizziamo altri strumenti di tracciamento, compresi alcuni di terzi. Leggi le informazioni sugli strumenti e come controllarli.</string>
-    <string name="third_party_policy_learn_more_header">Informativa sulla privacy di terze parti</string>
     <string name="privacy_policy_learn_more_caption">Queste informazioni ci aiutano a migliorare i prodotti, offrire proposte di marketing più pertinenti, personalizzare l’esperienza WordPress.com e molto altro, come indicato nel dettaglio nella nostra informativa sulla privacy.</string>
-    <string name="privacy_policy_learn_more_header">Privacy Policy</string>
     <string name="cookie_policy_learn_more_caption">Condividi informazioni con il nostro strumento di analisi relativamente al tuo uso dei servizi mentre sei connesso con il tuo account WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Informativa sui cookie</string>
     <string name="preference_privacy_settings">Impostazioni della privacy</string>
     <string name="preference_collect_information">Raccogli informazioni</string>
     <string name="post_submitted">Articolo inviato</string>
@@ -2782,7 +2769,6 @@ Language: it
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">elimina</string>
     <string name="photo_picker_thumbnail_desc">Riproduci video</string>
-    <string name="reader_cardview_post_play_video_desc">riproduci video in primo piano</string>
     <string name="plugin_detail_logo_desc">logo plugin</string>
     <string name="plugin_detail_banner_desc">banner plugin</string>
     <string name="photo_picker_wpmedia_desc">scegli tra i contenuti multimediali WordPress</string>
@@ -3125,8 +3111,6 @@ Language: it
     <string name="media_all">Tutto</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s è stato negato l\'accesso ai tuoi file multimediali. Per risolvere questo problema, modifica le tue autorizzazioni e attiva %2$s.</string>
     <string name="reader_view_comments">Visualizza commenti</string>
-    <string name="site_settings_video_quality_hint">Qualità dei video. Valori più alti comportano una migliore qualità dei video.</string>
-    <string name="site_settings_video_width_hint">Ridimensiona i video negli articoli secondo queste dimensioni</string>
     <string name="site_settings_optimize_video_summary">Consenti di ridimensionare e comprimere i video</string>
     <string name="site_settings_optimize_videos">Ottimizza video</string>
     <string name="draft_uploaded">Bozza caricata</string>
@@ -3210,7 +3194,6 @@ Language: it
     <string name="photo_picker_title">Scegli foto</string>
     <string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
     <string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
-    <string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
     <string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
     <string name="media_encoder_quality_maximum">Massima</string>
     <string name="media_encoder_quality_high">Alta</string>
@@ -3462,7 +3445,6 @@ Language: it
     <string name="site_settings_discussion_hint">Visualizza e modifica le impostazioni di discussione del sito</string>
     <string name="site_settings_more_hint">Visualizza tutte le impostazioni di discussione disponibili</string>
     <string name="site_settings_related_posts_hint">Mostra o nascondi gli articoli correlati nel Reader</string>
-    <string name="site_settings_image_width_hint">Ridimensiona le immagini negli articoli secondo questa larghezza</string>
     <string name="site_settings_format_hint">Imposta nuovo formato articolo</string>
     <string name="site_settings_category_hint">Imposta nuova categoria articolo</string>
     <string name="site_settings_password_hint">Modifica la password</string>

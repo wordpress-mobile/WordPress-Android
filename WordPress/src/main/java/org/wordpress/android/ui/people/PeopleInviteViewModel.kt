@@ -271,7 +271,6 @@ class PeopleInviteViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         inviteLinksRequestJob?.cancel()
     }
 }

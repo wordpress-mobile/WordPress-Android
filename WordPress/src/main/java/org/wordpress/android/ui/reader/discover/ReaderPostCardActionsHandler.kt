@@ -23,7 +23,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
@@ -33,7 +32,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -50,13 +48,11 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserState
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
-import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
@@ -91,10 +87,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderSiteFollowUseCase,
     private val blockBlogUseCase: BlockBlogUseCase,
-    private val blockUserUseCase: BlockUserUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
-    private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
+    private val readerBlogRepository: ReaderBlogRepository,
     private val fetchSiteUseCase: ReaderFetchSiteUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
@@ -195,11 +190,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post, source)
+            FOLLOW -> handleFollowSiteClicked(post.blogId, post.feedId, post.blogName, source)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId)
             BLOCK_USER -> handleBlockUserClicked(post.authorId, post.feedId)
             LIKE -> handleLikeClicked(post, source)
             BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
@@ -232,12 +227,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
-        }
-    }
-
-    suspend fun handleVideoOverlayClicked(videoUrl: String) {
-        withContext(bgDispatcher) {
-            _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
         }
     }
 
@@ -304,37 +293,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowRecommendedSiteClicked(
-        recommendedBlogUiState: ReaderRecommendedBlogUiState,
+    suspend fun handleFollowSiteClicked(
+        blogId: Long,
+        feedId: Long,
+        blogName: String,
         source: String
     ) {
         if (!accountStore.hasAccessToken()) {
             showSignInPrompt()
             return
         }
-        val param = ReaderSiteFollowUseCase.Param(
-            blogId = recommendedBlogUiState.blogId,
-            blogName = recommendedBlogUiState.name,
-            feedId = recommendedBlogUiState.feedId
-        )
-        followSite(param, source)
-    }
-
-    private suspend fun handleFollowClicked(
-        post: ReaderPost,
-        source: String
-    ) {
-        if (!accountStore.hasAccessToken()) {
-            showSignInPrompt()
-            return
-        }
-        followSite(
-            ReaderSiteFollowUseCase.Param(
-                post.blogId,
-                post.feedId,
-                post.blogName
-            ), source
-        )
+        followSite(ReaderSiteFollowUseCase.Param(blogId, feedId, blogName), source)
     }
 
     private fun showSignInPrompt() {
@@ -431,8 +400,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private suspend fun handleBlockSiteClicked(
         blogId: Long,
-        feedId: Long,
-        source: String
+        feedId: Long
     ) {
         blockBlogUseCase.blockBlog(blogId, feedId).collect {
             when (it) {
@@ -447,7 +415,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 {
                                     coroutineScope.launch {
                                         val blogId = it.blockedBlogData.blogId
-                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
+                                        readerBlogRepository.undoBlockBlog(it.blockedBlogData)
                                         _refreshPosts.postValue(Event(Unit))
                                         _scrollToSiteId.emit(blogId)
                                         _snackbarEvents.postValue(
@@ -481,31 +449,26 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleBlockUserClicked(
+    private fun handleBlockUserClicked(
         authorId: Long,
         feedId: Long,
     ) {
-        blockUserUseCase.blockUser(authorId, feedId).collect {
-            when (it) {
-                is BlockUserState.UserBlockedInLocalDb -> {
-                    _refreshPosts.postValue(Event(Unit))
-                    _snackbarEvents.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_user_blocked),
-                                UiStringRes(R.string.undo),
-                                {
-                                    coroutineScope.launch {
-                                        blockUserUseCase.undoBlockUser(it.blockedUserData)
-                                        _refreshPosts.postValue(Event(Unit))
-                                    }
-                                })
-                        )
-                    )
-                }
-                BlockUserState.Failed.AlreadyRunning -> Unit // do nothing
-            }
-        }
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_USER_BLOCKED, authorId, feedId)
+        val blockedUserData = readerBlogRepository.blockUserLocal(authorId)
+        _refreshPosts.postValue(Event(Unit))
+        _snackbarEvents.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiStringRes(R.string.reader_toast_user_blocked),
+                    UiStringRes(R.string.undo),
+                    {
+                        coroutineScope.launch {
+                            readerBlogRepository.undoBlockUser(blockedUserData)
+                            _refreshPosts.postValue(Event(Unit))
+                        }
+                    })
+            )
+        )
     }
 
     private suspend fun handleLikeClicked(post: ReaderPost, source: String) {

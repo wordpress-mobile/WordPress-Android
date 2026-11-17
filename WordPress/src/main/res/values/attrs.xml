@@ -24,7 +24,6 @@
     <attr name="colorGutenbergBackground" format="reference|color" />
 
     <!-- Gravatar colors -->
-    <attr name="grColorInfoBanner" format="reference|color" />
     <attr name="grColorSyncBanner" format="reference|color" />
 
     <!-- Modal layout picker colors-->
@@ -34,12 +33,6 @@
     <attr name="mlpDividerColor" format="reference|color" />
 
     <!-- Reader attributes -->
-    <attr name="readerFollowButtonBackground" format="reference|color" />
-    <attr name="readerFollowButtonForeground" format="reference|color" />
-    <attr name="readerFollowButtonSelectedBackground" format="reference|color" />
-    <attr name="readerFollowButtonSelectedForeground" format="reference|color" />
-    <attr name="readerFollowButtonSelectedTextAlpha" format="float" />
-    <attr name="readerFollowButtonSelectedStrokeAlpha" format="reference|float" />
 
     <!-- Snackbar colors -->
     <attr name="snackbarActionColor" format="reference|color" />
@@ -102,28 +95,6 @@
     </declare-styleable>
 
     <!--
-        ReaderIconCountView attributes
-    -->
-    <declare-styleable name="ReaderIconCountView">
-        <attr name="readerIcon" format="enum">
-            <enum name="like" value="0" />
-            <enum name="comment" value="1" />
-            <enum name="reblog" value="2" />
-        </attr>
-    </declare-styleable>
-
-    <!--
-        ReaderFollowButton attributes
-    -->
-    <declare-styleable name="ReaderFollowButton">
-        <attr name="wpShowFollowButtonCaption" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="ReaderFollowButtonStyle">
-        <attr name="followButtonStyle" format="reference"/>
-    </declare-styleable>
-
-    <!--
         PostListButton attributes
     -->
     <declare-styleable name="wpPostListButton">
@@ -164,29 +135,6 @@
         <attr name="wpSummary" format="string" />
         <attr name="wpShowDivider" format="boolean" />
         <attr name="wpTextDialogSubtitle" format="string" />
-    </declare-styleable>
-
-    <!--
-        FilteredRecyclerView
-    -->
-    <declare-styleable name="FilteredRecyclerView">
-        <!-- Optional: Layout resource id for the Filter Spinner main TextView -->
-        <attr name="wpSpinnerItemView" format="reference"/>
-
-        <!-- Optional: Layout resource id for the Filter Spinner dropdown TextView -->
-        <attr name="wpSpinnerDropDownItemView" format="reference"/>
-
-        <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
-        <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
-        <!-- Optional: Default to false. Hide the AppBarLayout. This flag was added as part of
-        ReaderPostListFragment refactoring. We don't need to use the FilteredRecyclerView in the
-        Reader anymore, but since it's planned to iteratively rewrite the ReaderPostListFragment
-        it's not worth replacing the FilteredRecyclerView with something else now. Therefore we
-        opted for a simple flag which hides the filtering options from the FilteredRecyclerView -->
-        <attr name="wpHideAppBarLayout" format="boolean"/>
-        <!-- Optional: Default is true. Include a default spacing between items, which can act as
-         a divider in case the RecyclerView background is different than each item's background-->
-        <attr name="wpIncludeDefaultSpacing" format="boolean"/>
     </declare-styleable>
 
     <!--

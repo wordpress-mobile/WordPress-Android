@@ -1,5 +1,0 @@
-- Enabled new Pages list with updated features
-- Set new Posts list to default for sites with application password
-- Combined bot/Happiness Engineer chats in Support
-- Fixed crash when opening media while leaving editor
-- Removed beta badge from Menus in My Site

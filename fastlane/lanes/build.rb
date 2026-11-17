@@ -2,95 +2,6 @@
 
 platform :android do
   #####################################################################################
-  # build_and_upload_release
-  # -----------------------------------------------------------------------------------
-  # This lane builds the final release of the app and uploads it
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_and_upload_release app:<wordpress|jetpack> [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
-  #
-  # Example:
-  # bundle exec fastlane build_and_upload_release app:wordpress
-  # bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true
-  # bundle exec fastlane build_and_upload_release app:wordpress create_release:true
-  #####################################################################################
-  desc 'Builds and updates for distribution'
-  lane :build_and_upload_release do |options|
-    ensure_git_branch(branch: '^release/') unless is_ci
-
-    UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
-
-    ensure_git_status_clean unless is_ci
-
-    UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
-
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-
-    # Create the file names
-    app = get_app_name_option!(options)
-    version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, buildType: 'Release')
-
-    upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
-    upload_gutenberg_sourcemaps(app: app, release_version: version_name)
-
-    create_gh_release(app: app, version_name: version_name) if options[:create_release]
-  end
-
-  #####################################################################################
-  # build_and_upload_pre_releases
-  # -----------------------------------------------------------------------------------
-  # This lane builds the app for both internal and external distribution and uploads them
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] <[create_release:<true|false>]
-  #
-  # Example:
-  # bundle exec fastlane build_and_upload_pre_releases
-  # bundle exec fastlane build_and_upload_pre_releases skip_confirm:true
-  # bundle exec fastlane build_and_upload_beta create_release:true
-  #####################################################################################
-  desc 'Builds and updates for distribution'
-  lane :build_and_upload_pre_releases do |options|
-    app = get_app_name_option!(options)
-    build_beta(app: app, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
-  end
-
-  #####################################################################################
-  # build_beta
-  # -----------------------------------------------------------------------------------
-  # This lane builds the app for internal testing and optionally uploads it
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane build_beta app:<wordpress|jetpack> [skip_confirm:<true|false>] [upload_to_play_store:<true|false>] [create_release:<true|false>]
-  #
-  # Example:
-  # bundle exec fastlane build_beta app:wordpress create_release:true
-  # bundle exec fastlane build_beta app:wordpress skip_confirm:true upload_to_play_store:true
-  # bundle exec fastlane build_beta app:jetpack create_release:true
-  #####################################################################################
-  desc 'Builds and updates for distribution'
-  lane :build_beta do |options|
-    ensure_git_branch(branch: '^release/') unless is_ci
-
-    ensure_git_status_clean unless is_ci
-
-    UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
-
-    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-
-    # Create the file names
-    app = get_app_name_option!(options)
-    version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, buildType: 'Release')
-
-    upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
-    upload_gutenberg_sourcemaps(app: app, release_version: version_name)
-
-    create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
-  end
-
-  #####################################################################################
   # build_and_upload_trunk_internal
   # -----------------------------------------------------------------------------------
   # Builds WordPress & Jetpack from the current commit and uploads them to the Play Store
@@ -180,7 +91,8 @@ platform :android do
           release_status: options[:release_status] || 'draft',
           metadata_path: metadata_dir,
           skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
-          skip_upload_changelogs: false,
+          # Release notes are set when a build is promoted to beta, not on upload
+          skip_upload_changelogs: true,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
@@ -198,36 +110,6 @@ platform :android do
       end
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
-    end
-  end
-
-  #####################################################################################
-  # download_signed_apks_from_google_play
-  # -----------------------------------------------------------------------------------
-  # This lane downloads the signed apks from Play Store for the given app and version
-  #
-  # If no argument is provided, it'll download both WordPress & Jetpack apks using the version from version.properties
-  # If only 'app' argument is provided, it'll download the apk for the given app using the version from version.properties
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane download_signed_apks_from_google_play # Download WordPress & Jetpack apks using the version from version.properties
-  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> # Download given app's apk using the version from version.properties
-  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> build_code:build_code
-  #####################################################################################
-  lane :download_signed_apks_from_google_play do |options|
-    # If no `app:` is specified, call this for both WordPress and Jetpack
-    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
-    build_code = options[:build_code] || current_build_code
-
-    apps.each do |app|
-      package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
-
-      download_universal_apk_from_google_play(
-        package_name: package_name,
-        version_code: build_code,
-        destination: signed_apk_path(app, current_version_name),
-        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
-      )
     end
   end
 
@@ -340,6 +222,15 @@ platform :android do
       sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
     end
     "#{build_dir}#{name}"
+  end
+
+  def bundle_file_path(app, version_name)
+    prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
+    File.join(PROJECT_ROOT_FOLDER, 'build', "#{prefix}-#{version_name}.aab")
+  end
+
+  def signed_apk_path(app, version_name)
+    bundle_file_path(app, version_name).sub('.aab', '.apk')
   end
 
   # Uploads the APK built by `gradle` to Firebase App Distribution and comments on the PR

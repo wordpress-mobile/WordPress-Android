@@ -11,7 +11,8 @@ data class MimeType(val type: Type, val subtypes: List<Subtype>, val extensions:
         AUDIO("audio"),
         VIDEO("video"),
         IMAGE("image"),
-        APPLICATION("application")
+        APPLICATION("application"),
+        TEXT("text")
     }
 
     enum class Subtype(val value: String) {
@@ -49,7 +50,8 @@ data class MimeType(val type: Type, val subtypes: List<Subtype>, val extensions:
         VND_MS_EXCEL("vnd.ms-excel"),
         XLSX("vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
         KEYNOTE("keynote"),
-        ZIP("zip")
+        ZIP("zip"),
+        PLAIN("plain")
     }
 
     override fun toString(): String {

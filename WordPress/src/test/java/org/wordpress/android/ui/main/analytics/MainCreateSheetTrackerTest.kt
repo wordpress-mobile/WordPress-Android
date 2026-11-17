@@ -10,9 +10,12 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.WPMainNavigationView
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -21,11 +24,16 @@ class MainCreateSheetTrackerTest {
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
+    @Mock
+    private lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    private val site: SiteModel = mock()
+
     private lateinit var tracker: MainCreateSheetTracker
 
     @Before
     fun setUp() {
-        tracker = MainCreateSheetTracker(analyticsTracker)
+        tracker = MainCreateSheetTracker(analyticsTracker, selectedSiteRepository)
     }
 
     // region trackActionTapped
@@ -212,16 +220,17 @@ class MainCreateSheetTrackerTest {
 
     // region trackFabShown
     @Test
-    fun `trackFabShown tracks fab shown for my site page`() {
+    fun `trackFabShown tracks fab shown with the selected site for my site page`() {
         // Arrange
         val page = WPMainNavigationView.PageType.MY_SITE
         val expectedStat = AnalyticsTracker.Stat.MY_SITE_CREATE_FAB_SHOWN
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
         // Act
         tracker.trackFabShown(page)
 
         // Assert
-        verify(analyticsTracker).track(expectedStat)
+        verify(analyticsTracker).track(expectedStat, site)
     }
 
     @Test

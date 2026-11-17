@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-30 14:54:51+0000
+Translation-Revision-Date: 2026-11-11 13:55:26+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: fr
@@ -30,6 +30,7 @@ Language: fr
     <string name="reader_reading_time">%s min de lecture</string>
     <string name="reader_discover_tab_latest">Les plus récents</string>
     <string name="reader_discover_tab_recommended">Recommandé</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">aujourd’hui</string>
     <string name="stats_subscribers_graph_years">Années</string>
     <string name="stats_subscribers_graph_months">Mois</string>
@@ -49,8 +50,10 @@ Language: fr
     <string name="stats_subscribers_all_time">Abonnés depuis le début</string>
     <string name="stats_utm_campaign">Campagne</string>
     <string name="stats_utm_medium">Média</string>
+    <string name="stats_utm_source">Source</string>
     <string name="stats_utm_campaign_source_medium">Campagne/Source/Média</string>
     <string name="stats_utm_source_medium">Source/Média</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Non authentifié</string>
     <string name="stats_collapse_group">Réduire</string>
     <string name="stats_expand_group">Développer</string>
@@ -68,6 +71,7 @@ Language: fr
     <string name="stats_insights_total_posts">Articles au total</string>
     <string name="stats_insights_likes">Mentions J’aime</string>
     <string name="stats_insights_words">Mots</string>
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
     <string name="post_rs_settings_show_password">Afficher le mot de passe</string>
     <string name="post_rs_settings_hide_password">Masquer le mot de passe</string>
     <string name="post_rs_settings_saving">Enregistrement\u2026</string>
@@ -124,6 +128,7 @@ Language: fr
     <string name="post_rs_settings_clear_excerpt">Effacer l’extrait</string>
     <string name="post_rs_settings_format_dialog_title">Format d’article</string>
     <string name="post_rs_settings_excerpt_dialog_title">Extrait</string>
+    <string name="post_rs_settings_slug_dialog_title">Slug</string>
     <string name="post_rs_settings_discard_message">Certaines modifications ne sont pas enregistrées. Voulez-vous les abandonner ?</string>
     <string name="post_rs_settings_discard_title">Annuler les modifications</string>
     <string name="post_rs_settings_status_dialog_title">État de l’article</string>
@@ -170,6 +175,8 @@ Language: fr
     <string name="menu_item_saved">Élément de menu enregistré</string>
     <string name="menu_item_target_label">Cible du lien</string>
     <string name="menu_item_no_parent">Aucun (niveau supérieur)</string>
+    <string name="menu_item_parent_label">Parent</string>
+    <string name="menu_item_url_label">URL</string>
     <string name="menu_item_title_label">Titre</string>
     <string name="move_down">Déplacer vers le bas</string>
     <string name="move_up">Déplacer vers le haut</string>
@@ -183,12 +190,14 @@ Language: fr
     <string name="menu_saved">Menu enregistré</string>
     <string name="menu_display_locations">Emplacements d’affichage</string>
     <string name="menu_auto_add_pages">Ajouter automatiquement les nouvelles pages de premier niveau</string>
+    <string name="menu_description_label">Description</string>
     <string name="menu_name_label">Nom</string>
     <string name="edit_items">Modifier les éléments</string>
     <string name="menu_locations_label">Emplacements : %1$s</string>
     <string name="no_menus">Aucun menu trouvé</string>
     <string name="edit_menu">Modifier le menu</string>
     <string name="create_menu">Créer un menu</string>
+    <string name="menus">Menus</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Nous n’avons pas réussi à vous connecter à l’aide de ce code</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">Ce code de connexion a expiré</string>
     <string name="qrcode_auth_flow_error_invalid_data_title">Échec de la validation</string>
@@ -263,9 +272,11 @@ Language: fr
     <string name="error_browser_no_network">Impossible de charger cette page</string>
     <string name="history_empty_subtitle_post">Vous verrez l’historique de cet article lorsque vous y apporterez des modifications</string>
     <string name="history_empty_subtitle_page">Vous verrez l’historique de cette page lorsque vous y apporterez des modifications</string>
+    <string name="reader_discover_tab_freshly_pressed">Fraîchement pressé</string>
     <string name="notifications_empty_action_comments">Rejoignez une conversation ! Commentez les articles dans le Lecteur.</string>
     <string name="notifications_empty_action_all">Participez ! Commentez les articles dans le Lecteur.</string>
     <string name="more_options">Plus d’options</string>
+    <string name="stats_weekly_average">%1$s en moyenne</string>
     <string name="stats_chart_type_bars">Bars</string>
     <string name="stats_chart_type_lines">Lignes</string>
     <string name="post_types_screen_title">Types d’articles</string>
@@ -316,6 +327,7 @@ Language: fr
     <string name="he_support_attachment_image">Image jointe</string>
     <string name="he_support_loading_image">Chargement de l’image</string>
     <string name="he_support_downloading_attachment">Téléchargement de %1$s…</string>
+    <string name="he_support_message_label">Message</string>
     <string name="he_support_send_button">Envoyer</string>
     <string name="he_support_reply_button">Répondre</string>
     <string name="he_support_last_updated">Dernière mise à jour %1$s</string>
@@ -331,6 +343,7 @@ Language: fr
     <string name="support_screen_user_avatar_content_description">Avatar de l’utilisateur</string>
     <string name="support_screen_application_logs_description">Outil avancé pour déboguer les problèmes</string>
     <string name="support_screen_application_logs_title">Journaux d’application</string>
+    <string name="support_screen_diagnostics_section_title">Diagnostics</string>
     <string name="support_screen_help_center_description">Documentation et didacticiels pour vous aider à démarrer</string>
     <string name="support_screen_help_center_title">Centre d’aide</string>
     <string name="support_screen_how_can_we_help_title">Comment pouvons-nous vous aider ?</string>
@@ -357,6 +370,7 @@ Language: fr
     <string name="application_password_required_description">Les mots de passe d’application sont un moyen plus sûr de vous connecter à votre site auto-hébergé et activer des fonctionnalités telles que %1$s.</string>
     <string name="application_password_required">Mot de passe d’application requis</string>
     <string name="menu_html_mode">Éditeur de code</string>
+    <string name="taxonomies_title">Taxonomies</string>
     <string name="media_edit_file_size_caption">Taille du fichier</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Impossible de se connecter à WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Connecter le site à WordPress.com</string>
@@ -424,8 +438,10 @@ Language: fr
     <string name="subscribers_plan_details_label">Détails du plan</string>
     <string name="subscribers_gift_plan_label">Plan cadeau</string>
     <string name="subscribers_delete_button">Supprimer l’abonné</string>
+    <string name="subscribers_site_label">Site</string>
     <string name="subscribers_country_label">Pays</string>
     <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_plan_label">Plan</string>
     <string name="subscribers_status_label">État de l’abonnement</string>
     <string name="subscribers_date_label">Date d’abonnement</string>
     <string name="subscribers_detail_label">Détails de l’abonné</string>
@@ -463,6 +479,7 @@ Language: fr
     <string name="experimental_features_feedback_dialog_title">Partager des commentaires</string>
     <string name="experimental_block_editor_description">Accéder à des types de blocs et réglages supplémentaires</string>
     <string name="experimental_block_editor_note">L’éditeur de blocs expérimental deviendra l’option par défaut dans une prochaine version et il ne sera plus possible de le désactiver.</string>
+    <string name="avatar_update_email_unverified">Pour modifier votre avatar, vous devez d’abord vérifier votre adresse e-mail.</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
     <string name="user_avatar_content_description">Avatar pour l’utilisateur %s</string>
@@ -631,9 +648,6 @@ Language: fr
     <string name="notifications_action_mark_all_as_read">Tout marquer comme lu</string>
     <string name="notifications_unread_content_description">Non lues</string>
     <string name="qrcode_media_deeplink_error">Site non trouvé. Vérifiez que vous êtes connecté(e) sur le bon compte.</string>
-    <string name="gravatar_info_learn_more_link">Qu’est-ce que Gravatar ?</string>
-    <string name="gravatar_info_description">Mettre à jour votre avatar, votre nom et les informations vous concernant ici les mettra également à jour sur l’ensemble des sites qui utilisent les profils Gravatar.</string>
-    <string name="gravatar_info_title">Votre profil WordPress.com est propulsé par Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Impossible de charger le média pour le partage. Veuillez vérifier les droits de l’application\n        ou utilisez la bibliothèque de médias de l’application.</string>
     <string name="site_monitoring_cannot_be_started">Nous ne sommes pas en mesure d’ouvrir la surveillance du site actuellement. Veuillez réessayer plus tard</string>
     <string name="site_monitoring_tab_title_web_server_logs">Journaux du serveur Web</string>
@@ -643,7 +657,6 @@ Language: fr
     <string name="reader_empty_followed_blogs_button_subscriptions">Accéder aux abonnements</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Les blogs auxquels vous êtes abonné(e) n’ont rien publié récemment</string>
     <string name="reader_no_followed_blogs_description_subs">Abonnez-vous à des blogs dans Découvrir ou cherchez un blog que vous aimez déjà.</string>
-    <string name="reader_no_recommended_blogs_title">Aucun blog recommandé</string>
     <string name="reader_no_posts_with_this_tag">Pas d’articles avec cette étiquette</string>
     <string name="reader_toast_err_unable_to_block_blog">Impossible de bloquer ce blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
@@ -651,7 +664,6 @@ Language: fr
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">Vous n’êtes pas autorisé(e) à accéder à ce blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Impossible de s’abonner à ce blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ce blog fait déjà partie de vos abonnements</string>
-    <string name="reader_toast_err_show_blog">Impossible d’afficher ce blog</string>
     <string name="reader_label_choose_interests">Choisissez vos centres d’intérêt</string>
     <string name="reader_label_subscribers_count_single">1 abonné</string>
     <string name="reader_label_subscribers_count">%s abonnés</string>
@@ -679,7 +691,6 @@ Language: fr
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Découvrir</string>
     <string name="reader_search_content_description">Rechercher</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Suivre des étiquettes</string>
     <string name="reader_filter_empty_tags_action_suggested">Étiquettes suggérées</string>
     <string name="reader_filter_empty_blogs_action_search">Chercher un blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Suivez une étiquette et vous verrez les meilleurs articles sur le sujet apparaître ici.</string>
@@ -774,7 +785,6 @@ Language: fr
     <string name="site_creation_domain_free_with_annual_plan">Gratuit la première année avec n’importe quel plan annuel payant</string>
     <string name="reader_secondary_bookmarked">Enregistré</string>
     <string name="reader_secondary_bookmark">Enregistrer</string>
-    <string name="reader_discover_recommended_header_new">Vous pourriez aimer</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dégrouper le bloc</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Appuyez ici pour afficher plus de détails.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Compositions synchronisées</string>
@@ -1858,8 +1868,6 @@ Language: fr
     <string name="hpp_retry_error">Veuillez vérifier votre connexion internet, puis réessayez.</string>
     <string name="hpp_error_subtitle">Appuyez sur Réessayer lorsque vous êtes de nouveau en ligne.</string>
     <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Essayez de suivre plus d’étiquettes pour élargir la recherche</string>
-    <string name="reader_discover_no_posts_title">Pas d’articles récents.</string>
     <string name="reader_discover_empty_title">Bienvenue !</string>
     <string name="scan">Analyser</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu de bloc déroulant ouvert. Sélectionner un bloc.</string>
@@ -1985,7 +1993,6 @@ Language: fr
     <string name="publish_date">Date de publication</string>
     <string name="ccpa_privacy_notice_read">Lisez l’avis de confidentialité CCPA</string>
     <string name="ccpa_privacy_notice_caption">Loi sur la protection du consommateur de Californie (« CCPA ») nous oblige à fournir aux résidents de Californie certaines informations supplémentaires sur les catégories d’informations personnelles que nous recueillons et partageons, où nous obtenons ces informations personnelles, et comment et pourquoi nous les utilisons.</string>
-    <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2699,11 +2706,8 @@ Language: fr
     <string name="activity_log">Journal d\'activités</string>
     <string name="privacy_policy_read">Lire la politique de confidentialité</string>
     <string name="third_party_policy_learn_more_caption">Nous utilisons d\'autres outils de suivi, notamment des outils provenant de tiers. Découvrez-les et apprenez à les contrôler.</string>
-    <string name="third_party_policy_learn_more_header">Politique de tiers</string>
     <string name="privacy_policy_learn_more_caption">Ces informations nous permettent d\'améliorer nos produits, de mieux cibler nos campagnes marketing, de personnaliser votre expérience WordPress.com et plus encore, comme indiqué dans notre politique de confidentialité.</string>
-    <string name="privacy_policy_learn_more_header">Politique de confidentialité</string>
     <string name="cookie_policy_learn_more_caption">Partagez les informations concernant votre utilisation des services avec notre outil d\'analyse tout en étant connecté à votre compte WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Politique relative aux cookies</string>
     <string name="preference_privacy_settings">Paramètres de confidentialité</string>
     <string name="preference_collect_information">Collecter des informations</string>
     <string name="post_submitted">Article envoyé</string>
@@ -2754,7 +2758,6 @@ Language: fr
     <string name="reader_photo_view_desc">photo</string>
     <string name="reader_list_item_suggestion_remove_desc">supprimer</string>
     <string name="photo_picker_thumbnail_desc">Lire la vidéo</string>
-    <string name="reader_cardview_post_play_video_desc">lire la vidéo à la une</string>
     <string name="plugin_detail_logo_desc">logo de l\'extension</string>
     <string name="plugin_detail_banner_desc">bannière de l\'extension</string>
     <string name="photo_picker_wpmedia_desc">sélectionner à partir du média WordPress</string>
@@ -3097,8 +3100,6 @@ Language: fr
     <string name="media_all">Tous</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s s’est vu refuser l’accès à vos fichiers multimédia. Pour corriger cela, modifiez vos autorisations et activez %2$s.</string>
     <string name="reader_view_comments">Afficher les commentaires</string>
-    <string name="site_settings_video_quality_hint">Qualité des vidéos. Des valeurs élevées signifient une meilleure qualité des vidéos.</string>
-    <string name="site_settings_video_width_hint">Redimensionne les vidéos des articles à cette taille</string>
     <string name="site_settings_optimize_video_summary">Autoriser le redimensionnement et la compression des vidéos</string>
     <string name="site_settings_optimize_videos">Optimiser les vidéos</string>
     <string name="draft_uploaded">Brouillon téléversé</string>
@@ -3182,7 +3183,6 @@ Language: fr
     <string name="photo_picker_title">Choisir une photo</string>
     <string name="error_publish_no_network">L’appareil est hors ligne. L’article a été enregistré localement.</string>
     <string name="editor_post_saved_online">Article enregistré en ligne</string>
-    <string name="site_settings_image_quality_hint">Qualité des images. Des valeurs élevées signifient une meilleure qualité d’image.</string>
     <string name="site_settings_optimize_images_summary">Autoriser le redimensionnement et la compression des images</string>
     <string name="media_encoder_quality_maximum">Maximale</string>
     <string name="media_encoder_quality_high">Élevée</string>
@@ -3434,7 +3434,6 @@ Language: fr
     <string name="site_settings_discussion_hint">Voir et modifier les réglages de discussion de votre site</string>
     <string name="site_settings_more_hint">Voir tous les réglages de discussion disponibles</string>
     <string name="site_settings_related_posts_hint">Afficher ou cacher les articles similaires dans le lecteur</string>
-    <string name="site_settings_image_width_hint">Redimensionner les images dans les articles dans cette largeur. </string>
     <string name="site_settings_format_hint">Configure le nouveau format d\'article</string>
     <string name="site_settings_category_hint">Configure la nouvelle catégorie d\'articles</string>
     <string name="site_settings_password_hint">Changez votre mot de passe</string>
@@ -3661,6 +3660,7 @@ Language: fr
     <string name="local_changes">Changements locaux</string>
     <string name="new_media">Nouveau média</string>
     <string name="new_post">Nouvel article</string>
+    <string name="notifications_empty_all">Pas (encore) de notifications !</string>
     <string name="invalid_site_url_message">Vérifiez que l\'URL saisie est valide</string>
     <string name="file_error_create">Impossible de créer un fichier temporaire pour le téléversement de média. Veuillez vérifier que vous disposez d\'assez d\'espace libre sur votre appareil.</string>
     <string name="category_name">Nom de la catégorie</string>

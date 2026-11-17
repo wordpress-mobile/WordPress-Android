@@ -3324,17 +3324,6 @@
     </issue>
 
     <issue
-        id="WeakPrng"
-        message="`java.util.Random` should only be used for non-security contexts as it is not a cryptographically secure PRNG"
-        errorLine1="    private static final Random RANDOM = new Random();"
-        errorLine2="                                         ~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/actions/ReaderPostActions.java"
-            line="54"
-            column="42"/>
-    </issue>
-
-    <issue
         id="TapjackingVulnerable"
         message="Add the `android:filterTouchesWhenObscured` attribute to protect this UI element from tapjacking / overlay attacks"
         errorLine1="    &lt;CheckBox"

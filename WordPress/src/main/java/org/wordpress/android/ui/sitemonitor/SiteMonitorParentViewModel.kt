@@ -87,7 +87,6 @@ class SiteMonitorParentViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         metricsViewModel.onCleared()
         phpLogViewModel.onCleared()
         webServerViewModel.onCleared()

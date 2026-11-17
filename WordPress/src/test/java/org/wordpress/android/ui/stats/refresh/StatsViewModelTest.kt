@@ -133,7 +133,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
         // The TRAFFIC tab is already the initial tab.
 
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_ACCESSED, site, StatsGranularity.DAYS)
     }
 
     @Test
@@ -143,7 +143,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
+        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED, site)
     }
 
     @Test
@@ -153,7 +153,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(DAYS)
 
         verify(statsSectionManager).setSelectedSection(DAYS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_DAYS_ACCESSED, site, StatsGranularity.DAYS)
     }
 
     @Test
@@ -163,7 +163,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(WEEKS)
 
         verify(statsSectionManager).setSelectedSection(WEEKS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_WEEKS_ACCESSED, site, StatsGranularity.WEEKS)
     }
 
     @Test
@@ -173,7 +173,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(MONTHS)
 
         verify(statsSectionManager).setSelectedSection(MONTHS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_MONTHS_ACCESSED, site, StatsGranularity.MONTHS)
     }
 
     @Test
@@ -183,7 +183,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(YEARS)
 
         verify(statsSectionManager).setSelectedSection(YEARS)
-        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_YEARS_ACCESSED, site, StatsGranularity.YEARS)
     }
 
     @Test
