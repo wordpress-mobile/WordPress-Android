@@ -15,6 +15,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Availability:** Everyone
   - **Where:** Reader → Subscriptions → site or tag filter → Manage
 
+- **Previewing a photo picked from the device works again**
+  Long-pressing a photo in the device media picker opens a full-screen preview that now shows the image, and it can be pinched to zoom. Before, the preview was a black screen reading "Unable to load media" for every photo.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → + → Choose from device → long-press an item; also the editor's media picker, and the play overlay on a video
+  - **Notes:** Videos and audio from the device preview as before. Documents still show "Unable to load media" in this preview - that is unchanged, there is no document viewer here. The same "Unable to load media" screen reached from long-press in media search (CMM-2379) is a different screen and is not addressed by this.
+
 - **The back arrow stays put while you watch a video in the media viewer**
   In the full-screen media viewer, the top bar with the back arrow now appears and disappears together with the video's playback controls, so it is always there while the controls are. Before, it faded out three seconds after you opened or swiped to a video and tapping the video only toggled the playback controls, which left no way back other than the system back gesture. Photos are unchanged: the top bar still fades out on its own and a tap brings it back.
   - **Apps:** Both
