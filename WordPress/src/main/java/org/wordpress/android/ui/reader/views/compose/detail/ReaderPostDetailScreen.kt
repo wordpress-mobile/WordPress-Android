@@ -10,14 +10,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,6 +32,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -99,6 +97,12 @@ class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
     val snackbarHostState = SnackbarHostState()
 
     val scrollConnection = ReaderTopBarScrollConnection(canScroll)
+
+    /**
+     * The system bars' top inset in pixels, from the View insets rather than Compose's: those follow the pager's
+     * status bar as it animates away, which would slide the top bar up as the screen opens
+     */
+    var topInset by mutableIntStateOf(0)
 }
 
 @Suppress("LongParameterList")
@@ -138,7 +142,7 @@ fun ReaderPostDetailScreen(
             scrollConnection = chrome.scrollConnection,
             topBar = {
                 if (!chrome.isCustomViewShowing) {
-                    TopBar(topBarState, detailsState?.moreMenuItems, isRelatedPost, actions)
+                    TopBar(topBarState, detailsState?.moreMenuItems, isRelatedPost, chrome.topInset, actions)
                 }
             },
             content = { AndroidView(factory = { body }, modifier = Modifier.fillMaxSize()) },
@@ -173,6 +177,7 @@ private fun TopBar(
     state: ReaderPostDetailTopBarState,
     moreMenuItems: List<ReaderPostCardAction>?,
     isRelatedPost: Boolean,
+    topInset: Int,
     actions: ReaderPostDetailScreenActions,
 ) {
     TopAppBar(
@@ -223,7 +228,7 @@ private fun TopBar(
         colors = TopAppBarDefaults.topAppBarColors(actionIconContentColor = MaterialTheme.colorScheme.onSurface),
         // only the status bar, which the pager hides, rather than M3's default of the bars plus the display cutout:
         // that would leave a gap above the bar on a device with a camera cutout, where the old toolbar had none
-        windowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Top),
+        windowInsets = WindowInsets(top = topInset),
     )
 }
 

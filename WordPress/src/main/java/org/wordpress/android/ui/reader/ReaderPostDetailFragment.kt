@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
@@ -32,6 +33,8 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -328,22 +331,34 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // hides the toolbar of NotificationsDetailActivity, which this screen's own top bar replaces
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
 
-        return ComposeView(themedContext).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                ReaderPostDetailTheme(theme, themeValues) {
-                    val uiState by viewModel.uiState.observeAsState()
-                    val isPostBlocked by viewModel.postBlocked.observeAsState(false)
-                    ReaderPostDetailScreen(
-                        chrome = chrome,
-                        uiState = uiState,
-                        topBarState = topBarState(uiState, isPostBlocked),
-                        isRelatedPost = isRelatedPost,
-                        actions = screenActions,
-                        body = bodyBinding.root,
-                        customViewContainer = customViewContainer,
-                    )
-                }
+        return createRootView(themedContext, theme, themeValues, body = bodyBinding.root)
+    }
+
+    private fun createRootView(
+        themedContext: Context,
+        theme: ReaderReadingPreferences.Theme,
+        themeValues: ReaderReadingPreferences.ThemeValues,
+        body: View,
+    ) = ComposeView(themedContext).apply {
+        // the insets' end state, as the old toolbar used, not the animated values Compose's insets follow
+        ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+            chrome.topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+            insets
+        }
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            ReaderPostDetailTheme(theme, themeValues) {
+                val uiState by viewModel.uiState.observeAsState()
+                val isPostBlocked by viewModel.postBlocked.observeAsState(false)
+                ReaderPostDetailScreen(
+                    chrome = chrome,
+                    uiState = uiState,
+                    topBarState = topBarState(uiState, isPostBlocked),
+                    isRelatedPost = isRelatedPost,
+                    actions = screenActions,
+                    body = body,
+                    customViewContainer = customViewContainer,
+                )
             }
         }
     }
