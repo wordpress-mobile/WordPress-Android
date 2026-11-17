@@ -16,6 +16,13 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → tap a post; Notifications → tap a new-post notification
   - **Notes:** The post body itself is unchanged.
 
+- **Adding a site you already subscribe to says so**
+  Entering a site you already subscribe to now shows "You are already subscribed to this blog" instead of subscribing again.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → site or tag filter → Manage
+
 - **Previewing a photo picked from the device works again**
   Long-pressing a photo in the device media picker opens a full-screen preview that now shows the image, and it can be pinched to zoom. Before, the preview was a black screen reading "Unable to load media" for every photo.
   - **Apps:** Both
