@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.views.compose.detail
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -59,8 +60,14 @@ fun ReaderPostDetailTheme(
                 )
             }
         }
-        CompositionLocalProvider(LocalReadingTextColor provides Color(themeValues.intTextColor)) {
-            MaterialTheme(colorScheme = colorScheme, content = content)
+        MaterialTheme(colorScheme = colorScheme) {
+            // there's no Surface to set the content color, so text without a color of its own would be black,
+            // unreadable on a dark theme
+            CompositionLocalProvider(
+                LocalContentColor provides colorScheme.onSurface,
+                LocalReadingTextColor provides Color(themeValues.intTextColor),
+                content = content,
+            )
         }
     }
 }
