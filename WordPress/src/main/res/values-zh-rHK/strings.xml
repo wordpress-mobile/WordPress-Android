@@ -3049,7 +3049,6 @@ Language: zh_TW
     <string name="login_checking_site_address" a8c-src-lib="module:login">檢查網站位址</string>
     <string name="login_site_address" a8c-src-lib="module:login">網站位址</string>
     <string name="enter_site_address" a8c-src-lib="module:login">請輸入要連結的 WordPress 網站位址。</string>
-    <string name="login_already_logged_in_wpcom">已登入 WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">繼續</string>
     <string name="connect_more">連結其他網站</string>
     <string name="next">下一篇</string>

@@ -209,21 +209,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
-            android:theme="@style/NoDisplay"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="magic-login"
-                    android:scheme="${magicLinkScheme}" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.sitecreation.SiteCreationActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize" />

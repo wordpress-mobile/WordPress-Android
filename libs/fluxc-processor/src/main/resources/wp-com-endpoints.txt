@@ -1,6 +1,3 @@
-/auth/send-login-email/
-/auth/send-signup-email/
-
 /connect/site-info/
 
 /devices/new/

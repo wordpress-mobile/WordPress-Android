@@ -358,7 +358,6 @@ class HelpActivity : BaseAppCompatActivity() {
         DISCARD_CHANGES("origin:discard-changes"),
         FEEDBACK_AZTEC("origin:aztec-feedback"),
         LOGIN_EMAIL("origin:login-email"),
-        LOGIN_MAGIC_LINK("origin:login-magic-link"),
         LOGIN_EMAIL_PASSWORD("origin:login-wpcom-password"),
         LOGIN_2FA("origin:login-2fa"),
         LOGIN_SITE_ADDRESS("origin:login-site-address"),

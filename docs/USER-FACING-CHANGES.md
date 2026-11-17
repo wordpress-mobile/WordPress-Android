@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Email login links no longer sign you in to the app**
+  Opening a `wordpress://magic-login` or `jetpack://magic-login` link no longer signs the app in to WordPress.com. The app stopped sending these links when its login screens were replaced, so the only links still around come from older app versions. Log in from the app's login screen instead.
+  - **Apps:** Both
+  - **Type:** Moved
+  - **Availability:** Everyone
+  - **Where:** Tapping a "log in to the app" link from a WordPress.com login email
+  - **Notes:** Older app versions emailed these links from their "Send me a login link" option. The current app logs in through WordPress.com's own login page instead.
+
 - **WordPress.com login only completes logins started in the app**
   Finishing a WordPress.com login now only works for a login started from the app. Starting a new login keeps an earlier one valid for 10 more minutes. Finishing a login the app no longer recognizes — replaced more than 10 minutes ago, already finished, or not started from the app — shows "Your login session has expired. Please try again." instead of a network error. If the login screen is already open, a link the app didn't start is ignored.
   - **Apps:** Both

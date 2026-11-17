@@ -457,7 +457,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun signIn() {
         viewModel.interceptedUri?.let { readerTracker.trackUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, it) }
-        ActivityLauncher.loginWithoutMagicLink(requireActivity())
+        ActivityLauncher.loginToWpCom(requireActivity())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

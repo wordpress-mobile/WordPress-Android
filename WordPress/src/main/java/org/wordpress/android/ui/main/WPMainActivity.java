@@ -49,7 +49,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
-import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.EditorSettingsStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
@@ -61,7 +60,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
-import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
 import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
@@ -73,13 +71,10 @@ import org.wordpress.android.support.SupportRouting;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ActivityNavigator;
-import org.wordpress.android.ui.JetpackConnectionSource;
-import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.ShortcutsNavigator;
-import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
@@ -171,9 +166,7 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function3;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
-import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
-import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -186,10 +179,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         BloggingPromptsOnboardingListener,
         UpdateSelectedSiteListener,
         ApplicationPasswordReauthNotifier.Listener {
-    public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
-    public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
-    public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
     public static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
@@ -221,8 +211,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private WPMainNavigationView mBottomNav;
 
     private TextView mConnectionBar;
-    private JetpackConnectionSource mJetpackConnectSource;
-    private boolean mIsMagicLinkLogin;
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
@@ -237,7 +225,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
     // Injected to ensure the store responds to dispatched actions
@@ -316,10 +303,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             }, 2000);
         });
 
-        mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
-        mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
-        String authTokenToSet = null;
-
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getSupportFragmentManager(), this);
 
@@ -362,23 +345,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
-                } else {
-                    if (mIsMagicLinkLogin) {
-                        if (mAccountStore.hasAccessToken()) {
-                            ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
-                        } else {
-                            authTokenToSet = getAuthToken();
-                        }
-                    }
-                    // Continue Jetpack connect flow if coming from login/signup magic link.
-                    if (getIntent() != null && getIntent().getExtras() != null
-                        && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
-                        JetpackConnectionWebViewActivity.startJetpackConnectionFlow(this, NOTIFICATIONS,
-                                (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
-                    }
                 }
-            } else if (mIsMagicLinkLogin) {
-                authTokenToSet = getAuthToken();
             } else {
                 showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                 finish();
@@ -399,11 +366,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         mNetworkConnectionMonitor.isConnected().observe(this, this::updateConnectionBar);
 
-        if (authTokenToSet != null) {
-            // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
-            UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
-            mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
-        } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
+        if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
             ActivityLauncher.newBlogForResult(this,
                     SiteCreationSource.fromString(getIntent().getStringExtra(ARG_SITE_CREATION_SOURCE)));
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
@@ -760,11 +723,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         } else {
             return CreatePageDashboardSource.FLOATING_ACTION_BUTTON;
         }
-    }
-
-    private @Nullable String getAuthToken() {
-        Uri uri = getIntent().getData();
-        return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
     @Override
@@ -1416,20 +1374,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             if (mSelectedSiteRepository.hasSelectedSite()
                 && event.error.type == AuthenticationErrorType.INVALID_TOKEN) {
                 AuthenticationDialogUtils.showAuthErrorView(this, mSiteStore, getSelectedSite());
-            }
-
-            return;
-        }
-
-        if (mAccountStore.hasAccessToken()) {
-            if (mIsMagicLinkLogin) {
-                mLoginAnalyticsTracker.trackLoginMagicLinkSucceeded();
-
-                if (mJetpackConnectSource != null) {
-                    ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
-                } else {
-                    initSelectedSite();
-                }
             }
         }
     }
