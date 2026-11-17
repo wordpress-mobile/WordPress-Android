@@ -39,8 +39,8 @@ public class ReaderBlog {
         // if meta/data/site exists then JSON is for a read/following/mine?meta=site subscription,
         // if meta/data/feed exists then JSON is for a read/following/mine?meta=feed subscription,
         // otherwise JSON the response for a single site/$siteId or read/feed/$feedId
-        JSONObject jsonSite = JSONUtils.getJSONChild(json, "meta/data/site");
-        JSONObject jsonFeed = JSONUtils.getJSONChild(json, "meta/data/feed");
+        JSONObject jsonSite = withoutError(JSONUtils.getJSONChild(json, "meta/data/site"));
+        JSONObject jsonFeed = withoutError(JSONUtils.getJSONChild(json, "meta/data/feed"));
         if (jsonSite != null) {
             blog.blogId = jsonSite.optLong("ID");
             blog.setName(JSONUtils.getStringDecoded(jsonSite, "name"));
@@ -62,6 +62,20 @@ public class ReaderBlog {
             blog.setUrl(JSONUtils.getString(jsonFeed, "URL"));
             blog.numSubscribers = jsonFeed.optInt("subscribers_count");
             // read/following/mine doesn't include is_following for feeds, so assume to be true
+            blog.isFollowing = true;
+        } else if (json.has("date_subscribed")) {
+            // a subscription the endpoint returned an error for instead of its site or feed, which it does
+            // for a site the user can't access, so the subscription's own fields are used instead
+            blog.blogId = json.optLong("blog_ID");
+            blog.feedId = blog.blogId == 0 ? json.optLong("feed_ID") : 0;
+            blog.setName(JSONUtils.getStringDecoded(json, "name"));
+            blog.setUrl(JSONUtils.getString(json, "URL"));
+            blog.setFeedUrl(JSONUtils.getString(json, "feed_URL"));
+            if (!json.isNull("site_icon")) {
+                blog.setImageUrl(JSONUtils.getString(json, "site_icon"));
+            }
+            blog.organizationId = json.optInt("organization_id");
+            // it's one of the subscriptions, so it's followed
             blog.isFollowing = true;
         } else {
             blog.blogId = json.optLong("ID");
@@ -95,6 +109,14 @@ public class ReaderBlog {
         }
 
         return blog;
+    }
+
+    /*
+     * returns the passed site or feed unless it's an error, which read/following/mine returns in place of
+     * the site or feed of a subscription the user can't access, such as a private site
+     */
+    private static JSONObject withoutError(JSONObject json) {
+        return json != null && json.has("errors") ? null : json;
     }
 
     public String getName() {
