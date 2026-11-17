@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiS
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 
-class ReaderPostDetailChromeStateTest {
+class ReaderPostDetailScreenStateTest {
     private val chrome = ReaderPostDetailChromeState(canScroll = { true })
 
     @Test
@@ -68,14 +68,7 @@ class ReaderPostDetailChromeStateTest {
     fun `WHEN the post fails to load THEN no top bar actions show`() {
         val state = topBarState(ErrorUiState(message = null), postHasUrl = true, isReadingPreferencesEnabled = true)
 
-        assertThat(state).isEqualTo(
-            ReaderPostDetailTopBarState(
-                showReadingPreferences = false,
-                showBrowse = false,
-                showShare = false,
-                showMore = false,
-            )
-        )
+        assertThat(state).isEqualTo(ReaderPostDetailTopBarState(showMore = false))
     }
 
     @Test
@@ -87,9 +80,9 @@ class ReaderPostDetailChromeStateTest {
 
     @Test
     fun `WHEN a blocked post loads THEN no top bar actions show`() {
-        val state = topBarState(LoadingUiState, isPostBlocked = true)
+        val state = topBarState(LoadingUiState, isPostBlocked = true, postHasUrl = true)
 
-        assertThat(state.showMore).isFalse()
+        assertThat(state).isEqualTo(ReaderPostDetailTopBarState(showMore = false))
     }
 
     @Test
