@@ -83,7 +83,7 @@ data class ReaderSiteHeaderUiState(
     val description: String?,
     val imageUrl: String?,
     val isP2orA8C: Boolean,
-    val subscriberCount: Int,
+    val subscriberCount: Int?,
     val isFollowed: Boolean,
     val isFollowInProgress: Boolean,
     val showSettings: Boolean

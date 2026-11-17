@@ -14,7 +14,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Type:** Fixed
   - **Availability:** Everyone
   - **Where:** Reader → Subscriptions → site or tag filter → Manage → Subscribed blogs
-  - **Notes:** The subscription was always created on the server; only the app's list left it out. These sites are listed with their address as the name and no icon, and opening one may show no posts, since that is all WordPress.com returns for them.
+  - **Notes:** The subscription was always created on the server; only the app's list left it out. Such a site may be listed with its address as the name and no icon, depending on what WordPress.com returns for it, and opening one may show no posts. A site's header also no longer says "0 subscribers" when the subscriber count isn't known.
 
 - **Reader post screen's bars and sections rebuilt**
   The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.

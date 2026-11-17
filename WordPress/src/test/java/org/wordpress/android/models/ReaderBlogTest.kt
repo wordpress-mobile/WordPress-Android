@@ -76,6 +76,43 @@ class ReaderBlogTest {
     }
 
     @Test
+    fun `subscription whose feed has no details is parsed from the subscription`() {
+        val blog = ReaderBlog.fromJson(JSONObject(EMPTY_FEED_SUBSCRIPTION_JSON))
+
+        assertThat(blog.feedId).isEqualTo(175735670L)
+        assertThat(blog.blogId).isEqualTo(175735670L)
+        assertThat(blog.name).isEqualTo("Impressed Grizzly")
+        assertThat(blog.url).isEqualTo("http://impressed-grizzly.jurassic.ninja")
+        assertThat(blog.feedUrl).isEqualTo("http://impressed-grizzly.jurassic.ninja/feed")
+        assertThat(blog.isFollowing).isTrue()
+    }
+
+    @Test
+    fun `subscription whose feed has no details is kept in the list of subscriptions`() {
+        val json = JSONObject("""{"subscriptions":[$EMPTY_FEED_SUBSCRIPTION_JSON]}""")
+
+        val blogs = ReaderBlogList.fromJson(json)
+
+        assertThat(blogs).hasSize(1)
+        assertThat(blogs[0].name).isEqualTo("Impressed Grizzly")
+    }
+
+    /*
+     * a site the API refused is still a site, so it keeps its own id rather than being stored as the
+     * external feed its feed_ID would make it
+     */
+    @Test
+    fun `subscription whose site the API refused keeps its site id when the feed is returned`() {
+        val blog = ReaderBlog.fromJson(JSONObject(REFUSED_SITE_WITH_FEED_SUBSCRIPTION_JSON))
+
+        assertThat(blog.blogId).isEqualTo(257682375L)
+        assertThat(blog.feedId).isEqualTo(0L)
+        assertThat(blog.name).isEqualTo("crafdp2")
+        assertThat(blog.organizationId).isEqualTo(1)
+        assertThat(blog.isFollowing).isTrue()
+    }
+
+    @Test
     fun `site is parsed from a read sites response`() {
         val blog = ReaderBlog.fromJson(JSONObject(READ_SITE_JSON))
 
@@ -184,6 +221,65 @@ class ReaderBlogTest {
                   "site": {
                     "errors": { "unauthorized": ["User cannot access this private blog."] },
                     "error_data": { "unauthorized": 403 }
+                  }
+                }
+              }
+            }
+        """
+
+        /*
+         * read/following/mine returns a feed with no name and no URL when the server hasn't read the
+         * feed yet, such as a feed subscribed moments ago
+         */
+        private const val EMPTY_FEED_SUBSCRIPTION_JSON = """
+            {
+              "ID": "826118145",
+              "blog_ID": 0,
+              "feed_ID": "175735670",
+              "URL": "http://impressed-grizzly.jurassic.ninja",
+              "feed_URL": "http://impressed-grizzly.jurassic.ninja/feed",
+              "date_subscribed": "2026-11-17T09:12:03+00:00",
+              "name": "Impressed Grizzly",
+              "organization_id": 0,
+              "site_icon": null,
+              "meta": {
+                "data": {
+                  "feed": {
+                    "blog_ID": "0",
+                    "feed_ID": "175735670",
+                    "name": null,
+                    "URL": "",
+                    "feed_URL": "http://impressed-grizzly.jurassic.ninja/feed"
+                  }
+                }
+              }
+            }
+        """
+
+        private const val REFUSED_SITE_WITH_FEED_SUBSCRIPTION_JSON = """
+            {
+              "ID": "864555847",
+              "blog_ID": "257682375",
+              "feed_ID": "182300651",
+              "URL": "https://crafdp2.wordpress.com",
+              "feed_URL": "http://crafdp2.wordpress.com",
+              "date_subscribed": "2026-10-26T07:58:57+00:00",
+              "name": "crafdp2",
+              "organization_id": 1,
+              "site_icon": "https://crafdp2.wordpress.com/icon.png",
+              "meta": {
+                "data": {
+                  "site": {
+                    "errors": { "unauthorized": ["User cannot access this private blog."] },
+                    "error_data": { "unauthorized": 403 }
+                  },
+                  "feed": {
+                    "blog_ID": "257682375",
+                    "feed_ID": "182300651",
+                    "name": "crafdp2",
+                    "URL": "https://crafdp2.wordpress.com",
+                    "feed_URL": "http://crafdp2.wordpress.com",
+                    "subscribers_count": 4
                   }
                 }
               }
