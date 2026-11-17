@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **The Web Address in Account Settings can be cleared**
+  Deleting your Web Address and tapping OK now removes it from your profile. Before, the OK button was disabled whenever the field was empty, so an address could be changed but never removed.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Me → Account Settings → Web Address
+  - **Notes:** A field containing only spaces still counts as invalid and keeps OK disabled.
+
 - **Reader post screen's bars and sections rebuilt**
   The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
   - **Apps:** Both
