@@ -99,8 +99,9 @@ class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
     val scrollConnection = ReaderTopBarScrollConnection(canScroll)
 
     /**
-     * The system bars' top inset in pixels, from the View insets rather than Compose's: those follow the pager's
-     * status bar as it animates away, which would slide the top bar up as the screen opens
+     * The system bars' top inset in pixels, from the View insets' end state rather than Compose's insets, which follow
+     * the pager's status bar as it animates away and would slide the top bar up as the screen opens. It's 0 wherever
+     * the host hides the status bar or applies the insets itself, and only pads the bar where the status bar shows.
      */
     var topInset by mutableIntStateOf(0)
 }
@@ -226,8 +227,8 @@ private fun TopBar(
         // the other colors default to the surface's, but action icons default to onSurfaceVariant, which the reading
         // theme makes translucent
         colors = TopAppBarDefaults.topAppBarColors(actionIconContentColor = MaterialTheme.colorScheme.onSurface),
-        // only the status bar, which the pager hides, rather than M3's default of the bars plus the display cutout:
-        // that would leave a gap above the bar on a device with a camera cutout, where the old toolbar had none
+        // just the top system bar inset, without M3's display cutout (a gap above the bar on a device with a camera
+        // cutout, where the old toolbar had none) or horizontal insets, which the old toolbar didn't pad for either
         windowInsets = WindowInsets(top = topInset),
     )
 }

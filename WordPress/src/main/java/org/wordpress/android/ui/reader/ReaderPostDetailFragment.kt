@@ -340,7 +340,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         themeValues: ReaderReadingPreferences.ThemeValues,
         body: View,
     ) = ComposeView(themedContext).apply {
-        // the insets' end state, as the old toolbar used, not the animated values Compose's insets follow
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
             chrome.topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
             insets
