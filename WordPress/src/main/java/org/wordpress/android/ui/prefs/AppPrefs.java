@@ -215,6 +215,8 @@ public class AppPrefs {
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
+        // OAuth `state` sent with the WP.com login the app started; the callback must return it
+        PENDING_WPCOM_OAUTH_STATE,
         // Whether a share flow is pending (for self-hosted login)
         IS_SHARE_FLOW_PENDING,
         // Whether the posts/pages lists are shown in their condensed density
@@ -2009,6 +2011,16 @@ public class AppPrefs {
 
     public static void setPendingLoginFlow(@Nullable String flowName) {
         setString(DeletablePrefKey.PENDING_LOGIN_FLOW, flowName);
+    }
+
+    @Nullable
+    public static String getPendingWpcomOAuthState() {
+        String value = getString(DeletablePrefKey.PENDING_WPCOM_OAUTH_STATE);
+        return value.isEmpty() ? null : value;
+    }
+
+    public static void setPendingWpcomOAuthState(@Nullable String state) {
+        setString(DeletablePrefKey.PENDING_WPCOM_OAUTH_STATE, state);
     }
 
     public static boolean consumeShareFlowPending() {

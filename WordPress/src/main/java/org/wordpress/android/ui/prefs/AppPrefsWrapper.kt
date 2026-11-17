@@ -588,6 +588,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setGutenbergKitAnnouncementDeferredUntil(siteUrl: String?, timestampMillis: Long) =
         AppPrefs.setGutenbergKitAnnouncementDeferredUntil(siteUrl, timestampMillis)
 
+    var pendingWpcomOAuthState: String?
+        get() = AppPrefs.getPendingWpcomOAuthState()
+        set(value) = AppPrefs.setPendingWpcomOAuthState(value)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

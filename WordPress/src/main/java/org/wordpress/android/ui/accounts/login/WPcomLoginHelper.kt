@@ -17,17 +17,31 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import java.security.SecureRandom
 import javax.inject.Inject
 
 class WPcomLoginHelper @Inject constructor(
     private val loginClient: WPcomLoginClient,
     private val accountStore: AccountStore,
-    appSecrets: AppSecrets,
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val appSecrets: AppSecrets,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    val wpcomLoginUri = loginClient.loginUri(appSecrets.redirectUri)
-    private val customTabsServiceConnection = ServiceConnection(wpcomLoginUri)
+    // Only used to warm up the Custom Tab. The URL that is actually opened comes from
+    // [startLogin], which adds a fresh `state`.
+    private val customTabsServiceConnection = ServiceConnection(loginClient.loginUri(appSecrets.redirectUri))
+
+    /**
+     * Returns the WP.com login URL to open, with a new random `state`. The state is saved so the
+     * OAuth callback can be matched to this login, even if the app process is killed meanwhile.
+     */
+    fun startLogin(): Uri {
+        val state = generateState()
+        appPrefsWrapper.pendingWpcomOAuthState = state
+        return loginClient.loginUri(appSecrets.redirectUri, state)
+    }
 
     /**
      * Returns true if the data string contains an OAuth callback code.
@@ -48,13 +62,25 @@ class WPcomLoginHelper @Inject constructor(
         onSuccess: Runnable,
         onFailure: java.util.function.Consumer<Exception>
     ) {
-        val code = data.toUri().getQueryParameter("code")
+        val uri = data.toUri()
+        val code = uri.getQueryParameter("code")
         if (code == null) {
             onFailure.accept(
                 IllegalArgumentException("Missing OAuth code in callback")
             )
             return
         }
+
+        // Only accept a callback for a login this app started. A link from anywhere else can
+        // carry a code for someone else's account, and exchanging it would sign the user in to
+        // that account. The state is single-use, but a mismatch leaves it in place so a stray
+        // link can't break a login that is in progress.
+        val expectedState = appPrefsWrapper.pendingWpcomOAuthState
+        if (expectedState == null || uri.getQueryParameter("state") != expectedState) {
+            onFailure.accept(WPcomLoginStateMismatchException())
+            return
+        }
+        appPrefsWrapper.pendingWpcomOAuthState = null
 
         scope.launch {
             loginClient.exchangeAuthCodeForToken(code).fold(
@@ -87,7 +113,19 @@ class WPcomLoginHelper @Inject constructor(
     fun bindCustomTabsService(context: Context) {
         customTabsServiceConnection.bind(context)
     }
+
+    private fun generateState(): String {
+        val bytes = ByteArray(STATE_BYTES).also { SecureRandom().nextBytes(it) }
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
+    companion object {
+        private const val STATE_BYTES = 32
+    }
 }
+
+class WPcomLoginStateMismatchException :
+    IllegalStateException("OAuth callback state does not match a login started by the app")
 
 class ServiceConnection(
     var uri: Uri

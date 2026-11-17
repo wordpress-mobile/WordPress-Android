@@ -579,7 +579,7 @@ public class LoginActivity extends BaseAppCompatActivity {
 
         CustomTabsIntent intent = getCustomTabsIntent();
 
-        Uri loginUri = mLoginHelper.getWpcomLoginUri();
+        Uri loginUri = mLoginHelper.startLogin();
         try {
             intent.launchUrl(this, loginUri);
         } catch (ActivityNotFoundException e) {

@@ -27,7 +27,11 @@ class WPcomLoginClient @Inject constructor(
         interceptors.forEach { addInterceptor(it) }
     }.build()
 
-    fun loginUri(redirectUri: String): Uri {
+    /**
+     * Builds the WP.com OAuth authorize URL. [state] is returned unchanged on the redirect, so the
+     * app can tell a callback for a login it started from one it didn't (RFC 6749 §10.12).
+     */
+    fun loginUri(redirectUri: String, state: String? = null): Uri {
         return Uri.Builder().scheme("https")
             .authority("public-api.wordpress.com")
             .path("/oauth2/authorize")
@@ -35,6 +39,7 @@ class WPcomLoginClient @Inject constructor(
             .appendQueryParameter("redirect_uri", redirectUri)
             .appendQueryParameter("response_type", "code")
             .appendQueryParameter("scope", "global")
+            .apply { state?.let { appendQueryParameter("state", it) } }
             .build()
     }
 
