@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Subscriptions to sites the Reader can't read are listed again**
+  A site you subscribe to now appears in your subscriptions even when WordPress.com returns no details for it, which it does for sites it treats as private. Such a subscription used to be left out of the subscribed sites list and of the Reader's site filter, so subscribing to the site looked as if it had silently failed, and entering its address again subscribed a second time instead of saying you were already subscribed.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → site or tag filter → Manage → Subscribed blogs
+  - **Notes:** The subscription was always created on the server; only the app's list left it out. Such a site may be listed with its address as the name and no icon, depending on what WordPress.com returns for it, and opening one may show no posts. A site's header also no longer says "0 subscribers" when the subscriber count isn't known.
+
 - **Reader post screen's bars and sections rebuilt**
   The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
   - **Apps:** Both
