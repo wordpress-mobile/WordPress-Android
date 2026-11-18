@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **WordPress.com login only completes logins started in the app**
-  Finishing a WordPress.com login now only works for a login started from the app. A login link that came from somewhere else is ignored, or shows an error if it opens the app. Starting a new login keeps an earlier one valid for 10 more minutes; finishing the earlier one after that shows "Your login session has expired. Please try again."
+  Finishing a WordPress.com login now only works for a login started from the app. Starting a new login keeps an earlier one valid for 10 more minutes. Finishing a login the app no longer recognizes — replaced more than 10 minutes ago, already finished, or not started from the app — shows "Your login session has expired. Please try again." instead of a network error. If the login screen is already open, a link the app didn't start is ignored.
   - **Apps:** Both
   - **Type:** Changed
   - **Availability:** Everyone

@@ -45,6 +45,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.OAuthCallbackStatus;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
 import org.wordpress.android.ui.accounts.login.WPcomLoginSessionExpiredException;
+import org.wordpress.android.ui.accounts.login.WPcomLoginStateMismatchException;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -481,7 +482,11 @@ public class LoginActivity extends BaseAppCompatActivity {
         if (loadingText != null) loadingText.setVisibility(View.GONE);
 
         if (errorText != null) {
-            errorText.setText(getString(error instanceof WPcomLoginSessionExpiredException
+            // A callback for a login the app no longer recognizes - replaced too long ago, already
+            // used, or not started here - is, for a real user, a stale login: ask them to start again.
+            boolean isStaleLogin = error instanceof WPcomLoginSessionExpiredException
+                    || error instanceof WPcomLoginStateMismatchException;
+            errorText.setText(getString(isStaleLogin
                     ? R.string.login_session_expired
                     : R.string.error_generic_network));
             errorText.setVisibility(View.VISIBLE);
