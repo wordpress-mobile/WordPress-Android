@@ -944,7 +944,7 @@ class ReaderPostListViewModel @Inject constructor(
             description = blog.description.ifEmpty { null },
             imageUrl = blog.imageUrl.ifEmpty { null },
             isP2orA8C = blog.isP2orA8C,
-            subscriberCount = blog.numSubscribers,
+            subscriberCount = blog.numSubscribers.takeIf { it > 0 },
             isFollowed = blog.isFollowing,
             isFollowInProgress = isSiteHeaderFollowInProgress,
             showSettings = blog.isFollowing && !isFeed && accountStore.hasAccessToken()
