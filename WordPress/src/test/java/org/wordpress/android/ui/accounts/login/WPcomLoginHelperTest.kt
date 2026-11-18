@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import java.time.Clock
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -46,19 +47,29 @@ class WPcomLoginHelperTest {
     }
 
     private var storedState: String? = null
+    private var storedSupersededStates: String? = null
     private val appPrefsWrapper: AppPrefsWrapper = mock<AppPrefsWrapper>().also { prefs ->
         whenever(prefs.pendingWpcomOAuthState).thenAnswer { storedState }
         Mockito.doAnswer { invocation ->
             storedState = invocation.getArgument<String?>(0)
             null
         }.`when`(prefs).pendingWpcomOAuthState = anyOrNull()
+        whenever(prefs.supersededWpcomOAuthStates).thenAnswer { storedSupersededStates }
+        Mockito.doAnswer { invocation ->
+            storedSupersededStates = invocation.getArgument<String?>(0)
+            null
+        }.`when`(prefs).supersededWpcomOAuthStates = anyOrNull()
     }
+
+    private var nowMillis = START_MILLIS
+    private val clock: Clock = mock<Clock>().also { whenever(it.millis()).thenAnswer { nowMillis } }
 
     private val helper = WPcomLoginHelper(
         loginClient = WPcomLoginClient(Dispatchers.Unconfined, appSecrets, setOf(tokenEndpoint)),
         accountStore = mock<AccountStore>(),
         appPrefsWrapper = appPrefsWrapper,
         appSecrets = appSecrets,
+        clock = clock,
     )
 
     private var failure: Exception? = null
@@ -134,17 +145,75 @@ class WPcomLoginHelperTest {
     }
 
     @Test
-    fun `only a callback with the saved state matches the pending login`() {
-        assertThat(helper.matchesPendingLogin(callback(code = "c", state = "any-state"))).isFalse
+    fun `only a callback with the saved state is valid, and checking doesn't use it up`() {
+        assertThat(helper.checkCallback(callback(code = "c", state = "any-state")))
+            .isEqualTo(OAuthCallbackStatus.UNKNOWN)
 
         val state = helper.startLogin().getQueryParameter("state")
 
-        assertThat(helper.matchesPendingLogin(callback(code = "c", state = state))).isTrue
-        assertThat(helper.matchesPendingLogin(callback(code = "c", state = "attacker-state"))).isFalse
-        assertThat(helper.matchesPendingLogin(callback(code = "c", state = null))).isFalse
-        assertThat(helper.matchesPendingLogin(null)).isFalse
-        // Checking doesn't use up the state
+        assertThat(helper.checkCallback(callback(code = "c", state = state))).isEqualTo(OAuthCallbackStatus.VALID)
+        assertThat(helper.checkCallback(callback(code = "c", state = "attacker-state")))
+            .isEqualTo(OAuthCallbackStatus.UNKNOWN)
+        assertThat(helper.checkCallback(callback(code = "c", state = null))).isEqualTo(OAuthCallbackStatus.UNKNOWN)
+        assertThat(helper.checkCallback(null)).isEqualTo(OAuthCallbackStatus.UNKNOWN)
         assertThat(storedState).isEqualTo(state)
+    }
+
+    @Test
+    fun `an earlier login replaced less than 10 minutes ago can still complete`() {
+        val first = helper.startLogin().getQueryParameter("state")
+        helper.startLogin()
+        nowMillis += TEN_MINUTES_MILLIS
+
+        handleCallback(callback(code = "the-code", state = first))
+
+        assertThat(tokenRequestSent.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).isTrue
+        assertThat(tokenRequests.single()).contains("code=the-code")
+        assertThat(failure).isNull()
+    }
+
+    @Test
+    fun `an earlier login replaced more than 10 minutes ago is rejected as expired`() {
+        val first = helper.startLogin().getQueryParameter("state")
+        helper.startLogin()
+        nowMillis += TEN_MINUTES_MILLIS + 1
+
+        handleCallback(callback(code = "the-code", state = first))
+
+        assertThat(failure).isInstanceOf(WPcomLoginSessionExpiredException::class.java)
+        assertThat(tokenRequests).isEmpty()
+    }
+
+    @Test
+    fun `the current login never expires`() {
+        val state = helper.startLogin().getQueryParameter("state")
+        nowMillis += ONE_DAY_MILLIS
+
+        assertThat(helper.checkCallback(callback(code = "c", state = state))).isEqualTo(OAuthCallbackStatus.VALID)
+    }
+
+    @Test
+    fun `completing any login uses up every saved state`() {
+        val first = helper.startLogin().getQueryParameter("state")
+        val second = helper.startLogin().getQueryParameter("state")
+
+        handleCallback(callback(code = "the-code", state = first))
+        assertThat(tokenRequestSent.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)).isTrue
+
+        assertThat(helper.checkCallback(callback(code = "c", state = first))).isEqualTo(OAuthCallbackStatus.UNKNOWN)
+        assertThat(helper.checkCallback(callback(code = "c", state = second))).isEqualTo(OAuthCallbackStatus.UNKNOWN)
+    }
+
+    @Test
+    fun `only the 5 most recently replaced logins are remembered`() {
+        val replaced = (1..6).map { helper.startLogin().getQueryParameter("state") }
+        helper.startLogin()
+
+        assertThat(helper.checkCallback(callback(code = "c", state = replaced.first())))
+            .isEqualTo(OAuthCallbackStatus.UNKNOWN)
+        replaced.drop(1).forEach {
+            assertThat(helper.checkCallback(callback(code = "c", state = it))).isEqualTo(OAuthCallbackStatus.VALID)
+        }
     }
 
     private fun callback(code: String, state: String?): String =
@@ -158,6 +227,9 @@ class WPcomLoginHelperTest {
         private const val REDIRECT_URI = "jetpack://wpcom-authorize"
         private const val STATE_HEX_LENGTH = 64
         private const val TIMEOUT_SECONDS = 5L
+        private const val START_MILLIS = 1_700_000_000_000L
+        private const val TEN_MINUTES_MILLIS = 10 * 60 * 1000L
+        private const val ONE_DAY_MILLIS = 24 * 60 * 60 * 1000L
         private const val HTTP_OK = 200
         private const val TOKEN_RESPONSE = """{"access_token":"token","token_type":"bearer",""" +
             """"blog_id":"0","blog_url":"","scope":"global"}"""

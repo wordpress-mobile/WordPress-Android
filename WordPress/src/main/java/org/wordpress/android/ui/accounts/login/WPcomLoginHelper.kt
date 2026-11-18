@@ -17,8 +17,12 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.AccountStore
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import java.security.SecureRandom
+import java.time.Clock
 import javax.inject.Inject
 
 class WPcomLoginHelper @Inject constructor(
@@ -26,6 +30,7 @@ class WPcomLoginHelper @Inject constructor(
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val appSecrets: AppSecrets,
+    private val clock: Clock,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -36,8 +41,15 @@ class WPcomLoginHelper @Inject constructor(
     /**
      * Returns the WP.com login URL to open, with a new random `state`. The state is saved so the
      * OAuth callback can be matched to this login, even if the app process is killed meanwhile.
+     *
+     * A login that was already pending stays valid for [SUPERSEDED_STATE_LIFETIME_MILLIS]: the user
+     * may have moved its page to the browser and still finish it there after starting this one.
      */
     fun startLogin(): Uri {
+        appPrefsWrapper.pendingWpcomOAuthState?.let { previous ->
+            val superseded = listOf(SupersededState(previous, clock.millis())) + readSupersededStates()
+            writeSupersededStates(superseded.take(MAX_SUPERSEDED_STATES))
+        }
         val state = generateState()
         appPrefsWrapper.pendingWpcomOAuthState = state
         return loginClient.loginUri(appSecrets.redirectUri, state)
@@ -52,14 +64,24 @@ class WPcomLoginHelper @Inject constructor(
     }
 
     /**
-     * Returns true if the data string carries the `state` of the login this app started, i.e. it
-     * is the callback [tryLoginWithDataString] would accept. Lets the caller ignore a stray link
-     * before it changes any UI.
+     * Matches the `state` in the data string against the logins this app started, without using it
+     * up. Lets the caller ignore a stray link before it changes any UI.
+     *
+     * - [OAuthCallbackStatus.VALID]: the current login, or one replaced by it less than
+     *   [SUPERSEDED_STATE_LIFETIME_MILLIS] ago. [tryLoginWithDataString] will accept it.
+     * - [OAuthCallbackStatus.EXPIRED]: a login this app started, but replaced too long ago.
+     * - [OAuthCallbackStatus.UNKNOWN]: not a login this app started, or one already completed.
      */
-    fun matchesPendingLogin(data: String?): Boolean {
-        if (data == null) return false
-        val expectedState = appPrefsWrapper.pendingWpcomOAuthState ?: return false
-        return data.toUri().getQueryParameter("state") == expectedState
+    fun checkCallback(data: String?): OAuthCallbackStatus {
+        val state = data?.toUri()?.getQueryParameter("state") ?: return OAuthCallbackStatus.UNKNOWN
+        if (state == appPrefsWrapper.pendingWpcomOAuthState) return OAuthCallbackStatus.VALID
+        val superseded = readSupersededStates().firstOrNull { it.state == state }
+            ?: return OAuthCallbackStatus.UNKNOWN
+        return if (clock.millis() - superseded.supersededAtMillis <= SUPERSEDED_STATE_LIFETIME_MILLIS) {
+            OAuthCallbackStatus.VALID
+        } else {
+            OAuthCallbackStatus.EXPIRED
+        }
     }
 
     /**
@@ -84,13 +106,21 @@ class WPcomLoginHelper @Inject constructor(
 
         // Only accept a callback for a login this app started. A link from anywhere else can
         // carry a code for someone else's account, and exchanging it would sign the user in to
-        // that account. The state is single-use, but a mismatch leaves it in place so a stray
-        // link can't break a login that is in progress.
-        if (!matchesPendingLogin(data)) {
-            onFailure.accept(WPcomLoginStateMismatchException())
-            return
+        // that account. The states are single-use: a match clears them all, but a mismatch leaves
+        // them in place so a stray link can't break a login that is in progress.
+        when (checkCallback(data)) {
+            OAuthCallbackStatus.VALID -> Unit
+            OAuthCallbackStatus.EXPIRED -> {
+                onFailure.accept(WPcomLoginSessionExpiredException())
+                return
+            }
+            OAuthCallbackStatus.UNKNOWN -> {
+                onFailure.accept(WPcomLoginStateMismatchException())
+                return
+            }
         }
         appPrefsWrapper.pendingWpcomOAuthState = null
+        appPrefsWrapper.supersededWpcomOAuthStates = null
 
         scope.launch {
             loginClient.exchangeAuthCodeForToken(code).fold(
@@ -129,13 +159,45 @@ class WPcomLoginHelper @Inject constructor(
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
+    private fun readSupersededStates(): List<SupersededState> {
+        val json = appPrefsWrapper.supersededWpcomOAuthStates ?: return emptyList()
+        return try {
+            val array = JSONArray(json)
+            (0 until array.length()).map { index ->
+                val item = array.getJSONObject(index)
+                SupersededState(item.getString(KEY_STATE), item.getLong(KEY_SUPERSEDED_AT))
+            }
+        } catch (_: JSONException) {
+            emptyList()
+        }
+    }
+
+    private fun writeSupersededStates(states: List<SupersededState>) {
+        val array = JSONArray()
+        states.forEach {
+            array.put(JSONObject().put(KEY_STATE, it.state).put(KEY_SUPERSEDED_AT, it.supersededAtMillis))
+        }
+        appPrefsWrapper.supersededWpcomOAuthStates = array.toString()
+    }
+
+    private data class SupersededState(val state: String, val supersededAtMillis: Long)
+
     companion object {
         private const val STATE_BYTES = 32
+        private const val MAX_SUPERSEDED_STATES = 5
+        private const val SUPERSEDED_STATE_LIFETIME_MILLIS = 10 * 60 * 1000L
+        private const val KEY_STATE = "state"
+        private const val KEY_SUPERSEDED_AT = "superseded_at"
     }
 }
 
+enum class OAuthCallbackStatus { VALID, EXPIRED, UNKNOWN }
+
 class WPcomLoginStateMismatchException :
     IllegalStateException("OAuth callback state does not match a login started by the app")
+
+class WPcomLoginSessionExpiredException :
+    IllegalStateException("OAuth callback is for a login the app started, but replaced too long ago")
 
 class ServiceConnection(
     var uri: Uri

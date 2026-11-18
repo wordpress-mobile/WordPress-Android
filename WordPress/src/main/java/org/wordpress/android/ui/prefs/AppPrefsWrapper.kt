@@ -592,6 +592,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getPendingWpcomOAuthState()
         set(value) = AppPrefs.setPendingWpcomOAuthState(value)
 
+    var supersededWpcomOAuthStates: String?
+        get() = AppPrefs.getSupersededWpcomOAuthStates()
+        set(value) = AppPrefs.setSupersededWpcomOAuthStates(value)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

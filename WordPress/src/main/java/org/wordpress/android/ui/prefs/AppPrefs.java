@@ -51,6 +51,15 @@ public class AppPrefs {
 
     private static final Gson GSON = new Gson();
 
+    // The WP.com OAuth `state`s live in their own file rather than the default one: they only matter
+    // while a login is in progress, and the backup rules include the default file by name, so this
+    // keeps them out of cloud backups and device transfers.
+    private static final String WPCOM_OAUTH_PREFS_NAME = "wpcom_oauth_state";
+    // OAuth `state` sent with the WP.com login the app started; the callback must return it
+    private static final String PENDING_WPCOM_OAUTH_STATE = "PENDING_WPCOM_OAUTH_STATE";
+    // Earlier OAuth `state`s replaced by a newer login, as JSON, so their callbacks are still recognized
+    private static final String SUPERSEDED_WPCOM_OAUTH_STATES = "SUPERSEDED_WPCOM_OAUTH_STATES";
+
     public interface PrefKey {
         String name();
 
@@ -215,8 +224,6 @@ public class AppPrefs {
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
-        // OAuth `state` sent with the WP.com login the app started; the callback must return it
-        PENDING_WPCOM_OAUTH_STATE,
         // Whether a share flow is pending (for self-hosted login)
         IS_SHARE_FLOW_PENDING,
         // Whether the posts/pages lists are shown in their condensed density
@@ -319,6 +326,10 @@ public class AppPrefs {
 
     static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+    }
+
+    private static SharedPreferences wpcomOAuthPrefs() {
+        return WordPress.getContext().getSharedPreferences(WPCOM_OAUTH_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     static Map<String, ?> getAllPrefs() {
@@ -428,6 +439,7 @@ public class AppPrefs {
             editor.remove(key.name());
         }
         editor.apply();
+        wpcomOAuthPrefs().edit().clear().apply();
     }
 
     public static ReaderTag getReaderTag() {
@@ -2015,12 +2027,30 @@ public class AppPrefs {
 
     @Nullable
     public static String getPendingWpcomOAuthState() {
-        String value = getString(DeletablePrefKey.PENDING_WPCOM_OAUTH_STATE);
-        return value.isEmpty() ? null : value;
+        return wpcomOAuthPrefs().getString(PENDING_WPCOM_OAUTH_STATE, null);
     }
 
     public static void setPendingWpcomOAuthState(@Nullable String state) {
-        setString(DeletablePrefKey.PENDING_WPCOM_OAUTH_STATE, state);
+        setWpcomOAuthPref(PENDING_WPCOM_OAUTH_STATE, state);
+    }
+
+    @Nullable
+    public static String getSupersededWpcomOAuthStates() {
+        return wpcomOAuthPrefs().getString(SUPERSEDED_WPCOM_OAUTH_STATES, null);
+    }
+
+    public static void setSupersededWpcomOAuthStates(@Nullable String json) {
+        setWpcomOAuthPref(SUPERSEDED_WPCOM_OAUTH_STATES, json);
+    }
+
+    private static void setWpcomOAuthPref(@NonNull String key, @Nullable String value) {
+        SharedPreferences.Editor editor = wpcomOAuthPrefs().edit();
+        if (TextUtils.isEmpty(value)) {
+            editor.remove(key);
+        } else {
+            editor.putString(key, value);
+        }
+        editor.apply();
     }
 
     public static boolean consumeShareFlowPending() {

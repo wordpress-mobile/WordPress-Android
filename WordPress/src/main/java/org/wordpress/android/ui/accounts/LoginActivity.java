@@ -42,7 +42,9 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.OAuthCallbackStatus;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
+import org.wordpress.android.ui.accounts.login.WPcomLoginSessionExpiredException;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -257,10 +259,11 @@ public class LoginActivity extends BaseAppCompatActivity {
 
         // A callback for a login this app didn't start (a stray or forged link, or a repeat of
         // one already used) must not disturb this screen: a login in progress here can still
-        // complete. Ignore it before it replaces the intent, the flow, the flags or the UI.
+        // complete. Ignore it before it replaces the intent, the flow, the flags or the UI. An
+        // expired login the app did start goes on, so the user is told to try again.
         String dataString = intent.getDataString();
         boolean isOAuthCallback = mLoginHelper.hasOAuthCallback(dataString);
-        if (isOAuthCallback && !mLoginHelper.matchesPendingLogin(dataString)) {
+        if (isOAuthCallback && mLoginHelper.checkCallback(dataString) == OAuthCallbackStatus.UNKNOWN) {
             AppLog.w(T.MAIN, "Ignoring a WordPress.com login callback this app didn't start");
             return;
         }
@@ -478,7 +481,9 @@ public class LoginActivity extends BaseAppCompatActivity {
         if (loadingText != null) loadingText.setVisibility(View.GONE);
 
         if (errorText != null) {
-            errorText.setText(getString(R.string.error_generic_network));
+            errorText.setText(getString(error instanceof WPcomLoginSessionExpiredException
+                    ? R.string.login_session_expired
+                    : R.string.error_generic_network));
             errorText.setVisibility(View.VISIBLE);
         }
 
