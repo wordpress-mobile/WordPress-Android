@@ -141,7 +141,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
         val collection = collection
         when {
             // the saved list couldn't be opened, so try again
-            collection == null -> if (!isStarted) start(photonWidth, photonHeight)
+            collection == null -> start(photonWidth, photonHeight)
             // a refresh would replace the page being loaded
             _uiState.value.isRefreshing || _uiState.value.isLoadingMore -> Unit
             !networkUtilsWrapper.isNetworkAvailable() -> {

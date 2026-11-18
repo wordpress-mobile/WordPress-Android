@@ -29,6 +29,7 @@ import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData
 import uniffi.wp_api.ReaderPostSaveIdentity
@@ -137,14 +138,19 @@ class ReaderSavedPostsRepository @Inject constructor(
         })
         // The monitor posts its first state after this runs, and onStart syncs at launch anyway, so only a
         // later change to online syncs
-        var isFirstStatus = networkConnectionMonitor.isConnected.value == null
-        ConnectionStatusLiveData(networkConnectionMonitor.isConnected).observeForever { status ->
-            if (isFirstStatus) {
-                isFirstStatus = false
-            } else if (status == ConnectionStatus.AVAILABLE) {
-                sync()
-            }
-        }
+        val isConnected = networkConnectionMonitor.isConnected
+        ConnectionStatusLiveData(isConnected)
+            .let { if (isConnected.value == null) it.skip(1) else it }
+            .observeForever { status -> if (status == ConnectionStatus.AVAILABLE) sync() }
+    }
+
+    /**
+     * Call once the signed-in account's details have loaded, after any reset of the Reader database, so a
+     * fresh sign-in imports and syncs without waiting for the app to come to the foreground again. Only while
+     * the import is due, as the account's details also load on every return to My Site.
+     */
+    fun onAccountFetched() {
+        if (!isSyncedListReady()) sync()
     }
 
     /**
@@ -330,7 +336,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     /** Creates the account's service on first use, which reads the cache: call it off the main thread. */
     @Synchronized
     private fun getService(): ReaderSavedService? {
-        val userId = userId.takeIf { accountStore.hasAccessToken() && it > 0 } ?: return null
+        val userId = userId.takeIf { isSyncedWithAccount } ?: return null
         return peekService() ?: createService(userId)?.also {
             it.setObserver(observer)
             // one left from another account, such as after its token was replaced, stops reporting changes

@@ -700,10 +700,8 @@ class AppInitializer @Inject constructor(
                     AppLog.i(T.READER, "User changed, resetting reader db")
                     ReaderDatabase.reset(false)
                 }
-                // How a fresh sign-in imports and syncs saved posts without waiting for the app to come to the
-                // foreground again, after any reset above so the device's saves that get imported are this
-                // account's. Only while the import is due: FETCH_ACCOUNT also follows every return to My Site.
-                if (!readerSavedPostsRepository.isSyncedListReady()) readerSavedPostsRepository.sync()
+                // after any reset above, so the device's saves that get imported are this account's
+                readerSavedPostsRepository.onAccountFetched()
             } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
                 val hasUserOptedOut = !prefs.getBoolean(application.getString(R.string.pref_key_send_usage), true)

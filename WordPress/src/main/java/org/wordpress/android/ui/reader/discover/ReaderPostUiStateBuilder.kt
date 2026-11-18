@@ -325,22 +325,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
         val contentDescription = UiStringRes(R.string.comments)
 
-        return if (showComments) {
-            PrimaryAction(
-                isEnabled = true,
-                count = post.numReplies,
-                contentDescription = contentDescription,
-                onClicked = onCommentsClicked,
-                type = ReaderPostCardActionType.COMMENTS
-            )
-        } else {
-            // the card still shows the count, as the counts line it replaced did
-            PrimaryAction(
-                isEnabled = false,
-                count = post.numReplies,
-                contentDescription = contentDescription,
-                type = ReaderPostCardActionType.COMMENTS
-            )
-        }
+        // the count is kept when comments can't be opened, as the card still shows it
+        return PrimaryAction(
+            isEnabled = showComments,
+            count = post.numReplies,
+            contentDescription = contentDescription,
+            onClicked = onCommentsClicked.takeIf { showComments },
+            type = ReaderPostCardActionType.COMMENTS
+        )
     }
 }

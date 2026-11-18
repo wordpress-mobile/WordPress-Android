@@ -790,7 +790,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
-            updateUiState { _uiState.value = convertPostToUiState(it) }
+            onUpdatePost(it)
             onRefreshLikersData(it)
             if (commentsSnippetFeatureConfig.isEnabled()) {
                 onRefreshCommentsData(it.blogId, it.postId)
@@ -832,7 +832,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        if (_uiState.value !is ReaderPostDetailsUiState) return
         updateUiState {
             // off the main thread, as whether the post is saved is read from the saved posts cache
             val actions = withContext(bgDispatcher) {
