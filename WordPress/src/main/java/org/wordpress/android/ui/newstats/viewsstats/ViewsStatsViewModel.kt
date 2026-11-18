@@ -52,6 +52,7 @@ private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
 private val EMPTY_BOTTOM_AGGREGATES = BottomStatsAggregates(0, 0, 0, 0, 0)
 private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
+private const val YEAR_PREFIX_LENGTH = 4 // "YYYY".length
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
@@ -785,18 +786,17 @@ class ViewsStatsViewModel @Inject constructor(
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
         // The chart's actual bucket unit is the source of truth for granularity: a Custom range is
         // charted in days, months or years depending on its span, and the rawPeriod string alone can't
-        // tell a day bucket from a month one -- the API returns a full ISO date for both. Falling back
-        // to day-level drill when no chart is loaded is the safe default.
-        val isMonthlyGranularity = lastChartResult?.unit?.let {
-            it == StatsUnit.MONTH || it == StatsUnit.YEAR
-        } ?: false
+        // tell a day bucket from a month or a year one -- the API returns a full ISO date for all
+        // three. Falling back to day-level drill when no chart is loaded is the safe default.
+        val chartUnit = lastChartResult?.unit
 
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
 
         return try {
             when {
-                isMonthlyGranularity -> drillDownMonth(rawPeriod)
+                chartUnit == StatsUnit.YEAR -> drillDownYear(rawPeriod)
+                chartUnit == StatsUnit.MONTH -> drillDownMonth(rawPeriod)
                 rawPeriod.matches(DAILY_FORMAT_REGEX) -> {
                     val date = LocalDate.parse(
                         rawPeriod,
@@ -814,6 +814,20 @@ class ViewsStatsViewModel @Inject constructor(
             )
             null
         }
+    }
+
+    /**
+     * The whole calendar year a YEAR bucket covers, so tapping the 2024 bar selects 2024 and not its
+     * January. The current year is clamped to today by [StatsRepository.calendarYearWindow], the same
+     * way the year-to-date presets end on today rather than on 31 December.
+     *
+     * Only the year is read off [rawPeriod]: a year bucket arrives as a full ISO date ("2024-01-01"),
+     * but its month and day carry no meaning, so the first four characters are all that is needed.
+     */
+    private fun drillDownYear(rawPeriod: String): StatsPeriod {
+        val year = rawPeriod.take(YEAR_PREFIX_LENGTH).toInt()
+        val (firstDay, lastDay) = statsRepository.calendarYearWindow(year)
+        return StatsPeriod.Custom(firstDay, lastDay)
     }
 
     private fun drillDownMonth(rawPeriod: String): StatsPeriod {

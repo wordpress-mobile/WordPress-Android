@@ -982,6 +982,47 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
     }
 
     @Test
+    fun `when a yearly bar is tapped, then it soft-selects the whole year`() = test {
+        val yearlyData = listOf(
+            ViewsDataPoint(period = "2024-01-01", views = 5000L),
+            ViewsDataPoint(period = "2025-01-01", views = 6000L),
+            ViewsDataPoint(period = "2026-01-01", views = 7000L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = yearlyData,
+                    previousPeriodData = yearlyData,
+                    unit = StatsUnit.YEAR
+                )
+            )
+        whenever(statsRepository.calendarYearWindow(2024))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 12, 31))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last3Years)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // The 2024 bar covers all of 2024, so drilling into it must not narrow to January: the header
+        // shows the year's total, and the cards below have to cover the same year.
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Last3Years)
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 12, 31))
+        }
+        assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
+    }
+
+    @Test
     fun `when a monthly bar is tapped, then it soft-selects the full month`() = test {
         val monthlyData = listOf(
             ViewsDataPoint(period = "2024-01-01", views = 5000L),

@@ -1698,6 +1698,40 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `calendarYearWindow covers a past year whole and the current year only up to today`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        assertThat(repository.calendarYearWindow(2024))
+            .isEqualTo(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 12, 31))
+        // The year in progress has no data past today, and a window running into the future would ask
+        // the API for days that don't exist yet.
+        assertThat(repository.calendarYearWindow(2026))
+            .isEqualTo(LocalDate.of(2026, 1, 1) to MID_WEEK)
+    }
+
+    @Test
+    fun `given a window Last3Years paged onto on 1 January, when fetched, then it charts whole years`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            // 2021..2023 runs 1 Jan to 1 Jan with no leap year between, so it measures exactly the
+            // two-year day count. Charting it by month would put 25 bars under a selector that still
+            // names three years.
+            val paged = StatsPeriod.Custom(LocalDate.of(2021, 1, 1), LocalDate.of(2023, 1, 1))
+            repositoryAt(NEW_YEARS_DAY).fetchStatsForPeriod(TEST_SITE_ID, paged)
+
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-01-01"),
+                startDate = eq("2021-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
     fun `previousPeriod of Last3Years steps whole years on 1 January, when its span is 731 days`() {
         // 2025..2027 runs 1 Jan to 1 Jan with no leap year between, so the window measures exactly
         // the two-year day count and the step must come from the preset rather than that count:

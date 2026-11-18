@@ -1194,12 +1194,22 @@ class StatsRepository @Inject constructor(
         return unit to quantityFor(start, end, unit)
     }
 
-    /** The bucket [StatsUnit] the inclusive [start]..[end] window is charted at. See [unitAndQuantityFor]. */
+    /**
+     * The bucket [StatsUnit] the inclusive [start]..[end] window is charted at. See
+     * [unitAndQuantityFor].
+     *
+     * The year threshold is inclusive because three whole year buckets running 1 Jan → 1 Jan measure
+     * exactly [MAX_DAYS_IN_2_YEARS] days whenever no leap year falls between them, and that is the
+     * window Last 3 Years pages onto every 1 January. An exclusive test charted it as 25 month bars
+     * directly below a selector still naming three years. The cliff itself is not new — a window one
+     * day longer has always been year-bucketed — so this moves it by a day rather than reshaping how
+     * hand-picked ranges are charted.
+     */
     private fun unitFor(start: LocalDate, end: LocalDate): StatsUnit {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
         return when {
             daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
-            daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
+            daysBetween >= MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
             else -> StatsUnit.MONTH
         }
     }
@@ -1428,6 +1438,18 @@ class StatsRepository @Inject constructor(
      * window from the one the cards below it loaded.
      */
     fun periodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> = currentPeriodWindow(period)
+
+    /**
+     * The whole calendar [year], clamped so the window never runs past today — the current year covers
+     * the year so far, exactly as the year-to-date presets do. Lives here because [today] is the one
+     * read of the injected clock, and because a full 1 Jan..31 Dec range is what [calendarUnitOf]
+     * recognises as a calendar year, so a completed year drilled into from the chart then pages and
+     * charts as one whole year.
+     */
+    fun calendarYearWindow(year: Int): Pair<LocalDate, LocalDate> {
+        val firstDay = LocalDate.of(year, 1, 1)
+        return firstDay to minOf(firstDay.with(TemporalAdjusters.lastDayOfYear()), today())
+    }
 
     private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
         val today = today()
