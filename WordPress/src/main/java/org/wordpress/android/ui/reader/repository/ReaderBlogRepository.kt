@@ -98,29 +98,30 @@ class ReaderBlogRepository @Inject constructor(
         }
 
     /**
-     * Follows the passed feed URL and returns whether it succeeded
+     * Returns the site or feed for the passed URL, or null if it can't be found. A cached row is only trusted
+     * when it's followed, since the server knows whether the user follows it under another URL.
      */
-    suspend fun followFeedUrl(feedUrl: String, source: String): Boolean {
-        if (feedUrl.isEmpty()) return false
-        // the lookup is part of the follow, so it isn't dropped if the caller is cancelled while it runs
-        return withContext(ioDispatcher + NonCancellable) {
-            val blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
-            if (blogInfo != null) {
-                followFeed(blogInfo.blogId, blogInfo.feedId, blogInfo.feedUrl, true, source)
-            } else {
-                // this follows even if the lookup fails, since the lookup doesn't do feed discovery but the
-                // follow does
-                val fetchedInfo = fetchFeedInfo(0, feedUrl)
-                followFeed(
-                    blogId = fetchedInfo?.blogId ?: 0,
-                    feedId = fetchedInfo?.feedId ?: 0,
-                    feedUrl = fetchedInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
-                    follow = true,
-                    source = source
-                )
-            }
+    suspend fun lookupFeedUrl(feedUrl: String): ReaderBlog? {
+        if (feedUrl.isEmpty()) return null
+        return withContext(ioDispatcher) {
+            val cached = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl))
+            cached?.takeIf { it.isFollowing } ?: fetchFeedInfo(0, feedUrl) ?: cached
         }
     }
+
+    /**
+     * Follows the passed feed URL, using the [lookupFeedUrl] result if there is one, and returns whether it
+     * succeeded. This follows even if the lookup failed, since the lookup doesn't do feed discovery but the
+     * follow does.
+     */
+    suspend fun followFeedUrl(feedUrl: String, blogInfo: ReaderBlog?, source: String): Boolean =
+        feedUrl.isNotEmpty() && followFeed(
+            blogId = blogInfo?.blogId ?: 0,
+            feedId = blogInfo?.feedId ?: 0,
+            feedUrl = blogInfo?.takeIf { it.hasFeedUrl() }?.feedUrl ?: feedUrl,
+            follow = true,
+            source = source
+        )
 
     /**
      * Fetches and saves the passed site, or feed if it's an external feed, and returns it, or null if that

@@ -38,9 +38,12 @@ public class ReaderBlog {
 
         // if meta/data/site exists then JSON is for a read/following/mine?meta=site subscription,
         // if meta/data/feed exists then JSON is for a read/following/mine?meta=feed subscription,
-        // otherwise JSON the response for a single site/$siteId or read/feed/$feedId
-        JSONObject jsonSite = JSONUtils.getJSONChild(json, "meta/data/site");
-        JSONObject jsonFeed = JSONUtils.getJSONChild(json, "meta/data/feed");
+        // if date_subscribed exists then JSON is a read/following/mine subscription whose site or feed
+        // the API returned no details for, otherwise JSON the response for a single site/$siteId or
+        // read/feed/$feedId
+        boolean isSubscription = json.has("date_subscribed");
+        JSONObject jsonSite = withoutError(JSONUtils.getJSONChild(json, "meta/data/site"));
+        JSONObject jsonFeed = withoutError(JSONUtils.getJSONChild(json, "meta/data/feed"));
         if (jsonSite != null) {
             blog.blogId = jsonSite.optLong("ID");
             blog.setName(JSONUtils.getStringDecoded(jsonSite, "name"));
@@ -63,6 +66,11 @@ public class ReaderBlog {
             blog.numSubscribers = jsonFeed.optInt("subscribers_count");
             // read/following/mine doesn't include is_following for feeds, so assume to be true
             blog.isFollowing = true;
+        } else if (isSubscription) {
+            // read/following/mine returned no usable site or feed for this subscription, which it does for
+            // a site the user can't access - everything it tells us about it is filled in below
+            // read/following/mine doesn't include is_following, so assume to be true
+            blog.isFollowing = true;
         } else {
             blog.blogId = json.optLong("ID");
             if (blog.blogId == 0) {
@@ -77,6 +85,10 @@ public class ReaderBlog {
             blog.isPrivate = JSONUtils.getBool(json, "is_private");
             blog.isFollowing = JSONUtils.getBool(json, "is_following");
             blog.numSubscribers = json.optInt("subscribers_count");
+        }
+
+        if (isSubscription) {
+            fillGapsFromSubscription(blog, json, jsonSite != null || jsonFeed != null);
         }
 
         blog.numUnseenPosts = json.optInt("unseen_count");
@@ -95,6 +107,43 @@ public class ReaderBlog {
         }
 
         return blog;
+    }
+
+    /*
+     * returns the passed site or feed unless it's an error, which read/following/mine returns in place of
+     * the site or feed of a subscription the user can't access, such as a private site
+     */
+    private static JSONObject withoutError(JSONObject json) {
+        return json != null && json.has("errors") ? null : json;
+    }
+
+    /*
+     * fills in what the site or feed of a read/following/mine subscription didn't provide from the
+     * subscription's own fields - for a subscription the user can't access the site or feed comes back
+     * as an error, or with no name and no URL, and then this is all the API tells us about it
+     */
+    private static void fillGapsFromSubscription(ReaderBlog blog, JSONObject json, boolean hasSiteOrFeed) {
+        if (!hasSiteOrFeed) {
+            // neither the site nor the feed identified this subscription, so its own ids do - a site by
+            // its blog id alone, as it is when the API does return its site
+            blog.blogId = json.optLong("blog_ID");
+            blog.feedId = blog.blogId == 0 ? json.optLong("feed_ID") : 0;
+        }
+        if (!blog.hasName()) {
+            blog.setName(JSONUtils.getStringDecoded(json, "name"));
+        }
+        if (!blog.hasUrl()) {
+            blog.setUrl(JSONUtils.getString(json, "URL"));
+        }
+        if (!blog.hasFeedUrl()) {
+            blog.setFeedUrl(JSONUtils.getString(json, "feed_URL"));
+        }
+        if (!blog.hasImageUrl() && !json.isNull("site_icon")) {
+            blog.setImageUrl(JSONUtils.getString(json, "site_icon"));
+        }
+        if (blog.organizationId == 0) {
+            blog.organizationId = json.optInt("organization_id");
+        }
     }
 
     public String getName() {

@@ -36,16 +36,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
-import org.wordpress.android.ui.newstats.components.StatsDetailListItem
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.components.StatsViewChange
+import org.wordpress.android.ui.newstats.poststats.PostStatsDetailActivity
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 private const val EXTRA_PERIOD_TYPE = "extra_period_type"
@@ -57,6 +59,9 @@ private const val NO_EPOCH_DAY = -1L
 class AuthorsDetailActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var newStatsTracker: NewStatsTracker
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private val viewModel: AuthorsDetailViewModel by viewModels()
 
@@ -80,10 +85,21 @@ class AuthorsDetailActivity : BaseAppCompatActivity() {
                     onRetry = { viewModel.retry() },
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
-                    }
+                    },
+                    onPostClick = ::openPostDetailStats
                 )
             }
         }
+    }
+
+    /**
+     * Opens the detail stats of a post listed under an expanded author row, the screen old Stats
+     * opened from the same tap (`AuthorsUseCase.onPostClicked`).
+     */
+    private fun openPostDetailStats(post: AuthorPostUiItem) {
+        analyticsTracker.track(Stat.STATS_AUTHORS_VIEW_POST_TAPPED, viewModel.getSite())
+        newStatsTracker.trackTopListItemTapped(StatsCardType.AUTHORS)
+        PostStatsDetailActivity.start(this, post.id, post.title)
     }
 
     private fun readPeriod(): StatsPeriod {
@@ -121,7 +137,8 @@ private fun AuthorsDetailScreen(
     uiState: AuthorsDetailUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
-    onOpenWpAdmin: () -> Unit = {}
+    onOpenWpAdmin: () -> Unit = {},
+    onPostClick: (AuthorPostUiItem) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -149,7 +166,11 @@ private fun AuthorsDetailScreen(
                 onOpenWpAdmin = if (uiState.isAuthError) onOpenWpAdmin else null,
                 modifier = contentModifier
             )
-            is AuthorsDetailUiState.Loaded -> AuthorsLoadedContent(uiState, contentModifier)
+            is AuthorsDetailUiState.Loaded -> AuthorsLoadedContent(
+                state = uiState,
+                onPostClick = onPostClick,
+                modifier = contentModifier
+            )
         }
     }
 }
@@ -157,6 +178,7 @@ private fun AuthorsDetailScreen(
 @Composable
 private fun AuthorsLoadedContent(
     state: AuthorsDetailUiState.Loaded,
+    onPostClick: (AuthorPostUiItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -178,14 +200,20 @@ private fun AuthorsLoadedContent(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        itemsIndexed(state.authors) { index, author ->
+        // Keyed by index rather than by name: two authors can share a display name, and a
+        // duplicate key crashes the LazyColumn. The index is what scopes each row's saved
+        // expanded state, so after a cold-start refetch a restored expansion follows the
+        // position rather than the author.
+        itemsIndexed(state.authors, key = { index, _ -> index }) { index, author ->
             val percentage = if (state.maxViewsForBar > 0) {
                 author.views.toFloat() / state.maxViewsForBar.toFloat()
             } else 0f
-            DetailAuthorRow(
-                position = index + 1,
+            ExpandableAuthorRow(
                 author = author,
-                percentage = percentage
+                percentage = percentage,
+                onPostClick = onPostClick,
+                position = index + 1,
+                postsStartPadding = 32.dp
             )
             if (index < state.authors.lastIndex) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -236,22 +264,6 @@ private fun AuthorsErrorContent(
     }
 }
 
-@Composable
-private fun DetailAuthorRow(
-    position: Int,
-    author: AuthorUiItem,
-    percentage: Float
-) {
-    StatsDetailListItem(
-        position = position,
-        percentage = percentage,
-        name = author.name,
-        views = author.views,
-        change = author.change,
-        icon = { AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name) }
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun AuthorsDetailScreenPreview() {
@@ -259,7 +271,13 @@ private fun AuthorsDetailScreenPreview() {
         AuthorsDetailScreen(
             uiState = AuthorsDetailUiState.Loaded(
                 authors = listOf(
-                    AuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
+                    AuthorUiItem(
+                        "John Doe", null, 3464, StatsViewChange.Positive(124, 3.7),
+                        posts = listOf(
+                            AuthorPostUiItem(1, "A post everyone read", 2800),
+                            AuthorPostUiItem(2, "A quieter post", 664)
+                        )
+                    ),
                     AuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
                     AuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
                     AuthorUiItem("Alice Brown", null, 485, StatsViewChange.Positive(33, 7.3)),

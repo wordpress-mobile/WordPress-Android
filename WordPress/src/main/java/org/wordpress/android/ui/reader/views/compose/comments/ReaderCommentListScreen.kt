@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.views.compose.comments
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -294,7 +295,7 @@ private fun CommentAuthorRow(comment: ReaderCommentItem, actions: ReaderCommentL
 }
 
 @Composable
-private fun AuthorBadge() {
+internal fun AuthorBadge() {
     Text(
         text = stringResource(R.string.comment_author_badge),
         style = MaterialTheme.typography.labelSmall,
@@ -489,14 +490,17 @@ private fun Composer(uiState: ReaderCommentListUiState, replyText: TextFieldValu
 }
 
 @Composable
-private fun FollowConversationActions(followState: FollowConversationUiState) {
+internal fun FollowConversationActions(
+    followState: FollowConversationUiState,
+    @StringRes followLabelRes: Int = R.string.reader_btn_follow,
+) {
     val flags = followState.flags
     if (flags.isFollowMenuVisible) {
         TextButton(
             onClick = { followState.onFollowTapped?.invoke() },
             enabled = flags.isMenuEnabled && !flags.showMenuShimmer && followState.onFollowTapped != null
         ) {
-            Text(stringResource(R.string.reader_btn_follow))
+            Text(stringResource(followLabelRes))
         }
     }
     if (flags.isBellMenuVisible) {

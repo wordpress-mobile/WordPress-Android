@@ -228,5 +228,6 @@ internal fun TopAuthorItemData.toAuthorUiItem() = AuthorUiItem(
         viewsChange > 0 -> StatsViewChange.Positive(viewsChange, abs(viewsChangePercent))
         viewsChange < 0 -> StatsViewChange.Negative(abs(viewsChange), abs(viewsChangePercent))
         else -> StatsViewChange.NoChange
-    }
+    },
+    posts = posts.map { AuthorPostUiItem(id = it.id, title = it.title, views = it.views) }
 )

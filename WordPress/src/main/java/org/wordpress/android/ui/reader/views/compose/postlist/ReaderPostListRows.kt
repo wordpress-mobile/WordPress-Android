@@ -136,12 +136,17 @@ internal fun ReaderSiteHeader(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            Text(
-                text = subscriberCountText(info.subscriberCount),
-                modifier = Modifier.padding(top = Margin.Medium.value, bottom = Margin.ExtraLarge.value),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            val subscriberCount = info.subscriberCount
+            if (subscriberCount != null) {
+                Text(
+                    text = subscriberCountText(subscriberCount),
+                    modifier = Modifier.padding(top = Margin.Medium.value, bottom = Margin.ExtraLarge.value),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            } else {
+                Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 FollowButton(
                     isFollowed = info.isFollowed,
@@ -218,8 +223,13 @@ internal fun ReaderTagHeader(item: ReaderPostListItem.TagHeader, onFollowClick: 
 }
 
 @Composable
-private fun FollowButton(isFollowed: Boolean, isInProgress: Boolean, onClick: () -> Unit) {
-    Box(contentAlignment = Alignment.Center) {
+internal fun FollowButton(
+    isFollowed: Boolean,
+    isInProgress: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
         if (isFollowed) {
             OutlinedButton(onClick = onClick, enabled = !isInProgress) {
                 Text(stringResource(R.string.reader_btn_subscribed))

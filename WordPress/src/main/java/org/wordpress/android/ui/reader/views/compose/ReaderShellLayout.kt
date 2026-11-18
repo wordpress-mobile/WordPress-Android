@@ -46,6 +46,14 @@ class ReaderTopBarScrollConnection(private val canScroll: () -> Boolean) : Neste
     fun reset() {
         offset = 0f
     }
+
+    fun hide() {
+        offset = -topBarHeight
+    }
+
+    /** How far the top bar is hidden, from 0 (shown) to 1 (hidden) */
+    val hiddenFraction: Float
+        get() = if (topBarHeight > 0f) -offset / topBarHeight else 0f
 }
 
 /**

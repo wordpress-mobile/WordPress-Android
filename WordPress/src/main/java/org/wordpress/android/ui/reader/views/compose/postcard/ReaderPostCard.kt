@@ -36,6 +36,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -166,10 +167,10 @@ private fun BlogSectionAvatars(blogSection: CompactBlogSectionData) {
 }
 
 @Composable
-private fun CircleAvatar(url: String, imageType: ImageType, modifier: Modifier = Modifier) {
+internal fun CircleAvatar(url: String, imageType: ImageType, modifier: Modifier = Modifier, size: Dp = 26.dp) {
     Box(
         modifier = modifier
-            .size(26.dp)
+            .size(size)
             .background(MaterialTheme.colorScheme.surface, CircleShape)
             .padding(1.dp),
     ) {

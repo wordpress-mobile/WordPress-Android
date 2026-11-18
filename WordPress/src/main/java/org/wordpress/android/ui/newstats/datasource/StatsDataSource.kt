@@ -585,10 +585,23 @@ data class TopAuthorsData(
 
 /**
  * A single top author item from the API.
+ *
+ * @param posts The author's posts in the period, as the API ordered them (most viewed first).
+ * Empty when the API reports none for the author.
  */
 data class TopAuthorItem(
     val name: String,
     val avatarUrl: String?,
+    val views: Long,
+    val posts: List<TopAuthorPostItem> = emptyList()
+)
+
+/**
+ * A single post of a top author, as the API reports it.
+ */
+data class TopAuthorPostItem(
+    val id: Long,
+    val title: String,
     val views: Long
 )
 
