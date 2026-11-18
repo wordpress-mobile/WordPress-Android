@@ -52,6 +52,17 @@ class WPcomLoginHelper @Inject constructor(
     }
 
     /**
+     * Returns true if the data string carries the `state` of the login this app started, i.e. it
+     * is the callback [tryLoginWithDataString] would accept. Lets the caller ignore a stray link
+     * before it changes any UI.
+     */
+    fun matchesPendingLogin(data: String?): Boolean {
+        if (data == null) return false
+        val expectedState = appPrefsWrapper.pendingWpcomOAuthState ?: return false
+        return data.toUri().getQueryParameter("state") == expectedState
+    }
+
+    /**
      * Asynchronously exchanges the OAuth code in the data string for
      * an access token. Calls [onSuccess] on the main thread if the
      * exchange succeeds, or [onFailure] with the exception if it
@@ -75,8 +86,7 @@ class WPcomLoginHelper @Inject constructor(
         // carry a code for someone else's account, and exchanging it would sign the user in to
         // that account. The state is single-use, but a mismatch leaves it in place so a stray
         // link can't break a login that is in progress.
-        val expectedState = appPrefsWrapper.pendingWpcomOAuthState
-        if (expectedState == null || uri.getQueryParameter("state") != expectedState) {
+        if (!matchesPendingLogin(data)) {
             onFailure.accept(WPcomLoginStateMismatchException())
             return
         }

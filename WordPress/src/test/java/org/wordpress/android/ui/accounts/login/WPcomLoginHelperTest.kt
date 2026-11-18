@@ -133,6 +133,20 @@ class WPcomLoginHelperTest {
         assertThat(tokenRequests).hasSize(1)
     }
 
+    @Test
+    fun `only a callback with the saved state matches the pending login`() {
+        assertThat(helper.matchesPendingLogin(callback(code = "c", state = "any-state"))).isFalse
+
+        val state = helper.startLogin().getQueryParameter("state")
+
+        assertThat(helper.matchesPendingLogin(callback(code = "c", state = state))).isTrue
+        assertThat(helper.matchesPendingLogin(callback(code = "c", state = "attacker-state"))).isFalse
+        assertThat(helper.matchesPendingLogin(callback(code = "c", state = null))).isFalse
+        assertThat(helper.matchesPendingLogin(null)).isFalse
+        // Checking doesn't use up the state
+        assertThat(storedState).isEqualTo(state)
+    }
+
     private fun callback(code: String, state: String?): String =
         Uri.parse(REDIRECT_URI).buildUpon()
             .appendQueryParameter("code", code)

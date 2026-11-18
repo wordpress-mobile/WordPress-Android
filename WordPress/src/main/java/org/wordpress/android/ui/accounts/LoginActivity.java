@@ -254,12 +254,22 @@ public class LoginActivity extends BaseAppCompatActivity {
     @Override
     protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
+
+        // A callback for a login this app didn't start (a stray or forged link, or a repeat of
+        // one already used) must not disturb this screen: a login in progress here can still
+        // complete. Ignore it before it replaces the intent, the flow, the flags or the UI.
+        String dataString = intent.getDataString();
+        boolean isOAuthCallback = mLoginHelper.hasOAuthCallback(dataString);
+        if (isOAuthCallback && !mLoginHelper.matchesPendingLogin(dataString)) {
+            AppLog.w(T.MAIN, "Ignoring a WordPress.com login callback this app didn't start");
+            return;
+        }
+
         setIntent(intent);
         mLoginFlow = null;
 
         // Handle OAuth callback when activity is reused (singleTop)
-        String dataString = intent.getDataString();
-        if (mLoginHelper.hasOAuthCallback(dataString)) {
+        if (isOAuthCallback) {
             // The login is under way, so this is no longer an abandoned tab. Clearing the flags
             // here is also what survives a recreation during the post-OAuth account/site fetch
             // (rotation, a theme change, "don't keep activities"): they are persisted, so the
