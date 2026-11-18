@@ -6,6 +6,11 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.util.DateTimeUtils
+import uniffi.wp_api.ReaderSavedKey
+import uniffi.wp_mobile.ReaderSavedListItem
+import uniffi.wp_mobile_cache.ReaderPostRecord
+import java.util.Date
 
 class ReaderSavedPostMappingTest {
     @Test
@@ -35,6 +40,23 @@ class ReaderSavedPostMappingTest {
 
         assertThat(identity.siteId).isEqualTo(123UL)
         assertThat(identity.feedItemId).isEqualTo(99UL)
+    }
+
+    @Test
+    fun `a saved post without its date shows when it was saved`() {
+        val identity = post(blogId = 1, postId = 2).toSaveIdentity()
+        val dateSaved = Date(0)
+        val item = ReaderSavedListItem(
+            key = ReaderSavedKey.Post(1UL, 2L),
+            dateSaved = dateSaved,
+            post = ReaderPostRecord(key = ReaderSavedKey.Post(1UL, 2L), identity = identity),
+            isPending = true,
+            isWaitingForRoom = false
+        )
+
+        val card = item.toCardPost()
+
+        assertThat(card.datePublished).isEqualTo(DateTimeUtils.iso8601UTCFromDate(dateSaved))
     }
 
     @Test
