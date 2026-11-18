@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.TopAuthorItem
+import org.wordpress.android.ui.newstats.datasource.TopAuthorPostItem
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsData
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
@@ -277,6 +278,85 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
         assertThat(success.totalViews).isEqualTo(0)
         assertThat(success.totalViewsChange).isEqualTo(0)
         assertThat(success.totalViewsChangePercent).isEqualTo(0.0)
+    }
+
+    @Test
+    fun `given authors with posts, when fetchTopAuthors, then each author's posts are returned`() = test {
+        val currentData = TopAuthorsData(
+            authors = listOf(
+                TopAuthorItem(
+                    name = "Author 1",
+                    avatarUrl = null,
+                    views = 150,
+                    posts = listOf(
+                        TopAuthorPostItem(id = 11L, title = "Most read", views = 100),
+                        TopAuthorPostItem(id = 12L, title = "Less read", views = 50)
+                    )
+                )
+            ),
+            totalViews = 150L
+        )
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Success(currentData))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        val success = result as TopAuthorsResult.Success
+        assertThat(success.authors[0].posts).containsExactly(
+            TopAuthorPostData(id = 11L, title = "Most read", views = 100),
+            TopAuthorPostData(id = 12L, title = "Less read", views = 50)
+        )
+    }
+
+    @Test
+    fun `given an author the API reports no posts for, when fetchTopAuthors, then posts are empty`() = test {
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Success(createTopAuthorsData()))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        val success = result as TopAuthorsResult.Success
+        assertThat(success.authors[0].posts).isEmpty()
+    }
+
+    /**
+     * The previous period is fetched only to compare totals, so an author's posts must come from
+     * the current period rather than from whichever period answered last.
+     */
+    @Test
+    fun `given posts in both periods, when fetchTopAuthors, then the current period's posts are used`() = test {
+        val currentData = TopAuthorsData(
+            authors = listOf(
+                TopAuthorItem(
+                    name = "Author 1",
+                    avatarUrl = null,
+                    views = 150,
+                    posts = listOf(TopAuthorPostItem(id = 11L, title = "This week", views = 150))
+                )
+            ),
+            totalViews = 150L
+        )
+        val previousData = TopAuthorsData(
+            authors = listOf(
+                TopAuthorItem(
+                    name = "Author 1",
+                    avatarUrl = null,
+                    views = 100,
+                    posts = listOf(TopAuthorPostItem(id = 22L, title = "Last week", views = 100))
+                )
+            ),
+            totalViews = 100L
+        )
+        whenever(statsDataSource.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(TopAuthorsDataResult.Success(currentData))
+            .thenReturn(TopAuthorsDataResult.Success(previousData))
+
+        val result = repository.fetchTopAuthors(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        val success = result as TopAuthorsResult.Success
+        assertThat(success.authors[0].posts).containsExactly(
+            TopAuthorPostData(id = 11L, title = "This week", views = 150)
+        )
     }
 
     private fun createTopAuthorsData() = TopAuthorsData(

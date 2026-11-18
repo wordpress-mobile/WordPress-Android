@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +33,6 @@ import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.components.StatsListHeader
-import org.wordpress.android.ui.newstats.components.StatsListItem
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 
@@ -51,7 +51,8 @@ fun AuthorsCard(
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null,
-    onOpenWpAdmin: (() -> Unit)? = null
+    onOpenWpAdmin: (() -> Unit)? = null,
+    onPostClick: (AuthorPostUiItem) -> Unit = {}
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
@@ -59,7 +60,7 @@ fun AuthorsCard(
             is AuthorsCardUiState.Loaded -> LoadedContent(
                 uiState, onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop,
-                onMoveDown, onMoveToBottom
+                onMoveDown, onMoveToBottom, onPostClick
             )
             is AuthorsCardUiState.Error -> StatsCardErrorContent(
                 titleResId = R.string.stats_authors_title,
@@ -127,7 +128,8 @@ private fun LoadedContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onPostClick: (AuthorPostUiItem) -> Unit
 ) {
     Column(modifier = Modifier.padding(CardPadding)) {
         StatsCardHeader(
@@ -152,7 +154,17 @@ private fun LoadedContent(
                 val percentage = if (state.maxViewsForBar > 0) {
                     author.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                AuthorRow(author = author, percentage = percentage)
+                // Keyed by position and name, as Most Viewed's rows are: a display name alone
+                // is not unique, and two authors sharing one would share this row's expanded
+                // state. The expansion survives recomposition and rotation; if the list reorders
+                // in place it follows the position rather than the author.
+                key(index, author.name) {
+                    ExpandableAuthorRow(
+                        author = author,
+                        percentage = percentage,
+                        onPostClick = onPostClick
+                    )
+                }
                 if (index < state.authors.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
                 }
@@ -163,20 +175,6 @@ private fun LoadedContent(
             ShowAllFooter(onClick = onShowAllClick)
         }
     }
-}
-
-@Composable
-private fun AuthorRow(
-    author: AuthorUiItem,
-    percentage: Float
-) {
-    StatsListItem(
-        percentage = percentage,
-        name = author.name,
-        views = author.views,
-        change = author.change,
-        icon = { AuthorAvatar(avatarUrl = author.avatarUrl, name = author.name) }
-    )
 }
 
 @Composable
@@ -232,7 +230,13 @@ private fun AuthorsCardLoadedPreview() {
         AuthorsCard(
             uiState = AuthorsCardUiState.Loaded(
                 authors = listOf(
-                    AuthorUiItem("John Doe", null, 3464, StatsViewChange.Positive(124, 3.7)),
+                    AuthorUiItem(
+                        "John Doe", null, 3464, StatsViewChange.Positive(124, 3.7),
+                        posts = listOf(
+                            AuthorPostUiItem(1, "A post everyone read", 2800),
+                            AuthorPostUiItem(2, "A quieter post", 664)
+                        )
+                    ),
                     AuthorUiItem("Jane Smith", null, 556, StatsViewChange.Positive(45, 8.8)),
                     AuthorUiItem("Bob Johnson", null, 522, StatsViewChange.Negative(12, 2.2)),
                     AuthorUiItem("Alice Brown", null, 485, StatsViewChange.NoChange)
