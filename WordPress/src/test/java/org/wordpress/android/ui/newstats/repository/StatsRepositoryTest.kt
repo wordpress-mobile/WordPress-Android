@@ -1698,6 +1698,30 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `previousPeriod of Last3Years steps whole years on 1 January, when its span is 731 days`() {
+        // 2025..2027 runs 1 Jan to 1 Jan with no leap year between, so the window measures exactly
+        // the two-year day count and the step must come from the preset rather than that count:
+        // stepping the span as 25 months would land on 1 Dec..1 Dec and chart a December as "2022".
+        val result = repositoryAt(NEW_YEARS_DAY_NO_LEAP).previousPeriod(StatsPeriod.Last3Years)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2022, 1, 1), LocalDate.of(2024, 1, 1)))
+    }
+
+    @Test
+    fun `given Last3Years is paged back and forward on 1 January, then it returns to the preset`() {
+        // Here the preset's own window clears the day-count threshold but the window it pages onto does
+        // not, so a span-derived step would move 25 months forward and strand the user on a range that
+        // is neither the preset nor the one they came from.
+        val repository = repositoryAt(NEW_YEARS_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last3Years)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last3Years)
+
+        assertThat(back).isEqualTo(StatsPeriod.Custom(LocalDate.of(2021, 1, 1), LocalDate.of(2023, 1, 1)))
+        assertThat(result).isEqualTo(StatsPeriod.Last3Years)
+    }
+
+    @Test
     fun `previousPeriod of ThisWeek is the whole previous calendar week`() {
         // Back from a partial "this week" (week start..today) lands on the full previous week, not a
         // same-length mirror ending on the day before the week started.
@@ -1968,6 +1992,10 @@ class StatsRepositoryTest : BaseUnitTest() {
         private val LEAP_DAY: LocalDate = LocalDate.of(2028, 2, 29)
         private val MONTH_END_AFTER_LEAP_MONTH: LocalDate = LocalDate.of(2025, 1, 31)
         private val NEW_YEARS_DAY: LocalDate = LocalDate.of(2026, 1, 1)
+
+        // 1 Jan 2027: 2025 and 2026 are both common years, so the three whole year buckets 2025..2027
+        // measure exactly 731 days — the longest span the repository still buckets by month.
+        private val NEW_YEARS_DAY_NO_LEAP: LocalDate = LocalDate.of(2027, 1, 1)
 
         // Unfinished-calendar-period anchors. With a US week (Sunday first) Wednesday 11 Mar 2026 sits
         // four days into its week (8-14 Mar) and eleven into a 31-day month; 5 Jan 2026 is early enough

@@ -403,8 +403,46 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * [period]'s window moved by [config]'s whole span in [direction], the same shape as
+     * [shiftPeriod] but with the step read off the preset instead of off the window's day count.
+     */
+    private fun shiftByConfig(period: StatsPeriod, config: PeriodConfig, direction: Int): StatsPeriod.Custom {
+        val (start, end) = currentPeriodWindow(period)
+        val amount = (config.quantity * direction).toLong()
+        val (newStart, newEnd) = when (config.dateUnit) {
+            DateUnit.YEAR -> start.plusYears(amount) to end.plusYears(amount)
+            DateUnit.MONTH -> start.plusMonths(amount) to end.plusMonths(amount)
+            DateUnit.DAY -> start.plusDays(amount) to end.plusDays(amount)
+        }
+        return StatsPeriod.Custom(newStart, newEnd)
+    }
+
+    /**
+     * The step a fixed-span rolling preset pages by, or null when the rhythm has to be read off the
+     * window instead — the calendar presets ([calendarUnitOf]), Today, and hand-picked Custom ranges,
+     * none of which [getPeriodConfig] describes.
+     *
+     * Taking the step from the preset rather than from the window's day span is what keeps a
+     * year-bucketed window paging by whole years: [unitFor] classifies by day count, and three whole
+     * year buckets running 1 Jan → 1 Jan measure exactly [MAX_DAYS_IN_2_YEARS] days whenever neither
+     * year between them is a leap year. On 1 January, Last 3 Years would otherwise be read as 25
+     * months and stepped a month at a time — the back arrow landing on 1 Dec..1 Dec, three bars still
+     * labelled as whole years with only December in the first, and the forward arrow unable to find
+     * its way back to the preset. The three day-unit and month-unit presets step identically either
+     * way; their windows can't reach the boundary.
+     */
+    private fun rollingStepOf(period: StatsPeriod): PeriodConfig? = when (period) {
+        is StatsPeriod.Last7Days,
+        is StatsPeriod.Last30Days,
+        is StatsPeriod.Last12Months,
+        is StatsPeriod.Last3Years -> getPeriodConfig(period)
+        else -> null
+    }
+
+    /**
      * Steps [period] one position in [direction], using calendar-unit steps for the calendar-aligned
-     * periods ([calendarUnitOf]) and the span-preserving [shiftPeriod] for everything else.
+     * periods ([calendarUnitOf]), the preset's own span for the rolling ones ([rollingStepOf]) and the
+     * span-preserving [shiftPeriod] for everything else.
      *
      * The rhythm comes from [origin] — the period the user picked — when the caller knows it, and from
      * the window's own shape otherwise. Paging produces concrete ranges, and a range's shape alone
@@ -412,12 +450,11 @@ class StatsRepository @Inject constructor(
      * like a calendar month.
      */
     private fun stepPeriod(period: StatsPeriod, direction: Int, origin: StatsPeriod? = null): StatsPeriod.Custom {
-        val calendarUnit = calendarUnitOf(origin ?: period)
-        return if (calendarUnit != null) {
-            calendarShift(period, calendarUnit, direction)
-        } else {
-            shiftPeriod(period, direction)
-        }
+        val rhythm = origin ?: period
+        val calendarUnit = calendarUnitOf(rhythm)
+        if (calendarUnit != null) return calendarShift(period, calendarUnit, direction)
+        return rollingStepOf(rhythm)?.let { shiftByConfig(period, it, direction) }
+            ?: shiftPeriod(period, direction)
     }
 
     /**
