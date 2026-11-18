@@ -334,8 +334,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 type = ReaderPostCardActionType.COMMENTS
             )
         } else {
+            // the card still shows the count, as the counts line it replaced did
             PrimaryAction(
                 isEnabled = false,
+                count = post.numReplies,
                 contentDescription = contentDescription,
                 type = ReaderPostCardActionType.COMMENTS
             )

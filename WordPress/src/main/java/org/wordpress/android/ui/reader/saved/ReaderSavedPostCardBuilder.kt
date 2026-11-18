@@ -56,8 +56,9 @@ class ReaderSavedPostCardBuilder @Inject constructor(
         return card.copy(
             blogSection = blogSection,
             moreMenuVisibility = false,
-            likeAction = card.likeAction.copy(isEnabled = false),
-            reblogAction = card.reblogAction.copy(isEnabled = false),
+            // without a count too, as a disabled action still shows one
+            likeAction = card.likeAction.copy(isEnabled = false, count = 0),
+            reblogAction = card.reblogAction.copy(isEnabled = false, count = 0),
             // rebuilt rather than routed like comments: the shared builder disables it for a post without IDs,
             // such as a page saved by URL, which still needs a way to be removed
             bookmarkAction = PrimaryAction(

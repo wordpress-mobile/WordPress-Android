@@ -83,9 +83,12 @@ class ReaderSavedPostsRepository @Inject constructor(
         }
     }
 
-    /** Whether saves go to a WordPress.com account. Without one, they're only kept on this device. */
+    /**
+     * Whether saves go to a WordPress.com account. Without one, they're only kept on this device, as they
+     * are just after sign-in until the account's details have loaded.
+     */
     val isSyncedWithAccount: Boolean
-        get() = accountStore.hasAccessToken()
+        get() = accountStore.hasAccessToken() && userId > 0
 
     private val userId: Long
         get() = accountStore.account.userId
@@ -98,14 +101,14 @@ class ReaderSavedPostsRepository @Inject constructor(
     /** [isSyncedListReady] as it changes, so the Saved tab can switch lists once the import finishes. */
     val syncedListReady: StateFlow<Boolean> = _syncedListReady.asStateFlow()
 
-
     /**
      * Whether [post] is saved, as far as this device knows. Doesn't touch the network, but reads the
-     * cache, so call it off the main thread.
+     * cache, so call it off the main thread. Until the device's saves are imported, the Saved tab shows
+     * the device's own list, so this answers as that list does.
      */
     fun isSaved(post: ReaderPost): Boolean {
         val status = try {
-            if (isSyncedWithAccount) peekService()?.status(post.toSaveIdentity()) else null
+            if (isSyncedListReady()) peekService()?.status(post.toSaveIdentity()) else null
         } catch (e: ReaderSavedException) {
             AppLog.e(T.READER, "Reading whether a post is saved failed", e)
             null
@@ -130,9 +133,15 @@ class ReaderSavedPostsRepository @Inject constructor(
         processLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) = sync()
         })
-        // created now so the state at launch is its baseline, and only a change to online syncs
+        // The monitor posts its first state after this runs, and onStart syncs at launch anyway, so only a
+        // later change to online syncs
+        var isFirstStatus = networkConnectionMonitor.isConnected.value == null
         ConnectionStatusLiveData(networkConnectionMonitor.isConnected).observeForever { status ->
-            if (status == ConnectionStatus.AVAILABLE) sync()
+            if (isFirstStatus) {
+                isFirstStatus = false
+            } else if (status == ConnectionStatus.AVAILABLE) {
+                sync()
+            }
         }
     }
 
@@ -141,6 +150,8 @@ class ReaderSavedPostsRepository @Inject constructor(
      * catches up with saves made elsewhere.
      */
     fun sync() {
+        // the account can change without a sign-out, such as when its token is replaced
+        _syncedListReady.value = isSyncedListReady()
         if (!isSyncedWithAccount) return
         appScope.launch(ioDispatcher) {
             importLocalSavesIfNeeded()
@@ -244,7 +255,9 @@ class ReaderSavedPostsRepository @Inject constructor(
             importMutex.withLock {
                 try {
                     if (savesImported) {
-                        (service ?: createService(userId))?.let { dropLocalCopiesOfAccountSaves(it) }
+                        (service ?: createService(userId))?.use { dropLocalCopiesOfAccountSaves(it) }
+                    } else {
+                        service?.close()
                     }
                     wpServiceProvider.getOrCreateCache().cache.removeWordpressComAccount(userId.toULong())
                 } catch (e: SqliteDbException) {
@@ -262,7 +275,7 @@ class ReaderSavedPostsRepository @Inject constructor(
      */
     private suspend fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {
         // wordpress-rs only lists unsent saves as part of the saved list, which includes every pending row
-        val unsent = service.savedPosts().loadItems()
+        val unsent = service.savedPosts().use { it.loadItems() }
             .filter { it.isPending || it.isWaitingForRoom }
             .map { readerSavedKeyNormalized(it.key) }
             .toSet()
@@ -273,6 +286,8 @@ class ReaderSavedPostsRepository @Inject constructor(
                 !isUnsent && service.status(identity) == ReaderSavedStatus.SAVED
             }
             .forEach { readerPostTableWrapper.setBookmarkFlag(it.blogId, it.postId, false) }
+        // otherwise the device's Saved list shows each as a post just removed, with an Undo
+        readerPostTableWrapper.purgeUnbookmarkedPostsWithBookmarkTag()
     }
 
     private suspend fun write(block: suspend (ReaderSavedService) -> Unit): WriteResult =
@@ -326,6 +341,10 @@ class ReaderSavedPostsRepository @Inject constructor(
             wpServiceProvider.getOrCreateCache().cache,
             userId.toULong()
         )
+    } catch (e: SqliteDbException) {
+        // opening the cache, such as a database that can't be migrated
+        AppLog.e(T.READER, "Creating the saved posts service failed", e)
+        null
     } catch (e: ReaderSavedException) {
         AppLog.e(T.READER, "Creating the saved posts service failed", e)
         null

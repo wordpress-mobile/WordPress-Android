@@ -843,6 +843,14 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a post whose comments can't be opened from the card still shows their count`() = test {
+        val uiState = mapPostToUiState(createPost(isDiscoverPost = true, numOfReplies = 12))
+
+        assertThat(uiState.commentsAction.isEnabled).isFalse
+        assertThat(uiState.commentsAction.count).isEqualTo(12)
+    }
+
+    @Test
     fun `Count on Comments button corresponds to number of comments on the post`() = test {
         // Arrange
         val numReplies = 15

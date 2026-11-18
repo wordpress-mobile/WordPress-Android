@@ -95,13 +95,14 @@ fun ReaderSavedListItem.toCardPost(): ReaderPost = ReaderPost().also { card ->
     // Always set: the card reads it, and a post that never had it set crashes the card. A save without the
     // post's date, such as one wordpress-rs hasn't fetched yet, shows when it was saved instead.
     card.setDatePublished((post?.date ?: dateSaved)?.let { DateTimeUtils.iso8601UTCFromDate(it) })
-    // the saved post doesn't say, and the card only offers comments for a WordPress.com post that has them open
-    card.isCommentsOpen = !card.isExternal && card.blogId != 0L
+    // the saved post doesn't say whether comments are open, so the card only offers them when there are some
+    card.isCommentsOpen = false
     card.isBookmarked = true
 }
 
 private fun ReaderPost.fillFrom(record: ReaderPostRecord) {
-    title = record.title
+    // a post without a title keeps the address it was saved under
+    record.title?.ifBlank { null }?.let { title = it }
     excerpt = record.excerpt
     featuredImage = record.displayImageUrl?.ifBlank { null } ?: record.featuredImage
     record.siteName?.ifBlank { null }?.let { blogName = it }

@@ -64,6 +64,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
         data class OpenSite(val blogId: Long, val feedId: Long, val isFollowed: Boolean) : Event()
         data class Unsaved(val item: ReaderSavedListItem) : Event()
         data object RequestFailed : Event()
+        data object NoNetwork : Event()
 
         /** Undoing an unsave went past the account's limit of saved posts. */
         data object TooManySaves : Event()
@@ -141,9 +142,13 @@ class ReaderSavedPostsViewModel @Inject constructor(
         when {
             // the saved list couldn't be opened, so try again
             collection == null -> if (!isStarted) start(photonWidth, photonHeight)
-            _uiState.value.isRefreshing -> Unit
-            !networkUtilsWrapper.isNetworkAvailable() ->
+            // a refresh would replace the page being loaded
+            _uiState.value.isRefreshing || _uiState.value.isLoadingMore -> Unit
+            !networkUtilsWrapper.isNetworkAvailable() -> {
                 _uiState.update { it.copy(error = ReaderPostListEmptyState.NoConnection) }
+                // the error only shows in place of an empty list, so say so when there are posts
+                if (_uiState.value.posts.isNotEmpty()) _events.trySend(Event.NoNetwork)
+            }
             else -> refresh(collection)
         }
     }
@@ -154,6 +159,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
             val succeeded = runRequest { collection.refresh() }
             val error = if (succeeded) null else ReaderPostListEmptyState.RequestFailed(isSearch = false)
             _uiState.update { it.copy(isRefreshing = false, error = error) }
+            if (!succeeded && _uiState.value.posts.isNotEmpty()) _events.send(Event.RequestFailed)
             requestReload()
         }
     }
@@ -198,6 +204,10 @@ class ReaderSavedPostsViewModel @Inject constructor(
                 repository.unsaveKey(item.key)
             }
             if (result == WriteResult.SUCCEEDED) {
+                // a failed refresh's message no longer describes the list, such as one this leaves empty
+                _uiState.update { state ->
+                    state.copy(error = state.error.takeUnless { it is ReaderPostListEmptyState.RequestFailed })
+                }
                 track(AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST, item)
                 _events.send(Event.Unsaved(item))
             } else {
@@ -259,6 +269,10 @@ class ReaderSavedPostsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(posts = posts, isLoaded = true, hasMore = info.hasMore == true)
             }
+            // back online, such as after the sync a reconnect starts, so the offline message no longer holds
+            val isBackOnline = _uiState.value.error == ReaderPostListEmptyState.NoConnection &&
+                networkUtilsWrapper.isNetworkAvailable()
+            if (isBackOnline) refresh()
         } catch (e: ReaderSavedException) {
             AppLog.e(T.READER, "Loading saved posts failed", e)
             _uiState.update { it.copy(isLoaded = true) }
@@ -279,5 +293,6 @@ class ReaderSavedPostsViewModel @Inject constructor(
 
     override fun onCleared() {
         observable?.close()
+        collection?.close()
     }
 }

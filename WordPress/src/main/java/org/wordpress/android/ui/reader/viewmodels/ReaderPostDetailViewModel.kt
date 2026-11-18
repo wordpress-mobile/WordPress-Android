@@ -819,14 +819,21 @@ class ReaderPostDetailViewModel @Inject constructor(
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
     }
 
+    private var updatePostActionsJob: Job? = null
+
     private fun updatePostActions(post: ReaderPost) {
         if (_uiState.value !is ReaderPostDetailsUiState) return
-        viewModelScope.launch {
+        // the latest update wins, as updates built off the main thread can finish out of order
+        updatePostActionsJob?.cancel()
+        updatePostActionsJob = viewModelScope.launch {
             // off the main thread, as whether the post is saved is read from the saved posts cache
             val actions = withContext(bgDispatcher) {
                 postDetailUiStateBuilder.buildPostActions(post, this@ReaderPostDetailViewModel::onButtonClicked)
             }
-            (_uiState.value as? ReaderPostDetailsUiState)?.let { _uiState.value = it.copy(actions = actions) }
+            // unless another post is showing by now
+            (_uiState.value as? ReaderPostDetailsUiState)
+                ?.takeIf { it.postId == post.postId && it.blogId == post.blogId }
+                ?.let { _uiState.value = it.copy(actions = actions) }
         }
     }
 
