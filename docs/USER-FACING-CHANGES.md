@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Experimental block editor needs an application password on private Atomic sites**
+  Opening the experimental block editor on a private or Coming Soon WordPress.com site with hosting features (Atomic) now requires an application password, as it already did for public Atomic sites. The app creates one automatically when the site is selected in My Site, so most people won't notice. If none exists yet, the editor shows "Application Password Required" instead of opening, and choosing Create shows a generic error.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → opening a post or page on a private or Coming Soon Atomic site
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. To recover, switch to another site and back in My Site, which creates the password, then open the post again. Before, the editor opened using the WordPress.com account's sign-in instead of a password for the site. The dialog's text calls the site "self-hosted", and My Site shows "This site is private, so we can't reconnect to it" while no password exists.
+
 - **Authors in Stats list each author's posts again**
   Rows in the redesigned Stats' Authors card, and in its full list, now expand to show that author's posts in the period with the views each one got, and tapping a post opens that post's stats — what the old Stats' Authors block did. An author the Stats API reports no posts for has no chevron and does not react to a tap.
   - **Apps:** Both
