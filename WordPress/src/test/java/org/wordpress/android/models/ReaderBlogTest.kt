@@ -98,16 +98,18 @@ class ReaderBlogTest {
     }
 
     /*
-     * a site the API refused is still a site, so it keeps its own id rather than being stored as the
-     * external feed its feed_ID would make it
+     * the feed of a subscription whose site the API refused is the only readable thing left, so the
+     * subscription is stored as that feed rather than as the site it can't read posts from
      */
     @Test
-    fun `subscription whose site the API refused keeps its site id when the feed is returned`() {
+    fun `subscription whose site the API refused is parsed from the feed it carries`() {
         val blog = ReaderBlog.fromJson(JSONObject(REFUSED_SITE_WITH_FEED_SUBSCRIPTION_JSON))
 
-        assertThat(blog.blogId).isEqualTo(257682375L)
-        assertThat(blog.feedId).isEqualTo(0L)
+        assertThat(blog.feedId).isEqualTo(182300651L)
+        assertThat(blog.blogId).isEqualTo(182300651L)
         assertThat(blog.name).isEqualTo("crafdp2")
+        assertThat(blog.numSubscribers).isEqualTo(4)
+        assertThat(blog.imageUrl).isEqualTo("https://crafdp2.wordpress.com/icon.png")
         assertThat(blog.organizationId).isEqualTo(1)
         assertThat(blog.isFollowing).isTrue()
     }

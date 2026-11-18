@@ -88,7 +88,7 @@ public class ReaderBlog {
         }
 
         if (isSubscription) {
-            fillGapsFromSubscription(blog, json);
+            fillGapsFromSubscription(blog, json, jsonSite != null || jsonFeed != null);
         }
 
         blog.numUnseenPosts = json.optInt("unseen_count");
@@ -122,15 +122,12 @@ public class ReaderBlog {
      * subscription's own fields - for a subscription the user can't access the site or feed comes back
      * as an error, or with no name and no URL, and then this is all the API tells us about it
      */
-    private static void fillGapsFromSubscription(ReaderBlog blog, JSONObject json) {
-        if (blog.blogId == 0) {
+    private static void fillGapsFromSubscription(ReaderBlog blog, JSONObject json, boolean hasSiteOrFeed) {
+        if (!hasSiteOrFeed) {
+            // neither the site nor the feed identified this subscription, so its own ids do - a site by
+            // its blog id alone, as it is when the API does return its site
             blog.blogId = json.optLong("blog_ID");
-        }
-        if (blog.blogId != 0) {
-            // a site is keyed by its blog id alone, as it is when the API does return its site
-            blog.feedId = 0;
-        } else if (blog.feedId == 0) {
-            blog.feedId = json.optLong("feed_ID");
+            blog.feedId = blog.blogId == 0 ? json.optLong("feed_ID") : 0;
         }
         if (!blog.hasName()) {
             blog.setName(JSONUtils.getStringDecoded(json, "name"));
