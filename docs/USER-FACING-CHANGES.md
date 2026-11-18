@@ -16,6 +16,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Stats → Traffic → period menu
   - **Notes:** The current year's bar covers the year so far, the same way Last 12 months ends on a part-finished month, and the selector's second line names the years ("2024 - 2026") rather than exact dates. The totals above the chart compare the three years against the three before them, not each year against the previous one. Stepping back and forward with the arrows moves three years at a time. Tapping a year's bar selects that whole year, so the cards below the chart cover it; the current year's bar covers the year up to today. The iOS app and the web version offer the same preset.
 
+- **Authors in Stats list each author's posts again**
+  Rows in the redesigned Stats' Authors card, and in its full list, now expand to show that author's posts in the period with the views each one got, and tapping a post opens that post's stats — what the old Stats' Authors block did. An author the Stats API reports no posts for has no chevron and does not react to a tap.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Authors card, and the card's Show all
+  - **Notes:** The posts come from the Stats response the card already fetches, so nothing extra is requested. How many posts an author lists is whatever the API returns for the period, and the views under an expanded author can add up to less than the author's own total when the API reports only their top posts.
+
+- **Subscriptions to sites the Reader can't read are listed again**
+  A site you subscribe to now appears in your subscriptions even when WordPress.com returns no details for it, which it does for sites it treats as private. Such a subscription used to be left out of the subscribed sites list and of the Reader's site filter, so subscribing to the site looked as if it had silently failed, and entering its address again subscribed a second time instead of saying you were already subscribed.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → site or tag filter → Manage → Subscribed blogs
+  - **Notes:** The subscription was always created on the server; only the app's list left it out. Such a site may be listed with its address as the name and no icon, depending on what WordPress.com returns for it, and opening one may show no posts. A site's header also no longer says "0 subscribers" when the subscriber count isn't known.
+
 - **Reader post screen's bars and sections rebuilt**
   The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
   - **Apps:** Both
