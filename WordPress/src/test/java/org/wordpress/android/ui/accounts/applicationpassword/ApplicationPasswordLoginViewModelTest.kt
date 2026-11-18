@@ -183,6 +183,32 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given the server blocks the Authorization header, when setup site, then emit its error without fetching or crash report`() =
+        runTest {
+            // Given
+            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
+                showSiteSelector = false,
+                siteUrl = urlLogin.siteUrl,
+                oldSitesIDs = null,
+                isError = true,
+                errorMessage = ApplicationPasswordLoginHelper.AUTHORIZATION_HEADER_BLOCKED
+            )
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
+                .thenReturn(StoreCredentialsResult.AuthorizationHeaderBlocked)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then
+                assertEquals(expectedResult, awaitItem())
+                verify(dispatcher, never()).dispatch(any())
+                verify(crashLogging, never()).sendReport(any(), any(), any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
     fun `given intent rawData, when setup site and not able to store credentials and throw error fetching, then fetch them and emit error`() =
         runTest {
             // Given

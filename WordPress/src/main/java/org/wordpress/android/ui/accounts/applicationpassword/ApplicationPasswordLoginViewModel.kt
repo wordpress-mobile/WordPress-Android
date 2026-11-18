@@ -117,6 +117,15 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                         errorMessage = "bad_data"
                     )
                 }
+                is StoreCredentialsResult.AuthorizationHeaderBlocked -> {
+                    // Already tracked inside the helper. The site's server configuration causes it,
+                    // not a bug in the app, so it isn't reported to Sentry.
+                    emitError(
+                        siteUrl = urlLogin.siteUrl.orEmpty(),
+                        errorMessage = ApplicationPasswordLoginHelper.AUTHORIZATION_HEADER_BLOCKED,
+                        reportToSentry = false,
+                    )
+                }
             }
         }
     }
