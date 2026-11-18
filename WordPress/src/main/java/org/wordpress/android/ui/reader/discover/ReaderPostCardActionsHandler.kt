@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.TooManySaves
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
@@ -508,11 +509,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 )
                 // the post reads as saved or unsaved already, so show it rather than wait for the server
                 Started -> _refreshPosts.postValue(Event(Unit))
-                Failed -> {
+                // the save was undone, so show the post as it is again
+                Failed, TooManySaves -> {
                     _refreshPosts.postValue(Event(Unit))
-                    _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
-                    )
+                    val message = if (it == TooManySaves) {
+                        R.string.reader_saved_posts_limit_reached
+                    } else {
+                        R.string.reader_error_request_failed_title
+                    }
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
                 }
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and

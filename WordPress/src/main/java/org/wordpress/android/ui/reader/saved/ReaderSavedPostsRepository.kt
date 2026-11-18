@@ -158,7 +158,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     }
 
     /**
-     * Saves or unsaves a post on the account, and returns whether it worked. A save with [details]
+     * Saves or unsaves a post on the account, and returns how it went. A save with [details]
      * sends them along, so the Saved list shows the post straight away instead of an empty row until
      * the next refresh. The write finishes even if the caller is cancelled, so the server sees writes
      * in the order they were made.
@@ -167,7 +167,7 @@ class ReaderSavedPostsRepository @Inject constructor(
         identity: ReaderPostSaveIdentity,
         saved: Boolean,
         details: uniffi.wp_api.ReaderPost? = null
-    ): Boolean = write {
+    ): WriteResult = write {
         when {
             !saved -> it.unsave(identity)
             details != null -> it.saveWithDetails(details)
@@ -176,7 +176,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     }
 
     /** Unsaves a key from the saved list that has no post, such as a page saved by URL. */
-    suspend fun unsaveKey(key: ReaderSavedKey): Boolean = write { it.unsaveKey(key) }
+    suspend fun unsaveKey(key: ReaderSavedKey): WriteResult = write { it.unsaveKey(key) }
 
     /** The account's saved list, or null when there's no account. */
     suspend fun savedPosts(): ReaderSavedPostsCollection? = withContext(ioDispatcher) { getService()?.savedPosts() }
@@ -226,15 +226,18 @@ class ReaderSavedPostsRepository @Inject constructor(
             .forEach { readerPostTableWrapper.setBookmarkFlag(it.blogId, it.postId, false) }
     }
 
-    private suspend fun write(block: suspend (ReaderSavedService) -> Unit): Boolean =
+    private suspend fun write(block: suspend (ReaderSavedService) -> Unit): WriteResult =
         withContext(NonCancellable + ioDispatcher) {
-            val service = getService() ?: return@withContext false
+            val service = getService() ?: return@withContext WriteResult.FAILED
             try {
                 block(service)
-                true
+                WriteResult.SUCCEEDED
+            } catch (e: ReaderSavedException.TooManySaves) {
+                AppLog.w(T.READER, "Saving a post failed: the account has reached its save limit")
+                WriteResult.TOO_MANY_SAVES
             } catch (e: ReaderSavedException) {
                 AppLog.e(T.READER, "Saving or unsaving a post failed", e)
-                false
+                WriteResult.FAILED
             }
         }
 
@@ -280,4 +283,13 @@ class ReaderSavedPostsRepository @Inject constructor(
     }
 
     private class AccountService(val userId: Long, val service: ReaderSavedService)
+
+    /** How a save or unsave ended. One made offline succeeds: it's sent with the next sync. */
+    enum class WriteResult {
+        SUCCEEDED,
+        FAILED,
+
+        /** The account has reached its limit of saved posts, so the save was undone. */
+        TOO_MANY_SAVES,
+    }
 }

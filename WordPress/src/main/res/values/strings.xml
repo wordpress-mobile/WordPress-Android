@@ -2475,6 +2475,7 @@
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_saved_posts_limit_reached">You\'ve reached the limit of saved posts. Remove some to save more.</string>
     <string name="reader_saved_post_removed">Removed from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_bookmark_snack_title">Post saved</string>

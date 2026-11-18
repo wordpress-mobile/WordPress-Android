@@ -12,6 +12,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository.WriteResult
 import org.wordpress.android.ui.reader.saved.toSaveIdentity
 import org.wordpress.android.ui.reader.saved.toSavedPostDetails
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.TooManySaves
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -40,10 +42,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     ) = flow {
         // offline, a synced save or unsave waits on this device and goes with the next sync
         val bookmarked = if (savedPostsRepository.isSyncedWithAccount) {
-            updatePostOnAccount(post.blogId, post.postId) ?: run {
-                emit(Failed)
-                return@flow
-            }
+            updatePostOnAccount(post.blogId, post.postId) ?: return@flow
         } else {
             updatePostInDb(post.blogId, post.postId)
         }
@@ -66,7 +65,8 @@ class ReaderPostBookmarkUseCase @Inject constructor(
 
     /**
      * Saves or unsaves the post on the account, then keeps the local copy in step so it can still be
-     * read offline. Returns whether the post is now saved, or null if the account couldn't be updated.
+     * read offline. Returns whether the post is now saved, or null if the account couldn't be updated,
+     * after emitting why: [Failed], or [TooManySaves] for a save past the account's limit.
      *
      * Emits [Started] once the change shows, which is as soon as the write starts rather than when the
      * server answers. If the server refuses it, the change is undone and [Failed] follows.
@@ -75,7 +75,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         val post = getPostFromDb(blogId, postId)
         val setToBookmarked = !savedPostsRepository.isSaved(post)
         val details = if (setToBookmarked) post.toSavedPostDetails() else null
-        val succeeded = coroutineScope {
+        val result = coroutineScope {
             // subscribed before the write starts, so its first change isn't missed
             val changed = async(start = CoroutineStart.UNDISPATCHED) { savedPostsRepository.changes.first() }
             val write = async { savedPostsRepository.setSaved(post.toSaveIdentity(), setToBookmarked, details) }
@@ -87,8 +87,16 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             if (showsChange) emit(Started)
             write.await()
         }
-        if (!succeeded) {
-            return null
+        when (result) {
+            WriteResult.SUCCEEDED -> Unit
+            WriteResult.FAILED -> {
+                emit(Failed)
+                return null
+            }
+            WriteResult.TOO_MANY_SAVES -> {
+                emit(TooManySaves)
+                return null
+            }
         }
         // the local flag can disagree with the account, so only change it when it differs
         if (post.isBookmarked != setToBookmarked) {
@@ -143,4 +151,7 @@ sealed class BookmarkPostState {
     /** A synced save or unsave shows, while the server hasn't answered yet. [Success] or [Failed] follows. */
     data object Started : BookmarkPostState()
     data object Failed : BookmarkPostState()
+
+    /** A save past the account's limit of saved posts, which was undone. */
+    data object TooManySaves : BookmarkPostState()
 }

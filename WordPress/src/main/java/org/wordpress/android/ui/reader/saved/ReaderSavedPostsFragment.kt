@@ -101,6 +101,7 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
                 R.string.undo.takeIf { event.item.post != null }
             ) { viewModel.onUndoUnsave(event.item) }
             ReaderSavedPostsViewModel.Event.RequestFailed -> showMessage(R.string.reader_error_request_failed_title)
+            ReaderSavedPostsViewModel.Event.TooManySaves -> showMessage(R.string.reader_saved_posts_limit_reached)
             ReaderSavedPostsViewModel.Event.LoadMoreFailed ->
                 showMessage(R.string.reader_error_request_failed_title, R.string.retry, viewModel::loadMore)
         }

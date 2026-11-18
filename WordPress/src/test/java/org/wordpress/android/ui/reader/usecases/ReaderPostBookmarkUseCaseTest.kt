@@ -23,6 +23,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository.WriteResult
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -68,7 +69,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false, networkAvailable = false)
         whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(WriteResult.SUCCEEDED)
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
@@ -81,7 +82,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(WriteResult.SUCCEEDED)
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
@@ -97,7 +98,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenAnswer {
             // what wordpress-rs does when the write starts
             savedChanges.tryEmit(Unit)
-            true
+            WriteResult.SUCCEEDED
         }
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
@@ -110,7 +111,7 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(true)
-        whenever(savedPostsRepository.setSaved(any(), eq(false), anyOrNull())).thenReturn(true)
+        whenever(savedPostsRepository.setSaved(any(), eq(false), anyOrNull())).thenReturn(WriteResult.SUCCEEDED)
 
         val result = useCase.toggleBookmark(post(), true, SOURCE).toList(mutableListOf())
 
@@ -123,12 +124,25 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
         whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(WriteResult.FAILED)
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
         verify(readerPostRepository, never()).setBookmarked(any(), any())
         assertThat(result).containsExactly(BookmarkPostState.Failed)
+    }
+
+    @Test
+    fun `when synced and the account is full, TooManySaves is emitted and the local flag is untouched`() = test {
+        val dummyPost = init(isBookmarked = false)
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
+        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(WriteResult.TOO_MANY_SAVES)
+
+        val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
+
+        verify(readerPostRepository, never()).setBookmarked(any(), any())
+        assertThat(result).containsExactly(BookmarkPostState.TooManySaves)
     }
 
     @Test

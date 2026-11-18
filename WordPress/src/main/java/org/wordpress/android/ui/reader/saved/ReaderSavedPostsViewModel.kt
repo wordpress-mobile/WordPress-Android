@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository.WriteResult
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.util.AppLog
@@ -63,6 +64,9 @@ class ReaderSavedPostsViewModel @Inject constructor(
         data class OpenSite(val blogId: Long, val feedId: Long, val isFollowed: Boolean) : Event()
         data class Unsaved(val item: ReaderSavedListItem) : Event()
         data object RequestFailed : Event()
+
+        /** Undoing an unsave went past the account's limit of saved posts. */
+        data object TooManySaves : Event()
         data object LoadMoreFailed : Event()
     }
 
@@ -179,12 +183,12 @@ class ReaderSavedPostsViewModel @Inject constructor(
         // offline, the unsave waits on this device and goes with the next sync
         viewModelScope.launch {
             val identity = item.post?.identity
-            val succeeded = if (identity != null) {
+            val result = if (identity != null) {
                 setSaved(identity, saved = false)
             } else {
                 repository.unsaveKey(item.key)
             }
-            if (succeeded) {
+            if (result == WriteResult.SUCCEEDED) {
                 track(AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST, item)
                 _events.send(Event.Unsaved(item))
             } else {
@@ -197,10 +201,10 @@ class ReaderSavedPostsViewModel @Inject constructor(
     fun onUndoUnsave(item: ReaderSavedListItem) {
         val identity = item.post?.identity ?: return
         viewModelScope.launch {
-            if (setSaved(identity, saved = true)) {
-                track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST, item)
-            } else {
-                _events.send(Event.RequestFailed)
+            when (setSaved(identity, saved = true)) {
+                WriteResult.SUCCEEDED -> track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST, item)
+                WriteResult.FAILED -> _events.send(Event.RequestFailed)
+                WriteResult.TOO_MANY_SAVES -> _events.send(Event.TooManySaves)
             }
         }
     }
@@ -218,14 +222,14 @@ class ReaderSavedPostsViewModel @Inject constructor(
     }
 
     /** Saves or unsaves on the account, and keeps the post's local copy, if there is one, in step. */
-    private suspend fun setSaved(identity: ReaderPostSaveIdentity, saved: Boolean): Boolean {
-        val succeeded = repository.setSaved(identity, saved)
-        if (succeeded) {
+    private suspend fun setSaved(identity: ReaderPostSaveIdentity, saved: Boolean): WriteResult {
+        val result = repository.setSaved(identity, saved)
+        if (result == WriteResult.SUCCEEDED) {
             withContext(ioDispatcher) {
                 readerPostTableWrapper.setBookmarkFlag(identity.localBlogId, identity.localPostId, saved)
             }
         }
-        return succeeded
+        return result
     }
 
     private fun requestReload() {

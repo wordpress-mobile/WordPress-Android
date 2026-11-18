@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.CompactBlogSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository.WriteResult
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsViewModel.Event
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
@@ -67,7 +68,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `unsaving offline still unsaves, since wordpress-rs sends it with the next sync`() = test {
-        whenever(repository.setSaved(identity, false)).thenReturn(true)
+        whenever(repository.setSaved(identity, false)).thenReturn(WriteResult.SUCCEEDED)
 
         viewModel.onUnsaveClicked(postItem)
 
@@ -77,7 +78,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `unsaving a post unsaves it on the account and clears its local flag`() = test {
-        whenever(repository.setSaved(identity, false)).thenReturn(true)
+        whenever(repository.setSaved(identity, false)).thenReturn(WriteResult.SUCCEEDED)
 
         viewModel.onUnsaveClicked(postItem)
 
@@ -87,7 +88,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `unsaving a post is tracked as the device's Saved list tracks it`() = test {
-        whenever(repository.setSaved(identity, false)).thenReturn(true)
+        whenever(repository.setSaved(identity, false)).thenReturn(WriteResult.SUCCEEDED)
 
         viewModel.onUnsaveClicked(postItem)
         viewModel.events.first()
@@ -103,7 +104,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `a failed unsave reports the failure and leaves the local flag alone`() = test {
-        whenever(repository.setSaved(identity, false)).thenReturn(false)
+        whenever(repository.setSaved(identity, false)).thenReturn(WriteResult.FAILED)
 
         viewModel.onUnsaveClicked(postItem)
 
@@ -114,7 +115,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
     @Test
     fun `unsaving an item without a post unsaves its key`() = test {
         val urlItem = ReaderSavedListItem(ReaderSavedKey.Url("https://example.com"), null, null, false, false)
-        whenever(repository.unsaveKey(urlItem.key)).thenReturn(true)
+        whenever(repository.unsaveKey(urlItem.key)).thenReturn(WriteResult.SUCCEEDED)
 
         viewModel.onUnsaveClicked(urlItem)
 
