@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Authors in Stats list each author's posts again**
+  Rows in the redesigned Stats' Authors card, and in its full list, now expand to show that author's posts in the period with the views each one got, and tapping a post opens that post's stats — what the old Stats' Authors block did. An author the Stats API reports no posts for has no chevron and does not react to a tap.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Authors card, and the card's Show all
+  - **Notes:** The posts come from the Stats response the card already fetches, so nothing extra is requested. How many posts an author lists is whatever the API returns for the period, and the views under an expanded author can add up to less than the author's own total when the API reports only their top posts.
+
 - **Subscriptions to sites the Reader can't read are listed again**
   A site you subscribe to now appears in your subscriptions even when WordPress.com returns no details for it, which it does for sites it treats as private. Such a subscription used to be left out of the subscribed sites list and of the Reader's site filter, so subscribing to the site looked as if it had silently failed, and entering its address again subscribed a second time instead of saying you were already subscribed.
   - **Apps:** Both

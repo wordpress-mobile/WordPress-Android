@@ -19,6 +19,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
+import org.wordpress.android.ui.newstats.repository.TopAuthorPostData
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
 
 @ExperimentalCoroutinesApi
@@ -424,6 +425,54 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
         assertThat(state.authors[0].change).isEqualTo(StatsViewChange.NoChange)
+    }
+    // endregion
+
+    // region Author posts
+    @Test
+    fun `when an author has posts, then they are mapped onto the ui item`() = test {
+        val authors = listOf(
+            TopAuthorItemData(
+                name = "Author 1",
+                avatarUrl = null,
+                views = 150,
+                previousViews = 100,
+                posts = listOf(
+                    TopAuthorPostData(id = 11L, title = "Most read", views = 100),
+                    TopAuthorPostData(id = 12L, title = "Less read", views = 50)
+                )
+            )
+        )
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(
+                TopAuthorsResult.Success(
+                    authors = authors,
+                    totalViews = 150,
+                    totalViewsChange = 50,
+                    totalViewsChangePercent = 50.0
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
+        assertThat(state.authors[0].posts).containsExactly(
+            AuthorPostUiItem(id = 11L, title = "Most read", views = 100),
+            AuthorPostUiItem(id = 12L, title = "Less read", views = 50)
+        )
+    }
+
+    @Test
+    fun `when an author has no posts, then its ui item carries none`() = test {
+        whenever(statsRepository.fetchTopAuthors(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as AuthorsCardUiState.Loaded
+        assertThat(state.authors[0].posts).isEmpty()
     }
     // endregion
 
