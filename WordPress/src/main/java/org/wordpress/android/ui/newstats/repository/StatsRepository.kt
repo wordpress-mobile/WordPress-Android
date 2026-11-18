@@ -2163,7 +2163,16 @@ class StatsRepository @Inject constructor(
                             name = author.name,
                             avatarUrl = author.avatarUrl,
                             views = author.views,
-                            previousViews = previousViews
+                            previousViews = previousViews,
+                            // The previous period is only fetched to compare totals, so the posts
+                            // listed under an author are the current period's.
+                            posts = author.posts.map { post ->
+                                TopAuthorPostData(
+                                    id = post.id,
+                                    title = post.title,
+                                    views = post.views
+                                )
+                            }
                         )
                     },
                     totalViews = totalViews,
@@ -3398,17 +3407,29 @@ sealed class TopAuthorsResult {
 
 /**
  * Data for a single top author item from the repository layer.
+ *
+ * @param posts The author's posts in the period, most viewed first. Empty when the API reports none.
  */
 data class TopAuthorItemData(
     val name: String,
     val avatarUrl: String?,
     val views: Long,
-    val previousViews: Long
+    val previousViews: Long,
+    val posts: List<TopAuthorPostData> = emptyList()
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
         get() = calculateItemChangePercent(views, previousViews)
 }
+
+/**
+ * Data for a single post of a top author from the repository layer.
+ */
+data class TopAuthorPostData(
+    val id: Long,
+    val title: String,
+    val views: Long
+)
 
 sealed class ClicksResult {
     data class Success(

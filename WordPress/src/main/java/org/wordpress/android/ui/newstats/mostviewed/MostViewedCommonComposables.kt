@@ -8,12 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,12 +19,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R
+import org.wordpress.android.ui.newstats.components.StatsExpandChevron
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.components.StatsOpenLinkIcon
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -118,7 +112,7 @@ internal fun MostViewedExpandableRow(
                 Column(horizontalAlignment = Alignment.End) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         if (hasChildren) {
-                            MostViewedExpandChevron(expanded = expanded)
+                            StatsExpandChevron(expanded = expanded)
                             Spacer(modifier = Modifier.width(4.dp))
                         } else if (linkUrl != null) {
                             StatsOpenLinkIcon()
@@ -143,22 +137,6 @@ internal fun MostViewedExpandableRow(
             onUrlClick = onUrlClick
         )
     }
-}
-
-/**
- * Expand/collapse chevron shown on a Most Viewed row that has children.
- * Shared by the card ([MostViewedCard]) and the detail screen ([MostViewedDetailActivity]).
- */
-@Composable
-internal fun MostViewedExpandChevron(expanded: Boolean) {
-    Icon(
-        imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-        contentDescription = stringResource(
-            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
-        ),
-        modifier = Modifier.size(16.dp),
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
-    )
 }
 
 /**
@@ -246,7 +224,7 @@ private fun MostViewedChildRow(
                 )
                 if (hasChildren) {
                     Spacer(modifier = Modifier.width(4.dp))
-                    MostViewedExpandChevron(expanded = expanded)
+                    StatsExpandChevron(expanded = expanded)
                 } else if (linkUrl != null) {
                     Spacer(modifier = Modifier.width(4.dp))
                     StatsOpenLinkIcon()

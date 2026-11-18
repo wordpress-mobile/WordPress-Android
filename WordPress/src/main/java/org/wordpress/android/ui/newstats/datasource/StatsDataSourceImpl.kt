@@ -31,6 +31,7 @@ import uniffi.wp_api.StatsPostWeek
 import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
+import uniffi.wp_api.StatsTopAuthorsAuthor
 import uniffi.wp_api.StatsTopAuthorsParams
 import uniffi.wp_api.StatsTopAuthorsPeriod
 import uniffi.wp_api.StatsTopPostsParams
@@ -494,6 +495,27 @@ class StatsDataSourceImpl @Inject constructor(
         )
     }
 
+    /**
+     * Maps the API's authors, including each author's posts -- which the Authors card and its
+     * detail screen list under an expanded row, as old Stats did.
+     */
+    @VisibleForTesting
+    internal fun mapTopAuthors(authors: List<StatsTopAuthorsAuthor>): List<TopAuthorItem> =
+        authors.map { author ->
+            TopAuthorItem(
+                name = author.name,
+                avatarUrl = author.avatar,
+                views = author.views.toLong(),
+                posts = author.posts.map { post ->
+                    TopAuthorPostItem(
+                        id = post.id.toLong(),
+                        title = post.title.orEmpty(),
+                        views = post.views.toLong()
+                    )
+                }
+            )
+        }
+
     override suspend fun fetchTopAuthors(
         siteId: Long,
         dateRange: StatsDateRange,
@@ -519,13 +541,7 @@ class StatsDataSourceImpl @Inject constructor(
                     "StatsDataSourceImpl: fetchTopAuthors success - ${authors.size} authors"
                 )
 
-                val authorItems = authors.map { author ->
-                    TopAuthorItem(
-                        name = author.name,
-                        avatarUrl = author.avatar,
-                        views = author.views.toLong()
-                    )
-                }
+                val authorItems = mapTopAuthors(authors)
                 val totalViews = authorItems.sumOf { it.views }
 
                 TopAuthorsDataResult.Success(
