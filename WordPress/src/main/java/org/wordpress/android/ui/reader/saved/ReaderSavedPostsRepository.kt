@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.reader.saved
 
+import androidx.annotation.MainThread
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
@@ -17,11 +20,14 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_api.ReaderSavedSource
@@ -48,6 +54,7 @@ import javax.inject.Singleton
 class ReaderSavedPostsRepository @Inject constructor(
     private val accountStore: AccountStore,
     private val wpServiceProvider: WpServiceProvider,
+    private val networkConnectionMonitor: NetworkConnectionMonitor,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -101,10 +108,28 @@ class ReaderSavedPostsRepository @Inject constructor(
         }
     }
 
+    private var isActivated = false
+
+    /**
+     * Syncs whenever the app comes to the foreground, launch included, and when the device comes back
+     * online, as wordpress-rs asks. Call once, after the [NetworkConnectionMonitor] has started.
+     */
+    @MainThread
+    fun activate(processLifecycleOwner: LifecycleOwner) {
+        if (isActivated) return
+        isActivated = true
+        processLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onStart(owner: LifecycleOwner) = sync()
+        })
+        // created now so the state at launch is its baseline, and only a change to online syncs
+        ConnectionStatusLiveData(networkConnectionMonitor.isConnected).observeForever { status ->
+            if (status == ConnectionStatus.AVAILABLE) sync()
+        }
+    }
+
     /**
      * Imports this device's saves if they haven't been, sends saves and unsaves made offline, then
-     * catches up with saves made elsewhere. Call at launch, on return to the foreground, and when the
-     * device comes back online, as wordpress-rs asks.
+     * catches up with saves made elsewhere.
      */
     fun sync() {
         if (!isSyncedWithAccount) return
@@ -215,6 +240,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     }
 
     private suspend fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {
+        // wordpress-rs only lists unsent saves as part of the saved list, which includes every pending row
         val unsent = service.savedPosts().loadItems()
             .filter { it.isPending || it.isWaitingForRoom }
             .map { readerSavedKeyNormalized(it.key) }

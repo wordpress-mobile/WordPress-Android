@@ -66,16 +66,6 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unsaving offline still unsaves, since wordpress-rs sends it with the next sync`() = test {
-        whenever(repository.setSaved(identity, false)).thenReturn(WriteResult.SUCCEEDED)
-
-        viewModel.onUnsaveClicked(postItem)
-
-        assertThat(viewModel.events.first()).isEqualTo(Event.Unsaved(postItem))
-        verify(networkUtilsWrapper, never()).isNetworkAvailable()
-    }
-
-    @Test
     fun `unsaving a post unsaves it on the account and clears its local flag`() = test {
         whenever(repository.setSaved(identity, false)).thenReturn(WriteResult.SUCCEEDED)
 

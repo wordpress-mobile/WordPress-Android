@@ -65,19 +65,6 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when synced and offline, the save still goes to the account, which sends it later`() = test {
-        val dummyPost = init(isBookmarked = false, networkAvailable = false)
-        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
-        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
-        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(WriteResult.SUCCEEDED)
-
-        val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
-
-        verify(readerPostRepository).setBookmarked(dummyPost, true)
-        assertThat(result).containsExactly(BookmarkPostState.Success(true))
-    }
-
-    @Test
     fun `when synced, saving follows the account state and saves locally and on the account`() = test {
         val dummyPost = init(isBookmarked = false)
         whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)

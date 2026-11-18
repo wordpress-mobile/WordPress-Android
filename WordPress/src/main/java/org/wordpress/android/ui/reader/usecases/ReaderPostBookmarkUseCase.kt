@@ -69,7 +69,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
      * after emitting why: [Failed], or [TooManySaves] for a save past the account's limit.
      *
      * Emits [Started] once the change shows, which is as soon as the write starts rather than when the
-     * server answers. If the server refuses it, the change is undone and [Failed] follows.
+     * server answers. If the server refuses it, the change is undone and [Failed] or [TooManySaves] follows.
      */
     private suspend fun FlowCollector<BookmarkPostState>.updatePostOnAccount(blogId: Long, postId: Long): Boolean? {
         val post = getPostFromDb(blogId, postId)
@@ -141,7 +141,10 @@ sealed class BookmarkPostState {
     data class PreLoadPostContent(val blogId: Long, val postId: Long) : BookmarkPostState()
     data class Success(val bookmarked: Boolean) : BookmarkPostState()
 
-    /** A synced save or unsave shows, while the server hasn't answered yet. [Success] or [Failed] follows. */
+    /**
+     * A synced save or unsave shows, while the server hasn't answered yet. [Success], [Failed] or [TooManySaves]
+     * follows.
+     */
     data object Started : BookmarkPostState()
     data object Failed : BookmarkPostState()
 
