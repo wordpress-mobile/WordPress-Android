@@ -8,10 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
-import org.mockito.Mockito.lenient
-import org.mockito.kotlin.any
-import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
@@ -34,6 +32,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.models.ReaderImageList
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -41,8 +40,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import java.util.Date
 
 @Suppress("LargeClass")
@@ -85,9 +84,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             savedPostsRepository,
             testDispatcher()
         )
-        lenient().whenever(savedPostsRepository.isSaved(any())).thenAnswer {
-            (it.arguments[0] as ReaderPost).isBookmarked
-        }
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
         val imageScanner: ReaderImageScanner = mock()

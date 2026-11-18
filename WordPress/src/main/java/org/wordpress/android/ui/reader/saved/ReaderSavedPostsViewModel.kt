@@ -174,19 +174,18 @@ class ReaderSavedPostsViewModel @Inject constructor(
 
     private fun onItemClicked(item: ReaderSavedListItem) {
         track(AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST, item)
-        viewModelScope.launch { _events.send(Event.OpenItem(item)) }
+        _events.trySend(Event.OpenItem(item))
     }
 
     private fun onCommentsClicked(item: ReaderSavedListItem) {
         val identity = item.post?.identity ?: return
-        viewModelScope.launch { _events.send(Event.OpenComments(identity.localBlogId, identity.localPostId)) }
+        _events.trySend(Event.OpenComments(identity.localBlogId, identity.localPostId))
     }
 
     private fun onSiteClicked(item: ReaderSavedListItem) {
         val identity = item.post?.identity ?: return
         val feedId = identity.feedId?.toLong() ?: 0L
-        val event = Event.OpenSite(identity.localBlogId, feedId, isFollowed = item.post?.isFollowing == true)
-        viewModelScope.launch { _events.send(event) }
+        _events.trySend(Event.OpenSite(identity.localBlogId, feedId, isFollowed = item.post?.isFollowing == true))
     }
 
     fun onUnsaveClicked(item: ReaderSavedListItem) {

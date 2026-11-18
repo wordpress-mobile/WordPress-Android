@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
+import com.google.android.material.R as MaterialR
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -8,9 +9,8 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
-import org.mockito.kotlin.any
-import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -19,10 +19,10 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
-import com.google.android.material.R as MaterialR
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)

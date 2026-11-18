@@ -98,9 +98,6 @@ class ReaderSavedPostsRepository @Inject constructor(
     /** [isSyncedListReady] as it changes, so the Saved tab can switch lists once the import finishes. */
     val syncedListReady: StateFlow<Boolean> = _syncedListReady.asStateFlow()
 
-    private fun updateSyncedListReady() {
-        _syncedListReady.value = isSyncedListReady()
-    }
 
     /**
      * Whether [post] is saved, as far as this device knows. Doesn't touch the network, but reads the
@@ -176,7 +173,7 @@ class ReaderSavedPostsRepository @Inject constructor(
             // unless the account was signed out while the import ran
             if (peekService() === service) {
                 appPrefsWrapper.setReaderSavedPostsImported(userId)
-                updateSyncedListReady()
+                _syncedListReady.value = isSyncedListReady()
             }
             trackImport(
                 "result" to "imported",
