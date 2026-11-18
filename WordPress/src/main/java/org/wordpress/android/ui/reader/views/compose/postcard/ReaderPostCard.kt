@@ -250,14 +250,14 @@ private fun ActionRow(uiState: ReaderPostUiState) {
                 uiState = uiState,
                 action = uiState.commentsAction,
                 iconRes = R.drawable.ic_comment_outline_new_24dp,
-                countText = countFormat.format(uiState.commentsAction.count),
+                countText = countText(uiState.commentsAction, countFormat),
             )
             ActionButton(
                 uiState = uiState,
                 action = uiState.likeAction,
                 iconRes = R.drawable.ic_like_outline_new_24dp,
                 selectedIconRes = R.drawable.ic_like_fill_new_24dp,
-                countText = countFormat.format(uiState.likeAction.count),
+                countText = countText(uiState.likeAction, countFormat),
             )
         }
         if (uiState.moreMenuVisibility) {
@@ -265,6 +265,10 @@ private fun ActionRow(uiState: ReaderPostUiState) {
         }
     }
 }
+
+/** The count beside an action's icon: zero only while the action can be used, as on iOS. */
+private fun countText(action: PrimaryAction, countFormat: CompactDecimalFormat): String? =
+    action.count.takeIf { action.isEnabled || it > 0 }?.let { countFormat.format(it) }
 
 @Composable
 private fun ActionButton(
@@ -274,7 +278,8 @@ private fun ActionButton(
     selectedIconRes: Int = iconRes,
     countText: String? = null,
 ) {
-    if (!action.isEnabled) return
+    // a count still shows when its action can't be used, such as likes for someone signed out
+    if (!action.isEnabled && countText == null) return
     val color = if (action.isSelected) {
         MaterialTheme.colorScheme.primary
     } else {
@@ -285,7 +290,9 @@ private fun ActionButton(
         modifier = Modifier
             .heightIn(min = ACTION_TOUCH_TARGET)
             .widthIn(min = ACTION_TOUCH_TARGET)
-            .clickable { action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type) }
+            .clickable(enabled = action.isEnabled) {
+                action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type)
+            }
             .semantics {
                 description?.let { contentDescription = it }
                 // TalkBack announces "selected" for a liked or saved post, as it did for the View-based card

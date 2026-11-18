@@ -246,6 +246,9 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun isReaderSavedPostsImported(userId: Long): Boolean = AppPrefs.isReaderSavedPostsImported(userId)
 
+    /** The WordPress.com user the Reader database belongs to. It's reset when a different one signs in. */
+    fun getLastUsedUserId(): Long = AppPrefs.getLastUsedUserId()
+
     fun setReaderSavedPostsImported(userId: Long) = AppPrefs.setReaderSavedPostsImported(userId)
 
     fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()

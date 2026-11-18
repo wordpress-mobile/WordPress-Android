@@ -111,7 +111,11 @@ class ReaderSavedPostsViewModel @Inject constructor(
         isStarted = true
         viewModelScope.launch {
             val collection = repository.savedPosts()?.also { collection = it } ?: run {
+                // shows the failure rather than a blank list, and a refresh tries again
                 isStarted = false
+                _uiState.update {
+                    it.copy(isLoaded = true, error = ReaderPostListEmptyState.RequestFailed(isSearch = false))
+                }
                 return@launch
             }
             observable = createObservableCollection(
@@ -134,11 +138,17 @@ class ReaderSavedPostsViewModel @Inject constructor(
 
     fun refresh() {
         val collection = collection
-        if (collection == null || _uiState.value.isRefreshing) return
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _uiState.update { it.copy(error = ReaderPostListEmptyState.NoConnection) }
-            return
+        when {
+            // the saved list couldn't be opened, so try again
+            collection == null -> if (!isStarted) start(photonWidth, photonHeight)
+            _uiState.value.isRefreshing -> Unit
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                _uiState.update { it.copy(error = ReaderPostListEmptyState.NoConnection) }
+            else -> refresh(collection)
         }
+    }
+
+    private fun refresh(collection: ReaderSavedPostsCollection) {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true, error = null) }
             val succeeded = runRequest { collection.refresh() }

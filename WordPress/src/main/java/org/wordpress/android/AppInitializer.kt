@@ -700,6 +700,9 @@ class AppInitializer @Inject constructor(
                     AppLog.i(T.READER, "User changed, resetting reader db")
                     ReaderDatabase.reset(false)
                 }
+                // After any reset above, so the device's saves that get imported are this account's. Also how a
+                // fresh sign-in starts syncing, without waiting for the app to come to the foreground again.
+                readerSavedPostsRepository.sync()
             } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
                 val hasUserOptedOut = !prefs.getBoolean(application.getString(R.string.pref_key_send_usage), true)

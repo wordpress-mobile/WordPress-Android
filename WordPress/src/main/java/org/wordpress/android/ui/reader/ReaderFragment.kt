@@ -30,6 +30,7 @@ import androidx.fragment.compose.AndroidFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -307,7 +308,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         }
         val modifier = Modifier.fillMaxSize()
         // until this device's saves are imported to the account, the device's own list shows them
-        val isSyncedSavedList = remember(tag) { tag.isBookmarked && savedPostsRepository.isSyncedListReady() }
+        val isSyncedListReady by savedPostsRepository.syncedListReady.collectAsStateWithLifecycle()
+        val isSyncedSavedList = tag.isBookmarked && isSyncedListReady
         when {
             tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier, onUpdate = ::onFeedAdded)
             tag.isTags -> AndroidFragment<ReaderTagsFeedFragment>(

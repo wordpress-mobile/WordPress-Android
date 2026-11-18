@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -109,6 +110,19 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
         viewModel.onUnsaveClicked(urlItem)
 
         assertThat(viewModel.events.first()).isEqualTo(Event.Unsaved(urlItem))
+    }
+
+    @Test
+    fun `a saved list that can't be opened shows the failure, and a refresh tries again`() = test {
+        whenever(repository.savedPosts()).thenReturn(null)
+
+        viewModel.start(photonWidth = 100, photonHeight = 50)
+        val state = viewModel.uiState.value
+        viewModel.refresh()
+
+        assertThat(state.isLoaded).isTrue()
+        assertThat(state.error).isInstanceOf(ReaderPostListEmptyState.RequestFailed::class.java)
+        verify(repository, times(2)).savedPosts()
     }
 
     @Test

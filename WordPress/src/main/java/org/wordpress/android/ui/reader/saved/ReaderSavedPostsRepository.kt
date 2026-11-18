@@ -8,8 +8,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -90,6 +93,15 @@ class ReaderSavedPostsRepository @Inject constructor(
     /** Whether the Saved tab shows the synced list rather than the device's own. */
     fun isSyncedListReady(): Boolean = isSyncedWithAccount && appPrefsWrapper.isReaderSavedPostsImported(userId)
 
+    private val _syncedListReady = MutableStateFlow(isSyncedListReady())
+
+    /** [isSyncedListReady] as it changes, so the Saved tab can switch lists once the import finishes. */
+    val syncedListReady: StateFlow<Boolean> = _syncedListReady.asStateFlow()
+
+    private fun updateSyncedListReady() {
+        _syncedListReady.value = isSyncedListReady()
+    }
+
     /**
      * Whether [post] is saved, as far as this device knows. Doesn't touch the network, but reads the
      * cache, so call it off the main thread.
@@ -147,6 +159,9 @@ class ReaderSavedPostsRepository @Inject constructor(
     private suspend fun importLocalSavesIfNeeded(): Unit = importMutex.withLock {
         val userId = userId
         if (appPrefsWrapper.isReaderSavedPostsImported(userId)) return@withLock
+        // Until the Reader database is reset for this account, its saves may be another account's: one that
+        // signed out with saves it hadn't sent. The reset follows sign-in, and so does a sync.
+        if (appPrefsWrapper.getLastUsedUserId() != userId) return@withLock
         val service = getService() ?: return@withLock
         val saves = readerPostTableWrapper.getBookmarkedPosts().map { it.toLocalSave() }
         try {
@@ -159,7 +174,10 @@ class ReaderSavedPostsRepository @Inject constructor(
                     "unsaveable=${report.unsaveable}"
             )
             // unless the account was signed out while the import ran
-            if (peekService() === service) appPrefsWrapper.setReaderSavedPostsImported(userId)
+            if (peekService() === service) {
+                appPrefsWrapper.setReaderSavedPostsImported(userId)
+                updateSyncedListReady()
+            }
             trackImport(
                 "result" to "imported",
                 "local_saves" to saves.size,
@@ -211,9 +229,10 @@ class ReaderSavedPostsRepository @Inject constructor(
      * database, which keeps the device's saves.
      *
      * If they'd been imported, the local copies of the ones the account holds are dropped, so the next
-     * sign-in doesn't import them again and bring back any unsaved elsewhere since. Saves the server
-     * hasn't confirmed, such as ones made offline, stay: this device is the only place they're kept,
-     * and the next sign-in imports them.
+     * sign-in doesn't import them again and bring back any unsaved elsewhere since. Saves the account
+     * doesn't hold, such as ones made offline that weren't sent, stay: this device is the only place
+     * they're kept. The account imports them when it next signs in; a different account resets the
+     * Reader database instead.
      *
      * Opening the cache loads the wordpress-rs library, so this runs off the main thread, after any
      * import that's under way.
@@ -222,6 +241,7 @@ class ReaderSavedPostsRepository @Inject constructor(
     fun clear(userId: Long, savesImported: Boolean) {
         val service = current?.takeIf { it.userId == userId }?.service
         current = null
+        _syncedListReady.value = false
         if (userId <= 0) return
         appScope.launch(ioDispatcher) {
             importMutex.withLock {
@@ -239,6 +259,10 @@ class ReaderSavedPostsRepository @Inject constructor(
         }
     }
 
+    /**
+     * Drops the local copies of the saves the account holds. One it doesn't, such as a save made offline that
+     * hasn't been sent or one the import couldn't send, stays: this device is the only place it's kept.
+     */
     private suspend fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {
         // wordpress-rs only lists unsent saves as part of the saved list, which includes every pending row
         val unsent = service.savedPosts().loadItems()
@@ -247,7 +271,9 @@ class ReaderSavedPostsRepository @Inject constructor(
             .toSet()
         readerPostTableWrapper.getBookmarkedPosts()
             .filter { post ->
-                readerSavedKeysForPost(post.toSaveIdentity()).none { readerSavedKeyNormalized(it) in unsent }
+                val identity = post.toSaveIdentity()
+                val isUnsent = readerSavedKeysForPost(identity).any { readerSavedKeyNormalized(it) in unsent }
+                !isUnsent && service.status(identity) == ReaderSavedStatus.SAVED
             }
             .forEach { readerPostTableWrapper.setBookmarkFlag(it.blogId, it.postId, false) }
     }

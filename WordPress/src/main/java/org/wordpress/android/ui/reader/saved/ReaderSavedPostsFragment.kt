@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
+import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPSnackbar
 import uniffi.wp_api.ReaderSavedKey
@@ -37,7 +38,7 @@ import javax.inject.Inject
  * The Saved tab once saves are synced with the account. See [ReaderSavedPostsViewModel].
  */
 @AndroidEntryPoint
-class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListener {
+class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListener, ReaderScrollingFeed {
     @Inject
     lateinit var readerPostListRepository: ReaderPostListRepository
 
@@ -46,6 +47,9 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
 
     private val viewModel: ReaderSavedPostsViewModel by viewModels()
     private val listState = LazyListState()
+
+    // so the Reader's top bar hides with the list, as it does for the other feeds
+    override val feedListState get() = listState
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val actions = ReaderSavedPostsActions(

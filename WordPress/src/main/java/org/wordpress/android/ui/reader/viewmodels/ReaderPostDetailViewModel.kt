@@ -713,14 +713,17 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun convertPostToUiState(
+    /** Off the main thread, as whether the post is saved is read from the saved posts cache. */
+    private suspend fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
-        val newUiState = postDetailUiStateBuilder.mapPostToUiState(
-            post = post,
-            onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
-            onHeaderAction = { action -> onHeaderAction(post, action) },
-        )
+        val newUiState = withContext(bgDispatcher) {
+            postDetailUiStateBuilder.mapPostToUiState(
+                post = post,
+                onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
+                onHeaderAction = { action -> onHeaderAction(post, action) },
+            )
+        }
         return preserveTransientState(newUiState)
     }
 
@@ -817,13 +820,13 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun updatePostActions(post: ReaderPost) {
-        (_uiState.value as? ReaderPostDetailsUiState)?.let {
-            _uiState.value = it.copy(
-                actions = postDetailUiStateBuilder.buildPostActions(
-                    post,
-                    this@ReaderPostDetailViewModel::onButtonClicked
-                )
-            )
+        if (_uiState.value !is ReaderPostDetailsUiState) return
+        viewModelScope.launch {
+            // off the main thread, as whether the post is saved is read from the saved posts cache
+            val actions = withContext(bgDispatcher) {
+                postDetailUiStateBuilder.buildPostActions(post, this@ReaderPostDetailViewModel::onButtonClicked)
+            }
+            (_uiState.value as? ReaderPostDetailsUiState)?.let { _uiState.value = it.copy(actions = actions) }
         }
     }
 

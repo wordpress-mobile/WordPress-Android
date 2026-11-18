@@ -56,12 +56,12 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     ): MutableList<ReaderPostCardAction> {
         val menuItems = mutableListOf<ReaderPostCardAction>()
         val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
-        val isPostBookmarked = savedPostsRepository.isSaved(post)
 
         menuItems.add(buildVisitSite(onButtonClicked))
         checkAndAddMenuItemForSiteNotifications(menuItems, isPostFollowed, post, onButtonClicked)
         checkAndAddMenuItemForPostSeenUnseen(menuItems, post, onButtonClicked)
-        if (includeBookmark) menuItems.add(buildBookmark(isPostBookmarked, onButtonClicked))
+        // reading whether it's saved reads the saved posts cache, so only when the menu offers it
+        if (includeBookmark) menuItems.add(buildBookmark(savedPostsRepository.isSaved(post), onButtonClicked))
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         if (includeReadingPreferences) {
