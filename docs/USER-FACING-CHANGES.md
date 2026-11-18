@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Stats can chart a year at a time again**
+  The Traffic period menu in the redesigned Stats offers a new option, Last 3 years, below Last 12 months. It draws one bar per year, so a site's years can be compared side by side, and the totals and every card below the chart cover the same three years. The old Stats had this as the Years option in its period dropdown; the redesigned Stats had no equivalent until now.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → period menu
+  - **Notes:** The current year's bar covers the year so far, the same way Last 12 months ends on a part-finished month, and the selector's second line names the years ("2024 - 2026") rather than exact dates. The totals above the chart compare the three years against the three before them, not each year against the previous one. Stepping back and forward with the arrows moves three years at a time. The iOS app and the web version offer the same preset.
+
 - **Reader post screen's bars and sections rebuilt**
   The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
   - **Apps:** Both

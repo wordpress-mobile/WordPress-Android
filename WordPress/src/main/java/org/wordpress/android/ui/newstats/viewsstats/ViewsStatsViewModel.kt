@@ -30,10 +30,12 @@ import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepos
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
+import org.wordpress.android.ui.newstats.util.PresetRangeGranularity
 import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
 import org.wordpress.android.ui.newstats.util.formatDayRangeWithYear
 import org.wordpress.android.ui.newstats.util.formatMonthRangeWithYear
 import org.wordpress.android.ui.newstats.util.formatPresetRange
+import org.wordpress.android.ui.newstats.util.formatYearRangeLabel
 import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -120,7 +122,7 @@ class ViewsStatsViewModel @Inject constructor(
     private fun formatPeriodDates(period: StatsPeriod): String? {
         if (period is StatsPeriod.Custom) return null
         val (start, end) = statsRepository.periodWindow(period)
-        return formatPresetRange(start, end, monthGranularity = period.isMonthBucketed())
+        return formatPresetRange(start, end, granularity = period.bucketGranularity())
     }
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
@@ -1062,6 +1064,7 @@ class ViewsStatsViewModel @Inject constructor(
         is StatsPeriod.Last7Days,
         is StatsPeriod.Last30Days,
         is StatsPeriod.Last12Months,
+        is StatsPeriod.Last3Years,
         is StatsPeriod.ThisWeek,
         is StatsPeriod.ThisMonth,
         is StatsPeriod.ThisYear -> true
@@ -1353,19 +1356,26 @@ class ViewsStatsViewModel @Inject constructor(
             is StatsPeriod.Custom ->
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)
-            else ->
-                if (period.isMonthBucketed()) formatMonthRange(startDate, endDate)
-                else formatDayRange(startDate, endDate)
+            else -> when (period.bucketGranularity()) {
+                PresetRangeGranularity.YEAR -> formatYearRange(startDate, endDate)
+                PresetRangeGranularity.MONTH -> formatMonthRange(startDate, endDate)
+                PresetRangeGranularity.DAY -> formatDayRange(startDate, endDate)
+            }
         }
     }
 
     /**
-     * Whether a preset period is charted — and so named — in whole months rather than days. Last 12
-     * Months is twelve month buckets by definition, and This Year takes its granularity from the
-     * whole calendar year, so it is twelve of them on 5 January just as in December.
+     * The buckets a preset period is charted — and so named — in. Last 12 Months is twelve month
+     * buckets by definition, and This Year takes its granularity from the whole calendar year, so it
+     * is twelve of them on 5 January just as in December. Last 3 Years is whole year buckets, one
+     * bar per year. Everything else is named by the day.
      */
-    private fun StatsPeriod.isMonthBucketed(): Boolean =
-        this is StatsPeriod.Last12Months || this is StatsPeriod.ThisYear
+    private fun StatsPeriod.bucketGranularity(): PresetRangeGranularity = when (this) {
+        is StatsPeriod.Last3Years -> PresetRangeGranularity.YEAR
+        is StatsPeriod.Last12Months,
+        is StatsPeriod.ThisYear -> PresetRangeGranularity.MONTH
+        else -> PresetRangeGranularity.DAY
+    }
 
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
@@ -1377,7 +1387,7 @@ class ViewsStatsViewModel @Inject constructor(
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
 
-        return if (start.year == end.year) "${start.year}" else "${start.year} - ${end.year}"
+        return formatYearRangeLabel(start, end)
     }
 
     @Suppress("ReturnCount")

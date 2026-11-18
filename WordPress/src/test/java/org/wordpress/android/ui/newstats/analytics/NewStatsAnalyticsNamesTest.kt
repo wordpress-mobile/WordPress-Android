@@ -47,6 +47,7 @@ class NewStatsAnalyticsNamesTest {
                 StatsPeriod.Last7Days to "last_7_days",
                 StatsPeriod.Last30Days to "last_30_days",
                 StatsPeriod.Last12Months to "last_12_months",
+                StatsPeriod.Last3Years to "last_3_years",
                 StatsPeriod.ThisWeek to "this_week",
                 StatsPeriod.ThisMonth to "this_month",
                 StatsPeriod.ThisYear to "this_year",

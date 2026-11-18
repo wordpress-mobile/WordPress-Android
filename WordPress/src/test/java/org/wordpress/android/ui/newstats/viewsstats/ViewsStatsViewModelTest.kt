@@ -314,6 +314,22 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
     }
 
     @Test
+    fun `a year-bucketed preset's label names its dates by year`() = test {
+        whenever(statsRepository.periodWindow(StatsPeriod.Last3Years))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2026, 10, 27))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last3Years)
+        advanceUntilIdle()
+
+        // The bars are years, so the label names years: "Jan 1, 2024 - Oct 27, 2026" would describe
+        // days the chart never draws separately.
+        assertThat(viewModel.effectivePeriodDates.value).isEqualTo("2024 - 2026")
+    }
+
+    @Test
     fun `a custom range gets no second line of dates, since its label is already made of them`() = test {
         initViewModel()
         advanceUntilIdle()

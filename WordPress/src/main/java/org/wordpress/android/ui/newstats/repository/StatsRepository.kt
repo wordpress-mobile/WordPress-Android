@@ -67,6 +67,7 @@ private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
 private const val MONTHS_IN_12_MONTHS = 12
+private const val YEARS_IN_3_YEARS = 3
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
 // The most a month/year step can lose to a short month (31 Jan + 1 month = 28 Feb). A forward step
@@ -1103,7 +1104,7 @@ class StatsRepository @Inject constructor(
         val upcomingEnd: LocalDate? = null
     )
 
-    private enum class DateUnit { DAY, MONTH }
+    private enum class DateUnit { DAY, MONTH, YEAR }
 
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
@@ -1404,6 +1405,12 @@ class StatsRepository @Inject constructor(
             // list cards — which do send their own start — would cover a different range from the chart.
             is StatsPeriod.Last12Months ->
                 today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()).withDayOfMonth(1) to today
+            // The same shape one unit coarser: whole year buckets ending with the current one, so
+            // "Last 3 years" is 2024, 2025 and 2026 charted side by side rather than three years
+            // measured back from today. iOS builds its `last3Years` the same way, offset from the
+            // end of the current calendar year.
+            is StatsPeriod.Last3Years ->
+                today.minusYears((YEARS_IN_3_YEARS - 1).toLong()).withDayOfYear(1) to today
             // Calendar-aligned windows run from the start of the current week/month/year up to today.
             is StatsPeriod.ThisWeek ->
                 today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())) to today
@@ -1417,6 +1424,7 @@ class StatsRepository @Inject constructor(
         return when (unit) {
             DateUnit.DAY -> date.minusDays(amount.toLong())
             DateUnit.MONTH -> date.minusMonths(amount.toLong())
+            DateUnit.YEAR -> date.minusYears(amount.toLong())
         }
     }
 
@@ -1428,6 +1436,7 @@ class StatsRepository @Inject constructor(
         is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        is StatsPeriod.Last3Years -> PeriodConfig(YEARS_IN_3_YEARS, StatsUnit.YEAR, DateUnit.YEAR)
         else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
     }
 
@@ -1725,9 +1734,10 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
             is StatsPeriod.Last30Days ->
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            // Last 12 Months sends its window rather than a day count: it is twelve whole month
-            // buckets, which no `num` describes. See [currentPeriodWindow].
+            // The month- and year-bucketed presets send their window rather than a day count: they
+            // are whole month or year buckets, which no `num` describes. See [currentPeriodWindow].
             is StatsPeriod.Last12Months,
+            is StatsPeriod.Last3Years,
             is StatsPeriod.ThisWeek,
             is StatsPeriod.ThisMonth,
             is StatsPeriod.ThisYear -> {
@@ -1765,12 +1775,13 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
-            // Twelve whole month buckets, compared against the same window twelve months earlier — the
-            // windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
-            // [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would put
-            // this card on a window three weeks longer than the chart above it, and longer than the one
-            // web and iOS report.
-            is StatsPeriod.Last12Months -> {
+            // Whole month or year buckets, compared against the same window a whole span earlier —
+            // the windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow]
+            // and [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would
+            // put Last 12 Months on a window three weeks longer than the chart above it, and longer
+            // than the one web and iOS report.
+            is StatsPeriod.Last12Months,
+            is StatsPeriod.Last3Years -> {
                 val (start, end) = currentPeriodWindow(period)
                 val (previousStart, previousEnd) =
                     previousWindowForConfig(start, end, getPeriodConfig(period))
