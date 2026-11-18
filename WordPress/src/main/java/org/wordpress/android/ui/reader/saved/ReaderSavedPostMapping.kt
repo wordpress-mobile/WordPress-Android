@@ -9,6 +9,7 @@ import uniffi.wp_api.ReaderPostTag
 import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderLocalSave
 import uniffi.wp_mobile.ReaderSavedListItem
+import uniffi.wp_mobile_cache.ReaderPostRecord
 
 /**
  * The fields wordpress-rs needs to pick the key a post is saved under. [ReaderPost] keeps them as
@@ -79,32 +80,37 @@ fun ReaderPost.toSavedPostDetails() = uniffi.wp_api.ReaderPost(
  * URL has nothing but its address, so its host stands in for the site and the address for the title.
  */
 fun ReaderSavedListItem.toCardPost(): ReaderPost = ReaderPost().also { card ->
-    val record = post
-    val identity = record?.identity
+    val identity = post?.identity
     val url = identity?.url ?: (key as? ReaderSavedKey.Url)?.url
-    val host = url?.let { it.toUri().host ?: it }
     card.postId = identity?.localPostId ?: 0L
     card.blogId = identity?.localBlogId ?: 0L
     card.feedId = identity?.feedId?.toLong() ?: 0L
     card.feedItemId = identity?.feedItemId?.toLong() ?: 0L
     card.isExternal = identity?.isExternal == true
     card.url = url
-    card.title = if (record == null) url else record.title
-    card.excerpt = record?.excerpt
-    card.featuredImage = record?.displayImageUrl?.ifBlank { null } ?: record?.featuredImage
-    card.blogName = record?.siteName?.ifBlank { null } ?: host
-    card.blogUrl = record?.siteUrl
-    card.blogImageUrl = record?.siteIconUrl
-    card.authorName = record?.authorName
-    card.postAvatar = record?.authorAvatarUrl
-    record?.date?.let { card.setDatePublished(DateTimeUtils.iso8601UTCFromDate(it)) }
-    card.numLikes = record?.likeCount?.toInt() ?: 0
-    card.numReplies = record?.commentCount?.toInt() ?: 0
-    card.isLikedByCurrentUser = record?.iLike == true
-    card.isFollowedByCurrentUser = record?.isFollowing == true
+    // what a page saved by URL shows, and what the post's own details replace
+    card.title = url
+    card.blogName = url?.let { it.toUri().host ?: it }
+    post?.let { card.fillFrom(it) }
     // the saved post doesn't say, and the card only offers comments for a WordPress.com post that has them open
     card.isCommentsOpen = !card.isExternal && card.blogId != 0L
     card.isBookmarked = true
+}
+
+private fun ReaderPost.fillFrom(record: ReaderPostRecord) {
+    title = record.title
+    excerpt = record.excerpt
+    featuredImage = record.displayImageUrl?.ifBlank { null } ?: record.featuredImage
+    record.siteName?.ifBlank { null }?.let { blogName = it }
+    blogUrl = record.siteUrl
+    blogImageUrl = record.siteIconUrl
+    authorName = record.authorName
+    postAvatar = record.authorAvatarUrl
+    record.date?.let { setDatePublished(DateTimeUtils.iso8601UTCFromDate(it)) }
+    numLikes = record.likeCount?.toInt() ?: 0
+    numReplies = record.commentCount?.toInt() ?: 0
+    isLikedByCurrentUser = record.iLike == true
+    isFollowedByCurrentUser = record.isFollowing == true
 }
 
 private fun String?.nonEmpty(): String? = this?.takeIf { it.isNotEmpty() }

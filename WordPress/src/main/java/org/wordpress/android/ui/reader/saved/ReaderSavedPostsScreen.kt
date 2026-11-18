@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostCard
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListEmptyState
@@ -23,12 +22,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 import uniffi.wp_api.ReaderSavedKey
-
-class ReaderSavedPostsActions(
-    val onRefresh: () -> Unit,
-    val onLoadMore: () -> Unit,
-    val onEmptyStateButtonClicked: (ReaderPostListEmptyButton) -> Unit,
-)
 
 /** The saved posts, as the same cards as the Reader's other post lists. */
 @Composable

@@ -523,59 +523,60 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
                     // ReaderPostDetailFragment
                     _refreshPosts.postValue(Event(Unit))
-
-                    val showSnackbarAction = {
-                        _snackbarEvents.postValue(
-                            Event(
-                                SnackbarMessageHolder(
-                                    UiStringRes(R.string.reader_bookmark_snack_title),
-                                    UiStringRes(R.string.reader_bookmark_snack_btn),
-                                    buttonAction = {
-                                        readerTracker.track(
-                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
-                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
-                                        )
-                                        _navigationEvents.postValue(Event(ShowBookmarkedTab))
-                                    })
-                            )
-                        )
-                    }
-                    if (it.bookmarked && !isBookmarkList) {
-                        // each message is shown once, so people who saw the local-only one still hear that
-                        // saves now sync
-                        val isSynced = savedPostsRepository.isSyncedWithAccount
-                        val shouldShowDialog = if (isSynced) {
-                            appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()
-                        } else {
-                            appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()
-                        }
-                        if (shouldShowDialog) {
-                            _navigationEvents.postValue(
-                                Event(
-                                    ShowBookmarkedSavedOnlyLocallyDialog(
-                                        okButtonAction = {
-                                            if (isSynced) {
-                                                appPrefsWrapper.setReaderSavedPostsSyncDialogShown()
-                                            } else {
-                                                appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
-                                            }
-                                            showSnackbarAction.invoke()
-                                        },
-                                        message = if (isSynced) {
-                                            R.string.reader_save_posts_synced_dialog_message
-                                        } else {
-                                            R.string.reader_save_posts_locally_dialog_message
-                                        }
-                                    )
-                                )
-                            )
-                        } else {
-                            showSnackbarAction.invoke()
-                        }
-                    }
+                    if (it.bookmarked && !isBookmarkList) showSavedConfirmation()
                 }
             }
         }
+    }
+
+    /** The one-time dialog about where saves are kept, if it's due, then the "Post saved" snackbar. */
+    private fun showSavedConfirmation() {
+        val showSnackbarAction = {
+            _snackbarEvents.postValue(
+                Event(
+                    SnackbarMessageHolder(
+                        UiStringRes(R.string.reader_bookmark_snack_title),
+                        UiStringRes(R.string.reader_bookmark_snack_btn),
+                        buttonAction = {
+                            readerTracker.track(
+                                AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
+                                ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
+                            )
+                            _navigationEvents.postValue(Event(ShowBookmarkedTab))
+                        })
+                )
+            )
+        }
+        // each message is shown once, so people who saw the local-only one still hear that saves now sync
+        val isSynced = savedPostsRepository.isSyncedWithAccount
+        val shouldShowDialog = if (isSynced) {
+            appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()
+        } else {
+            appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()
+        }
+        if (!shouldShowDialog) {
+            showSnackbarAction.invoke()
+            return
+        }
+        _navigationEvents.postValue(
+            Event(
+                ShowBookmarkedSavedOnlyLocallyDialog(
+                    okButtonAction = {
+                        if (isSynced) {
+                            appPrefsWrapper.setReaderSavedPostsSyncDialogShown()
+                        } else {
+                            appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
+                        }
+                        showSnackbarAction.invoke()
+                    },
+                    message = if (isSynced) {
+                        R.string.reader_save_posts_synced_dialog_message
+                    } else {
+                        R.string.reader_save_posts_locally_dialog_message
+                    }
+                )
+            )
+        )
     }
 
     private suspend fun handleReblogClicked(post: ReaderPost) {

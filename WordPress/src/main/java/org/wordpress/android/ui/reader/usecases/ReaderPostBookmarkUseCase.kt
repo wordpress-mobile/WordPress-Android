@@ -87,16 +87,9 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             if (showsChange) emit(Started)
             write.await()
         }
-        when (result) {
-            WriteResult.SUCCEEDED -> Unit
-            WriteResult.FAILED -> {
-                emit(Failed)
-                return null
-            }
-            WriteResult.TOO_MANY_SAVES -> {
-                emit(TooManySaves)
-                return null
-            }
+        if (result != WriteResult.SUCCEEDED) {
+            emit(if (result == WriteResult.TOO_MANY_SAVES) TooManySaves else Failed)
+            return null
         }
         // the local flag can disagree with the account, so only change it when it differs
         if (post.isBookmarked != setToBookmarked) {

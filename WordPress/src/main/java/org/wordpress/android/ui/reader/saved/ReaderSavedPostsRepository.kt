@@ -233,7 +233,7 @@ class ReaderSavedPostsRepository @Inject constructor(
                 block(service)
                 WriteResult.SUCCEEDED
             } catch (e: ReaderSavedException.TooManySaves) {
-                AppLog.w(T.READER, "Saving a post failed: the account has reached its save limit")
+                AppLog.e(T.READER, "Saving a post failed: the account has reached its save limit", e)
                 WriteResult.TOO_MANY_SAVES
             } catch (e: ReaderSavedException) {
                 AppLog.e(T.READER, "Saving or unsaving a post failed", e)
