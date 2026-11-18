@@ -201,8 +201,9 @@ private fun AuthorsLoadedContent(
         }
 
         // Keyed by index rather than by name: two authors can share a display name, and a
-        // duplicate key crashes the LazyColumn. The list is a static snapshot, so the index is a
-        // stable, unique key, and it is what scopes each row's saved expanded state here.
+        // duplicate key crashes the LazyColumn. The index is what scopes each row's saved
+        // expanded state, so after a cold-start refetch a restored expansion follows the
+        // position rather than the author.
         itemsIndexed(state.authors, key = { index, _ -> index }) { index, author ->
             val percentage = if (state.maxViewsForBar > 0) {
                 author.views.toFloat() / state.maxViewsForBar.toFloat()

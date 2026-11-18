@@ -154,9 +154,11 @@ private fun LoadedContent(
                 val percentage = if (state.maxViewsForBar > 0) {
                     author.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                // Keyed by name so an expanded author keeps its state across recomposition and
-                // rotation, and doesn't hand it to whatever row later takes its position.
-                key(author.name) {
+                // Keyed by position and name, as Most Viewed's rows are: a display name alone
+                // is not unique, and two authors sharing one would share this row's expanded
+                // state. The expansion survives recomposition and rotation; if the list reorders
+                // in place it follows the position rather than the author.
+                key(index, author.name) {
                     ExpandableAuthorRow(
                         author = author,
                         percentage = percentage,

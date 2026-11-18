@@ -29,6 +29,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitField
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
+import org.wordpress.android.ui.newstats.datasource.TopAuthorItem
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
 import org.wordpress.android.ui.newstats.datasource.VideoPlaysDataResult
@@ -2158,21 +2159,8 @@ class StatsRepository @Inject constructor(
 
                 TopAuthorsResult.Success(
                     authors = currentResult.data.authors.map { author ->
-                        val previousViews = previousAuthorsMap[author.name]?.views ?: 0L
-                        TopAuthorItemData(
-                            name = author.name,
-                            avatarUrl = author.avatarUrl,
-                            views = author.views,
-                            previousViews = previousViews,
-                            // The previous period is only fetched to compare totals, so the posts
-                            // listed under an author are the current period's.
-                            posts = author.posts.map { post ->
-                                TopAuthorPostData(
-                                    id = post.id,
-                                    title = post.title,
-                                    views = post.views
-                                )
-                            }
+                        author.toTopAuthorItemData(
+                            previousViews = previousAuthorsMap[author.name]?.views ?: 0L
                         )
                     },
                     totalViews = totalViews,
@@ -2193,6 +2181,19 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    /**
+     * Maps one author of the current period to the repository's item, pairing it with that
+     * author's views in the previous period. The previous period is only fetched to compare
+     * totals, so the posts listed under an author are the current period's.
+     */
+    private fun TopAuthorItem.toTopAuthorItemData(previousViews: Long) = TopAuthorItemData(
+        name = name,
+        avatarUrl = avatarUrl,
+        views = views,
+        previousViews = previousViews,
+        posts = posts.map { TopAuthorPostData(id = it.id, title = it.title, views = it.views) }
+    )
 
     suspend fun fetchClicks(
         siteId: Long,
