@@ -103,7 +103,6 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
             ReaderSavedPostsViewModel.Event.RequestFailed -> showMessage(R.string.reader_error_request_failed_title)
             ReaderSavedPostsViewModel.Event.LoadMoreFailed ->
                 showMessage(R.string.reader_error_request_failed_title, R.string.retry, viewModel::loadMore)
-            ReaderSavedPostsViewModel.Event.NoNetwork -> showMessage(R.string.error_network_connection)
         }
     }
 

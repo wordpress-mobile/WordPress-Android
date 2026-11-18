@@ -60,7 +60,7 @@ class ReaderSavedPostMappingTest {
         assertThat(details.title).isEqualTo("Title")
         assertThat(details.displayImageUrl).isEqualTo("https://example.com/image.jpg")
         assertThat(details.commentCount).isEqualTo(3UL)
-        assertThat(details.tags.map { it.slug to it.name }).containsExactly("travel" to "Travel")
+        assertThat(details.tags.orEmpty().map { it.slug to it.name }).containsExactly("travel" to "Travel")
         assertThat(details.excerpt).isNull()
         assertThat(details.siteIconUrl).isNull()
     }

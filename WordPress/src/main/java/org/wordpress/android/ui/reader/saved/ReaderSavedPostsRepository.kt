@@ -84,11 +84,16 @@ class ReaderSavedPostsRepository @Inject constructor(
     fun isSyncedListReady(): Boolean = isSyncedWithAccount && appPrefsWrapper.isReaderSavedPostsImported(userId)
 
     /**
-     * Whether [post] is saved, as far as this device knows. Doesn't touch the network or the disk, so
-     * it's safe on the main thread.
+     * Whether [post] is saved, as far as this device knows. Doesn't touch the network, but reads the
+     * cache, so call it off the main thread.
      */
     fun isSaved(post: ReaderPost): Boolean {
-        val status = if (isSyncedWithAccount) peekService()?.status(post.toSaveIdentity()) else null
+        val status = try {
+            if (isSyncedWithAccount) peekService()?.status(post.toSaveIdentity()) else null
+        } catch (e: ReaderSavedException) {
+            AppLog.e(T.READER, "Reading whether a post is saved failed", e)
+            null
+        }
         return when (status) {
             ReaderSavedStatus.SAVED -> true
             ReaderSavedStatus.NOT_SAVED -> false
@@ -96,15 +101,19 @@ class ReaderSavedPostsRepository @Inject constructor(
         }
     }
 
-    /** Imports this device's saves if they haven't been, then catches up with saves made elsewhere. */
+    /**
+     * Imports this device's saves if they haven't been, sends saves and unsaves made offline, then
+     * catches up with saves made elsewhere. Call at launch, on return to the foreground, and when the
+     * device comes back online, as wordpress-rs asks.
+     */
     fun sync() {
         if (!isSyncedWithAccount) return
         appScope.launch(ioDispatcher) {
             importLocalSavesIfNeeded()
             try {
-                getService()?.refresh()
+                getService()?.sync()
             } catch (e: ReaderSavedException) {
-                AppLog.e(T.READER, "Refreshing saved posts failed", e)
+                AppLog.e(T.READER, "Syncing saved posts failed", e)
             }
         }
     }
@@ -116,23 +125,25 @@ class ReaderSavedPostsRepository @Inject constructor(
         val service = getService() ?: return@withLock
         val saves = readerPostTableWrapper.getBookmarkedPosts().map { it.toLocalSave() }
         try {
-            val report = service.importLocalSaves(saves)
+            // saves that can't be sent yet stay pending, and a later sync sends them
+            val report = service.importSaves(saves)
             AppLog.i(
                 T.READER,
                 "Saved posts import: imported=${report.imported}, rejected=${report.rejected.size}, " +
-                    "unsaveable=${report.unsaveable}, alreadyImported=${report.alreadyImported}"
+                    "pending=${report.pending}, waitingForRoom=${report.waitingForRoom}, " +
+                    "unsaveable=${report.unsaveable}"
             )
             // unless the account was signed out while the import ran
             if (peekService() === service) appPrefsWrapper.setReaderSavedPostsImported(userId)
-            if (!report.alreadyImported) {
-                trackImport(
-                    "result" to "imported",
-                    "local_saves" to saves.size,
-                    "imported" to report.imported.toLong(),
-                    "refused" to report.rejected.size,
-                    "unsaveable" to report.unsaveable.toLong()
-                )
-            }
+            trackImport(
+                "result" to "imported",
+                "local_saves" to saves.size,
+                "imported" to report.imported.toLong(),
+                "refused" to report.rejected.size,
+                "pending" to report.pending.toLong(),
+                "waiting_for_room" to report.waitingForRoom.toLong(),
+                "unsaveable" to report.unsaveable.toLong()
+            )
         } catch (e: ReaderSavedException) {
             // rs tries again next time
             AppLog.e(T.READER, "Saved posts import failed", e)
@@ -175,8 +186,9 @@ class ReaderSavedPostsRepository @Inject constructor(
      * database, which keeps the device's saves.
      *
      * If they'd been imported, the local copies of the ones the account holds are dropped, so the next
-     * sign-in doesn't import them again and bring back any unsaved elsewhere since. The saves the
-     * account refused stay: this device is the only place they're kept.
+     * sign-in doesn't import them again and bring back any unsaved elsewhere since. Saves the server
+     * hasn't confirmed, such as ones made offline, stay: this device is the only place they're kept,
+     * and the next sign-in imports them.
      *
      * Opening the cache loads the wordpress-rs library, so this runs off the main thread, after any
      * import that's under way.
@@ -190,21 +202,26 @@ class ReaderSavedPostsRepository @Inject constructor(
             importMutex.withLock {
                 try {
                     if (savesImported) {
-                        (service ?: createService(userId))?.let(::dropLocalCopiesOfAccountSaves)
+                        (service ?: createService(userId))?.let { dropLocalCopiesOfAccountSaves(it) }
                     }
                     wpServiceProvider.getOrCreateCache().cache.removeWordpressComAccount(userId.toULong())
                 } catch (e: SqliteDbException) {
+                    AppLog.e(T.READER, "Removing saved posts for the signed-out account failed", e)
+                } catch (e: ReaderSavedException) {
                     AppLog.e(T.READER, "Removing saved posts for the signed-out account failed", e)
                 }
             }
         }
     }
 
-    private fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {
-        val localOnly = service.localOnlyKeys().toSet()
+    private suspend fun dropLocalCopiesOfAccountSaves(service: ReaderSavedService) {
+        val unsent = service.savedPosts().loadItems()
+            .filter { it.isPending || it.isWaitingForRoom }
+            .map { readerSavedKeyNormalized(it.key) }
+            .toSet()
         readerPostTableWrapper.getBookmarkedPosts()
             .filter { post ->
-                readerSavedKeysForPost(post.toSaveIdentity()).none { readerSavedKeyNormalized(it) in localOnly }
+                readerSavedKeysForPost(post.toSaveIdentity()).none { readerSavedKeyNormalized(it) in unsent }
             }
             .forEach { readerPostTableWrapper.setBookmarkFlag(it.blogId, it.postId, false) }
     }
@@ -232,9 +249,10 @@ class ReaderSavedPostsRepository @Inject constructor(
     private fun importErrorKind(e: ReaderSavedException): String = when (e) {
         is ReaderSavedException.Api -> "api"
         is ReaderSavedException.PostCannotBeSaved -> "post_cannot_be_saved"
+        is ReaderSavedException.TooManySaves -> "too_many_saves"
         is ReaderSavedException.UnexpectedImportResults -> "unexpected_import_results"
+        is ReaderSavedException.UnmatchedImportResults -> "unmatched_import_results"
         is ReaderSavedException.Database -> "database"
-        is ReaderSavedException.StaleLoadMore -> "stale_load_more"
     }
 
     private fun peekService(): ReaderSavedService? = current?.takeIf { it.userId == userId }?.service

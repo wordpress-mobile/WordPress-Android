@@ -64,15 +64,16 @@ class ReaderPostBookmarkUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when synced and offline, nothing changes and NoNetwork is emitted`() = test {
+    fun `when synced and offline, the save still goes to the account, which sends it later`() = test {
+        val dummyPost = init(isBookmarked = false, networkAvailable = false)
         whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(savedPostsRepository.isSaved(dummyPost)).thenReturn(false)
+        whenever(savedPostsRepository.setSaved(any(), eq(true), anyOrNull())).thenReturn(true)
 
         val result = useCase.toggleBookmark(post(), false, SOURCE).toList(mutableListOf())
 
-        assertThat(result).containsExactly(BookmarkPostState.NoNetwork)
-        verify(readerPostRepository, never()).setBookmarked(any(), any())
-        verify(savedPostsRepository, never()).setSaved(any(), any(), anyOrNull())
+        verify(readerPostRepository).setBookmarked(dummyPost, true)
+        assertThat(result).containsExactly(BookmarkPostState.Success(true))
     }
 
     @Test

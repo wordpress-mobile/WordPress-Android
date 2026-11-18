@@ -64,7 +64,6 @@ class ReaderSavedPostsViewModel @Inject constructor(
         data class Unsaved(val item: ReaderSavedListItem) : Event()
         data object RequestFailed : Event()
         data object LoadMoreFailed : Event()
-        data object NoNetwork : Event()
     }
 
     private val _uiState = MutableStateFlow(UiState())
@@ -177,11 +176,7 @@ class ReaderSavedPostsViewModel @Inject constructor(
     }
 
     fun onUnsaveClicked(item: ReaderSavedListItem) {
-        // a save only this device has is removed without the server
-        if (!item.isLocalOnly && !networkUtilsWrapper.isNetworkAvailable()) {
-            viewModelScope.launch { _events.send(Event.NoNetwork) }
-            return
-        }
+        // offline, the unsave waits on this device and goes with the next sync
         viewModelScope.launch {
             val identity = item.post?.identity
             val succeeded = if (identity != null) {
@@ -263,10 +258,6 @@ class ReaderSavedPostsViewModel @Inject constructor(
      */
     private suspend fun runRequest(request: suspend () -> Unit): Boolean = try {
         withContext(ioDispatcher) { request() }
-        true
-    } catch (e: ReaderSavedException.StaleLoadMore) {
-        // a refresh started while the page loaded, and replaced it
-        AppLog.d(T.READER, "Saved posts page discarded: ${e.message}")
         true
     } catch (e: ReaderSavedException) {
         AppLog.e(T.READER, "Fetching saved posts failed", e)

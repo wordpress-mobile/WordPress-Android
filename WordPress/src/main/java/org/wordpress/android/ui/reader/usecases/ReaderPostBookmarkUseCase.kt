@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.saved.toSaveIdentity
 import org.wordpress.android.ui.reader.saved.toSavedPostDetails
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
-import org.wordpress.android.ui.reader.usecases.BookmarkPostState.NoNetwork
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
@@ -39,11 +38,8 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         isBookmarkList: Boolean,
         source: String
     ) = flow {
+        // offline, a synced save or unsave waits on this device and goes with the next sync
         val bookmarked = if (savedPostsRepository.isSyncedWithAccount) {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(NoNetwork)
-                return@flow
-            }
             updatePostOnAccount(post.blogId, post.postId) ?: run {
                 emit(Failed)
                 return@flow
@@ -146,6 +142,5 @@ sealed class BookmarkPostState {
 
     /** A synced save or unsave shows, while the server hasn't answered yet. [Success] or [Failed] follows. */
     data object Started : BookmarkPostState()
-    data object NoNetwork : BookmarkPostState()
     data object Failed : BookmarkPostState()
 }

@@ -363,6 +363,7 @@ class AppInitializer @Inject constructor(
         // background thread instead of the deprecated CONNECTIVITY_ACTION broadcast, so it can't cause a
         // background ANR. start() is idempotent, so it's safe if init() runs more than once.
         networkConnectionMonitor.start(application)
+        syncReaderSavedPostsOnReconnect()
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
@@ -860,6 +861,17 @@ class AppInitializer @Inject constructor(
     override fun onStart(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppComesFromBackground()
         appConfig.refresh(appScope)
+        // sends saves made offline and catches up with saves made elsewhere, off the main thread
+        readerSavedPostsRepository.sync()
+    }
+
+    /** Saves and unsaves made offline go to the account once the device is back online. */
+    private fun syncReaderSavedPostsOnReconnect() {
+        var wasConnected: Boolean? = null
+        networkConnectionMonitor.isConnected.observeForever { isConnected ->
+            if (isConnected == true && wasConnected == false) readerSavedPostsRepository.sync()
+            wasConnected = isConnected
+        }
     }
 
     override fun onStop(owner: LifecycleOwner) {

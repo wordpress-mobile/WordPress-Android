@@ -194,7 +194,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         // the view is reused when returning to the Reader tab, so show the top bar again as a new one would be
         topBarScrollConnection.reset()
         startReaderViewModel(savedInstanceState)
-        savedPostsRepository.sync()
     }
 
     override fun onResume() {

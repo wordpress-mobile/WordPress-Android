@@ -8,7 +8,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_mobile.ReaderSavedListItem
 import javax.inject.Inject
 
@@ -19,7 +18,6 @@ import javax.inject.Inject
  */
 class ReaderSavedPostCardBuilder @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
-    private val resourceProvider: ResourceProvider,
 ) {
     class Callbacks(
         val onClicked: (ReaderSavedListItem) -> Unit,
@@ -54,14 +52,6 @@ class ReaderSavedPostCardBuilder @Inject constructor(
         val blogSection = card.blogSection.copy(
             // a page saved by URL has no site to open
             onClicked = card.blogSection.onClicked.takeIf { post.blogId != 0L || post.feedId != 0L },
-            // a save the account refused is only kept here, which the card would otherwise not say
-            dateLine = if (item.isLocalOnly) {
-                listOf(card.blogSection.dateLine, resourceProvider.getString(R.string.reader_saved_post_local_only))
-                    .filter { it.isNotEmpty() }
-                    .joinToString(resourceProvider.getString(R.string.reader_dot_separator))
-            } else {
-                card.blogSection.dateLine
-            },
         )
         return card.copy(
             blogSection = blogSection,

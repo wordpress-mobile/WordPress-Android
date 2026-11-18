@@ -66,18 +66,17 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unsaving offline reports no network and doesn't touch the account`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+    fun `unsaving offline still unsaves, since wordpress-rs sends it with the next sync`() = test {
+        whenever(repository.setSaved(identity, false)).thenReturn(true)
 
         viewModel.onUnsaveClicked(postItem)
 
-        assertThat(viewModel.events.first()).isEqualTo(Event.NoNetwork)
-        verify(repository, never()).setSaved(any(), any(), anyOrNull())
+        assertThat(viewModel.events.first()).isEqualTo(Event.Unsaved(postItem))
+        verify(networkUtilsWrapper, never()).isNetworkAvailable()
     }
 
     @Test
     fun `unsaving a post unsaves it on the account and clears its local flag`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(repository.setSaved(identity, false)).thenReturn(true)
 
         viewModel.onUnsaveClicked(postItem)
@@ -87,18 +86,7 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `unsaving a save only this device has works offline`() = test {
-        val localOnlyItem = postItem.copy(isLocalOnly = true)
-        whenever(repository.setSaved(identity, false)).thenReturn(true)
-
-        viewModel.onUnsaveClicked(localOnlyItem)
-
-        assertThat(viewModel.events.first()).isEqualTo(Event.Unsaved(localOnlyItem))
-    }
-
-    @Test
     fun `unsaving a post is tracked as the device's Saved list tracks it`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(repository.setSaved(identity, false)).thenReturn(true)
 
         viewModel.onUnsaveClicked(postItem)
@@ -115,7 +103,6 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `a failed unsave reports the failure and leaves the local flag alone`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(repository.setSaved(identity, false)).thenReturn(false)
 
         viewModel.onUnsaveClicked(postItem)
@@ -127,7 +114,6 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
     @Test
     fun `unsaving an item without a post unsaves its key`() = test {
         val urlItem = ReaderSavedListItem(ReaderSavedKey.Url("https://example.com"), null, null, false, false)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(repository.unsaveKey(urlItem.key)).thenReturn(true)
 
         viewModel.onUnsaveClicked(urlItem)
@@ -193,8 +179,8 @@ class ReaderSavedPostsViewModelTest : BaseUnitTest() {
             key = postKey,
             dateSaved = null,
             post = ReaderPostRecord(key = postKey, identity = identity),
-            isRecent = false,
-            isLocalOnly = false
+            isPending = false,
+            isWaitingForRoom = false
         )
     }
 }
