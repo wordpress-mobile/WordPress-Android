@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Self-hosted sign-in explains when the server blocks application passwords**
+  When a self-hosted site's server does not pass the Authorization header to WordPress, signing in with an application password now stops with a dialog that says "Your server is blocking sign-in with application passwords. Contact your hosting provider for help." Nothing is saved for the site. Before, the sign-in seemed to finish, but features that use the site's REST API failed and the app kept asking the user to authorize the app again.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Login → Enter your existing site address → authorize the app in the browser; also the dialogs that ask a signed-in self-hosted site to create an application password
+  - **Notes:** The app checks the new password with one request before saving it. The dialog appears only when WordPress answers that request as if no credentials were sent and the request went to the same address the site returned with the password. The fix is on the host's side: the site's Site Health screen reports the problem as "The authorization header is missing".
+
 - **Reader saved posts sync with your WordPress.com account**
   Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the app opens after updating. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving and unsaving work offline: the change shows straight away and reaches the account once the device is back online.
   - **Apps:** Both
