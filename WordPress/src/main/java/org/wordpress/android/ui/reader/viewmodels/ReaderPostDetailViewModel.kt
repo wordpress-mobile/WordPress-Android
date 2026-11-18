@@ -8,8 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -614,9 +617,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onUpdatePost(post: ReaderPost) {
-        viewModelScope.launch {
-            _uiState.value = convertPostToUiState(post)
-        }
+        updateUiState { _uiState.value = convertPostToUiState(post) }
     }
 
     fun onTagItemClicked(tagSlug: String) {
@@ -789,9 +790,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
-            viewModelScope.launch {
-                _uiState.value = convertPostToUiState(it)
-            }
+            updateUiState { _uiState.value = convertPostToUiState(it) }
             onRefreshLikersData(it)
             if (commentsSnippetFeatureConfig.isEnabled()) {
                 onRefreshCommentsData(it.blogId, it.postId)
@@ -819,13 +818,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
     }
 
-    private var updatePostActionsJob: Job? = null
+    private val uiStateMutex = Mutex()
+
+    /**
+     * Runs [update] after the ones before it. The state is built off the main thread, where updates could
+     * otherwise finish out of order and an older one overwrite a newer one.
+     */
+    private fun updateUiState(update: suspend () -> Unit) {
+        // undispatched, so updates queue for the lock in the order they're asked for
+        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            uiStateMutex.withLock { update() }
+        }
+    }
 
     private fun updatePostActions(post: ReaderPost) {
         if (_uiState.value !is ReaderPostDetailsUiState) return
-        // the latest update wins, as updates built off the main thread can finish out of order
-        updatePostActionsJob?.cancel()
-        updatePostActionsJob = viewModelScope.launch {
+        updateUiState {
             // off the main thread, as whether the post is saved is read from the saved posts cache
             val actions = withContext(bgDispatcher) {
                 postDetailUiStateBuilder.buildPostActions(post, this@ReaderPostDetailViewModel::onButtonClicked)

@@ -103,12 +103,14 @@ class ReaderSavedPostsRepository @Inject constructor(
 
     /**
      * Whether [post] is saved, as far as this device knows. Doesn't touch the network, but reads the
-     * cache, so call it off the main thread. Until the device's saves are imported, the Saved tab shows
-     * the device's own list, so this answers as that list does.
+     * cache, and opens it on first use, so call it off the main thread. Until the device's saves are
+     * imported, the Saved tab shows the device's own list, so this answers as that list does.
      */
     fun isSaved(post: ReaderPost): Boolean {
         val status = try {
-            if (isSyncedListReady()) peekService()?.status(post.toSaveIdentity()) else null
+            // getService rather than peekService: before anything else opens the service, the device's own
+            // flag would say a post saved elsewhere isn't saved
+            if (isSyncedListReady()) getService()?.status(post.toSaveIdentity()) else null
         } catch (e: ReaderSavedException) {
             AppLog.e(T.READER, "Reading whether a post is saved failed", e)
             null
@@ -245,7 +247,8 @@ class ReaderSavedPostsRepository @Inject constructor(
      * Opening the cache loads the wordpress-rs library, so this runs off the main thread, after any
      * import that's under way.
      */
-    @Synchronized
+    // Not synchronized: it runs on the main thread, and getService holds the lock while it opens the cache.
+    // current is volatile, and a service opened meanwhile is for an account that's no longer signed in.
     fun clear(userId: Long, savesImported: Boolean) {
         val service = current?.takeIf { it.userId == userId }?.service
         current = null
@@ -330,6 +333,11 @@ class ReaderSavedPostsRepository @Inject constructor(
         val userId = userId.takeIf { accountStore.hasAccessToken() && it > 0 } ?: return null
         return peekService() ?: createService(userId)?.also {
             it.setObserver(observer)
+            // one left from another account, such as after its token was replaced, stops reporting changes
+            current?.service?.let { old ->
+                old.setObserver(null)
+                old.close()
+            }
             current = AccountService(userId, it)
         }
     }
