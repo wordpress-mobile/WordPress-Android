@@ -94,8 +94,6 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.PostRefreshed
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
@@ -352,7 +350,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderPostDetailScreen(
                     chrome = chrome,
                     uiState = uiState,
-                    topBarState = topBarState(uiState, isPostBlocked),
+                    topBarState = ReaderPostDetailTopBarState.from(
+                        uiState = uiState,
+                        isPostBlocked = isPostBlocked,
+                        postHasUrl = viewModel.post?.hasUrl() == true,
+                        hasInterceptedUri = viewModel.interceptedUri != null,
+                        isReadingPreferencesEnabled = readingPreferencesFeatureConfig.isEnabled(),
+                    ),
                     isRelatedPost = isRelatedPost,
                     actions = screenActions,
                     body = body,
@@ -386,7 +390,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             null
         }
         ReaderPostDetailFooter(
-            detailsState = currentDetailsState(uiState),
+            detailsState = chrome.currentDetailsState(uiState),
             hasWebViewContent = chrome.hasWebViewContent,
             likesState = likesState,
             commentSnippetState = commentSnippetState,
@@ -839,26 +843,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         bookmarksSavedLocallyDialog?.dismiss()
     }
 
-    /**
-     * Only More shows while the post loads, nothing once it fails, and More hides for a blocked post
-     */
-    private fun topBarState(uiState: UiState?, isPostBlocked: Boolean): ReaderPostDetailTopBarState = when (uiState) {
-        is ErrorUiState -> ReaderPostDetailTopBarState(showMore = false)
-        is ReaderPostDetailsUiState -> {
-            val postHasUrl = viewModel.post?.hasUrl() == true
-            ReaderPostDetailTopBarState(
-                // reading preferences require the feature flag to be on
-                showReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
-                // browse requires the post to have a URL (some feed-based posts don't have one) or an intercepted URI
-                showBrowse = postHasUrl || viewModel.interceptedUri != null,
-                // share requires the post to have a URL
-                showShare = postHasUrl,
-                showMore = !isPostBlocked,
-            )
-        }
-        else -> ReaderPostDetailTopBarState(showMore = !isPostBlocked)
-    }
-
     private fun onBrowseClicked() {
         val interceptedUri = viewModel.interceptedUri
         val post = viewModel.post
@@ -989,7 +973,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * already tracked it
      */
     private fun trackRelatedPostsIfShowing() {
-        val state = currentDetailsState(viewModel.uiState.value) ?: return
+        val state = chrome.currentDetailsState(viewModel.uiState.value) ?: return
         if (!hasTrackedGlobalRelatedPosts && isScrolledIntoView(isGlobal = true)) {
             hasTrackedGlobalRelatedPosts = true
             AppLog.d(T.READER, "reader post detail > global related posts rendered")
@@ -1000,18 +984,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             hasTrackedLocalRelatedPosts = true
             AppLog.d(T.READER, "reader post detail > local related posts rendered")
             state.localRelatedPosts?.railcarJsonStrings?.forEach { it?.let(readerTracker::trackRailcar) }
-        }
-    }
-
-    /**
-     * The details state, unless it's still that of a post replaced in place, whose related posts and other details
-     * mustn't show below the new post or be tracked for it
-     */
-    private fun currentDetailsState(uiState: UiState?): ReaderPostDetailsUiState? {
-        val replaced = chrome.replacedState as? ReaderPostDetailsUiState
-        // by ids rather than identity: a late update of the replaced post emits a copy of its state
-        return (uiState as? ReaderPostDetailsUiState)?.takeUnless {
-            replaced != null && it.postId == replaced.postId && it.blogId == replaced.blogId
         }
     }
 
