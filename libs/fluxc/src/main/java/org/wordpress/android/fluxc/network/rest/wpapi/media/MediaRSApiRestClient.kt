@@ -270,6 +270,11 @@ class MediaRSApiRestClient @Inject constructor(
             is RequestExecutionErrorReason.ConnectionError,
             is RequestExecutionErrorReason.InvalidSslError -> MediaErrorType.CONNECTION_ERROR
             is RequestExecutionErrorReason.NonExistentSiteError -> MediaErrorType.NOT_FOUND
+            // A Cloudflare edge failure still carries the HTTP status the request came back with
+            // (413 for a too-large upload, 5xx for an origin problem, and so on), so map on that
+            // rather than on the Cloudflare-specific kind.
+            is RequestExecutionErrorReason.CloudflareError ->
+                MediaErrorType.fromHttpStatusCode(reason.statusCode.toInt())
             // Keep this aligned with MediaErrorType.fromHttpStatusCode: a 403 (forbidden) maps to
             // NOT_AUTHENTICATED, while a 401 (auth required/rejected/misconfigured) maps to
             // AUTHORIZATION_REQUIRED.
