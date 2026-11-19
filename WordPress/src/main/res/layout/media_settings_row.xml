@@ -5,8 +5,7 @@
     style="@style/MediaSettings.Row"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true"
-    android:paddingEnd="12dp">
+    android:focusable="true">
 
     <TextView
         android:id="@+id/row_label"
