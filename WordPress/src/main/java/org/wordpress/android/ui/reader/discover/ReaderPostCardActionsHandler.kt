@@ -53,9 +53,13 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.TooManySaves
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
@@ -99,6 +103,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val accountStore: AccountStore,
+    private val savedPostsRepository: ReaderSavedPostsRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private lateinit var coroutineScope: CoroutineScope
@@ -502,45 +507,71 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PreLoadPostContent -> _preloadPostEvents.postValue(
                     Event(PreLoadPostContent(post.blogId, post.postId))
                 )
+                // the post reads as saved or unsaved already, so show it rather than wait for the server
+                Started -> _refreshPosts.postValue(Event(Unit))
+                // the save was undone, so show the post as it is again
+                Failed, TooManySaves -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    val message = if (it == TooManySaves) {
+                        R.string.reader_saved_posts_limit_reached
+                    } else {
+                        R.string.reader_error_request_failed_title
+                    }
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
+                }
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
                     // ReaderPostDetailFragment
                     _refreshPosts.postValue(Event(Unit))
-
-                    val showSnackbarAction = {
-                        _snackbarEvents.postValue(
-                            Event(
-                                SnackbarMessageHolder(
-                                    UiStringRes(R.string.reader_bookmark_snack_title),
-                                    UiStringRes(R.string.reader_bookmark_snack_btn),
-                                    buttonAction = {
-                                        readerTracker.track(
-                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
-                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
-                                        )
-                                        _navigationEvents.postValue(Event(ShowBookmarkedTab))
-                                    })
-                            )
-                        )
-                    }
-                    if (it.bookmarked && !isBookmarkList) {
-                        if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
-                            _navigationEvents.postValue(
-                                Event(
-                                    ShowBookmarkedSavedOnlyLocallyDialog(
-                                        okButtonAction = {
-                                            appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
-                                            showSnackbarAction.invoke()
-                                        })
-                                )
-                            )
-                        } else {
-                            showSnackbarAction.invoke()
-                        }
-                    }
+                    if (it.bookmarked && !isBookmarkList) showSavedConfirmation()
                 }
             }
         }
+    }
+
+    /** The one-time dialog about where saves are kept, if it's due, then the "Post saved" snackbar. */
+    private fun showSavedConfirmation() {
+        // each message is shown once, so people who saw the local-only one still hear that saves now sync
+        val (shouldShowDialog, setDialogShown, message) = if (savedPostsRepository.isSyncedWithAccount) {
+            Triple(
+                appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog(),
+                appPrefsWrapper::setReaderSavedPostsSyncDialogShown,
+                R.string.reader_save_posts_synced_dialog_message
+            )
+        } else {
+            Triple(
+                appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog(),
+                appPrefsWrapper::setBookmarksSavedLocallyDialogShown,
+                R.string.reader_save_posts_locally_dialog_message
+            )
+        }
+        if (!shouldShowDialog) {
+            showSavedSnackbar()
+            return
+        }
+        val dialog = ShowBookmarkedSavedOnlyLocallyDialog(
+            okButtonAction = {
+                setDialogShown()
+                showSavedSnackbar()
+            },
+            message = message
+        )
+        _navigationEvents.postValue(Event(dialog))
+    }
+
+    private fun showSavedSnackbar() {
+        val snackbar = SnackbarMessageHolder(
+            UiStringRes(R.string.reader_bookmark_snack_title),
+            UiStringRes(R.string.reader_bookmark_snack_btn),
+            buttonAction = {
+                readerTracker.track(
+                    AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
+                    ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
+                )
+                _navigationEvents.postValue(Event(ShowBookmarkedTab))
+            }
+        )
+        _snackbarEvents.postValue(Event(snackbar))
     }
 
     private suspend fun handleReblogClicked(post: ReaderPost) {

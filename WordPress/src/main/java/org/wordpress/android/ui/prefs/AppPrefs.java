@@ -75,6 +75,9 @@ public class AppPrefs {
 
         NEW_STATS_INTRO_SHOWN,
 
+        // WP.com user id whose local Reader saved posts were imported to their account
+        READER_SAVED_POSTS_IMPORTED_USER_ID,
+
         NEW_STATS_USER_OPTED_IN,
 
         STATS_NEW_STATS_SUGGESTION_SHOWN,
@@ -248,6 +251,10 @@ public class AppPrefs {
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
+
+        // Whether the dialog saying saved Reader posts sync with the account has been shown. Separate from
+        // BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, so people who saw the local-only one still hear about syncing
+        READER_SAVED_POSTS_SYNC_DIALOG_SHOWN,
 
         // Set when the user explicitly turns New Stats off. Undeletable so the choice survives
         // sign-out - it is the only thing that can override the android_new_stats rollout flag,
@@ -604,6 +611,22 @@ public class AppPrefs {
 
     public static void setBookmarksSavedLocallyDialogShown() {
         setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
+    }
+
+    public static boolean shouldShowReaderSavedPostsSyncDialog() {
+        return !getBoolean(UndeletablePrefKey.READER_SAVED_POSTS_SYNC_DIALOG_SHOWN, false);
+    }
+
+    public static void setReaderSavedPostsSyncDialogShown() {
+        setBoolean(UndeletablePrefKey.READER_SAVED_POSTS_SYNC_DIALOG_SHOWN, true);
+    }
+
+    public static boolean isReaderSavedPostsImported(long userId) {
+        return userId > 0 && getLong(DeletablePrefKey.READER_SAVED_POSTS_IMPORTED_USER_ID, 0) == userId;
+    }
+
+    public static void setReaderSavedPostsImported(long userId) {
+        setLong(DeletablePrefKey.READER_SAVED_POSTS_IMPORTED_USER_ID, userId);
     }
 
     /**

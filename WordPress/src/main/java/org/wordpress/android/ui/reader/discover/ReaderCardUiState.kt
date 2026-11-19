@@ -21,13 +21,13 @@ sealed class ReaderCardUiState {
         val feedId: Long,
         val isFollowed: Boolean,
         val blogSection: CompactBlogSectionData,
-        val interactionSection: InteractionSectionData,
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
+        val bookmarkAction: PrimaryAction,
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
@@ -47,11 +47,6 @@ sealed class ReaderCardUiState {
             val isAuthorAvatarVisible: Boolean,
             val blavatarType: ImageType,
             val onClicked: ((Long, Long) -> Unit)?,
-        )
-
-        data class InteractionSectionData(
-            val likeCount: Int,
-            val commentCount: Int,
         )
 
         data class GalleryThumbnailStripData(

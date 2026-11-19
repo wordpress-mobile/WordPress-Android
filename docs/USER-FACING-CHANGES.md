@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader saved posts sync with your WordPress.com account**
+  Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the app opens after updating. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving and unsaving work offline: the change shows straight away and reaches the account once the device is back online.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Reader → Saved; the bookmark button on Reader posts
+  - **Notes:** Needs a WordPress.com account; without one, posts are still saved only on the device. Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saving a post when the account already holds its limit of 1,000 says the limit was reached. Saves past the limit that were made offline or imported stay saved and are added once there's room; a save the account refuses is undone. A one-time dialog on the first save says saved posts sync across devices; it shows even to people who already saw the old "only on this device" dialog. Signing out removes from the device the saved posts the account holds, and keeps the rest; signing back in to the same account adds them to it. A post saved elsewhere can't be opened offline.
+
 - **Stats can chart a year at a time again**
   The Traffic period menu in the redesigned Stats offers a new option, Last 3 years, below Last 12 months. It draws one bar per year, so a site's years can be compared side by side, and the totals and every card below the chart cover the same three years. The old Stats had this as the Years option in its period dropdown; the redesigned Stats had no equivalent until now.
   - **Apps:** Both

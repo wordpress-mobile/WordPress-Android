@@ -19,6 +19,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
@@ -63,7 +64,9 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBl
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.PostLikedInLocalDb
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
@@ -78,6 +81,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val SOURCE = "source"
@@ -131,6 +135,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var accountStore: AccountStore
 
     @Mock
+    private lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
+    @Mock
     private lateinit var resourceProvider: ResourceProvider
 
     @Mock
@@ -156,6 +163,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             seenStatusToggleUseCase,
             readerBlogTableWrapper,
             accountStore,
+            savedPostsRepository,
             testDispatcher()
         )
         actionHandler.initScope(testScope())
@@ -205,6 +213,45 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         )
 
         // Assert
+        assertThat(observedValues.navigation).isEmpty()
+    }
+
+    @Test
+    fun `when synced, shows the sync dialog once even if the local-only one was shown`() = test {
+        whenever(bookmarkUseCase.toggleBookmark(any(), any(), any())).thenReturn(flowOf(Success(true)))
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
+        whenever(appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()).thenReturn(true)
+
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false, SOURCE)
+
+        val dialog = observedValues.navigation[0] as ShowBookmarkedSavedOnlyLocallyDialog
+        assertThat(dialog.message).isEqualTo(R.string.reader_save_posts_synced_dialog_message)
+        dialog.okButtonAction()
+        verify(appPrefsWrapper).setReaderSavedPostsSyncDialogShown()
+    }
+
+    @Test
+    fun `a save past the account's limit says so and refreshes the posts`() = test {
+        whenever(bookmarkUseCase.toggleBookmark(any(), any(), any())).thenReturn(flowOf(BookmarkPostState.TooManySaves))
+
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false, SOURCE)
+
+        assertThat(observedValues.snackbarMsgs.map { it.message })
+            .containsExactly(UiStringRes(R.string.reader_saved_posts_limit_reached))
+        assertThat(observedValues.refreshPosts).isNotEmpty()
+    }
+
+    @Test
+    fun `when synced, doesn't show the sync dialog again`() = test {
+        whenever(bookmarkUseCase.toggleBookmark(any(), any(), any())).thenReturn(flowOf(Success(true)))
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
+        whenever(appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()).thenReturn(false)
+
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false, SOURCE)
+
         assertThat(observedValues.navigation).isEmpty()
     }
 

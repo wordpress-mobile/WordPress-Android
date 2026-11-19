@@ -32,6 +32,13 @@ class ReaderPostTableWrapper @Inject constructor() {
 
     fun getNumPostsWithTag(readerTag: ReaderTag): Int = ReaderPostTable.getNumPostsWithTag(readerTag)
 
+    fun getBookmarkedPosts(): ReaderPostList = ReaderPostTable.getBookmarkedPosts()
+
+    fun purgeUnbookmarkedPostsWithBookmarkTag(): Int = ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag()
+
+    fun setBookmarkFlag(blogId: Long, postId: Long, bookmark: Boolean) =
+        ReaderPostTable.setBookmarkFlag(blogId, postId, bookmark)
+
     fun addOrUpdatePosts(readerTag: ReaderTag?, posts: ReaderPostList) =
         ReaderPostTable.addOrUpdatePosts(readerTag, posts)
 

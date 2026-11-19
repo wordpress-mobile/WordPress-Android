@@ -2476,6 +2476,8 @@
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_saved_posts_limit_reached">You\'ve reached the limit of saved posts. Remove some to save more.</string>
+    <string name="reader_saved_post_removed">Removed from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_blog_notifications_off">Turn off blog notifications</string>
@@ -2624,6 +2626,7 @@
 
     <!-- dialogs -->
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
+    <string name="reader_save_posts_synced_dialog_message">Saved posts sync with your WordPress.com account, so they\'re on all your devices.</string>
     <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices.</string>
 
     <!-- Reader tags feed -->
