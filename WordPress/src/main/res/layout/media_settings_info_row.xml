@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MediaSettings.Row"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/row_label"
+        style="@style/MediaSettings.RowLabel"
+        tools:text="File size" />
+
+    <TextView
+        android:id="@+id/row_value"
+        style="@style/MediaSettings.RowValue"
+        tools:text="980.77 KB" />
+</LinearLayout>
