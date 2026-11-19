@@ -375,7 +375,6 @@ Language: es_MX
     <string name="application_password_required">Se requiere contraseña de aplicación</string>
     <string name="menu_html_mode">Editor de código</string>
     <string name="taxonomies_title">Taxonomías</string>
-    <string name="media_edit_file_size_caption">Tamaño del archivo</string>
     <string name="jetpack_rest_connection_error_login_wpcom">No se pudo iniciar sesión en WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Conectar el sitio a WordPress.com</string>
     <string name="dataview_default_empty_message">No hay nada aquí</string>
@@ -2973,7 +2972,6 @@ Language: es_MX
     <string name="remove_image_from_post">Quitar de la entrada</string>
     <string name="confirm_remove_media_image">¿Quitamos esta imagen de la entrada?</string>
     <string name="media_edit_customize_card_caption">Personalizar</string>
-    <string name="media_edit_file_details_card_caption">Detalles del archivo</string>
     <string name="login_error_button">Cerrar</string>
     <string name="error_generic_network">Ocurrió un error en la red. Por favor, revisa tu conexión e inténtalo de nuevo.</string>
     <string name="post_settings_remove_featured_image">Quitar imagen destacada</string>
@@ -3007,14 +3005,8 @@ Language: es_MX
     <string name="media_title_audio_details">Detalles del audio</string>
     <string name="media_title_video_details">Detalles del video:</string>
     <string name="media_title_image_details">Detalles de la imagen</string>
-    <string name="fab_content_description_preview">Vista previa</string>
     <string name="media_edit_duration_caption">Duración</string>
-    <string name="media_edit_upload_date_caption">Fecha de actualización</string>
-    <string name="media_edit_video_dimensions_caption">Dimensiones de video</string>
-    <string name="media_edit_image_dimensions_caption">Sin imagen</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_filetype_caption">Tipo de archivo</string>
-    <string name="media_edit_filename_caption">Nombre del archivo</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="connect_site">Conectar un sitio</string>

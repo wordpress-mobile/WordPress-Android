@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Redesigned media details screen**
+  The media details screen shows every field in the same rounded-card rows. Title, Caption, Alt text and Description are no longer text boxes on the screen: tapping one opens a sheet with a single text field and Cancel and Save buttons, and empty fields show a prompt such as "Add alt text". File name and a one-line summary (type, dimensions or duration, size) appear under the image. URL, file type, file size, dimensions, upload date and duration are in a read-only "File info" section, and the URL has a copy icon instead of a Copy button. The green full-screen button is replaced by a smaller button in the photo's corner. Trash (and Remove image when opened from the editor) moved to the toolbar's overflow menu.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item; image settings opened from the post editor
+  - **Notes:** Edits still save when you leave the screen. Tapping Save in the sheet only updates the field, and Cancel, Back or swiping the sheet down discards the edit. The File Name, Image Dimensions and Upload Date rows were removed. The file name is in the summary under the image, dimensions show as "Dimensions", and the upload date shows as "Uploaded".
+
 - **Reader saved posts sync with your WordPress.com account**
   Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the app opens after updating. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving and unsaving work offline: the change shows straight away and reaches the account once the device is back online.
   - **Apps:** Both

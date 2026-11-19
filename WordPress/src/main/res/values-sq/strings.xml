@@ -353,7 +353,6 @@ Language: sq_AL
     <string name="application_password_required">Lypset Fjalëkalim Aplikacioni</string>
     <string name="menu_html_mode">Përpunues Kodi</string>
     <string name="taxonomies_title">Klasifikime</string>
-    <string name="media_edit_file_size_caption">Madhësi Kartele</string>
     <string name="jetpack_rest_connection_error_login_wpcom">S’arrihet të hyhet te WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Lidheni sajtin me WordPress.com-in</string>
     <string name="dataview_default_empty_message">S’ka gjë këtu</string>
@@ -2943,7 +2942,6 @@ Language: sq_AL
     <string name="remove_image_from_post">Hiqe prej postimi</string>
     <string name="confirm_remove_media_image">Të hiqet kjo figurë nga postimi?</string>
     <string name="media_edit_customize_card_caption">Përshtateni</string>
-    <string name="media_edit_file_details_card_caption">Hollësi Kartele</string>
     <string name="login_error_button">Mbylle</string>
     <string name="error_generic_network">Ndodhi një gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="post_settings_remove_featured_image">Hiqe figurën e zgjedhur</string>
@@ -2977,13 +2975,7 @@ Language: sq_AL
     <string name="media_title_audio_details">Hollësi audioje</string>
     <string name="media_title_video_details">Hollësi videoje</string>
     <string name="media_title_image_details">Hollësi figure</string>
-    <string name="fab_content_description_preview">Paraparje</string>
-    <string name="media_edit_upload_date_caption">Datë Ngarkimi</string>
     <string name="media_edit_duration_caption">Kohëzgjatje</string>
-    <string name="media_edit_video_dimensions_caption">Përmasa Videoje</string>
-    <string name="media_edit_image_dimensions_caption">Përmasa Figure</string>
-    <string name="media_edit_filetype_caption">Lloj Kartele</string>
-    <string name="media_edit_filename_caption">Emër Kartele</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Tekst alternativ</string>
     <string name="connect_site">Lidhni një sajt</string>

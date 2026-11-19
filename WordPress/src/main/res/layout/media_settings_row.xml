@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:importantForAccessibility="noHideDescendants"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/row_label"
+            style="@style/MediaSettings.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Alt text" />
+
+        <TextView
+            android:id="@+id/row_value"
+            style="@style/MediaSettings.Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="A dog on a beach" />
+
+        <TextView
+            android:id="@+id/row_helper"
+            style="@style/MediaSettings.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"
+            tools:text="Describes the image for people using screen readers"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:importantForAccessibility="no"
+        android:scaleType="center"
+        android:src="@drawable/ic_pencil_white_24dp"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+</LinearLayout>

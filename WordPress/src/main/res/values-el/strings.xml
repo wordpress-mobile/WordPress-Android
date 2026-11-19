@@ -335,7 +335,6 @@ Language: el_GR
     <string name="remove_image_from_post">Αφαίρεση από το άρθρο</string>
     <string name="confirm_remove_media_image">Αφαίρεση αυτής της εικόνας από το άρθρο;</string>
     <string name="media_edit_customize_card_caption">Προσαρμογή</string>
-    <string name="media_edit_file_details_card_caption">Λεπτομέρειες αρχείου</string>
     <string name="login_error_button">Κλείσιμο</string>
     <string name="post_settings_remove_featured_image">Αφαίρεση χαρακτηριστικής εικόνας</string>
     <string name="post_settings_choose_featured_image">Επιλέξτε χαρακτηρισμένη εικόνα</string>
@@ -354,13 +353,7 @@ Language: el_GR
     <string name="media_title_document_details">Λεμπτομέρειες κειμένου</string>
     <string name="media_title_video_details">Λεπτομέρειες βίντεο</string>
     <string name="media_title_image_details">Λεπτομέρειες εικόνας</string>
-    <string name="fab_content_description_preview">Προεπισκόπηση</string>
-    <string name="media_edit_upload_date_caption">Ημερομηνία Μεταφόρτωσης</string>
     <string name="media_edit_duration_caption">Διάρκεια</string>
-    <string name="media_edit_video_dimensions_caption">Διαστάσεις Βίντεο</string>
-    <string name="media_edit_image_dimensions_caption">Διαστάσεις Εικόνας</string>
-    <string name="media_edit_filetype_caption">Τύπος Αρχείου</string>
-    <string name="media_edit_filename_caption">Όνομα Αρχείου</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Ενναλακτικό κείμενο</string>
     <string name="connect_site">Σύνδεση ιστότοπου</string>
