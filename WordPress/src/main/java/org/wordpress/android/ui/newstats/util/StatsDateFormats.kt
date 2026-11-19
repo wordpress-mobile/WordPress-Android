@@ -35,6 +35,13 @@ object StatsDateSkeleton {
 
     /** Weekday, day and abbreviated month, for the Today card's subtitle. */
     const val WEEKDAY_DAY_MONTH = "EEEEMMMd"
+
+    /**
+     * Day, abbreviated month and 24-hour time, for naming an hourly chart bucket where there is room
+     * for its date. The hour is fixed to the 24-hour field rather than the locale's preferred one so
+     * it reads the same as the chart axis beneath it, which has no room for an am/pm marker.
+     */
+    const val DAY_MONTH_HOUR_MINUTE = "MMMdHm"
 }
 
 /**

@@ -15,8 +15,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.util.PresetRangeGranularity
 import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
+import org.wordpress.android.ui.newstats.util.formatCustomDateRange
 import org.wordpress.android.ui.newstats.util.formatDayRangeWithYear
 import org.wordpress.android.ui.newstats.util.formatMonthRangeWithYear
 import org.wordpress.android.ui.newstats.util.formatPresetRange
@@ -166,9 +165,6 @@ class ViewsStatsViewModel @Inject constructor(
     private var wholePeriodBottomRequest: ChartRequest? = null
 
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
-
-    // Serialises the read-modify-write cycles in [editConfiguration]; see its comment.
-    private val configWrites = Mutex()
 
     // The bucket width the chart is drawn at. [ChartInterval.AUTOMATIC] leaves it to the window, which
     // is what the chart has always done; anything else is the user overriding that derivation.
@@ -556,20 +552,19 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * Reads the stored configuration for [siteId], applies [edit] to it and writes it back, with no
-     * other write of this view model's interleaving.
+     * other edit of the blob interleaving.
      *
      * Every setting here lives in one blob, so persisting any of them is a read-modify-write of the
      * whole thing: two running at once and the one that writes first is silently reverted. A single
      * period change fires two — the period, plus the interval when the new period can't draw it —
-     * which is enough to lose the period the user just picked.
+     * which is enough to lose the period the user just picked. The serialising lives in the
+     * repository, which is the singleton that owns the blob, so a card reorder issued from another
+     * view model is ordered against these writes too.
      */
     private suspend fun editConfiguration(
         siteId: Long,
         edit: (StatsCardsConfiguration) -> StatsCardsConfiguration
-    ) = configWrites.withLock {
-        val config = cardsConfigurationRepository.getConfiguration(siteId)
-        cardsConfigurationRepository.saveConfiguration(siteId, edit(config))
-    }
+    ) = cardsConfigurationRepository.update(siteId, edit)
 
     /**
      * Pins the width of one chart bar to [unit].
@@ -747,7 +742,7 @@ class ViewsStatsViewModel @Inject constructor(
             bottomStats = buildSelectedBarBottom(index) ?: content.bottomStats,
             selectedBar = SelectedBar(
                 index = index,
-                label = dataPoint.label,
+                label = selectionLabelOf(dataPoint),
                 canDrillDown = barPeriod != null
             )
         )
@@ -805,9 +800,18 @@ class ViewsStatsViewModel @Inject constructor(
             previousPeriodTotal = previousValue,
             difference = currentValue - previousValue,
             percentageChange = calculatePercentageChange(currentValue, previousValue),
-            currentPeriodDateRange = current.label,
-            previousPeriodDateRange = previous?.label ?: loaded.previousPeriodDateRange
+            currentPeriodDateRange = selectionLabelOf(current),
+            previousPeriodDateRange = previous?.let { selectionLabelOf(it) } ?: loaded.previousPeriodDateRange
         )
+    }
+
+    /**
+     * [point]'s name as the header and the selected-bar label write it, falling back to the axis
+     * label when no chart result is held to read the bucket unit off.
+     */
+    private fun selectionLabelOf(point: ChartDataPoint): String {
+        val unit = lastChartResult?.unit ?: return point.label
+        return formatSelectionLabel(point.rawPeriod, unit)
     }
 
     /**
@@ -827,6 +831,11 @@ class ViewsStatsViewModel @Inject constructor(
             ?: EMPTY_BOTTOM_AGGREGATES
         val barItems = buildStatItems(current.toBottomAggregates(), previous)
         if (barItems.all { hasPerBucketSeries(result, it.metric) }) return BottomStatsUiState.Loaded(barItems)
+        // What the row borrows is the *window's* total, which only stands in for a bucket while the
+        // window is the single day an hourly response was fetched for. A chosen Hours interval can
+        // chart a window of several days, where a whole week's visitors sitting under one hour's bar
+        // would read as that hour's own count; there, the bucket keeps the zero the API gave it.
+        if (!result.coversSingleDay()) return BottomStatsUiState.Loaded(barItems)
         // Something has to be borrowed from the day's own row, so what happens next depends on whether
         // that row has landed for *this* period.
         val wholePeriodItems = when (val dayRow = wholePeriodRowForCurrentPeriod()) {
@@ -882,6 +891,10 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun hasPerBucketSeries(result: PeriodStatsResult.Success, metric: StatsMetric): Boolean =
         result.unit != StatsUnit.HOUR || result.currentPeriodData.any { it.valueFor(metric) > 0L }
+
+    /** Whether this result's window is a single day, so the window's totals are a day's totals. */
+    private fun PeriodStatsResult.Success.coversSingleDay(): Boolean =
+        currentAggregates.startDate == currentAggregates.endDate
 
     private fun ViewsDataPoint.toBottomAggregates() = BottomStatsAggregates(
         views = views,
@@ -958,8 +971,24 @@ class ViewsStatsViewModel @Inject constructor(
      * haven't happened: the last bar of Last 12 Months used to drill into the whole current month.
      */
     private fun clampToChartWindow(start: LocalDate, end: LocalDate): StatsPeriod {
-        val (windowStart, windowEnd) = statsRepository.periodWindow(currentPeriod)
+        val (windowStart, windowEnd) = chartWindow()
         return StatsPeriod.Custom(maxOf(start, windowStart), minOf(end, windowEnd))
+    }
+
+    /**
+     * The window the chart on screen was loaded for, falling back to the committed period's own
+     * window when no chart result is held.
+     *
+     * Read off the loaded result rather than recomputed from [currentPeriod], because every rolling
+     * preset's window is relative to today: re-reading the clock on a tap made after midnight would
+     * clamp a drill-down against a window a day away from the one the bars were drawn for, and the
+     * last bar — the one most likely to be tapped — would clamp to a day it doesn't cover.
+     */
+    private fun chartWindow(): Pair<LocalDate, LocalDate> {
+        val aggregates = lastChartResult?.currentAggregates
+        val start = aggregates?.startDate?.let { parsePeriodDate(it) }
+        val end = aggregates?.endDate?.let { parsePeriodDate(it) }
+        return if (start != null && end != null) start to end else statsRepository.periodWindow(currentPeriod)
     }
 
     private fun drillDownMonth(rawPeriod: String): StatsPeriod {
@@ -984,6 +1013,14 @@ class ViewsStatsViewModel @Inject constructor(
         // rebuilt whole-period header/bottom would sit alongside a still-highlighted bar and an
         // effectivePeriod stuck on the drilled sub-period, drifting the cards out of sync.
         clearSoftSelection()
+        // The units a period offers are measured against its window, and every rolling preset's
+        // window moves with the clock, so a refresh can be the first load of a period the chosen
+        // interval no longer fits — a screen left open overnight on "Today" with Hours is charting
+        // two days by the time it is pulled. Dropped in memory only, as at startup: the clock moving
+        // is not a pick, so what's stored stays there for the next period that can draw it.
+        if (!intervalFitsPeriod(currentInterval, currentPeriod)) {
+            currentInterval = ChartInterval.DEFAULT
+        }
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
@@ -1498,6 +1535,31 @@ class ViewsStatsViewModel @Inject constructor(
     private fun formatHourlyLabel(period: String): String {
         val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val outputFormat = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+        return LocalDateTime.parse(period, inputFormat).format(outputFormat)
+    }
+
+    /**
+     * How a bucket is named where there is room to spell it out: the selected-bar label above the
+     * chart, and the legend line the selection takes over from the window's date range.
+     *
+     * Two units are abbreviated on the axis because the axis cannot fit them, and both become
+     * ambiguous once they stand alone. A week bucket is labelled by the Monday it starts on, which
+     * reads as a single day; here it is widened to the Monday-to-Sunday span it covers. An hourly
+     * bucket is labelled by its time alone, which was unambiguous while the chart only ever covered
+     * one day — a chosen Hours interval can now span several, so the day is named alongside it.
+     * Every other unit already names itself, and is left exactly as the axis writes it.
+     */
+    private fun formatSelectionLabel(period: String, unit: StatsUnit): String = when {
+        period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabelWithDate(period)
+        unit == StatsUnit.WEEK -> parsePeriodDate(period)
+            ?.let { formatCustomDateRange(it, it.plusDays(DAYS_IN_WEEK - 1)) }
+            ?: formatDataPointLabel(period, unit)
+        else -> formatDataPointLabel(period, unit)
+    }
+
+    private fun formatHourlyLabelWithDate(period: String): String {
+        val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputFormat = statsDateFormatter(StatsDateSkeleton.DAY_MONTH_HOUR_MINUTE)
         return LocalDateTime.parse(period, inputFormat).format(outputFormat)
     }
 

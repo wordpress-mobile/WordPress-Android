@@ -10,6 +10,8 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -922,9 +924,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         viewModel.onChartTypeChanged(ChartType.BAR)
         advanceUntilIdle()
 
-        verify(cardsConfigurationRepository).saveConfiguration(
-            any(), any()
-        )
+        verify(cardsConfigurationRepository).update(any(), any())
     }
 
     @Test
@@ -1064,7 +1064,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = yearlyData,
                     previousPeriodData = yearlyData,
-                    unit = StatsUnit.YEAR
+                    unit = StatsUnit.YEAR,
+                    currentStartDate = "2024-01-01",
+                    currentEndDate = "2026-10-27"
                 )
             )
         whenever(statsRepository.calendarYearWindow(2024))
@@ -1106,7 +1108,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = monthlyData,
                     previousPeriodData = monthlyData,
-                    unit = StatsUnit.MONTH
+                    unit = StatsUnit.MONTH,
+                    currentStartDate = "2024-01-01",
+                    currentEndDate = "2024-12-31"
                 )
             )
         whenever(statsRepository.periodWindow(StatsPeriod.Last12Months))
@@ -1183,7 +1187,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = monthlyData,
                     previousPeriodData = monthlyData,
-                    unit = StatsUnit.MONTH
+                    unit = StatsUnit.MONTH,
+                    currentStartDate = "2024-01-01",
+                    currentEndDate = "2024-02-20"
                 )
             )
         whenever(statsRepository.periodWindow(StatsPeriod.ThisYear))
@@ -1219,7 +1225,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = weeklyData,
                     previousPeriodData = weeklyData,
-                    unit = StatsUnit.WEEK
+                    unit = StatsUnit.WEEK,
+                    currentStartDate = "2024-01-01",
+                    currentEndDate = "2024-01-30"
                 )
             )
         whenever(statsRepository.periodWindow(StatsPeriod.Last30Days))
@@ -1256,7 +1264,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = weeklyData,
                     previousPeriodData = weeklyData,
-                    unit = StatsUnit.WEEK
+                    unit = StatsUnit.WEEK,
+                    currentStartDate = "2024-01-10",
+                    currentEndDate = "2024-02-08"
                 )
             )
         whenever(statsRepository.periodWindow(StatsPeriod.Last30Days))
@@ -1289,7 +1299,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = monthlyData,
                     previousPeriodData = monthlyData,
-                    unit = StatsUnit.MONTH
+                    unit = StatsUnit.MONTH,
+                    currentStartDate = "2023-02-01",
+                    currentEndDate = "2024-01-20"
                 )
             )
         whenever(statsRepository.periodWindow(StatsPeriod.Last12Months))
@@ -1565,7 +1577,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
             createPeriodStatsResult(
                 currentPeriodData = hourly,
                 previousPeriodData = hourly,
-                unit = StatsUnit.HOUR
+                unit = StatsUnit.HOUR,
+                currentStartDate = "2024-01-14",
+                currentEndDate = "2024-01-14"
             )
         )
         whenever(statsRepository.fetchBottomStats(any(), any(), any())).thenReturn(createBottomStatsResult())
@@ -1597,7 +1611,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
             createPeriodStatsResult(
                 currentPeriodData = hourly,
                 previousPeriodData = hourly,
-                unit = StatsUnit.HOUR
+                unit = StatsUnit.HOUR,
+                currentStartDate = "2024-01-14",
+                currentEndDate = "2024-01-14"
             )
         )
         // The day-level row is fetched separately and can land after the user has tapped a bar.
@@ -1645,7 +1661,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = hourly,
                     previousPeriodData = hourly,
-                    unit = StatsUnit.HOUR
+                    unit = StatsUnit.HOUR,
+                    currentStartDate = "2024-01-14",
+                    currentEndDate = "2024-01-14"
                 )
             )
             val bottomGate = CompletableDeferred<Unit>()
@@ -1692,7 +1710,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = hourly,
                     previousPeriodData = hourly,
-                    unit = StatsUnit.HOUR
+                    unit = StatsUnit.HOUR,
+                    currentStartDate = "2024-01-14",
+                    currentEndDate = "2024-01-14"
                 )
             )
             val bottomGate = CompletableDeferred<Unit>()
@@ -1748,7 +1768,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
             createPeriodStatsResult(
                 currentPeriodData = hourly,
                 previousPeriodData = hourly,
-                unit = StatsUnit.HOUR
+                unit = StatsUnit.HOUR,
+                currentStartDate = "2024-01-14",
+                currentEndDate = "2024-01-14"
             )
         )
         val bottomGate = CompletableDeferred<Unit>()
@@ -1796,7 +1818,9 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                 createPeriodStatsResult(
                     currentPeriodData = hourly,
                     previousPeriodData = hourly,
-                    unit = StatsUnit.HOUR
+                    unit = StatsUnit.HOUR,
+                    currentStartDate = "2024-01-14",
+                    currentEndDate = "2024-01-14"
                 )
             )
             // Gate the day-level row so the bar can be tapped while it is still in flight, then fail it.
@@ -2172,14 +2196,11 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
         // The range stored is the one on screen — a whole calendar month here — but the origin stays
         // the preset the user picked, so a restart mid-paging doesn't have to guess between the two.
-        verify(cardsConfigurationRepository).saveConfiguration(
-            any(),
-            argThat {
-                selectedPeriodType == "custom" &&
-                    customPeriodStartDate == previous.startDate.toEpochDay() &&
-                    originPeriodType == "last_30_days"
-            }
-        )
+        assertThat(persistedConfigurations()).anyMatch {
+            it.selectedPeriodType == "custom" &&
+                it.customPeriodStartDate == previous.startDate.toEpochDay() &&
+                it.originPeriodType == "last_30_days"
+        }
     }
 
     @Test
@@ -2343,10 +2364,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         viewModel.onMetricSelected(StatsMetric.LIKES)
         advanceUntilIdle()
 
-        verify(cardsConfigurationRepository).saveConfiguration(
-            eq(TEST_SITE_ID),
-            argThat { selectedMetric == "likes" }
-        )
+        assertThat(persistedConfigurations()).anyMatch { it.selectedMetric == "likes" }
     }
 
     @Test
@@ -2409,7 +2427,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
         assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
         // The stored preference is untouched by the fallback.
-        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
+        verify(cardsConfigurationRepository, never()).update(any(), any())
     }
 
     @Test
@@ -2445,8 +2463,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
         assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
         assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
-        verify(cardsConfigurationRepository)
-            .saveConfiguration(any(), argThat { selectedMetric == "visitors" })
+        assertThat(persistedConfigurations()).anyMatch { it.selectedMetric == "visitors" }
     }
 
     @Test
@@ -2513,7 +2530,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         viewModel.onMetricSelected(StatsMetric.VIEWS)
         advanceUntilIdle()
 
-        verify(cardsConfigurationRepository, never()).saveConfiguration(any(), any())
+        verify(cardsConfigurationRepository, never()).update(any(), any())
         // Proof the preference survived: the next multi-day period charts visitors again.
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
         viewModel.loadDataIfNeeded()
@@ -2676,10 +2693,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         advanceUntilIdle()
 
         verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any(), any())
-        verify(cardsConfigurationRepository, never()).saveConfiguration(
-            eq(TEST_SITE_ID),
-            argThat { selectedChartInterval == "day" }
-        )
+        assertThat(persistedConfigurations()).noneMatch { it.selectedChartInterval == "day" }
     }
 
     @Test
@@ -2713,10 +2727,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         viewModel.onChartIntervalSelected(StatsUnit.WEEK)
         advanceUntilIdle()
 
-        verify(cardsConfigurationRepository).saveConfiguration(
-            eq(TEST_SITE_ID),
-            argThat { selectedChartInterval == "week" }
-        )
+        assertThat(persistedConfigurations()).anyMatch { it.selectedChartInterval == "week" }
     }
 
     @Test
@@ -2807,10 +2818,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
         verify(statsRepository)
             .fetchStatsForPeriod(any(), eq(StatsPeriod.Today), eq(ChartInterval.AUTOMATIC), any())
-        verify(cardsConfigurationRepository).saveConfiguration(
-            eq(TEST_SITE_ID),
-            argThat { selectedChartInterval == "automatic" }
-        )
+        assertThat(persistedConfigurations()).anyMatch { it.selectedChartInterval == "automatic" }
     }
 
     @Test
@@ -2863,6 +2871,22 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         verify(statsRepository, times(1)).fetchBottomStats(any(), any(), any())
     }
     // endregion
+
+    /**
+     * The configurations the card asked the repository to write, in the order it asked.
+     *
+     * Every setting the card persists goes through [StatsCardsConfigurationRepository.update], which
+     * takes an edit rather than a finished configuration — the repository owns the read-modify-write
+     * so two cards editing the same blob can't revert one another. So the assertion has to run each
+     * captured edit against the configuration the repository is holding, which here is whatever
+     * [StatsCardsConfigurationRepository.getConfiguration] is stubbed to return.
+     */
+    private suspend fun persistedConfigurations(): List<StatsCardsConfiguration> {
+        val edits = argumentCaptor<(StatsCardsConfiguration) -> StatsCardsConfiguration>()
+        verify(cardsConfigurationRepository, atLeast(0)).update(eq(TEST_SITE_ID), edits.capture())
+        val stored = cardsConfigurationRepository.getConfiguration(TEST_SITE_ID)
+        return edits.allValues.map { it(stored) }
+    }
 
     private fun createPeriodStatsResult(
         currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,

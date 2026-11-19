@@ -284,6 +284,86 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
     }
     // endregion
 
+    // region Leading-bucket alignment
+    @Test
+    fun `given a previous window that opens mid-bucket, when charted in weeks, then its sliver is dropped`() = test {
+        // "Last 12 months" on 19 Nov 2026 runs 1 Dec 2025 - 19 Nov 2026 against 1 Dec 2024 -
+        // 19 Nov 2025. Charted in weeks, 1 Dec 2025 is itself a Monday while 1 Dec 2024 is a Sunday,
+        // so the API answers the previous window with a leading bucket keyed to its Monday (24 Nov
+        // 2024) holding that one day. Paired by index it would sit under a full week of the current
+        // year, which is how a quiet Monday showed up as a +1637% rise.
+        stubWindows(
+            current = weekBuckets("2025W12W01", "2025W12W08"),
+            previous = weekBuckets("2024W11W25", "2024W12W02", "2024W12W09")
+        )
+
+        val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months, ChartInterval.WEEKS)
+
+        assertThat(result).isInstanceOf(PeriodStatsResult.Success::class.java)
+        with(result as PeriodStatsResult.Success) {
+            assertThat(previousPeriodData.map { it.period })
+                .containsExactly("2024W12W02", "2024W12W09")
+            // The totals still cover every day the window asked for: only the chart's pairing moves.
+            assertThat(previousAggregates.views).isEqualTo(THREE_BUCKET_VIEWS)
+        }
+    }
+
+    @Test
+    fun `given both windows opening mid-bucket, when charted in weeks, then neither series is trimmed`() = test {
+        // Both slivers are the window's own leading edge, so index pairing already puts like against
+        // like; dropping one would shift every bar by a week for no gain.
+        stubWindows(
+            current = weekBuckets("2026W10W19", "2026W10W26"),
+            previous = weekBuckets("2026W10W05", "2026W10W12", "2026W10W19")
+        )
+
+        val result = repository.fetchStatsForPeriod(
+            TEST_SITE_ID,
+            customPeriod("2026-10-21", "2026-11-01"),
+            ChartInterval.WEEKS
+        )
+
+        with(result as PeriodStatsResult.Success) {
+            assertThat(previousPeriodData.map { it.period })
+                .containsExactly("2026W10W05", "2026W10W12", "2026W10W19")
+        }
+    }
+
+    @Test
+    fun `given a previous series that omits the partial bucket, then no whole bucket is dropped`() = test {
+        // Nothing in the response promises the sliver is there. If the API ever starts omitting it,
+        // trimming on the date arithmetic alone would delete a real week of the comparison.
+        stubWindows(
+            current = weekBuckets("2025W12W01", "2025W12W08"),
+            previous = weekBuckets("2024W12W02", "2024W12W09")
+        )
+
+        val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months, ChartInterval.WEEKS)
+
+        with(result as PeriodStatsResult.Success) {
+            assertThat(previousPeriodData.map { it.period }).containsExactly("2024W12W02", "2024W12W09")
+        }
+    }
+    // endregion
+
+    /**
+     * Answers the current window's request with [current] and the previous one's with [previous].
+     * The two are told apart by call order, which is how [StatsRepository] issues them.
+     */
+    private suspend fun stubWindows(current: StatsVisitsData, previous: StatsVisitsData) {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(current), StatsVisitsDataResult.Success(previous))
+    }
+
+    /** One bucket per key, each carrying [BUCKET_VIEWS] views, in the shape the chart reads. */
+    private fun weekBuckets(vararg periods: String) = StatsVisitsData(
+        visits = periods.map { VisitsDataPoint(it, BUCKET_VIEWS) },
+        visitors = periods.map { VisitorsDataPoint(it, 5L) },
+        likes = periods.map { LikesDataPoint(it, 1L) },
+        comments = periods.map { CommentsDataPoint(it, 1L) },
+        posts = periods.map { PostsDataPoint(it, 1L) }
+    )
+
     private fun customPeriod(start: String, end: String) =
         StatsPeriod.Custom(LocalDate.parse(start), LocalDate.parse(end))
 
@@ -314,5 +394,7 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 12345L
         private val TODAY = LocalDate.of(2026, 11, 19)
+        private const val BUCKET_VIEWS = 10L
+        private const val THREE_BUCKET_VIEWS = 30L
     }
 }

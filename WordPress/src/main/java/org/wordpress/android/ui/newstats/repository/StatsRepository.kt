@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog
 import java.time.Clock
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
@@ -64,6 +65,11 @@ private const val HOURLY_QUANTITY = 24
 // day's 00:00–23:00 buckets; a date-only value (00:00) shifts the window back an hour and drops the
 // day's 00:00 bucket.
 private const val HOURLY_END_TIME = "23:00:00"
+// The last hour bucket of a day, which is where an hourly window's elapsed series stops.
+private const val LAST_HOUR_OF_DAY = 23
+// An hour bucket's `period` carries the hour as well as the day ("2026-11-15 14:00:00"), the same
+// shape [HOURLY_END_TIME] builds the window end from.
+private const val HOUR_PERIOD_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss"
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
@@ -156,6 +162,7 @@ class StatsRepository @Inject constructor(
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
     private val weekPeriodFormatter = DateTimeFormatter.ofPattern(WEEK_PERIOD_DATE_PATTERN, Locale.ROOT)
+    private val hourlyPeriodFormatter = DateTimeFormatter.ofPattern(HOUR_PERIOD_DATE_PATTERN, Locale.ROOT)
 
     /**
      * The current date, read through the injected [clock] so every window this class derives — and the
@@ -267,22 +274,34 @@ class StatsRepository @Inject constructor(
     ) = needsRevalidation(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
 
     /**
-     * The chart's key carries the interval, so switching it can't be answered from the bars drawn at
-     * the previous one. [ChartInterval.AUTOMATIC] encodes as no variant at all, which is the key
-     * every chart request has always written.
+     * The chart's key carries its bucket width, so switching the interval can't be answered from the
+     * bars drawn at the previous one — see [chartVariant] for why it is the resolved unit and not the
+     * interval that goes into the key.
      *
      * The bottom row needs no equivalent: once it routes on the resolved unit, the only thing that
      * still reaches [fetchBottomStats] is an hourly chart, and that call derives its own unit from
      * the period ([calculateBottomStatsRange]) rather than from the chart's.
      */
     fun isChartCached(siteId: Long, period: StatsPeriod, interval: ChartInterval) =
-        isCached(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(interval))
+        isCached(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(period, interval))
 
     fun chartNeedsRevalidation(siteId: Long, period: StatsPeriod, interval: ChartInterval) =
-        needsRevalidation(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(interval))
+        needsRevalidation(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(period, interval))
 
-    private fun chartVariant(interval: ChartInterval): String? =
-        interval.storageKey.takeIf { interval != ChartInterval.AUTOMATIC }
+    /**
+     * Keyed on the unit the chart will be drawn at, not on the interval that asked for it: an explicit
+     * pick that lands on the unit the window would have derived anyway produces a byte-identical
+     * request, and keying it separately would answer it with a second fetch and a flash of
+     * placeholders over the bars already on screen.
+     *
+     * The derived unit encodes as no variant at all, which is the key every chart request wrote before
+     * the interval existed, so [ChartInterval.AUTOMATIC] keeps using it.
+     */
+    private fun chartVariant(period: StatsPeriod, interval: ChartInterval): String? {
+        val resolved = chartUnitFor(period, interval)
+        return ChartInterval.of(resolved).storageKey
+            .takeIf { resolved != chartUnitFor(period, ChartInterval.AUTOMATIC) }
+    }
 
     fun isUtmCached(siteId: Long, period: StatsPeriod, keys: List<String>) =
         isCached(StatsCacheBucket.UTM, siteId, period, variant = utmVariant(keys))
@@ -826,7 +845,7 @@ class StatsRepository @Inject constructor(
         interval: ChartInterval = ChartInterval.DEFAULT,
         forceRefresh: Boolean = false
     ): PeriodStatsResult = cached(
-        key = cacheKey(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(interval)),
+        key = cacheKey(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(period, interval)),
         forceRefresh = forceRefresh,
         isCacheable = { it is PeriodStatsResult.Success }
     ) {
@@ -1047,11 +1066,16 @@ class StatsRepository @Inject constructor(
             periodRange.previousStart.format(dateFormatter),
             previousDisplayDateString
         )
+        val currentBuckets = currentData.toMetricDataPoints()
         // An unfinished calendar period is charted over its whole span, so the current series is padded
         // out to the end of the week/month/year; the previous window is the whole preceding period, so
         // the buckets that haven't happened yet still have a comparison drawn over them.
-        val currentPeriodData = currentData.toMetricDataPoints() + upcomingPoints(periodRange)
-        val previousPeriodData = previousData.toMetricDataPoints()
+        val currentPeriodData = currentBuckets + upcomingPoints(periodRange)
+        val previousPeriodData = alignedPreviousBuckets(
+            currentBuckets,
+            previousData.toMetricDataPoints(),
+            periodRange
+        )
 
         return PeriodStatsResult.Success(
             currentAggregates = currentAggregates,
@@ -1060,6 +1084,45 @@ class StatsRepository @Inject constructor(
             previousPeriodData = previousPeriodData,
             unit = periodRange.unit
         )
+    }
+
+    /**
+     * [previous] realigned to [current] when the two windows cut their leading bucket differently.
+     *
+     * The chart pairs the two series by index, which holds as long as both open on a bucket boundary.
+     * The API truncates a leading bucket at the window's `start_date` rather than dropping it, so a
+     * window that begins mid-bucket opens with a sliver — on a Monday-anchored week bucket, as little
+     * as a single day. Under AUTOMATIC the window is always built from bucket boundaries, but a chosen
+     * interval fixes the bucket width independently of the window, and the two windows sit a whole
+     * period apart, so one can open mid-bucket while the other does not: "Last 12 months" in weeks
+     * starts on a Monday this year and on a Sunday last year, which paired a full week against one day
+     * and drew it as a +1637% rise.
+     *
+     * Dropping the extra leading bucket pairs whole bucket against whole bucket from there on, at the
+     * cost of shifting the comparison by the days that sliver held. Only the previous series is ever
+     * trimmed: a sliver at the start of the *current* window is the user's own data for a day they are
+     * looking at, so the chart has to draw it.
+     */
+    private fun alignedPreviousBuckets(
+        current: List<ViewsDataPoint>,
+        previous: List<ViewsDataPoint>,
+        periodRange: PeriodDateRange
+    ): List<ViewsDataPoint> {
+        val previousOpensMidBucket = opensMidBucket(previous, periodRange.previousStart, periodRange.unit)
+        val currentOpensMidBucket = opensMidBucket(current, periodRange.currentStart, periodRange.unit)
+        return if (previousOpensMidBucket && !currentOpensMidBucket) previous.drop(1) else previous
+    }
+
+    /**
+     * Whether [data] opens with a bucket the API truncated at [windowStart].
+     *
+     * Checks the returned key as well as the date arithmetic, so that a response which omits the
+     * partial bucket (or starts somewhere else entirely) is left alone rather than losing a whole one.
+     */
+    private fun opensMidBucket(data: List<ViewsDataPoint>, windowStart: LocalDate, unit: StatsUnit): Boolean {
+        val start = windowStart.atStartOfDay()
+        val bucketStart = bucketStart(start, unit)
+        return bucketStart != start && data.firstOrNull()?.period == bucketKey(bucketStart, unit)
     }
 
     /**
@@ -1185,21 +1248,23 @@ class StatsRepository @Inject constructor(
     /**
      * Computes the date range and API unit for a dedicated bottom-row fetch, coarsening the unit as the
      * span grows (day up to a month, month up to two years, year beyond) so the API de-duplicates
-     * visitor uniques per bucket before the totals are summed. The previous window mirrors the current
-     * one's exact day span ([previousWindowMirror], exactly as [calculateTodayPeriodDates] and
-     * [calculateCustomPeriodDates] do), so the header's and the bottom row's Views % change compare
-     * against identical windows and never disagree. Each window's quantity is derived from its own span
-     * — the mirror can cover a different number of buckets.
+     * visitor uniques per bucket before the totals are summed. Each window's quantity is derived from
+     * its own span — the two can cover a different number of buckets.
      *
-     * In practice only the single-day periods reach here (see [fetchBottomStats]), so the coarser units
-     * are currently unreachable from the card — every longer period fills its row from the chart. The
-     * span-based rule is kept so a caller that does need a standalone total for a longer window gets a
-     * correct one rather than a silently wrong bucket.
+     * The previous window is taken from the chart's own range rather than re-derived here, so the
+     * header's and the bottom row's Views % change compare against identical windows and never
+     * disagree. Deriving it independently is what made an hourly chart on an unfinished calendar
+     * period show two different percentages for one metric: the chart compares This Week against the
+     * whole of last week, while a mirror of the elapsed span compares it against the few days before
+     * the week began. Which periods reach here depends on the chosen interval (see
+     * `fillsBottomFromChart`), so this cannot assume a single-day window.
      */
     private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
         val (currentStart, currentEnd) = currentPeriodWindow(period)
         val (unit, currentQuantity) = unitAndQuantityFor(currentStart, currentEnd)
-        val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
+        val chartRange = calculatePeriodDates(period, ChartInterval.AUTOMATIC)
+        val previousStart = chartRange.previousStart
+        val previousEnd = chartRange.previousEnd
         val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
         return PeriodDateRange(
             currentStart = currentStart,
@@ -1283,11 +1348,15 @@ class StatsRepository @Inject constructor(
         date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
     /**
-     * How the API keys the [unit] bucket starting at [date]. Every unit but WEEK is keyed by a plain
-     * ISO date; see [WEEK_PERIOD_DATE_PATTERN] for the exception.
+     * How the API keys the [unit] bucket starting at [date]. DAY, MONTH and YEAR buckets are keyed by
+     * a plain ISO date; WEEK has its own W-separated form (see [WEEK_PERIOD_DATE_PATTERN]) and HOUR
+     * carries the hour as well, since a date alone cannot tell two buckets of the same day apart.
      */
-    private fun bucketKey(date: LocalDate, unit: StatsUnit): String =
-        if (unit == StatsUnit.WEEK) date.format(weekPeriodFormatter) else date.format(dateFormatter)
+    private fun bucketKey(date: LocalDateTime, unit: StatsUnit): String = when (unit) {
+        StatsUnit.WEEK -> date.format(weekPeriodFormatter)
+        StatsUnit.HOUR -> date.format(hourlyPeriodFormatter)
+        else -> date.format(dateFormatter)
+    }
 
     /**
      * The immediately-preceding window that mirrors [start]..[end]'s exact day span, ending the day
@@ -1488,14 +1557,20 @@ class StatsRepository @Inject constructor(
         return previousStart to start.minusDays(1)
     }
 
-    /** [start] moved forward by [buckets] whole [unit] buckets. */
-    private fun advanceBuckets(start: LocalDate, buckets: Int, unit: StatsUnit): LocalDate {
+    /**
+     * [start] moved forward by [buckets] whole [unit] buckets.
+     *
+     * Exhaustive on purpose: an HOUR bucket falling through to a day-wide step is what made an hourly
+     * chart pad a week with a handful of day-wide bars instead of the hours it was drawn in.
+     */
+    private fun advanceBuckets(start: LocalDateTime, buckets: Int, unit: StatsUnit): LocalDateTime {
         val amount = buckets.toLong()
         return when (unit) {
             StatsUnit.YEAR -> start.plusYears(amount)
             StatsUnit.MONTH -> start.plusMonths(amount)
             StatsUnit.WEEK -> start.plusWeeks(amount)
-            else -> start.plusDays(amount)
+            StatsUnit.DAY -> start.plusDays(amount)
+            StatsUnit.HOUR -> start.plusHours(amount)
         }
     }
 
@@ -1513,20 +1588,32 @@ class StatsRepository @Inject constructor(
         unit: StatsUnit
     ): List<ViewsDataPoint> {
         val points = mutableListOf<ViewsDataPoint>()
-        var bucket = advanceBuckets(bucketStart(currentEnd, unit), 1, unit)
-        while (!bucket.isAfter(upcomingEnd)) {
+        // Where the elapsed series actually stops. An hourly window covers whole days, so its last
+        // bucket is [currentEnd]'s 23:00 and the first placeholder is the next day's 00:00; every
+        // coarser unit stops at the bucket holding [currentEnd].
+        val elapsedEnd = if (unit == StatsUnit.HOUR) {
+            currentEnd.atTime(LAST_HOUR_OF_DAY, 0)
+        } else {
+            currentEnd.atStartOfDay()
+        }
+        // The upcoming part runs to the end of [upcomingEnd]'s own day, which for the date-granular
+        // units is the same bound as "bucket starts on or before [upcomingEnd]".
+        val endExclusive = upcomingEnd.plusDays(1).atStartOfDay()
+        var bucket = advanceBuckets(bucketStart(elapsedEnd, unit), 1, unit)
+        while (bucket.isBefore(endExclusive)) {
             points.add(ViewsDataPoint(period = bucketKey(bucket, unit), views = 0L, isUpcoming = true))
             bucket = advanceBuckets(bucket, 1, unit)
         }
         return points
     }
 
-    /** The first day of the [unit] bucket holding [date]. */
-    private fun bucketStart(date: LocalDate, unit: StatsUnit): LocalDate = when (unit) {
-        StatsUnit.YEAR -> date.withDayOfYear(1)
-        StatsUnit.MONTH -> date.withDayOfMonth(1)
-        StatsUnit.WEEK -> apiWeekStart(date)
-        else -> date
+    /** The start of the [unit] bucket holding [date]. */
+    private fun bucketStart(date: LocalDateTime, unit: StatsUnit): LocalDateTime = when (unit) {
+        StatsUnit.YEAR -> date.toLocalDate().withDayOfYear(1).atStartOfDay()
+        StatsUnit.MONTH -> date.toLocalDate().withDayOfMonth(1).atStartOfDay()
+        StatsUnit.WEEK -> apiWeekStart(date.toLocalDate()).atStartOfDay()
+        StatsUnit.DAY -> date.toLocalDate().atStartOfDay()
+        StatsUnit.HOUR -> date.truncatedTo(ChronoUnit.HOURS)
     }
 
     /**
