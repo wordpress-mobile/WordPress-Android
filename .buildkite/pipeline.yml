@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
+# Skip decisions run during upload. even-if-skipped keeps required GitHub checks green.
+
 # Nodes with values to reuse in the pipeline.
 common_params:
   - &test_collector_common_params
@@ -38,44 +40,45 @@ steps:
           queue: "linter"
 
       - label: "🕵️ checkstyle"
-        command: |
-          if .buildkite/commands/should-skip-job.sh --job-type validation; then
-            exit 0
-          fi
-
-          ./gradlew checkstyle
+        skip: "$SKIP_VALIDATION"
+        command: ./gradlew checkstyle
+        notify:
+          - github_commit_status:
+              context: buildkite/wordpress-android/checkstyle
+            even-if-skipped: true
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/checkstyle/checkstyle.*"
 
       - label: "🕵️ detekt"
-        command: |
-          if .buildkite/commands/should-skip-job.sh --job-type validation; then
-            exit 0
-          fi
-
-          ./gradlew detekt
+        skip: "$SKIP_VALIDATION"
+        command: ./gradlew detekt
+        notify:
+          - github_commit_status:
+              context: buildkite/wordpress-android/detekt
+            even-if-skipped: true
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
       - label: "🌐 Locale Consistency"
+        skip: "$SKIP_VALIDATION"
         command: |
-          if .buildkite/commands/should-skip-job.sh --job-type validation; then
-            exit 0
-          fi
-
           install_gems
           bundle exec fastlane check_declared_locales_consistency app:wordpress
           bundle exec fastlane check_declared_locales_consistency app:jetpack
         plugins: [$CI_TOOLKIT]
 
       - label: "🕵️ Lint WordPress"
+        skip: "$SKIP_LINT"
         command: ".buildkite/commands/lint.sh wordpress"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
         notify:
+          - github_commit_status:
+              context: buildkite/wordpress-android/lint-wordpress
+            even-if-skipped: true
           - slack:
               channels:
                 - "#wpmobile-team"
@@ -83,11 +86,15 @@ steps:
             if: build.pull_request.id == null && step.outcome != "passed"
 
       - label: "🕵️ Lint Jetpack"
+        skip: "$SKIP_LINT"
         command: ".buildkite/commands/lint.sh jetpack"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
         notify:
+          - github_commit_status:
+              context: buildkite/wordpress-android/lint-jetpack
+            even-if-skipped: true
           - slack:
               channels:
                 - "#wpmobile-team"
@@ -95,9 +102,8 @@ steps:
             if: build.pull_request.id == null && step.outcome != "passed"
 
       - label: "🕵️ Lint Libraries"
-        command: ".buildkite/commands/lint.sh library"
-        # Decided when the pipeline is uploaded (see `shared-pipeline-vars`), so a skipped job never waits for an agent.
         skip: "$SKIP_LIBRARY_LINT"
+        command: ".buildkite/commands/lint.sh library"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
@@ -125,6 +131,7 @@ steps:
         soft_fail: true
 
       - label: "Merged Manifest Diff WordPress"
+        skip: "$SKIP_VALIDATION"
         command: ".buildkite/commands/diff-merged-manifest.sh wordpressRelease"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
@@ -133,6 +140,7 @@ steps:
         soft_fail: true
 
       - label: "Merged Manifest Diff Jetpack"
+        skip: "$SKIP_VALIDATION"
         command: ".buildkite/commands/diff-merged-manifest.sh jetpackRelease"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
@@ -144,8 +152,13 @@ steps:
   # Unit Tests
   #################
   - label: "🔬 Unit Tests"
+    skip: "$SKIP_VALIDATION"
     key: unit-tests
     command: ".buildkite/commands/run-unit-tests.sh"
+    notify:
+      - github_commit_status:
+          context: buildkite/wordpress-android/unit-tests
+        even-if-skipped: true
     plugins:
       - $CI_TOOLKIT
       - $TEST_COLLECTOR :
@@ -186,11 +199,13 @@ steps:
   - group: "📲 Prototype Builds"
     steps:
       - label: ":wordpress: :android: Prototype Build"
+        skip: "$SKIP_BUILD"
         command: ".buildkite/commands/prototype-build.sh wordpress"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT]
 
       - label: ":jetpack: :android: Prototype Build"
+        skip: "$SKIP_BUILD"
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
         plugins: [$CI_TOOLKIT ]
@@ -198,10 +213,12 @@ steps:
   - group: "🐘 Gradle build cache"
     steps:
       - label: ":wordpress: Populate Gradle build cache"
+        skip: "$SKIP_BUILD"
         command: ".buildkite/commands/gradle-cache-build.sh wordpress"
         plugins: [ $CI_TOOLKIT ]
 
       - label: ":jetpack: Populate Gradle build cache"
+        skip: "$SKIP_BUILD"
         command: ".buildkite/commands/gradle-cache-build.sh jetpack"
         plugins: [ $CI_TOOLKIT ]
 

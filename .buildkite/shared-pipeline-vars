@@ -7,12 +7,9 @@ export CI_TOOLKIT="automattic/a8c-ci-toolkit#6.3.0"
 export TEST_COLLECTOR="test-collector#v1.10.1"
 export CLAUDE_PLUGIN="iangmaia/claude-summarize#ce99c67dd57cdf236c3daca82b86a335fd5e9cc2"
 
-# Skip decision for the Lint Libraries step, made here on the upload agent so that a skipped job never waits for an agent.
-# `false` runs the step, anything else is the reason to skip it. The pipeline uses it as `skip: "$SKIP_LIBRARY_LINT"`.
-# Any failure keeps the step: this file is sourced with `bash -e`, so nothing here may fail.
-SKIP_LIBRARY_LINT=false
-if .buildkite/commands/should-skip-job.sh --job-type library-lint >/dev/null; then
-  SKIP_LIBRARY_LINT="No relevant files changed"
-fi
-export SKIP_LIBRARY_LINT
-echo "SKIP_LIBRARY_LINT=$SKIP_LIBRARY_LINT"
+# false (or an empty result after an error) runs the job. The pipeline uses these as skip values.
+SKIP_BUILD=$(.buildkite/commands/should-skip-job.sh --job-type build || true)
+SKIP_VALIDATION=$(.buildkite/commands/should-skip-job.sh --job-type validation || true)
+SKIP_LINT=$(.buildkite/commands/should-skip-job.sh --job-type lint || true)
+SKIP_LIBRARY_LINT=$(.buildkite/commands/should-skip-job.sh --job-type library-lint || true)
+export SKIP_BUILD SKIP_VALIDATION SKIP_LINT SKIP_LIBRARY_LINT
