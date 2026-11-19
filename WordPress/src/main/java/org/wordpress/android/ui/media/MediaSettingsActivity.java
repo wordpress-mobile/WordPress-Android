@@ -147,6 +147,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     private SeekBar mImageSizeSeekBarView;
     private Spinner mAlignmentSpinnerView;
     private View mFullScreenButton;
+    @Nullable private View mRowToRefocus;
 
     private AlertDialog mDeleteMediaConfirmationDialog;
 
@@ -664,8 +665,20 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         if (getSupportFragmentManager().findFragmentByTag(MediaFieldEditBottomSheet.TAG) != null) {
             return;
         }
+        mRowToRefocus = mDetailRows.get(field).getRoot();
         MediaFieldEditBottomSheet.newInstance(field, getFieldValue(field))
                                  .showNow(getSupportFragmentManager(), MediaFieldEditBottomSheet.TAG);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        // when the edit sheet closes after keyboard input, focus would otherwise land on the scroll view,
+        // which then draws as a gray overlay across the screen; give it back to the row that opened the sheet
+        if (hasFocus && mRowToRefocus != null) {
+            mRowToRefocus.requestFocus();
+            mRowToRefocus = null;
+        }
     }
 
     @NonNull
