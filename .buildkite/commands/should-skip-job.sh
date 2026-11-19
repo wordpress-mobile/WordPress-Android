@@ -2,6 +2,7 @@
 
 # Usage: should-skip-job.sh --job-type [validation|lint|build|library-lint]
 # --job-type library-lint: Skip standalone library lint for app-source-only PR changes.
+#     Called by `shared-pipeline-vars` when the pipeline is uploaded, so it doesn't annotate (see SKIP_LIBRARY_LINT there).
 # --job-type validation: For jobs like unit/instrumented tests, manifest validation…
 #     Skip when changes are limited to documentation, tooling, non-code files, and localization files
 # --job-type lint: For jobs doing linting, especially ones that might include linting of localization files
@@ -70,7 +71,6 @@ case "$job_type" in
       'docs/*'
     )
     if pr_changed_files --all-match "${PATTERNS[@]}"; then
-      show_skip_message "$job_type"
       exit 0
     fi
     exit 1

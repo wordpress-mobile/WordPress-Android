@@ -96,6 +96,8 @@ steps:
 
       - label: "🕵️ Lint Libraries"
         command: ".buildkite/commands/lint.sh library"
+        # Decided when the pipeline is uploaded (see `shared-pipeline-vars`), so a skipped job never waits for an agent.
+        skip: "$SKIP_LIBRARY_LINT"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"

@@ -1,11 +1,6 @@
 #!/bin/bash -eu
 
-job_type=lint
-if [[ "${1:-}" == library ]]; then
-  job_type=library-lint
-fi
-
-if "$(dirname "${BASH_SOURCE[0]}")/should-skip-job.sh" --job-type "$job_type"; then
+if "$(dirname "${BASH_SOURCE[0]}")/should-skip-job.sh" --job-type lint; then
   exit 0
 fi
 
