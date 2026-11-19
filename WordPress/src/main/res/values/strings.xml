@@ -3384,7 +3384,7 @@
     <string name="connect_more">Connect another site</string>
     <string name="connect_site">Connect a site</string>
     <string name="login_continue" a8c-src-lib="module:login">Continue</string>
-    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
+    <string name="login_session_expired">Your login session has expired. Please try again.</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site address</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Checking site address</string>

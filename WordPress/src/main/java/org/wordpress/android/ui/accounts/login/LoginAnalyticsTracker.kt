@@ -25,14 +25,6 @@ class LoginAnalyticsTracker @Inject constructor(
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_ACCESSED)
     }
 
-    fun trackLoginMagicLinkOpened() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPENED)
-    }
-
-    fun trackLoginMagicLinkSucceeded() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED)
-    }
-
     fun trackUrlFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED)
         unifiedLoginTracker.track(Flow.LOGIN_SITE_ADDRESS, Step.START)

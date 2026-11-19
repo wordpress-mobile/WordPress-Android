@@ -16,6 +16,30 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** My Site → Stats → Traffic → period menu
   - **Notes:** The current year's bar covers the year so far, the same way Last 12 months ends on a part-finished month, and the selector's second line names the years ("2024 - 2026") rather than exact dates. The totals above the chart compare the three years against the three before them, not each year against the previous one. Stepping back and forward with the arrows moves three years at a time. Tapping a year's bar selects that whole year, so the cards below the chart cover it; the current year's bar covers the year up to today. The iOS app and the web version offer the same preset.
 
+- **Email login links no longer sign you in to the app**
+  Opening a `wordpress://magic-login` or `jetpack://magic-login` link no longer signs the app in to WordPress.com. The app stopped sending these links when its login screens were replaced, so the only links still around come from older app versions. Log in from the app's login screen instead.
+  - **Apps:** Both
+  - **Type:** Moved
+  - **Availability:** Everyone
+  - **Where:** Tapping a "log in to the app" link from a WordPress.com login email
+  - **Notes:** Older app versions emailed these links from their "Send me a login link" option. The current app logs in through WordPress.com's own login page instead.
+
+- **WordPress.com login only completes logins started in the app**
+  Finishing a WordPress.com login now only works for a login started from the app. Starting a new login keeps an earlier one valid for 10 more minutes. Finishing a login the app no longer recognizes — replaced more than 10 minutes ago, already finished, or not started from the app — shows "Your login session has expired. Please try again." instead of a network error. If the login screen is already open, a link the app didn't start is ignored.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Log in → Continue with WordPress.com; Me → Log in to WordPress.com
+  - **Notes:** The current login never expires. The 10-minute limit only applies to an earlier login that a newer one replaced, e.g. after "Open in browser" and starting again in the app.
+
+- **Experimental block editor needs an application password on private Atomic sites**
+  Opening the experimental block editor on a private or Coming Soon WordPress.com site with hosting features (Atomic) now requires an application password, as it already did for public Atomic sites. The app creates one automatically when the site is selected in My Site, so most people won't notice. If none exists yet, the editor shows "Application Password Required" instead of opening, and choosing Create shows a generic error.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → opening a post or page on a private or Coming Soon Atomic site
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. To recover, switch to another site and back in My Site, which creates the password, then open the post again. Before, the editor opened using the WordPress.com account's sign-in instead of a password for the site. The dialog's text calls the site "self-hosted", and My Site shows "This site is private, so we can't reconnect to it" while no password exists.
+
 - **Authors in Stats list each author's posts again**
   Rows in the redesigned Stats' Authors card, and in its full list, now expand to show that author's posts in the period with the views each one got, and tapping a post opens that post's stats — what the old Stats' Authors block did. An author the Stats API reports no posts for has no chevron and does not react to a tap.
   - **Apps:** Both

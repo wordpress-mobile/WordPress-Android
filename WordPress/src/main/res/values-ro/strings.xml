@@ -3061,7 +3061,6 @@ Language: ro
     <string name="login_checking_site_address" a8c-src-lib="module:login">Verific adresa site-ului</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresă site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Introdu adresa site-ului WordPress pe care vrei să-l conectezi.</string>
-    <string name="login_already_logged_in_wpcom">Autentificat deja în WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Continuă</string>
     <string name="connect_more">Conectează un alt site</string>
     <string name="next">Următor</string>

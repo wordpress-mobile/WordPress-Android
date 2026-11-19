@@ -1174,7 +1174,6 @@ Language: ku_TR
     <string name="login_checking_site_address" a8c-src-lib="module:login">Navnîşana malperê tê kontrolkirin</string>
     <string name="login_site_address" a8c-src-lib="module:login">Navnîşana malperê</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Navnîşana Malpera WordPressê ya ku tu dixwazî lê girêdî binivîsî.</string>
-    <string name="login_already_logged_in_wpcom">Jixwe di WordPress.com\'ê de têketin pêk hatiye</string>
     <string name="login_continue" a8c-src-lib="module:login">Bidomîne</string>
     <string name="connect_more">Malpereke din girêde</string>
     <string name="next">Pêşve</string>

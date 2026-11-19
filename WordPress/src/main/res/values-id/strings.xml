@@ -3059,7 +3059,6 @@ Language: id
     <string name="login_checking_site_address" a8c-src-lib="module:login">Memeriksa alamat situs</string>
     <string name="login_site_address" a8c-src-lib="module:login">Alamat situs</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Masukkan alamat situs WordPress yang ingin Anda hubungkan.</string>
-    <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Lanjutkan</string>
     <string name="connect_more">Hubungkan situs lainnya</string>
     <string name="next">Selanjutnya</string>

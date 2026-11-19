@@ -3061,7 +3061,6 @@ Language: nl
     <string name="login_checking_site_address" a8c-src-lib="module:login">Site adres wordt gecontroleerd</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site adres</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Voer het adres van de WordPress site in die je wil verbinden.</string>
-    <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Doorgaan</string>
     <string name="connect_more">Een andere site koppelen</string>
     <string name="next">Volgende</string>

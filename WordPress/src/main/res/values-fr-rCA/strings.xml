@@ -3050,7 +3050,6 @@ Language: fr
     <string name="login_checking_site_address" a8c-src-lib="module:login">Vérification de l’adresse du site</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresse du site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Saisissez l’adresse du site WordPress que vous voulez connecter.</string>
-    <string name="login_already_logged_in_wpcom">Déjà connecté·e à WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Continuer</string>
     <string name="connect_more">Connectez un autre site</string>
     <string name="next">Suivant</string>

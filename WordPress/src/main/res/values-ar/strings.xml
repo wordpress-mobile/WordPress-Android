@@ -3039,7 +3039,6 @@ Language: ar
     <string name="login_checking_site_address" a8c-src-lib="module:login">التحقق من عنوان الموقع</string>
     <string name="enter_site_address" a8c-src-lib="module:login">أدخل العنوان لموقع ووردبريس الذي تود الاتصال به.</string>
     <string name="login_site_address" a8c-src-lib="module:login">رابط الموقع</string>
-    <string name="login_already_logged_in_wpcom">تم تسجيل الدخول بالفعل إلى WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">المتابعة</string>
     <string name="connect_more">الاتصال بموقع آخر</string>
     <string name="next">التالي</string>
