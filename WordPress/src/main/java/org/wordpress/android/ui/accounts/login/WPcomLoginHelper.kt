@@ -73,14 +73,15 @@ class WPcomLoginHelper @Inject constructor(
      * - [OAuthCallbackStatus.UNKNOWN]: not a login this app started, or one already completed.
      */
     fun checkCallback(data: String?): OAuthCallbackStatus {
-        val state = data?.toUri()?.getQueryParameter("state") ?: return OAuthCallbackStatus.UNKNOWN
-        if (state == appPrefsWrapper.pendingWpcomOAuthState) return OAuthCallbackStatus.VALID
-        val superseded = readSupersededStates().firstOrNull { it.state == state }
-            ?: return OAuthCallbackStatus.UNKNOWN
-        return if (clock.millis() - superseded.supersededAtMillis <= SUPERSEDED_STATE_LIFETIME_MILLIS) {
-            OAuthCallbackStatus.VALID
-        } else {
-            OAuthCallbackStatus.EXPIRED
+        val state = data?.toUri()?.getQueryParameter("state")
+        val superseded = state?.let { readSupersededStates().firstOrNull { it.state == state } }
+        return when {
+            state == null -> OAuthCallbackStatus.UNKNOWN
+            state == appPrefsWrapper.pendingWpcomOAuthState -> OAuthCallbackStatus.VALID
+            superseded == null -> OAuthCallbackStatus.UNKNOWN
+            clock.millis() - superseded.supersededAtMillis <= SUPERSEDED_STATE_LIFETIME_MILLIS ->
+                OAuthCallbackStatus.VALID
+            else -> OAuthCallbackStatus.EXPIRED
         }
     }
 
@@ -95,12 +96,9 @@ class WPcomLoginHelper @Inject constructor(
         onSuccess: Runnable,
         onFailure: java.util.function.Consumer<Exception>
     ) {
-        val uri = data.toUri()
-        val code = uri.getQueryParameter("code")
+        val code = data.toUri().getQueryParameter("code")
         if (code == null) {
-            onFailure.accept(
-                IllegalArgumentException("Missing OAuth code in callback")
-            )
+            onFailure.accept(IllegalArgumentException("Missing OAuth code in callback"))
             return
         }
 
@@ -109,16 +107,17 @@ class WPcomLoginHelper @Inject constructor(
         // that account. The states are single-use: a match clears them all, but a mismatch leaves
         // them in place so a stray link can't break a login that is in progress.
         when (checkCallback(data)) {
-            OAuthCallbackStatus.VALID -> Unit
-            OAuthCallbackStatus.EXPIRED -> {
-                onFailure.accept(WPcomLoginSessionExpiredException())
-                return
-            }
-            OAuthCallbackStatus.UNKNOWN -> {
-                onFailure.accept(WPcomLoginStateMismatchException())
-                return
-            }
+            OAuthCallbackStatus.VALID -> exchangeCode(code, onSuccess, onFailure)
+            OAuthCallbackStatus.EXPIRED -> onFailure.accept(WPcomLoginSessionExpiredException())
+            OAuthCallbackStatus.UNKNOWN -> onFailure.accept(WPcomLoginStateMismatchException())
         }
+    }
+
+    private fun exchangeCode(
+        code: String,
+        onSuccess: Runnable,
+        onFailure: java.util.function.Consumer<Exception>
+    ) {
         appPrefsWrapper.pendingWpcomOAuthState = null
         appPrefsWrapper.supersededWpcomOAuthStates = null
 
