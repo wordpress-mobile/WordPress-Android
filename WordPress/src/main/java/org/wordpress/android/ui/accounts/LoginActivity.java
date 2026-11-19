@@ -42,7 +42,10 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.OAuthCallbackStatus;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
+import org.wordpress.android.ui.accounts.login.WPcomLoginSessionExpiredException;
+import org.wordpress.android.ui.accounts.login.WPcomLoginStateMismatchException;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -254,12 +257,23 @@ public class LoginActivity extends BaseAppCompatActivity {
     @Override
     protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
+
+        // A callback for a login this app didn't start (a stray or forged link, or a repeat of
+        // one already used) must not disturb this screen: a login in progress here can still
+        // complete. Ignore it before it replaces the intent, the flow, the flags or the UI. An
+        // expired login the app did start goes on, so the user is told to try again.
+        String dataString = intent.getDataString();
+        boolean isOAuthCallback = mLoginHelper.hasOAuthCallback(dataString);
+        if (isOAuthCallback && mLoginHelper.checkCallback(dataString) == OAuthCallbackStatus.UNKNOWN) {
+            AppLog.w(T.MAIN, "Ignoring a WordPress.com login callback this app didn't start");
+            return;
+        }
+
         setIntent(intent);
         mLoginFlow = null;
 
         // Handle OAuth callback when activity is reused (singleTop)
-        String dataString = intent.getDataString();
-        if (mLoginHelper.hasOAuthCallback(dataString)) {
+        if (isOAuthCallback) {
             // The login is under way, so this is no longer an abandoned tab. Clearing the flags
             // here is also what survives a recreation during the post-OAuth account/site fetch
             // (rotation, a theme change, "don't keep activities"): they are persisted, so the
@@ -468,7 +482,13 @@ public class LoginActivity extends BaseAppCompatActivity {
         if (loadingText != null) loadingText.setVisibility(View.GONE);
 
         if (errorText != null) {
-            errorText.setText(getString(R.string.error_generic_network));
+            // A callback for a login the app no longer recognizes - replaced too long ago, already
+            // used, or not started here - is, for a real user, a stale login: ask them to start again.
+            boolean isStaleLogin = error instanceof WPcomLoginSessionExpiredException
+                    || error instanceof WPcomLoginStateMismatchException;
+            errorText.setText(getString(isStaleLogin
+                    ? R.string.login_session_expired
+                    : R.string.error_generic_network));
             errorText.setVisibility(View.VISIBLE);
         }
 
@@ -579,7 +599,7 @@ public class LoginActivity extends BaseAppCompatActivity {
 
         CustomTabsIntent intent = getCustomTabsIntent();
 
-        Uri loginUri = mLoginHelper.getWpcomLoginUri();
+        Uri loginUri = mLoginHelper.startLogin();
         try {
             intent.launchUrl(this, loginUri);
         } catch (ActivityNotFoundException e) {

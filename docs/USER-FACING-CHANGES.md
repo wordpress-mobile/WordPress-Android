@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **WordPress.com login only completes logins started in the app**
+  Finishing a WordPress.com login now only works for a login started from the app. Starting a new login keeps an earlier one valid for 10 more minutes. Finishing a login the app no longer recognizes — replaced more than 10 minutes ago, already finished, or not started from the app — shows "Your login session has expired. Please try again." instead of a network error. If the login screen is already open, a link the app didn't start is ignored.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Log in → Continue with WordPress.com; Me → Log in to WordPress.com
+  - **Notes:** The current login never expires. The 10-minute limit only applies to an earlier login that a newer one replaced, e.g. after "Open in browser" and starting again in the app.
+
 - **Experimental block editor needs an application password on private Atomic sites**
   Opening the experimental block editor on a private or Coming Soon WordPress.com site with hosting features (Atomic) now requires an application password, as it already did for public Atomic sites. The app creates one automatically when the site is selected in My Site, so most people won't notice. If none exists yet, the editor shows "Application Password Required" instead of opening, and choosing Create shows a generic error.
   - **Apps:** Both
