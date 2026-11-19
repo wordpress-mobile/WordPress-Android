@@ -285,7 +285,6 @@ class MediaRSApiRestClient @Inject constructor(
                 MediaErrorType.AUTHORIZATION_REQUIRED
             is RequestExecutionErrorReason.MisconfiguredRateLimitError,
             is RequestExecutionErrorReason.CancellationError,
-            is RequestExecutionErrorReason.CloudflareError,
             is RequestExecutionErrorReason.HttpError,
             is RequestExecutionErrorReason.GenericError -> MediaErrorType.GENERIC_ERROR
         }
