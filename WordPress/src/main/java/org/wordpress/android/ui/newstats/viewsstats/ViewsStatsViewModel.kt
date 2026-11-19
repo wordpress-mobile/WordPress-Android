@@ -531,6 +531,16 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * What the interval menu shows: the pick, the intervals this period can draw, and the width the
+     * bars are actually at — which under [ChartInterval.AUTOMATIC] is whatever the window resolved to.
+     */
+    private fun intervalUiState() = ChartIntervalUiState(
+        selected = currentInterval,
+        offered = statsRepository.offeredIntervals(currentPeriod),
+        effectiveUnit = statsRepository.chartUnitFor(currentPeriod, currentInterval)
+    )
+
     private fun restoreIntervalFromSavedState(): ChartInterval =
         ChartInterval.fromStorageKey(savedStateHandle.get<String>(KEY_CHART_INTERVAL)) ?: ChartInterval.DEFAULT
 
@@ -578,7 +588,9 @@ class ViewsStatsViewModel @Inject constructor(
         // not even for the metric switch that would otherwise re-plot from it.
         lastChartResult = null
         (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
-            _uiState.value = content.copy(isLoadingNewPeriod = true)
+            // The menu's checkmark and the unit it names have to move with the tap, not when the
+            // refetch lands, or the card looks inert for the length of a network call.
+            _uiState.value = content.copy(isLoadingNewPeriod = true, interval = intervalUiState())
         }
         loadingRequest = currentRequest()
         loadData()
@@ -1016,7 +1028,8 @@ class ViewsStatsViewModel @Inject constructor(
                 _uiState.value = ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = BottomStatsUiState.Loading,
-                    selectedMetric = chartedMetric()
+                    selectedMetric = chartedMetric(),
+                    interval = intervalUiState()
                 )
             }
         }
@@ -1257,12 +1270,14 @@ class ViewsStatsViewModel @Inject constructor(
                 is ViewsStatsCardUiState.Content ->
                     current.copy(
                         chart = if (current.selectedBar != null) current.chart else chart,
-                        selectedMetric = chartedMetric()
+                        selectedMetric = chartedMetric(),
+                        interval = intervalUiState()
                     )
                 else -> ViewsStatsCardUiState.Content(
                     chart = chart,
                     bottomStats = BottomStatsUiState.Loading,
-                    selectedMetric = chartedMetric()
+                    selectedMetric = chartedMetric(),
+                    interval = intervalUiState()
                 )
             }
         }
@@ -1291,12 +1306,14 @@ class ViewsStatsViewModel @Inject constructor(
                         bottomStats = current.selectedBar
                             ?.let { buildSelectedBarBottom(it.index) ?: current.bottomStats }
                             ?: bottom,
-                        selectedMetric = chartedMetric()
+                        selectedMetric = chartedMetric(),
+                        interval = intervalUiState()
                     )
                 else -> ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = bottom,
-                    selectedMetric = chartedMetric()
+                    selectedMetric = chartedMetric(),
+                    interval = intervalUiState()
                 )
             }
         }

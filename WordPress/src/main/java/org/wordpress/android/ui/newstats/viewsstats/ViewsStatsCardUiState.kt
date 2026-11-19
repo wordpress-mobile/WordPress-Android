@@ -3,7 +3,9 @@ package org.wordpress.android.ui.newstats.viewsstats
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.R
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 
 /**
  * UI State for the Views Stats card in the new stats screen.
@@ -22,11 +24,28 @@ sealed class ViewsStatsCardUiState {
         val bottomStats: BottomStatsUiState,
         val selectedMetric: StatsMetric = StatsMetric.DEFAULT,
         val isLoadingNewPeriod: Boolean = false,
-        val selectedBar: SelectedBar? = null
+        val selectedBar: SelectedBar? = null,
+        val interval: ChartIntervalUiState = ChartIntervalUiState()
     ) : ViewsStatsCardUiState()
 
     data class Error(val message: String) : ViewsStatsCardUiState()
 }
+
+/**
+ * The state of the chart's interval menu.
+ *
+ * [selected] and [effectiveUnit] are deliberately separate: the menu's checkmark follows what the
+ * user chose, while the row that opens it names the width the bars are actually drawn at, which
+ * under [ChartInterval.AUTOMATIC] is the one the window resolved to. iOS splits them the same way.
+ *
+ * @param offered the intervals this period can sensibly draw, [ChartInterval.AUTOMATIC] included.
+ * The menu row is hidden when there is nothing to choose between.
+ */
+data class ChartIntervalUiState(
+    val selected: ChartInterval = ChartInterval.DEFAULT,
+    val offered: List<ChartInterval> = emptyList(),
+    val effectiveUnit: StatsUnit = StatsUnit.DAY
+)
 
 /**
  * A "soft" bar selection in the Views chart. Tapping a bar selects it (rather than drilling down):
