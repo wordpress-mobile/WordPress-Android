@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.media
 
+import android.app.Dialog
 import android.os.Bundle
 import android.text.InputType
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MediaFieldEditBottomSheetBinding
+import org.wordpress.android.util.ActivityUtils
 
 /**
  * Edits one text field of [MediaSettingsActivity]. The new value is returned through the fragment result API
@@ -34,6 +37,16 @@ class MediaFieldEditBottomSheet : BottomSheetDialogFragment() {
 
     override fun getTheme() = R.style.MediaSettings_EditSheetTheme
 
+    // Save, Cancel, Back, swipe-down and tapping outside all end here, so this is the one place
+    // to hide the keyboard while the sheet's window still owns it
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        object : BottomSheetDialog(requireContext(), theme) {
+            override fun dismiss() {
+                currentFocus?.let { ActivityUtils.hideKeyboardForced(it) }
+                super.dismiss()
+            }
+        }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         MediaFieldEditBottomSheetBinding.inflate(inflater, container, false).root
 
@@ -50,6 +63,14 @@ class MediaFieldEditBottomSheet : BottomSheetDialogFragment() {
                     InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or
                     InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
             fieldEdit.imeOptions = EditorInfo.IME_ACTION_DONE
+            // Done saves, like the old inline fields did; a hardware Enter arrives as IME_NULL with a key event
+            fieldEdit.setOnEditorActionListener { _, actionId, event ->
+                val isDone = actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER
+                if (isDone && event?.action != KeyEvent.ACTION_UP) {
+                    buttonSave.performClick()
+                }
+                isDone
+            }
             if (field.isMultiLine) {
                 fieldEdit.setHorizontallyScrolling(false)
                 fieldEdit.maxLines = Int.MAX_VALUE

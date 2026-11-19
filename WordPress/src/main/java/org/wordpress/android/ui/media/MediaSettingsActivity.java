@@ -62,6 +62,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.databinding.MediaSettingsInfoRowBinding;
+import org.wordpress.android.databinding.MediaSettingsRowBinding;
 import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
@@ -137,7 +139,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     private ImageView mImagePlay;
     // in-memory values of the editable fields, read by saveChanges()
     private final EnumMap<Field, String> mFieldValues = new EnumMap<>(Field.class);
-    private final EnumMap<Field, View> mDetailRows = new EnumMap<>(Field.class);
+    private final EnumMap<Field, MediaSettingsRowBinding> mDetailRows = new EnumMap<>(Field.class);
 
     private EditText mLinkView;
     private CheckBox mLinkTargetNewWindowView;
@@ -254,14 +256,16 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         mAlignmentSpinnerView = findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
         mFullScreenButton = findViewById(R.id.button_fullscreen);
 
-        mDetailRows.put(Field.TITLE, findViewById(R.id.row_title));
-        mDetailRows.put(Field.CAPTION, findViewById(R.id.row_caption));
-        mDetailRows.put(Field.DESCRIPTION, findViewById(R.id.row_description));
-        mDetailRows.put(Field.ALT_TEXT, findViewById(R.id.row_alt_text));
-        for (Map.Entry<Field, View> entry : mDetailRows.entrySet()) {
+        mDetailRows.put(Field.TITLE, MediaSettingsRowBinding.bind(findViewById(R.id.row_title)));
+        mDetailRows.put(Field.CAPTION, MediaSettingsRowBinding.bind(findViewById(R.id.row_caption)));
+        mDetailRows.put(Field.DESCRIPTION, MediaSettingsRowBinding.bind(findViewById(R.id.row_description)));
+        mDetailRows.put(Field.ALT_TEXT, MediaSettingsRowBinding.bind(findViewById(R.id.row_alt_text)));
+        for (Map.Entry<Field, MediaSettingsRowBinding> entry : mDetailRows.entrySet()) {
             Field field = entry.getKey();
-            entry.getValue().setOnClickListener(v -> showFieldEditor(field));
-            ViewCompat.replaceAccessibilityAction(entry.getValue(), AccessibilityActionCompat.ACTION_CLICK,
+            MediaSettingsRowBinding row = entry.getValue();
+            row.rowLabel.setText(field.getTitleRes());
+            row.getRoot().setOnClickListener(v -> showFieldEditor(field));
+            ViewCompat.replaceAccessibilityAction(row.getRoot(), AccessibilityActionCompat.ACTION_CLICK,
                     getString(R.string.edit), null);
         }
 
@@ -423,7 +427,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         mFullScreenButton.setVisibility(shouldShowFullScreenButton() ? View.VISIBLE : View.GONE);
         int altTextVisibility = isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE;
-        findViewById(R.id.row_alt_text).setVisibility(altTextVisibility);
+        mDetailRows.get(Field.ALT_TEXT).getRoot().setVisibility(altTextVisibility);
         findViewById(R.id.divider_alt_text).setVisibility(altTextVisibility);
 
         showMetaData();
@@ -625,7 +629,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             mLinkView.setText(mEditorImageMetaData.getLinkUrl());
             mLinkTargetNewWindowView.setChecked(mEditorImageMetaData.isLinkTargetBlank());
 
-            findViewById(R.id.row_description).setVisibility(View.GONE);
+            mDetailRows.get(Field.DESCRIPTION).getRoot().setVisibility(View.GONE);
             findViewById(R.id.divider_description).setVisibility(View.GONE);
 
             setupAlignmentSpinner();
@@ -670,13 +674,12 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     }
 
     private void bindDetailRows() {
-        for (Map.Entry<Field, View> entry : mDetailRows.entrySet()) {
-            View row = entry.getValue();
+        for (Map.Entry<Field, MediaSettingsRowBinding> entry : mDetailRows.entrySet()) {
+            MediaSettingsRowBinding row = entry.getValue();
             String label = getString(entry.getKey().getTitleRes());
             String value = getFieldValue(entry.getKey());
-            ((TextView) row.findViewById(R.id.row_label)).setText(label);
-            ((TextView) row.findViewById(R.id.row_value)).setText(value);
-            row.setContentDescription(value.isEmpty()
+            row.rowValue.setText(value);
+            row.getRoot().setContentDescription(value.isEmpty()
                     ? getString(R.string.media_settings_row_not_set, label)
                     : getString(R.string.media_settings_row_value, label, value));
         }
@@ -708,12 +711,12 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         }
         LayoutInflater inflater = getLayoutInflater();
         inflater.inflate(R.layout.media_settings_divider, container, true);
-        View row = inflater.inflate(R.layout.media_settings_info_row, container, false);
+        MediaSettingsInfoRowBinding row = MediaSettingsInfoRowBinding.inflate(inflater, container, false);
         String label = getString(labelRes);
-        ((TextView) row.findViewById(R.id.row_label)).setText(label);
-        ((TextView) row.findViewById(R.id.row_value)).setText(value);
-        row.setContentDescription(getString(R.string.media_settings_row_value, label, value));
-        container.addView(row);
+        row.rowLabel.setText(label);
+        row.rowValue.setText(value);
+        row.getRoot().setContentDescription(getString(R.string.media_settings_row_value, label, value));
+        container.addView(row.getRoot());
     }
 
     @Nullable
