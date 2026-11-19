@@ -46,6 +46,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
 import java.time.Clock
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -69,6 +70,10 @@ private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
 private const val MONTHS_IN_12_MONTHS = 12
 private const val YEARS_IN_3_YEARS = 3
+// A week bucket's `period` is not an ISO date: the API keys it as year, then the month and the day
+// of the week's Monday, each separated by a literal "W" ("2013W07W22" is 22 July 2013). The same
+// pattern the old Stats date formatter and the Weekly Roundup worker parse.
+private const val WEEK_PERIOD_DATE_PATTERN = "yyyy'W'MM'W'dd"
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
 // The most a month/year step can lose to a short month (31 Jan + 1 month = 28 Feb). A forward step
@@ -145,6 +150,7 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+    private val weekPeriodFormatter = DateTimeFormatter.ofPattern(WEEK_PERIOD_DATE_PATTERN, Locale.ROOT)
 
     /**
      * The current date, read through the injected [clock] so every window this class derives — and the
@@ -863,7 +869,7 @@ class StatsRepository @Inject constructor(
      * The API `start_date` for a window starting at [start] at [unit], or null when the window must not
      * send one.
      *
-     * MONTH and YEAR windows send it; this is what the web app does
+     * Every unit coarser than a day sends it; this is what the web app does
      * (`unit=month&date=<end>&start_date=<start>&quantity=<n>`), and for the same two reasons.
      *
      * It anchors the buckets: without a start the API does not tie its year buckets to the requested
@@ -884,9 +890,14 @@ class StatsRepository @Inject constructor(
      *
      * DAY and HOUR windows send none: their buckets are never partial, so unit + quantity + endDate
      * already pins the window exactly.
+     *
+     * Both reasons apply to any bucket wider than a day, which is why this is a test on the unit
+     * rather than a list of two: a user-chosen chart interval can put a WEEK, MONTH or YEAR bucket on
+     * a window far shorter than the one that unit would be derived from, and without a start the API
+     * would answer with the whole bucket — all of November for a window of seven days.
      */
     private fun apiStartDateOrNull(start: LocalDate, unit: StatsUnit): String? =
-        if (unit == StatsUnit.MONTH || unit == StatsUnit.YEAR) start.format(dateFormatter) else null
+        if (unit == StatsUnit.DAY || unit == StatsUnit.HOUR) null else start.format(dateFormatter)
 
     /**
      * Fetches the bottom-row totals from a dedicated call, for the single-day periods only: Today and a
@@ -1225,8 +1236,33 @@ class StatsRepository @Inject constructor(
             (ChronoUnit.MONTHS.between(start.withDayOfMonth(1), end.withDayOfMonth(1)).toInt() + 1)
                 .coerceAtLeast(1)
         StatsUnit.YEAR -> (end.year - start.year + 1).coerceAtLeast(1)
-        else -> (ChronoUnit.DAYS.between(start, end).toInt() + 1).coerceAtLeast(1)
+        // Counted between the two buckets' Mondays, for the same reason the month branch counts
+        // between the two 1sts: a window that starts on a Friday and ends on the next Tuesday elapses
+        // less than a week but spans two of the API's buckets.
+        StatsUnit.WEEK ->
+            (ChronoUnit.WEEKS.between(apiWeekStart(start), apiWeekStart(end)).toInt() + 1)
+                .coerceAtLeast(1)
+        StatsUnit.HOUR ->
+            ((ChronoUnit.DAYS.between(start, end).toInt() + 1) * HOURLY_QUANTITY).coerceAtLeast(1)
+        StatsUnit.DAY -> (ChronoUnit.DAYS.between(start, end).toInt() + 1).coerceAtLeast(1)
     }
+
+    /**
+     * The Monday the API's week bucket holding [date] starts on.
+     *
+     * Deliberately not [firstDayOfWeek], which is the *locale's* first day (Sunday in the US) and
+     * drives how a calendar week is presented. The API's week buckets are Monday-anchored whatever
+     * the device locale, so mixing the two would mis-count buckets for half the world.
+     */
+    private fun apiWeekStart(date: LocalDate): LocalDate =
+        date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+
+    /**
+     * How the API keys the [unit] bucket starting at [date]. Every unit but WEEK is keyed by a plain
+     * ISO date; see [WEEK_PERIOD_DATE_PATTERN] for the exception.
+     */
+    private fun bucketKey(date: LocalDate, unit: StatsUnit): String =
+        if (unit == StatsUnit.WEEK) date.format(weekPeriodFormatter) else date.format(dateFormatter)
 
     /**
      * The immediately-preceding window that mirrors [start]..[end]'s exact day span, ending the day
@@ -1391,6 +1427,7 @@ class StatsRepository @Inject constructor(
         return when (unit) {
             StatsUnit.YEAR -> start.plusYears(amount)
             StatsUnit.MONTH -> start.plusMonths(amount)
+            StatsUnit.WEEK -> start.plusWeeks(amount)
             else -> start.plusDays(amount)
         }
     }
@@ -1400,8 +1437,8 @@ class StatsRepository @Inject constructor(
      * hasn't happened yet. Appended to the current series so the chart spans the whole period, with
      * only the previous period's bars drawn over the days still to come.
      *
-     * The placeholders are keyed by their own bucket start date in the API's own ISO format, so they
-     * label themselves exactly like the buckets the API returns.
+     * The placeholders are keyed by their own bucket start date in the API's own format for that unit
+     * ([bucketKey]), so they label themselves exactly like the buckets the API returns.
      */
     private fun upcomingDataPoints(
         currentEnd: LocalDate,
@@ -1411,7 +1448,7 @@ class StatsRepository @Inject constructor(
         val points = mutableListOf<ViewsDataPoint>()
         var bucket = advanceBuckets(bucketStart(currentEnd, unit), 1, unit)
         while (!bucket.isAfter(upcomingEnd)) {
-            points.add(ViewsDataPoint(period = bucket.format(dateFormatter), views = 0L, isUpcoming = true))
+            points.add(ViewsDataPoint(period = bucketKey(bucket, unit), views = 0L, isUpcoming = true))
             bucket = advanceBuckets(bucket, 1, unit)
         }
         return points
@@ -1421,6 +1458,7 @@ class StatsRepository @Inject constructor(
     private fun bucketStart(date: LocalDate, unit: StatsUnit): LocalDate = when (unit) {
         StatsUnit.YEAR -> date.withDayOfYear(1)
         StatsUnit.MONTH -> date.withDayOfMonth(1)
+        StatsUnit.WEEK -> apiWeekStart(date)
         else -> date
     }
 
