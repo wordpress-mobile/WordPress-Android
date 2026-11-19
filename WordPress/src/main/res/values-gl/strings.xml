@@ -3061,7 +3061,6 @@ Language: gl_ES
     <string name="login_checking_site_address" a8c-src-lib="module:login">Comprobando enderezo do sitio</string>
     <string name="login_site_address" a8c-src-lib="module:login">Enderezo do sitio</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Introduce o enderezo do sitio WordPress co que che gustaría conectar.</string>
-    <string name="login_already_logged_in_wpcom">Xa estás conectado a WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Continuar</string>
     <string name="connect_more">Conectar outro sitio</string>
     <string name="next">Seguinte</string>

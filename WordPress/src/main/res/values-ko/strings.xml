@@ -3057,7 +3057,6 @@ Language: ko_KR
     <string name="login_checking_site_address" a8c-src-lib="module:login">사이트 주소 확인 중</string>
     <string name="login_site_address" a8c-src-lib="module:login">사이트 주소</string>
     <string name="enter_site_address" a8c-src-lib="module:login">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
-    <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
     <string name="login_continue" a8c-src-lib="module:login">계속</string>
     <string name="connect_more">다른 사이트 연결하기</string>
     <string name="next">다음</string>

@@ -3061,7 +3061,6 @@ Language: ru
     <string name="login_checking_site_address" a8c-src-lib="module:login">Проверка адреса сайта</string>
     <string name="login_site_address" a8c-src-lib="module:login">Адрес сайта</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Введите адрес сайта WordPress, к которому требуется подключиться.</string>
-    <string name="login_already_logged_in_wpcom">Вы уже вошли на WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Продолжить</string>
     <string name="connect_more">Подключить ещё один сайт</string>
     <string name="next">Вперед</string>

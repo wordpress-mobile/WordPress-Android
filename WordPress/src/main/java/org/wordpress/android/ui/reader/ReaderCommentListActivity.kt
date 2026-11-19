@@ -225,7 +225,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
                 duration = SnackbarDuration.Indefinite,
                 onAction = viewModel::onSignInClicked
             )
-            ReaderCommentListEvent.SignIn -> ActivityLauncher.loginWithoutMagicLink(
+            ReaderCommentListEvent.SignIn -> ActivityLauncher.loginToWpCom(
                 this@ReaderCommentListActivity
             )
             ReaderCommentListEvent.ClearReply -> replyText.value = TextFieldValue("")

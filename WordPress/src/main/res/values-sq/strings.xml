@@ -3031,7 +3031,6 @@ Language: sq_AL
     <string name="login_checking_site_address" a8c-src-lib="module:login">Po kontrollohet adresa e sajtit</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresë sajti</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Jepni adresën e sajtit WordPress te i cili do të donit të lidheshit.</string>
-    <string name="login_already_logged_in_wpcom">Jeni tashmë i futur te WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Vazhdo</string>
     <string name="connect_more">Lidhni një sajt tjetër</string>
     <string name="next">Pasuesi</string>

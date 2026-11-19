@@ -570,7 +570,6 @@ Language: sk
     <string name="connection_to_server_lost">Pripojenie k serveru sa stratilo.</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Kontrolovanie adresy webovej stránky.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresa webovej stránky</string>
-    <string name="login_already_logged_in_wpcom">Už ste prihlásený vo WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Pokračovať</string>
     <string name="connect_more">Pripojiť ďalšiu webovú stránku</string>
     <string name="next">Ďalej</string>

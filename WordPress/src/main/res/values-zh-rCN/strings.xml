@@ -3055,7 +3055,6 @@ Language: zh_CN
     <string name="login_checking_site_address" a8c-src-lib="module:login">正在检查站点地址</string>
     <string name="login_site_address" a8c-src-lib="module:login">站点地址</string>
     <string name="enter_site_address" a8c-src-lib="module:login">输入您要连接的 WordPress 站点的地址。</string>
-    <string name="login_already_logged_in_wpcom">已经登录 WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">继续</string>
     <string name="connect_more">连接其他站点</string>
     <string name="next">下一步</string>

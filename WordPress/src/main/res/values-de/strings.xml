@@ -3155,7 +3155,6 @@ Language: de
     <string name="login_checking_site_address" a8c-src-lib="module:login">Website-Adresse wird überprüft</string>
     <string name="login_site_address" a8c-src-lib="module:login">Website-Adresse</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Gib die Adresse der WordPress-Website ein, die du verbinden möchtest.</string>
-    <string name="login_already_logged_in_wpcom">Bereits bei WordPress.com angemeldet</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortfahren</string>
     <string name="connect_more">Andere Website verbinden</string>
     <string name="next">Weiter</string>

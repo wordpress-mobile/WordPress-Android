@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -18,24 +17,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnTokenRequest;
-import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
-import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
-import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
-import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -72,7 +60,6 @@ public class Authenticator {
     private static final String INVALID_OTP_ERROR = "invalid_otp";
     private static final String INVALID_CREDS_ERROR = "Incorrect username or password.";
 
-    private final Context mAppContext;
     private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
@@ -83,19 +70,9 @@ public class Authenticator {
     public interface ErrorListener extends Response.ErrorListener {
     }
 
-    public static class AuthEmailResponsePayload extends Payload<AuthEmailError> {
-        public final boolean isSignup;
-
-        public AuthEmailResponsePayload(boolean isSignup) {
-            this.isSignup = isSignup;
-        }
-    }
-
-    @Inject public Authenticator(Context appContext,
-                         Dispatcher dispatcher,
+    @Inject public Authenticator(Dispatcher dispatcher,
                          @Named(OkHttpClientQualifiers.REGULAR) RequestQueue requestQueue,
                          AppSecrets secrets) {
-        mAppContext = appContext;
         mDispatcher = dispatcher;
         mRequestQueue = requestQueue;
         mAppSecrets = secrets;
@@ -298,58 +275,6 @@ public class Authenticator {
             }
             mSupportedAuthTypes = supportedAuthTypes;
         }
-    }
-
-    public void sendAuthEmail(final AuthEmailPayload payload) {
-        String url = payload.isSignup ? WPCOMREST.auth.send_signup_email.getUrlV1_1()
-                : WPCOMREST.auth.send_login_email.getUrlV1_3();
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("email", payload.emailOrUsername);
-        params.put("client_id", mAppSecrets.getAppId());
-        params.put("client_secret", mAppSecrets.getAppSecret());
-
-        AuthEmailPayloadScheme scheme = payload.scheme;
-        if (scheme == null) {
-            scheme = AuthEmailPayloadScheme.WORDPRESS;
-        }
-        params.put("scheme", scheme.toString());
-
-        if (payload.flow != null) {
-            params.put("flow", payload.flow.getName());
-        }
-
-        if (payload.source != null) {
-            params.put("source", payload.source.getName());
-        }
-
-        if (payload.signupFlowName != null && !TextUtils.isEmpty(payload.signupFlowName)) {
-            params.put("signup_flow_name", payload.signupFlowName);
-        }
-
-        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
-                new Response.Listener<AuthEmailWPComRestResponse>() {
-                    @Override
-                    public void onResponse(AuthEmailWPComRestResponse response) {
-                        AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
-
-                        if (!response.success) {
-                            responsePayload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
-                        }
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
-                    }
-                }, new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
-                        responsePayload.error = new AuthEmailError(error.apiError, error.message);
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
-                    }
-                }
-        );
-        request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
-
-        mRequestQueue.add(request);
     }
 
     public static AuthenticationErrorType volleyErrorToAuthenticationError(VolleyError error) {
