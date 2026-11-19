@@ -193,15 +193,37 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
     }
 
     @Test
-    fun `given YEAR unit, when chart loads, then the legend shows a year span`() = test {
-        val result = createPeriodStatsResult(unit = StatsUnit.YEAR)
+    fun `given a year-charted custom range, when chart loads, then the legend shows a year span`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.YEAR,
+            currentStartDate = "2024-03-05",
+            currentEndDate = "2026-07-18"
+        )
         whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
 
         initViewModel()
         advanceUntilIdle()
 
-        // Aggregates are stubbed as 2024-01-14..2024-01-20, a span inside a single year.
-        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("2024")
+        viewModel.onCustomRangeSelected(LocalDate.of(2024, 3, 5), LocalDate.of(2026, 7, 18))
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // A custom range's endpoints are arbitrary days whatever its span, so the unit is the only
+        // thing that can say how wide it is. "Mar - Jul 2026" would describe months it never draws.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("2024 - 2026")
+    }
+
+    @Test
+    fun `given a preset charted coarser than itself, when chart loads, then the legend names the window`() = test {
+        // The legend names the window, not a bucket. A chosen interval re-slices Last 7 Days into one
+        // month bucket, but the seven days it covers are still what the header is comparing.
+        val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan 14 - Jan 20, 2024")
     }
 
     @Test
@@ -366,6 +388,44 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
         assertThat(labels).isNotEmpty
         assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given WEEK unit, when chart loads, then labels name the day the week starts on`() = test {
+        // A week bucket's period is the only one that isn't an ISO date: "2024W01W15" is the week
+        // starting Monday 15 January 2024. Left unparsed it would be printed to the axis verbatim.
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.WEEK,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024W01W15", views = 1000L),
+                ViewsDataPoint(period = "2024W01W22", views = 1500L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("Jan 15", "Jan 22")
+    }
+
+    @Test
+    fun `given a week bucket keyed mid-week, when chart loads, then the label names its Monday`() = test {
+        // Whichever day inside the week the key happens to name, the bucket itself starts on Monday.
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.WEEK,
+            currentPeriodData = listOf(ViewsDataPoint(period = "2024W01W18", views = 1000L)),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("Jan 15")
     }
 
     @Test
@@ -998,6 +1058,8 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
             )
         whenever(statsRepository.calendarYearWindow(2024))
             .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 12, 31))
+        whenever(statsRepository.periodWindow(StatsPeriod.Last3Years))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2026, 10, 27))
 
         initViewModel()
         advanceUntilIdle()
@@ -1036,6 +1098,8 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                     unit = StatsUnit.MONTH
                 )
             )
+        whenever(statsRepository.periodWindow(StatsPeriod.Last12Months))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 12, 31))
 
         initViewModel()
         advanceUntilIdle()
@@ -1111,6 +1175,8 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
                     unit = StatsUnit.MONTH
                 )
             )
+        whenever(statsRepository.periodWindow(StatsPeriod.ThisYear))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 2, 20))
 
         initViewModel()
         advanceUntilIdle()
@@ -1128,6 +1194,110 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         with(effective as StatsPeriod.Custom) {
             assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
             assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 31))
+        }
+    }
+
+    @Test
+    fun `when a weekly bar is tapped, then it soft-selects Monday to Sunday`() = test {
+        val weeklyData = listOf(
+            ViewsDataPoint(period = "2024W01W08", views = 5000L),
+            ViewsDataPoint(period = "2024W01W15", views = 6000L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = weeklyData,
+                    previousPeriodData = weeklyData,
+                    unit = StatsUnit.WEEK
+                )
+            )
+        whenever(statsRepository.periodWindow(StatsPeriod.Last30Days))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 1, 30))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(1)
+        advanceUntilIdle()
+
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 15))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 21))
+        }
+        assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
+    }
+
+    @Test
+    fun `when a partial leading bucket is tapped, then the drill-down starts where the window does`() = test {
+        // The window's first bucket is only partly inside it whenever the window doesn't begin on a
+        // bucket boundary. Handing the cards below the whole week would put them on days the chart
+        // isn't drawing -- which is how CMM-2489 happened.
+        val weeklyData = listOf(ViewsDataPoint(period = "2024W01W08", views = 5000L))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = weeklyData,
+                    previousPeriodData = weeklyData,
+                    unit = StatsUnit.WEEK
+                )
+            )
+        whenever(statsRepository.periodWindow(StatsPeriod.Last30Days))
+            .thenReturn(LocalDate.of(2024, 1, 10) to LocalDate.of(2024, 2, 8))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        with(viewModel.effectivePeriod.value as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 10))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 14))
+        }
+    }
+
+    @Test
+    fun `when the last monthly bar is tapped, then the drill-down stops at the window's end`() = test {
+        // The current month's bar covers only the days so far, so drilling into it must not select
+        // days that haven't happened yet.
+        val monthlyData = listOf(ViewsDataPoint(period = "2024-01-01", views = 5000L))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = monthlyData,
+                    previousPeriodData = monthlyData,
+                    unit = StatsUnit.MONTH
+                )
+            )
+        whenever(statsRepository.periodWindow(StatsPeriod.Last12Months))
+            .thenReturn(LocalDate.of(2023, 2, 1) to LocalDate.of(2024, 1, 20))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last12Months)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        with(viewModel.effectivePeriod.value as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 20))
         }
     }
 

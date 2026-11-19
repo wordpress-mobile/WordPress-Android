@@ -39,10 +39,12 @@ import org.wordpress.android.ui.newstats.util.formatYearRangeLabel
 import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -57,6 +59,11 @@ private const val YEAR_PREFIX_LENGTH = 4 // "YYYY".length
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
 private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
+// A week bucket is the one period string that isn't an ISO date: "2013W07W22" is the week starting
+// Monday 22 July 2013. See StatsRepository's WEEK_PERIOD_DATE_PATTERN.
+private val WEEKLY_FORMAT_REGEX = Regex("""\d{4}W\d{2}W\d{2}""")
+private val WEEKLY_PERIOD_FORMATTER = DateTimeFormatter.ofPattern("yyyy'W'MM'W'dd", Locale.ROOT)
+private const val DAYS_IN_WEEK = 7L
 
 private const val KEY_CHART_TYPE = "chart_type"
 private const val KEY_SELECTED_METRIC = "selected_metric"
@@ -787,7 +794,8 @@ class ViewsStatsViewModel @Inject constructor(
         // The chart's actual bucket unit is the source of truth for granularity: a Custom range is
         // charted in days, months or years depending on its span, and the rawPeriod string alone can't
         // tell a day bucket from a month or a year one -- the API returns a full ISO date for all
-        // three. Falling back to day-level drill when no chart is loaded is the safe default.
+        // three. (A week bucket is the exception, being the only self-describing key.) Falling back to
+        // day-level drill when no chart is loaded is the safe default.
         val chartUnit = lastChartResult?.unit
 
         // Hourly data — no smaller period available
@@ -797,6 +805,7 @@ class ViewsStatsViewModel @Inject constructor(
             when {
                 chartUnit == StatsUnit.YEAR -> drillDownYear(rawPeriod)
                 chartUnit == StatsUnit.MONTH -> drillDownMonth(rawPeriod)
+                chartUnit == StatsUnit.WEEK -> drillDownWeek(rawPeriod)
                 rawPeriod.matches(DAILY_FORMAT_REGEX) -> {
                     val date = LocalDate.parse(
                         rawPeriod,
@@ -827,7 +836,28 @@ class ViewsStatsViewModel @Inject constructor(
     private fun drillDownYear(rawPeriod: String): StatsPeriod {
         val year = rawPeriod.take(YEAR_PREFIX_LENGTH).toInt()
         val (firstDay, lastDay) = statsRepository.calendarYearWindow(year)
-        return StatsPeriod.Custom(firstDay, lastDay)
+        return clampToChartWindow(firstDay, lastDay)
+    }
+
+    /** The Monday-to-Sunday week a WEEK bucket covers, clamped to the window on screen. */
+    private fun drillDownWeek(rawPeriod: String): StatsPeriod {
+        val monday = parseWeekPeriod(rawPeriod)
+        return clampToChartWindow(monday, monday.plusDays(DAYS_IN_WEEK - 1))
+    }
+
+    /**
+     * [start]..[end] narrowed to the window the chart is drawing.
+     *
+     * A coarse bucket can reach outside that window at either end — the window's first and last
+     * buckets are partial whenever it doesn't begin and end on a bucket boundary, which a chosen
+     * interval makes the normal case rather than the exception. Handing the screen the whole bucket
+     * would put every list card on a range wider than, and partly outside, the one the chart shows,
+     * which is how CMM-2489 happened. The trailing clamp also keeps a drill-down off days that
+     * haven't happened: the last bar of Last 12 Months used to drill into the whole current month.
+     */
+    private fun clampToChartWindow(start: LocalDate, end: LocalDate): StatsPeriod {
+        val (windowStart, windowEnd) = statsRepository.periodWindow(currentPeriod)
+        return StatsPeriod.Custom(maxOf(start, windowStart), minOf(end, windowEnd))
     }
 
     private fun drillDownMonth(rawPeriod: String): StatsPeriod {
@@ -843,7 +873,7 @@ class ViewsStatsViewModel @Inject constructor(
         val lastDay = firstDay.withDayOfMonth(
             firstDay.lengthOfMonth()
         )
-        return StatsPeriod.Custom(firstDay, lastDay)
+        return clampToChartWindow(firstDay, lastDay)
     }
 
     fun refresh() {
@@ -1317,7 +1347,7 @@ class ViewsStatsViewModel @Inject constructor(
      * granularity the buckets were actually requested at — not from the [period] string, which is a
      * full ISO date for DAY, MONTH and YEAR buckets alike and so cannot be told apart on its own.
      * The string's shape still decides how to *parse* it, since the API returns "yyyy-MM" for some
-     * month buckets and "yyyy-MM-dd" for others.
+     * month buckets, "yyyy-MM-dd" for others and a W-separated form for week buckets.
      */
     private fun formatDataPointLabel(period: String, unit: StatsUnit): String = when {
         period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
@@ -1327,20 +1357,37 @@ class ViewsStatsViewModel @Inject constructor(
                 // would only cost axis width.
                 StatsUnit.YEAR -> date.year.toString()
                 StatsUnit.MONTH -> date.format(statsDateFormatter(StatsDateSkeleton.MONTH))
+                // A week bucket is named by the Monday it starts on, which is what iOS's axis does
+                // too. Spelling out the whole range ("Nov 9 - 15") costs more axis width than the
+                // labels have, and the selected-bar label above the chart already shows the range.
                 else -> date.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH))
             }
         } ?: period
     }
 
-    /** Parses a bucket's period string, tolerating both the "yyyy-MM" and "yyyy-MM-dd" shapes. */
+    /**
+     * Parses a bucket's period string into the day its bucket starts on, tolerating every shape the
+     * API uses: "yyyy-MM-dd", "yyyy-MM" for some month buckets, and the W-separated form a week
+     * bucket arrives in ([WEEKLY_FORMAT_REGEX]).
+     */
     private fun parsePeriodDate(period: String): LocalDate? = when {
         period.matches(DAILY_FORMAT_REGEX) -> LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
+        period.matches(WEEKLY_FORMAT_REGEX) -> parseWeekPeriod(period)
         period.matches(MONTHLY_FORMAT_REGEX) -> {
             val parts = period.split("-")
             LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
         }
         else -> null
     }
+
+    /**
+     * The Monday a week bucket starts on. The API's key already names a day inside the week, but
+     * normalising to the Monday keeps the label and the drilled range independent of which day that
+     * happens to be.
+     */
+    private fun parseWeekPeriod(period: String): LocalDate =
+        LocalDate.parse(period, WEEKLY_PERIOD_FORMATTER)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
     private fun formatHourlyLabel(period: String): String {
         val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -1354,27 +1401,30 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Formats the legend's date range. A YEAR-unit window is decided by [unit] rather than by
-     * [period], because a Custom range long enough to be charted in years would otherwise fall into
-     * the month branch and render a span like "Jan - Jun" for 2024→2026.
+     * Formats the legend's date range.
+     *
+     * This names the *window*, not a bucket, so it follows [period] and not the granularity the
+     * chart happens to be drawing. A Custom range is the one case the period can't resolve on its
+     * own — its endpoints are arbitrary days whatever its span — so there [unit] stands in for how
+     * wide the range is, and a range long enough to be charted in years is named by its years
+     * rather than rendering a span like "Jan - Jun" for 2024→2026.
      */
     private fun formatDateRangeForPeriod(
         startDate: String,
         endDate: String,
         period: StatsPeriod,
         unit: StatsUnit
-    ): String {
-        if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
-        return when (period) {
-            is StatsPeriod.Today -> formatSingleDayRange(endDate)
-            is StatsPeriod.Custom ->
-                if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
-                else formatDayRange(startDate, endDate)
-            else -> when (period.bucketGranularity()) {
-                PresetRangeGranularity.YEAR -> formatYearRange(startDate, endDate)
-                PresetRangeGranularity.MONTH -> formatMonthRange(startDate, endDate)
-                PresetRangeGranularity.DAY -> formatDayRange(startDate, endDate)
-            }
+    ): String = when (period) {
+        is StatsPeriod.Today -> formatSingleDayRange(endDate)
+        is StatsPeriod.Custom -> when {
+            unit == StatsUnit.YEAR -> formatYearRange(startDate, endDate)
+            isCustomPeriodMonthly(period) -> formatMonthRange(startDate, endDate)
+            else -> formatDayRange(startDate, endDate)
+        }
+        else -> when (period.bucketGranularity()) {
+            PresetRangeGranularity.YEAR -> formatYearRange(startDate, endDate)
+            PresetRangeGranularity.MONTH -> formatMonthRange(startDate, endDate)
+            PresetRangeGranularity.DAY -> formatDayRange(startDate, endDate)
         }
     }
 
