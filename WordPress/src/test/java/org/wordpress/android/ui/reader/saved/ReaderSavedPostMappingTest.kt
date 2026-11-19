@@ -43,6 +43,28 @@ class ReaderSavedPostMappingTest {
     }
 
     @Test
+    fun `a saved post's text has no HTML, as the Reader's other posts don't`() {
+        val identity = post(blogId = 1, postId = 2).toSaveIdentity()
+        val item = ReaderSavedListItem(
+            key = ReaderSavedKey.Post(1UL, 2L),
+            dateSaved = null,
+            post = ReaderPostRecord(
+                key = ReaderSavedKey.Post(1UL, 2L),
+                identity = identity,
+                title = "Sun &amp; Rain",
+                excerpt = "<p>Fond farewell to the season&#8217;s sunflowers.</p>"
+            ),
+            isPending = false,
+            isWaitingForRoom = false
+        )
+
+        val card = item.toCardPost()
+
+        assertThat(card.title).isEqualTo("Sun & Rain")
+        assertThat(card.excerpt).isEqualTo("Fond farewell to the season\u2019s sunflowers.")
+    }
+
+    @Test
     fun `a saved post without its date shows when it was saved`() {
         val identity = post(blogId = 1, postId = 2).toSaveIdentity()
         val dateSaved = Date(0)

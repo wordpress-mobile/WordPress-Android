@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.saved
 import androidx.core.net.toUri
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.ReaderPostAuthor
 import uniffi.wp_api.ReaderPostSaveIdentity
 import uniffi.wp_api.ReaderPostTag
@@ -100,15 +101,16 @@ fun ReaderSavedListItem.toCardPost(): ReaderPost = ReaderPost().also { card ->
     card.isBookmarked = true
 }
 
+/** The record's text as the Reader API's posts have it in [ReaderPost]: without HTML, and entities decoded. */
 private fun ReaderPost.fillFrom(record: ReaderPostRecord) {
     // a post without a title keeps the address it was saved under
-    record.title?.ifBlank { null }?.let { title = it }
-    excerpt = record.excerpt
+    record.title?.plainText()?.ifBlank { null }?.let { title = it }
+    excerpt = record.excerpt?.plainText()
     featuredImage = record.displayImageUrl?.ifBlank { null } ?: record.featuredImage
-    record.siteName?.ifBlank { null }?.let { blogName = it }
+    record.siteName?.plainText()?.ifBlank { null }?.let { blogName = it }
     blogUrl = record.siteUrl
     blogImageUrl = record.siteIconUrl
-    authorName = record.authorName
+    authorName = record.authorName?.plainText()
     postAvatar = record.authorAvatarUrl
     numLikes = record.likeCount?.toInt() ?: 0
     numReplies = record.commentCount?.toInt() ?: 0
@@ -117,3 +119,5 @@ private fun ReaderPost.fillFrom(record: ReaderPostRecord) {
 }
 
 private fun String?.nonEmpty(): String? = this?.takeIf { it.isNotEmpty() }
+
+private fun String.plainText(): String = HtmlUtils.fastStripHtml(this).trim()

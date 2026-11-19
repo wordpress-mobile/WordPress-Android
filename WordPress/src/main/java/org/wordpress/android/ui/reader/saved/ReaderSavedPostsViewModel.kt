@@ -26,6 +26,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import rs.wordpress.cache.kotlin.ObservableCollection
 import rs.wordpress.cache.kotlin.createObservableCollection
 import uniffi.wp_api.ReaderPostSaveIdentity
+import uniffi.wp_api.ReaderSavedKey
 import uniffi.wp_mobile.ReaderSavedException
 import uniffi.wp_mobile.ReaderSavedListItem
 import uniffi.wp_mobile.ReaderSavedPostsCollection
@@ -69,6 +70,9 @@ class ReaderSavedPostsViewModel @Inject constructor(
         /** Undoing an unsave went past the account's limit of saved posts. */
         data object TooManySaves : Event()
         data object LoadMoreFailed : Event()
+
+        /** Shows the item at [index], such as a post an undo restored, which comes back as the newest. */
+        data class ScrollTo(val index: Int) : Event()
     }
 
     private val _uiState = MutableStateFlow(UiState())
@@ -80,6 +84,10 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private val reloadRequests = Channel<Unit>(Channel.CONFLATED)
 
     private var isStarted = false
+
+    // a post an undo restores, scrolled to once the list has it: saving it again makes it the newest save, so it
+    // comes back at the top rather than where it was
+    private var revealKey: ReaderSavedKey? = null
 
     // a card only changes when its item does, so cards are kept across reloads
     private var cards = emptyMap<ReaderSavedListItem, ReaderPostUiState>()
@@ -219,8 +227,12 @@ class ReaderSavedPostsViewModel @Inject constructor(
     /** Undoes an unsave. Only offered for items with a post, since a key alone can't be saved again. */
     fun onUndoUnsave(item: ReaderSavedListItem) {
         val identity = item.post?.identity ?: return
+        // before the save, as the list shows it again as soon as it starts
+        revealKey = item.key
         viewModelScope.launch {
-            when (setSaved(identity, saved = true)) {
+            val result = setSaved(identity, saved = true)
+            if (result != WriteResult.SUCCEEDED) revealKey = null
+            when (result) {
                 WriteResult.SUCCEEDED -> track(AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST, item)
                 WriteResult.FAILED -> _events.send(Event.RequestFailed)
                 WriteResult.TOO_MANY_SAVES -> _events.send(Event.TooManySaves)
@@ -244,7 +256,8 @@ class ReaderSavedPostsViewModel @Inject constructor(
     private suspend fun setSaved(identity: ReaderPostSaveIdentity, saved: Boolean): WriteResult {
         val result = repository.setSaved(identity, saved)
         if (result == WriteResult.SUCCEEDED) {
-            withContext(ioDispatcher) {
+            // not waited on, so the snackbar with its Undo shows as soon as the account has the change
+            viewModelScope.launch(ioDispatcher) {
                 readerPostTableWrapper.setBookmarkFlag(identity.localBlogId, identity.localPostId, saved)
             }
         }
@@ -268,6 +281,13 @@ class ReaderSavedPostsViewModel @Inject constructor(
             this.cards = posts.associate { it.item to it.card }
             _uiState.update {
                 it.copy(posts = posts, isLoaded = true, hasMore = info.hasMore == true)
+            }
+            revealKey?.let { key ->
+                val index = posts.indexOfFirst { it.item.key == key }
+                if (index >= 0) {
+                    revealKey = null
+                    _events.send(Event.ScrollTo(index))
+                }
             }
             // back online, such as after the sync a reconnect starts, so the offline message no longer holds
             val isBackOnline = _uiState.value.error == ReaderPostListEmptyState.NoConnection &&
