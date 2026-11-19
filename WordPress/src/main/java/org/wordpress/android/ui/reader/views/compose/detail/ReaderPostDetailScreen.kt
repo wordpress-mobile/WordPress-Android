@@ -71,7 +71,30 @@ data class ReaderPostDetailTopBarState(
     val showBrowse: Boolean = false,
     val showShare: Boolean = false,
     val showMore: Boolean = true,
-)
+) {
+    companion object {
+        /**
+         * Only More shows while the post loads, nothing once it fails, and More hides for a blocked post. Browse needs
+         * the post's URL (some feed-based posts don't have one) or an intercepted URI, and share needs the URL.
+         */
+        fun from(
+            uiState: UiState?,
+            isPostBlocked: Boolean,
+            postHasUrl: Boolean,
+            hasInterceptedUri: Boolean,
+            isReadingPreferencesEnabled: Boolean,
+        ): ReaderPostDetailTopBarState = when (uiState) {
+            is ErrorUiState -> ReaderPostDetailTopBarState(showMore = false)
+            is ReaderPostDetailsUiState -> ReaderPostDetailTopBarState(
+                showReadingPreferences = isReadingPreferencesEnabled,
+                showBrowse = postHasUrl || hasInterceptedUri,
+                showShare = postHasUrl,
+                showMore = !isPostBlocked,
+            )
+            else -> ReaderPostDetailTopBarState(showMore = !isPostBlocked)
+        }
+    }
+}
 
 /**
  * The parts of the screen driven by the fragment, rather than by the view model's UI state: the WebView body and
@@ -104,6 +127,18 @@ class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
      * the host hides the status bar or applies the insets itself, and only pads the bar where the status bar shows.
      */
     var topInset by mutableIntStateOf(0)
+
+    /**
+     * The details state, unless it's still that of a post replaced in place, whose related posts and other details
+     * mustn't show below the new post or be tracked for it
+     */
+    fun currentDetailsState(uiState: UiState?): ReaderPostDetailsUiState? {
+        val replaced = replacedState as? ReaderPostDetailsUiState
+        // by ids rather than identity: a late update of the replaced post emits a copy of its state
+        return (uiState as? ReaderPostDetailsUiState)?.takeUnless {
+            replaced != null && it.postId == replaced.postId && it.blogId == replaced.blogId
+        }
+    }
 }
 
 @Suppress("LongParameterList")

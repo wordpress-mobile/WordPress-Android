@@ -236,7 +236,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 signOutWordPressComWithConfirmation()
             } else {
                 activity?.let {
-                    activityNavigator.openInCustomTab(it, wpcomLoginHelper.wpcomLoginUri.toString())
+                    activityNavigator.openInCustomTab(it, wpcomLoginHelper.startLogin().toString())
                 }
             }
         }

@@ -663,8 +663,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     private fun shouldRequireApplicationPassword(): Boolean {
         return !siteModel.isUsingSelfHostedRestApi &&
-                !siteModel.isWPCom && // WPCOM Simple sites use bearer tokens
-                !siteModel.isPrivateWPComAtomic // App passwords don't support private Atomic sites
+                !siteModel.isWPCom // WPCOM Simple sites use bearer tokens
     }
 
     private fun refreshMobileEditorFromSiteSetting() {

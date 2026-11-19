@@ -3061,7 +3061,6 @@ Language: cs_CZ
     <string name="login_checking_site_address" a8c-src-lib="module:login">Kontrola adresy webu</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresa webu</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Zadejte adresu WordPress webu, ke kterému se chcete připojit.</string>
-    <string name="login_already_logged_in_wpcom">Již jste přihlášeni na WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Pokračovat</string>
     <string name="connect_more">Připojit se k jinému webu</string>
     <string name="next">Další</string>

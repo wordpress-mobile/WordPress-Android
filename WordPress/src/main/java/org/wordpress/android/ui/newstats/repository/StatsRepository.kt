@@ -29,6 +29,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitField
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
+import org.wordpress.android.ui.newstats.datasource.TopAuthorItem
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
 import org.wordpress.android.ui.newstats.datasource.VideoPlaysDataResult
@@ -67,6 +68,7 @@ private const val DAYS_BEFORE_END_DATE = -6
 private const val DAYS_IN_7_DAYS = 7
 private const val DAYS_IN_30_DAYS = 30
 private const val MONTHS_IN_12_MONTHS = 12
+private const val YEARS_IN_3_YEARS = 3
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
 // The most a month/year step can lose to a short month (31 Jan + 1 month = 28 Feb). A forward step
@@ -402,8 +404,46 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * [period]'s window moved by [config]'s whole span in [direction], the same shape as
+     * [shiftPeriod] but with the step read off the preset instead of off the window's day count.
+     */
+    private fun shiftByConfig(period: StatsPeriod, config: PeriodConfig, direction: Int): StatsPeriod.Custom {
+        val (start, end) = currentPeriodWindow(period)
+        val amount = (config.quantity * direction).toLong()
+        val (newStart, newEnd) = when (config.dateUnit) {
+            DateUnit.YEAR -> start.plusYears(amount) to end.plusYears(amount)
+            DateUnit.MONTH -> start.plusMonths(amount) to end.plusMonths(amount)
+            DateUnit.DAY -> start.plusDays(amount) to end.plusDays(amount)
+        }
+        return StatsPeriod.Custom(newStart, newEnd)
+    }
+
+    /**
+     * The step a fixed-span rolling preset pages by, or null when the rhythm has to be read off the
+     * window instead — the calendar presets ([calendarUnitOf]), Today, and hand-picked Custom ranges,
+     * none of which [getPeriodConfig] describes.
+     *
+     * Taking the step from the preset rather than from the window's day span is what keeps a
+     * year-bucketed window paging by whole years: [unitFor] classifies by day count, and three whole
+     * year buckets running 1 Jan → 1 Jan measure exactly [MAX_DAYS_IN_2_YEARS] days whenever neither
+     * year between them is a leap year. On 1 January, Last 3 Years would otherwise be read as 25
+     * months and stepped a month at a time — the back arrow landing on 1 Dec..1 Dec, three bars still
+     * labelled as whole years with only December in the first, and the forward arrow unable to find
+     * its way back to the preset. The three day-unit and month-unit presets step identically either
+     * way; their windows can't reach the boundary.
+     */
+    private fun rollingStepOf(period: StatsPeriod): PeriodConfig? = when (period) {
+        is StatsPeriod.Last7Days,
+        is StatsPeriod.Last30Days,
+        is StatsPeriod.Last12Months,
+        is StatsPeriod.Last3Years -> getPeriodConfig(period)
+        else -> null
+    }
+
+    /**
      * Steps [period] one position in [direction], using calendar-unit steps for the calendar-aligned
-     * periods ([calendarUnitOf]) and the span-preserving [shiftPeriod] for everything else.
+     * periods ([calendarUnitOf]), the preset's own span for the rolling ones ([rollingStepOf]) and the
+     * span-preserving [shiftPeriod] for everything else.
      *
      * The rhythm comes from [origin] — the period the user picked — when the caller knows it, and from
      * the window's own shape otherwise. Paging produces concrete ranges, and a range's shape alone
@@ -411,12 +451,11 @@ class StatsRepository @Inject constructor(
      * like a calendar month.
      */
     private fun stepPeriod(period: StatsPeriod, direction: Int, origin: StatsPeriod? = null): StatsPeriod.Custom {
-        val calendarUnit = calendarUnitOf(origin ?: period)
-        return if (calendarUnit != null) {
-            calendarShift(period, calendarUnit, direction)
-        } else {
-            shiftPeriod(period, direction)
-        }
+        val rhythm = origin ?: period
+        val calendarUnit = calendarUnitOf(rhythm)
+        if (calendarUnit != null) return calendarShift(period, calendarUnit, direction)
+        return rollingStepOf(rhythm)?.let { shiftByConfig(period, it, direction) }
+            ?: shiftPeriod(period, direction)
     }
 
     /**
@@ -1103,7 +1142,7 @@ class StatsRepository @Inject constructor(
         val upcomingEnd: LocalDate? = null
     )
 
-    private enum class DateUnit { DAY, MONTH }
+    private enum class DateUnit { DAY, MONTH, YEAR }
 
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
@@ -1156,12 +1195,22 @@ class StatsRepository @Inject constructor(
         return unit to quantityFor(start, end, unit)
     }
 
-    /** The bucket [StatsUnit] the inclusive [start]..[end] window is charted at. See [unitAndQuantityFor]. */
+    /**
+     * The bucket [StatsUnit] the inclusive [start]..[end] window is charted at. See
+     * [unitAndQuantityFor].
+     *
+     * The year threshold is inclusive because three whole year buckets running 1 Jan → 1 Jan measure
+     * exactly [MAX_DAYS_IN_2_YEARS] days whenever no leap year falls between them, and that is the
+     * window Last 3 Years pages onto every 1 January. An exclusive test charted it as 25 month bars
+     * directly below a selector still naming three years. The cliff itself is not new — a window one
+     * day longer has always been year-bucketed — so this moves it by a day rather than reshaping how
+     * hand-picked ranges are charted.
+     */
     private fun unitFor(start: LocalDate, end: LocalDate): StatsUnit {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
         return when {
             daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
-            daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
+            daysBetween >= MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
             else -> StatsUnit.MONTH
         }
     }
@@ -1391,6 +1440,18 @@ class StatsRepository @Inject constructor(
      */
     fun periodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> = currentPeriodWindow(period)
 
+    /**
+     * The whole calendar [year], clamped so the window never runs past today — the current year covers
+     * the year so far, exactly as the year-to-date presets do. Lives here because [today] is the one
+     * read of the injected clock, and because a full 1 Jan..31 Dec range is what [calendarUnitOf]
+     * recognises as a calendar year, so a completed year drilled into from the chart then pages and
+     * charts as one whole year.
+     */
+    fun calendarYearWindow(year: Int): Pair<LocalDate, LocalDate> {
+        val firstDay = LocalDate.of(year, 1, 1)
+        return firstDay to minOf(firstDay.with(TemporalAdjusters.lastDayOfYear()), today())
+    }
+
     private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
         val today = today()
         return when (period) {
@@ -1404,6 +1465,12 @@ class StatsRepository @Inject constructor(
             // list cards — which do send their own start — would cover a different range from the chart.
             is StatsPeriod.Last12Months ->
                 today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()).withDayOfMonth(1) to today
+            // The same shape one unit coarser: whole year buckets ending with the current one, so
+            // "Last 3 years" is 2024, 2025 and 2026 charted side by side rather than three years
+            // measured back from today. iOS builds its `last3Years` the same way, offset from the
+            // end of the current calendar year.
+            is StatsPeriod.Last3Years ->
+                today.minusYears((YEARS_IN_3_YEARS - 1).toLong()).withDayOfYear(1) to today
             // Calendar-aligned windows run from the start of the current week/month/year up to today.
             is StatsPeriod.ThisWeek ->
                 today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek())) to today
@@ -1417,6 +1484,7 @@ class StatsRepository @Inject constructor(
         return when (unit) {
             DateUnit.DAY -> date.minusDays(amount.toLong())
             DateUnit.MONTH -> date.minusMonths(amount.toLong())
+            DateUnit.YEAR -> date.minusYears(amount.toLong())
         }
     }
 
@@ -1428,6 +1496,7 @@ class StatsRepository @Inject constructor(
         is StatsPeriod.Last7Days -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last30Days -> PeriodConfig(DAYS_IN_30_DAYS, StatsUnit.DAY, DateUnit.DAY)
         is StatsPeriod.Last12Months -> PeriodConfig(MONTHS_IN_12_MONTHS, StatsUnit.MONTH, DateUnit.MONTH)
+        is StatsPeriod.Last3Years -> PeriodConfig(YEARS_IN_3_YEARS, StatsUnit.YEAR, DateUnit.YEAR)
         else -> PeriodConfig(DAYS_IN_7_DAYS, StatsUnit.DAY, DateUnit.DAY) // Fallback to 7 days
     }
 
@@ -1725,9 +1794,10 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_7_DAYS, date = todayString)
             is StatsPeriod.Last30Days ->
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString)
-            // Last 12 Months sends its window rather than a day count: it is twelve whole month
-            // buckets, which no `num` describes. See [currentPeriodWindow].
+            // The month- and year-bucketed presets send their window rather than a day count: they
+            // are whole month or year buckets, which no `num` describes. See [currentPeriodWindow].
             is StatsPeriod.Last12Months,
+            is StatsPeriod.Last3Years,
             is StatsPeriod.ThisWeek,
             is StatsPeriod.ThisMonth,
             is StatsPeriod.ThisYear -> {
@@ -1765,12 +1835,13 @@ class StatsRepository @Inject constructor(
                 StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = todayString) to
                     StatsDateRange.Preset(num = DAYS_IN_30_DAYS, date = previousEndString)
             }
-            // Twelve whole month buckets, compared against the same window twelve months earlier — the
-            // windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow] and
-            // [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would put
-            // this card on a window three weeks longer than the chart above it, and longer than the one
-            // web and iOS report.
-            is StatsPeriod.Last12Months -> {
+            // Whole month or year buckets, compared against the same window a whole span earlier —
+            // the windows the chart fetches, derived from the chart's own rules ([currentPeriodWindow]
+            // and [previousWindowForConfig]) so the two cannot drift apart. A rolling `num=365` would
+            // put Last 12 Months on a window three weeks longer than the chart above it, and longer
+            // than the one web and iOS report.
+            is StatsPeriod.Last12Months,
+            is StatsPeriod.Last3Years -> {
                 val (start, end) = currentPeriodWindow(period)
                 val (previousStart, previousEnd) =
                     previousWindowForConfig(start, end, getPeriodConfig(period))
@@ -2158,12 +2229,8 @@ class StatsRepository @Inject constructor(
 
                 TopAuthorsResult.Success(
                     authors = currentResult.data.authors.map { author ->
-                        val previousViews = previousAuthorsMap[author.name]?.views ?: 0L
-                        TopAuthorItemData(
-                            name = author.name,
-                            avatarUrl = author.avatarUrl,
-                            views = author.views,
-                            previousViews = previousViews
+                        author.toTopAuthorItemData(
+                            previousViews = previousAuthorsMap[author.name]?.views ?: 0L
                         )
                     },
                     totalViews = totalViews,
@@ -2184,6 +2251,19 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    /**
+     * Maps one author of the current period to the repository's item, pairing it with that
+     * author's views in the previous period. The previous period is only fetched to compare
+     * totals, so the posts listed under an author are the current period's.
+     */
+    private fun TopAuthorItem.toTopAuthorItemData(previousViews: Long) = TopAuthorItemData(
+        name = name,
+        avatarUrl = avatarUrl,
+        views = views,
+        previousViews = previousViews,
+        posts = posts.map { TopAuthorPostData(id = it.id, title = it.title, views = it.views) }
+    )
 
     suspend fun fetchClicks(
         siteId: Long,
@@ -3398,17 +3478,29 @@ sealed class TopAuthorsResult {
 
 /**
  * Data for a single top author item from the repository layer.
+ *
+ * @param posts The author's posts in the period, most viewed first. Empty when the API reports none.
  */
 data class TopAuthorItemData(
     val name: String,
     val avatarUrl: String?,
     val views: Long,
-    val previousViews: Long
+    val previousViews: Long,
+    val posts: List<TopAuthorPostData> = emptyList()
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
         get() = calculateItemChangePercent(views, previousViews)
 }
+
+/**
+ * Data for a single post of a top author from the repository layer.
+ */
+data class TopAuthorPostData(
+    val id: Long,
+    val title: String,
+    val views: Long
+)
 
 sealed class ClicksResult {
     data class Success(

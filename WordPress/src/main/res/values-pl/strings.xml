@@ -3061,7 +3061,6 @@ Language: pl
     <string name="login_checking_site_address" a8c-src-lib="module:login">Sprawdzanie adresu witryny</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adres witryny</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Wprowadź adres witryny WordPress, którą chciałbyś połączyć.</string>
-    <string name="login_already_logged_in_wpcom">Jesteś już zalogowany na WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Kontynuuj</string>
     <string name="connect_more">Połącz kolejną witrynę</string>
     <string name="next">Następny</string>

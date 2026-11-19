@@ -314,6 +314,22 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
     }
 
     @Test
+    fun `a year-bucketed preset's label names its dates by year`() = test {
+        whenever(statsRepository.periodWindow(StatsPeriod.Last3Years))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2026, 10, 27))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last3Years)
+        advanceUntilIdle()
+
+        // The bars are years, so the label names years: "Jan 1, 2024 - Oct 27, 2026" would describe
+        // days the chart never draws separately.
+        assertThat(viewModel.effectivePeriodDates.value).isEqualTo("2024 - 2026")
+    }
+
+    @Test
     fun `a custom range gets no second line of dates, since its label is already made of them`() = test {
         initViewModel()
         advanceUntilIdle()
@@ -963,6 +979,47 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         }
         // Committing clears the soft selection.
         assertThat(viewModel.uiState.value.selectedBar()).isNull()
+    }
+
+    @Test
+    fun `when a yearly bar is tapped, then it soft-selects the whole year`() = test {
+        val yearlyData = listOf(
+            ViewsDataPoint(period = "2024-01-01", views = 5000L),
+            ViewsDataPoint(period = "2025-01-01", views = 6000L),
+            ViewsDataPoint(period = "2026-01-01", views = 7000L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = yearlyData,
+                    previousPeriodData = yearlyData,
+                    unit = StatsUnit.YEAR
+                )
+            )
+        whenever(statsRepository.calendarYearWindow(2024))
+            .thenReturn(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 12, 31))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last3Years)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        // The 2024 bar covers all of 2024, so drilling into it must not narrow to January: the header
+        // shows the year's total, and the cards below have to cover the same year.
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.Last3Years)
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 12, 31))
+        }
+        assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
     }
 
     @Test

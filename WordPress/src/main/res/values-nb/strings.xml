@@ -1362,7 +1362,6 @@ Language: nb_NO
     <string name="login_checking_site_address" a8c-src-lib="module:login">Sjekker sideadressen</string>
     <string name="login_site_address" a8c-src-lib="module:login">Nettstedsadresse</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Oppgi adressen til det WordPress-nettstedet du ønsker å koble til.</string>
-    <string name="login_already_logged_in_wpcom">Du er allerede logget på WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortsett</string>
     <string name="connect_more">Koble til et annet nettsted</string>
     <string name="next">Neste</string>
