@@ -609,19 +609,7 @@ class MediaRsApiRestClientTest {
 
         whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
         whenever(wpApiClient.request<Any>(any())).thenReturn(
-            WpRequestResult.RequestExecutionFailed(
-                statusCode = null,
-                redirects = null,
-                reason = RequestExecutionErrorReason.CloudflareError(
-                    statusCode = 413u,
-                    cloudflareCode = null,
-                    kind = CloudflareErrorKind.REQUEST_TOO_LARGE,
-                    rayId = null,
-                    retryAfter = null
-                ),
-                requestUrl = "",
-                requestMethod = RequestMethod.POST
-            )
+            cloudflareFailure(413u, CloudflareErrorKind.REQUEST_TOO_LARGE)
         )
 
         restClient.uploadMedia(testSite, testMedia)
@@ -633,6 +621,53 @@ class MediaRsApiRestClientTest {
         assertNotNull(payload.error)
         assertEquals(MediaErrorType.REQUEST_TOO_LARGE, payload.error?.type)
     }
+
+    @Test
+    fun `uploadMedia with cloudflare origin failure maps to a server error`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            cloudflareFailure(521u, CloudflareErrorKind.ORIGIN_DOWN)
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val payload = actionCaptor.value.payload as ProgressPayload
+        assertNotNull(payload.error)
+        // 521 shares no name with a MediaErrorType, so this only passes if the status, and not the
+        // Cloudflare kind, is what the mapping reads
+        assertEquals(MediaErrorType.SERVER_ERROR, payload.error?.type)
+        assertEquals(521, payload.error?.statusCode)
+    }
+
+    /**
+     * wordpress-rs fills in the outer `statusCode` for every reason it derives from a response, so
+     * a Cloudflare failure always carries the status twice - once on the result and once on the
+     * reason. Keep both set here, or the fixture describes a state the library never produces.
+     */
+    private fun cloudflareFailure(
+        statusCode: UInt,
+        kind: CloudflareErrorKind
+    ) = WpRequestResult.RequestExecutionFailed<Any>(
+        statusCode = statusCode,
+        redirects = null,
+        reason = RequestExecutionErrorReason.CloudflareError(
+            statusCode = statusCode,
+            cloudflareCode = null,
+            kind = kind,
+            rayId = null,
+            retryAfter = null
+        ),
+        requestUrl = "",
+        requestMethod = RequestMethod.POST
+    )
 
     @Test
     fun `pushMedia with null media dispatches error action immediately`() = runTest {
