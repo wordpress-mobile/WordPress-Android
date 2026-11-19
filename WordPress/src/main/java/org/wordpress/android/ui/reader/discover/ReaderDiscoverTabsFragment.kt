@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.compose.AndroidFragment
 import androidx.lifecycle.Lifecycle
@@ -35,6 +31,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -129,16 +126,11 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener, ReaderScro
         }
         // passes the lists' scrolling on, so the Reader's top bar still hides as they scroll
         Column(modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection())) {
-            // scrollable, so large font sizes scroll the tabs rather than wrapping their labels mid-word
-            PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                        text = { Text(stringResource(tab.titleRes), maxLines = 1) }
-                    )
-                }
-            }
+            FilterChipTabRow(
+                labels = tabs.map { stringResource(it.titleRes) },
+                selectedIndex = pagerState.settledPage,
+                onSelect = { index -> scope.launch { pagerState.animateScrollToPage(index) } }
+            )
             HorizontalPager(
                 state = pagerState,
                 // keeps every shown list alive, as ViewPager2 did, so switching tabs doesn't reload them
