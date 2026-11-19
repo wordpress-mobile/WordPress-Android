@@ -169,8 +169,8 @@ private fun SearchTabs(
     onTabSelected: (ReaderSearchTab) -> Unit,
     onTabReselected: (ReaderSearchTab) -> Unit
 ) {
-    // the top bar slot isn't inset, and only the TopAppBar insets itself
     val tabs = ReaderSearchTab.entries
+    // the top bar slot isn't inset, and only the TopAppBar insets itself
     FilterChipTabRow(
         labels = tabs.map { stringResource(it.labelRes) },
         selectedIndex = selectedTab.ordinal,
