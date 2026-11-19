@@ -3,5 +3,4 @@
     <dimen name="format_bar_height" tools:ignore="MissingDefaultResource">50dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_tablet_large
     </dimen>
-    <dimen name="media_settings_margin">@dimen/media_settings_margin_tablet_large</dimen>
 </resources>

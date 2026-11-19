@@ -62,4 +62,6 @@
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#1C1C1E</color>
     <color name="gravatar_sync_info_banner">#2C2C2E</color>
+    <color name="media_settings_page_background">@color/background_dark</color>
+    <color name="media_settings_card_background">@color/background_dark_elevated</color>
 </resources>
