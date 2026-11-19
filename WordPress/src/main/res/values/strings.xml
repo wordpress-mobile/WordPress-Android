@@ -1694,6 +1694,7 @@
     <string name="stats_period_last_7_days">Last 7 days</string>
     <string name="stats_period_last_30_days">Last 30 days</string>
     <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_last_3_years">Last 3 years</string>
     <string name="stats_period_this_week">This Week</string>
     <string name="stats_period_this_month">This Month</string>
     <string name="stats_period_this_year">This Year</string>

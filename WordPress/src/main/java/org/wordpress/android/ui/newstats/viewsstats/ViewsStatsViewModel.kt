@@ -30,10 +30,12 @@ import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepos
 import org.wordpress.android.ui.newstats.repository.StatsCacheBucket
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
+import org.wordpress.android.ui.newstats.util.PresetRangeGranularity
 import org.wordpress.android.ui.newstats.util.StatsDateSkeleton
 import org.wordpress.android.ui.newstats.util.formatDayRangeWithYear
 import org.wordpress.android.ui.newstats.util.formatMonthRangeWithYear
 import org.wordpress.android.ui.newstats.util.formatPresetRange
+import org.wordpress.android.ui.newstats.util.formatYearRangeLabel
 import org.wordpress.android.ui.newstats.util.statsDateFormatter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -50,6 +52,7 @@ private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
 private val EMPTY_BOTTOM_AGGREGATES = BottomStatsAggregates(0, 0, 0, 0, 0)
 private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
+private const val YEAR_PREFIX_LENGTH = 4 // "YYYY".length
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
@@ -120,7 +123,7 @@ class ViewsStatsViewModel @Inject constructor(
     private fun formatPeriodDates(period: StatsPeriod): String? {
         if (period is StatsPeriod.Custom) return null
         val (start, end) = statsRepository.periodWindow(period)
-        return formatPresetRange(start, end, monthGranularity = period.isMonthBucketed())
+        return formatPresetRange(start, end, granularity = period.bucketGranularity())
     }
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
@@ -783,18 +786,17 @@ class ViewsStatsViewModel @Inject constructor(
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
         // The chart's actual bucket unit is the source of truth for granularity: a Custom range is
         // charted in days, months or years depending on its span, and the rawPeriod string alone can't
-        // tell a day bucket from a month one -- the API returns a full ISO date for both. Falling back
-        // to day-level drill when no chart is loaded is the safe default.
-        val isMonthlyGranularity = lastChartResult?.unit?.let {
-            it == StatsUnit.MONTH || it == StatsUnit.YEAR
-        } ?: false
+        // tell a day bucket from a month or a year one -- the API returns a full ISO date for all
+        // three. Falling back to day-level drill when no chart is loaded is the safe default.
+        val chartUnit = lastChartResult?.unit
 
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
 
         return try {
             when {
-                isMonthlyGranularity -> drillDownMonth(rawPeriod)
+                chartUnit == StatsUnit.YEAR -> drillDownYear(rawPeriod)
+                chartUnit == StatsUnit.MONTH -> drillDownMonth(rawPeriod)
                 rawPeriod.matches(DAILY_FORMAT_REGEX) -> {
                     val date = LocalDate.parse(
                         rawPeriod,
@@ -812,6 +814,20 @@ class ViewsStatsViewModel @Inject constructor(
             )
             null
         }
+    }
+
+    /**
+     * The whole calendar year a YEAR bucket covers, so tapping the 2024 bar selects 2024 and not its
+     * January. The current year is clamped to today by [StatsRepository.calendarYearWindow], the same
+     * way the year-to-date presets end on today rather than on 31 December.
+     *
+     * Only the year is read off [rawPeriod]: a year bucket arrives as a full ISO date ("2024-01-01"),
+     * but its month and day carry no meaning, so the first four characters are all that is needed.
+     */
+    private fun drillDownYear(rawPeriod: String): StatsPeriod {
+        val year = rawPeriod.take(YEAR_PREFIX_LENGTH).toInt()
+        val (firstDay, lastDay) = statsRepository.calendarYearWindow(year)
+        return StatsPeriod.Custom(firstDay, lastDay)
     }
 
     private fun drillDownMonth(rawPeriod: String): StatsPeriod {
@@ -1062,6 +1078,7 @@ class ViewsStatsViewModel @Inject constructor(
         is StatsPeriod.Last7Days,
         is StatsPeriod.Last30Days,
         is StatsPeriod.Last12Months,
+        is StatsPeriod.Last3Years,
         is StatsPeriod.ThisWeek,
         is StatsPeriod.ThisMonth,
         is StatsPeriod.ThisYear -> true
@@ -1353,19 +1370,26 @@ class ViewsStatsViewModel @Inject constructor(
             is StatsPeriod.Custom ->
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)
-            else ->
-                if (period.isMonthBucketed()) formatMonthRange(startDate, endDate)
-                else formatDayRange(startDate, endDate)
+            else -> when (period.bucketGranularity()) {
+                PresetRangeGranularity.YEAR -> formatYearRange(startDate, endDate)
+                PresetRangeGranularity.MONTH -> formatMonthRange(startDate, endDate)
+                PresetRangeGranularity.DAY -> formatDayRange(startDate, endDate)
+            }
         }
     }
 
     /**
-     * Whether a preset period is charted — and so named — in whole months rather than days. Last 12
-     * Months is twelve month buckets by definition, and This Year takes its granularity from the
-     * whole calendar year, so it is twelve of them on 5 January just as in December.
+     * The buckets a preset period is charted — and so named — in. Last 12 Months is twelve month
+     * buckets by definition, and This Year takes its granularity from the whole calendar year, so it
+     * is twelve of them on 5 January just as in December. Last 3 Years is whole year buckets, one
+     * bar per year. Everything else is named by the day.
      */
-    private fun StatsPeriod.isMonthBucketed(): Boolean =
-        this is StatsPeriod.Last12Months || this is StatsPeriod.ThisYear
+    private fun StatsPeriod.bucketGranularity(): PresetRangeGranularity = when (this) {
+        is StatsPeriod.Last3Years -> PresetRangeGranularity.YEAR
+        is StatsPeriod.Last12Months,
+        is StatsPeriod.ThisYear -> PresetRangeGranularity.MONTH
+        else -> PresetRangeGranularity.DAY
+    }
 
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
@@ -1377,7 +1401,7 @@ class ViewsStatsViewModel @Inject constructor(
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
 
-        return if (start.year == end.year) "${start.year}" else "${start.year} - ${end.year}"
+        return formatYearRangeLabel(start, end)
     }
 
     @Suppress("ReturnCount")

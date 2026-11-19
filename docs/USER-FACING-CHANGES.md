@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Stats can chart a year at a time again**
+  The Traffic period menu in the redesigned Stats offers a new option, Last 3 years, below Last 12 months. It draws one bar per year, so a site's years can be compared side by side, and the totals and every card below the chart cover the same three years. The old Stats had this as the Years option in its period dropdown; the redesigned Stats had no equivalent until now.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → period menu
+  - **Notes:** The current year's bar covers the year so far, the same way Last 12 months ends on a part-finished month, and the selector's second line names the years ("2024 - 2026") rather than exact dates. The totals above the chart compare the three years against the three before them, not each year against the previous one. Stepping back and forward with the arrows moves three years at a time. Tapping a year's bar selects that whole year, so the cards below the chart cover it; the current year's bar covers the year up to today. The iOS app and the web version offer the same preset.
+
 - **Email login links no longer sign you in to the app**
   Opening a `wordpress://magic-login` or `jetpack://magic-login` link no longer signs the app in to WordPress.com. The app stopped sending these links when its login screens were replaced, so the only links still around come from older app versions. Log in from the app's login screen instead.
   - **Apps:** Both

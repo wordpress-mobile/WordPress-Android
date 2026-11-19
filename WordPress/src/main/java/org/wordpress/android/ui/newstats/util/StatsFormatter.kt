@@ -139,6 +139,7 @@ fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
         is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
         is StatsPeriod.Last30Days -> resourceProvider.getString(R.string.stats_period_last_30_days)
         is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
+        is StatsPeriod.Last3Years -> resourceProvider.getString(R.string.stats_period_last_3_years)
         is StatsPeriod.ThisWeek -> resourceProvider.getString(R.string.stats_period_this_week)
         is StatsPeriod.ThisMonth -> resourceProvider.getString(R.string.stats_period_this_month)
         is StatsPeriod.ThisYear -> resourceProvider.getString(R.string.stats_period_this_year)
@@ -321,20 +322,43 @@ fun formatCustomDateRangeTwoLine(startDate: LocalDate, endDate: LocalDate, curre
     return DateRangeLabel(primary, secondary)
 }
 
+/** The bucket unit a preset's resolved window is named in. See [formatPresetRange]. */
+enum class PresetRangeGranularity { DAY, MONTH, YEAR }
+
 /**
  * The resolved date window a *preset* period covers, rendered as the Traffic selector's second
  * line so the label always says which dates are on screen — the preset name alone ("Last 7 days")
  * never changes, which is what made a stale, still-selected period look like stats that had stopped
  * updating (CMM-2540).
  *
- * [monthGranularity] periods (Last 12 Months, This Year) name their endpoints by month, matching
- * the buckets their chart is drawn in; the rest name whole days.
+ * The endpoints are named at the granularity the preset's chart is drawn in, so the label and the
+ * bars below it describe the same buckets: [PresetRangeGranularity.MONTH] periods (Last 12 Months,
+ * This Year) name months, [PresetRangeGranularity.YEAR] ones (Last 3 Years) name years, and the
+ * rest name whole days. The current bucket is still in progress either way — "2024 - 2026" in
+ * November means 2026 so far, exactly as "Dec 2025 - Nov 2026" does for the month it ends on.
  */
-fun formatPresetRange(startDate: LocalDate, endDate: LocalDate, monthGranularity: Boolean): String = when {
+fun formatPresetRange(
+    startDate: LocalDate,
+    endDate: LocalDate,
+    granularity: PresetRangeGranularity
+): String = when {
+    granularity == PresetRangeGranularity.YEAR -> formatYearRangeLabel(startDate, endDate)
     startDate == endDate -> startDate.format(statsDateFormatter(StatsDateSkeleton.DAY_MONTH_YEAR))
-    monthGranularity -> formatMonthRangeWithYear(startDate, endDate)
+    granularity == PresetRangeGranularity.MONTH -> formatMonthRangeWithYear(startDate, endDate)
     else -> formatDayRangeWithYear(startDate, endDate)
 }
+
+/**
+ * A span of whole years, named by the years alone ("2024 - 2026"). A bare four-digit year reads the
+ * same in every locale — the same reason the chart's year axis labels aren't localized — so this
+ * needs no skeleton lookup.
+ */
+fun formatYearRangeLabel(startDate: LocalDate, endDate: LocalDate): String =
+    if (startDate.year == endDate.year) {
+        "${startDate.year}"
+    } else {
+        "${startDate.year}$RANGE_SEPARATOR${endDate.year}"
+    }
 
 /**
  * The full range spoken as a single string for accessibility, with the year merged onto each
