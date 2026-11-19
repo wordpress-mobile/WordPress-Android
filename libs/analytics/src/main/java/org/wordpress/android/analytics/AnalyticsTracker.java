@@ -466,8 +466,6 @@ public final class AnalyticsTracker {
         UNIFIED_LOGIN_INTERACTION,
         UNIFIED_LOGIN_FAILURE,
         LOGIN_ACCESSED,
-        LOGIN_MAGIC_LINK_OPENED,
-        LOGIN_MAGIC_LINK_SUCCEEDED,
         LOGIN_FAILED("login_failed_to_login"),
         LOGIN_PROLOGUE_PAGED,
         LOGIN_PROLOGUE_VIEWED,

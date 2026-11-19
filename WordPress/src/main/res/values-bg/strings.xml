@@ -251,7 +251,6 @@ Language: bg
     <string name="connection_to_server_lost">Връзката със сървъра бе прекъсната</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Проверяване на адреса на сайта</string>
     <string name="login_site_address" a8c-src-lib="module:login">Адрес на сайта</string>
-    <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Напред</string>
     <string name="connect_more">Свързване на друг сайт</string>
     <string name="next">Следващ</string>

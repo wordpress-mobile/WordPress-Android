@@ -105,7 +105,6 @@ Language: ms
     <string name="uploading_post">Memuat naik \"%s\"</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Memeriksa alamat laman</string>
     <string name="login_site_address" a8c-src-lib="module:login">Alamat laman</string>
-    <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Teruskan</string>
     <string name="next">Seterusnya</string>
     <string name="me_profile_photo">Gambar Profail</string>

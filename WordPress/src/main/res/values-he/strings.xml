@@ -3049,7 +3049,6 @@ Language: he_IL
     <string name="login_checking_site_address" a8c-src-lib="module:login">בודק את כתובת האתר</string>
     <string name="login_site_address" a8c-src-lib="module:login">כתובת אתר</string>
     <string name="enter_site_address" a8c-src-lib="module:login">יש להזין את כתובת האתר ב-WordPress שאליו ברצונך להתחבר.</string>
-    <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">המשך</string>
     <string name="connect_more">חיבור אתר נוסף</string>
     <string name="next">הבא</string>
