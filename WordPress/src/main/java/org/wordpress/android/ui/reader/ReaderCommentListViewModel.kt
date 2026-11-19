@@ -217,9 +217,13 @@ class ReaderCommentListViewModel @Inject constructor(
         }
     }
 
-    // the composer bar opens the sheet for whatever's being replied to
+    // the composer bar replies to the comment that's open, otherwise to whatever's being replied to
     fun onComposerClicked() {
-        if (!_uiState.value.isSubmitting) _uiState.update { it.copy(isReplySheetShown = true) }
+        val openCommentId = _uiState.value.detail?.comment?.commentId
+        when {
+            openCommentId != null -> onReplyClicked(openCommentId)
+            !_uiState.value.isSubmitting -> _uiState.update { it.copy(isReplySheetShown = true) }
+        }
     }
 
     fun onReplyClicked(commentId: Long) {
@@ -551,7 +555,7 @@ class ReaderCommentListViewModel @Inject constructor(
             )
         }
 
-        val replyHint = if (replyToCommentId == 0L) {
+        val replyHint = if (replyToCommentId == 0L && detail == null) {
             R.string.reader_hint_comment_on_post
         } else {
             R.string.reader_hint_comment_on_comment

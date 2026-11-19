@@ -126,7 +126,9 @@ fun ReaderCommentListScreen(
         ContentListPullToRefreshBox(
             isRefreshing = uiState.isRefreshing,
             onRefresh = actions.onRefresh,
-            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier.padding(contentPadding),
+            // a refresh drops comments past the first page, which would close a comment opened from there
+            enabled = detail == null
         ) {
             AnimatedContent(
                 targetState = detail,

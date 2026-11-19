@@ -706,7 +706,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 blogId,
                 postId,
                 this.source.sourceDescription,
-                commentId
+                this.commentId
             )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog ->
