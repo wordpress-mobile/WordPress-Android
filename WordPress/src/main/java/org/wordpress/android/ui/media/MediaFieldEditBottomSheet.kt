@@ -5,21 +5,22 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MediaFieldEditBottomSheetBinding
-import org.wordpress.android.ui.WPBottomSheetDialogFragment
 
 /**
  * Edits one text field of [MediaSettingsActivity]. The new value is returned through the fragment result API
  * under [REQUEST_KEY]; the activity still decides when to save it.
  */
-class MediaFieldEditBottomSheet : WPBottomSheetDialogFragment() {
+class MediaFieldEditBottomSheet : BottomSheetDialogFragment() {
     enum class Field(
         @StringRes val titleRes: Int,
         @StringRes val explanationRes: Int?,
@@ -44,14 +45,15 @@ class MediaFieldEditBottomSheet : WPBottomSheetDialogFragment() {
             sheetExplanation.isVisible = field.explanationRes != null
             field.explanationRes?.let { sheetExplanation.setText(it) }
 
-            val textFlags = InputType.TYPE_CLASS_TEXT or
+            // none of these fields may contain newlines, so long values wrap instead of using a multi-line input
+            fieldEdit.inputType = InputType.TYPE_CLASS_TEXT or
                     InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or
                     InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
+            fieldEdit.imeOptions = EditorInfo.IME_ACTION_DONE
             if (field.isMultiLine) {
-                fieldEdit.inputType = textFlags or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                fieldEdit.setHorizontallyScrolling(false)
+                fieldEdit.maxLines = Int.MAX_VALUE
                 fieldEdit.minLines = MULTI_LINE_MIN_LINES
-            } else {
-                fieldEdit.inputType = textFlags
             }
             if (field == Field.ALT_TEXT) {
                 fieldLayout.helperText = getString(R.string.media_settings_alt_text_sheet_helper)

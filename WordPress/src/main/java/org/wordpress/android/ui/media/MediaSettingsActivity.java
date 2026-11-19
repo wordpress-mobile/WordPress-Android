@@ -648,6 +648,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         if (url.isEmpty()) {
             urlRow.setOnClickListener(null);
             urlRow.setClickable(false);
+            ViewCompat.replaceAccessibilityAction(urlRow, AccessibilityActionCompat.ACTION_CLICK, null, null);
         } else {
             urlRow.setOnClickListener(v -> copyMediaUrlToClipboard());
             ViewCompat.replaceAccessibilityAction(urlRow, AccessibilityActionCompat.ACTION_CLICK,
@@ -660,7 +661,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             return;
         }
         MediaFieldEditBottomSheet.newInstance(field, getFieldValue(field))
-                                 .show(getSupportFragmentManager(), MediaFieldEditBottomSheet.TAG);
+                                 .showNow(getSupportFragmentManager(), MediaFieldEditBottomSheet.TAG);
     }
 
     @NonNull
