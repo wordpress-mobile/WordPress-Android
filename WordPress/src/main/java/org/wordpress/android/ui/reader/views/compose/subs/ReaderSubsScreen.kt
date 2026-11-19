@@ -148,7 +148,7 @@ fun ReaderSubsScreen(
                 // the top bar slot isn't inset, and only the TopAppBar insets itself
                 FilterChipTabRow(
                     labels = tabs.map { stringResource(it.labelRes) },
-                    selectedIndex = pagerState.settledPage,
+                    selectedIndex = pagerState.currentPage,
                     onSelect = { index -> scope.launch { pagerState.animateScrollToPage(index) } },
                     modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                 )
