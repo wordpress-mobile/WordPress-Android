@@ -60,6 +60,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -69,6 +70,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -102,6 +104,7 @@ fun ReaderCommentListScreen(
     // hoisted so the list keeps its position while a comment's detail replaces it
     val listState = rememberLazyListState()
     val detail = uiState.detail
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     BackHandler(enabled = detail != null, onBack = actions.onDetailBack)
     Scaffold(
         topBar = {
@@ -130,7 +133,8 @@ fun ReaderCommentListScreen(
                 contentKey = { it?.comment?.commentId },
                 transitionSpec = {
                     // opening a comment slides it in from the end; backing out slides the other way
-                    val direction = if ((targetState?.depth ?: 0) > (initialState?.depth ?: 0)) 1 else -1
+                    val isOpening = (targetState?.depth ?: 0) > (initialState?.depth ?: 0)
+                    val direction = (if (isOpening) 1 else -1) * (if (isRtl) -1 else 1)
                     (slideInHorizontally { direction * it } + fadeIn())
                         .togetherWith(slideOutHorizontally { -direction * it / SLIDE_OUT_FRACTION } + fadeOut())
                 },
@@ -236,7 +240,10 @@ internal fun CommentRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
-                .clickable(enabled = onClick != null) { onClick?.invoke() }
+                // a comment that's still sending can't be opened, since its id changes once it's sent
+                .then(
+                    if (onClick != null && !comment.isPending) Modifier.clickable(onClick = onClick) else Modifier
+                )
                 .background(
                     if (comment.isHighlighted) {
                         MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHT_ALPHA)

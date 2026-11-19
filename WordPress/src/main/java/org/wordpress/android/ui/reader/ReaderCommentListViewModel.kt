@@ -529,10 +529,13 @@ class ReaderCommentListViewModel @Inject constructor(
         val visible = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
         val items = visible.map { it.toItem(it.level.coerceAtMost(MAX_INDENT_LEVEL)) }
 
-        // a comment that's been moderated away drops out of the detail
+        // a comment that's been moderated away drops out of the detail, along with any repeat that leaves behind -
+        // [A, B, A] without B would otherwise need two backs to leave A
         val visibleById = visible.associateBy { it.commentId }
-        val stack = detailStack.filter { visibleById.containsKey(it) }.toLongArray()
-        if (stack.size != detailStack.size) detailStack = stack
+        val stack = detailStack.filter { visibleById.containsKey(it) }
+            .fold(mutableListOf<Long>()) { ids, id -> ids.apply { if (lastOrNull() != id) add(id) } }
+            .toLongArray()
+        if (!stack.contentEquals(detailStack)) detailStack = stack
         val detail = stack.lastOrNull()?.let { visibleById[it] }?.let { comment ->
             ReaderCommentDetailUiState(
                 depth = stack.size,
