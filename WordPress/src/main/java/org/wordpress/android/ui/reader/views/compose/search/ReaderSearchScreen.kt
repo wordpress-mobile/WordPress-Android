@@ -32,9 +32,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -60,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.htmlEncode
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.reader.views.compose.ReaderSiteRow
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchContent
@@ -170,19 +169,17 @@ private fun SearchTabs(
     onTabSelected: (ReaderSearchTab) -> Unit,
     onTabReselected: (ReaderSearchTab) -> Unit
 ) {
+    val tabs = ReaderSearchTab.entries
     // the top bar slot isn't inset, and only the TopAppBar insets itself
-    PrimaryTabRow(
-        selectedTabIndex = selectedTab.ordinal,
+    FilterChipTabRow(
+        labels = tabs.map { stringResource(it.labelRes) },
+        selectedIndex = selectedTab.ordinal,
+        onSelect = { index ->
+            val tab = tabs[index]
+            if (tab == selectedTab) onTabReselected(tab) else onTabSelected(tab)
+        },
         modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
-    ) {
-        ReaderSearchTab.entries.forEach { tab ->
-            Tab(
-                selected = tab == selectedTab,
-                onClick = { if (tab == selectedTab) onTabReselected(tab) else onTabSelected(tab) },
-                text = { Text(stringResource(tab.labelRes)) }
-            )
-        }
-    }
+    )
 }
 
 @Composable

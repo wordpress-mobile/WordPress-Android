@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
+import android.R as AndroidR
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -11,12 +12,12 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
@@ -26,13 +27,12 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
 import javax.inject.Inject
 import javax.inject.Named
-import android.R as AndroidR
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -42,6 +42,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val savedPostsRepository: ReaderSavedPostsRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     @Suppress("LongParameterList")
@@ -99,13 +100,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
             feedId = post.feedId,
             isFollowed = post.isFollowedByCurrentUser,
             blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
-            interactionSection = buildInteractionSection(post),
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
             thumbnailStripSection = buildThumbnailStripUrls(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
+            bookmarkAction = buildBookmarkSection(post, onButtonClicked),
             likeAction = buildLikeSection(post, onButtonClicked, isReaderImprovementsEnabled = true),
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),
@@ -192,13 +193,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
     }
 
-    private fun buildInteractionSection(
-        post: ReaderPost
-    ): InteractionSectionData = InteractionSectionData(
-        likeCount = post.numLikes,
-        commentCount = post.numReplies,
-    )
-
     private fun buildBlogUrl(post: ReaderPost) = post
         .takeIf { it.hasBlogUrl() }
         ?.blogUrl
@@ -263,8 +257,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
+        val isSaved = savedPostsRepository.isSaved(post)
         val contentDescription = UiStringRes(
-            if (post.isBookmarked) {
+            if (isSaved) {
                 R.string.reader_remove_bookmark
             } else {
                 R.string.reader_add_bookmark
@@ -273,7 +268,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                 isEnabled = true,
-                isSelected = post.isBookmarked,
+                isSelected = isSaved,
                 contentDescription = contentDescription,
                 onClicked = onClicked,
                 type = BOOKMARK
@@ -330,20 +325,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
         val contentDescription = UiStringRes(R.string.comments)
 
-        return if (showComments) {
-            PrimaryAction(
-                isEnabled = true,
-                count = post.numReplies,
-                contentDescription = contentDescription,
-                onClicked = onCommentsClicked,
-                type = ReaderPostCardActionType.COMMENTS
-            )
-        } else {
-            PrimaryAction(
-                isEnabled = false,
-                contentDescription = contentDescription,
-                type = ReaderPostCardActionType.COMMENTS
-            )
-        }
+        // the count is kept when comments can't be opened, as the card still shows it
+        return PrimaryAction(
+            isEnabled = showComments,
+            count = post.numReplies,
+            contentDescription = contentDescription,
+            onClicked = onCommentsClicked.takeIf { showComments },
+            type = ReaderPostCardActionType.COMMENTS
+        )
     }
 }

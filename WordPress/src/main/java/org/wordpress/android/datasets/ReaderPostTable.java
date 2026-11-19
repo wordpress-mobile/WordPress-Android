@@ -1020,6 +1020,22 @@ public class ReaderPostTable {
         }
     }
 
+    /*
+     * posts the user saved on this device, newest first
+     */
+    public static ReaderPostList getBookmarkedPosts() {
+        String sql = "SELECT " + COLUMN_NAMES_NO_TEXT + " FROM tbl_posts"
+                     + " WHERE tag_type=? AND is_bookmarked != 0"
+                     + " ORDER BY datetime(date_tagged) DESC";
+        String[] args = {Integer.toString(ReaderTagType.BOOKMARKED.toInt())};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            return getPostListFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =

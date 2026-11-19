@@ -30,6 +30,7 @@ import androidx.fragment.compose.AndroidFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -39,6 +40,8 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverTabsFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsFragment
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSearchPage
@@ -76,6 +79,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
 
     private lateinit var viewModel: ReaderViewModel
 
@@ -301,6 +307,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             }
         }
         val modifier = Modifier.fillMaxSize()
+        // until this device's saves are imported to the account, the device's own list shows them
+        val isSyncedListReady by savedPostsRepository.syncedListReady.collectAsStateWithLifecycle()
+        val isSyncedSavedList = tag.isBookmarked && isSyncedListReady
         when {
             tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier, onUpdate = ::onFeedAdded)
             tag.isTags -> AndroidFragment<ReaderTagsFeedFragment>(
@@ -308,6 +317,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                 arguments = remember { ReaderTagsFeedFragment.argumentsFor(tag) },
                 onUpdate = ::onFeedAdded
             )
+            isSyncedSavedList -> AndroidFragment<ReaderSavedPostsFragment>(modifier, onUpdate = ::onFeedAdded)
             else -> AndroidFragment<ReaderPostListFragment>(
                 modifier,
                 arguments = remember {
@@ -383,7 +393,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
      */
     private fun getCurrentFeedFragment(): Fragment? {
         return childFragmentManager.fragments.lastOrNull {
-            it is ReaderPostListFragment || it is ReaderTagsFeedFragment || it is ReaderDiscoverTabsFragment
+            it is OnScrollToTopListener
         }
     }
 
