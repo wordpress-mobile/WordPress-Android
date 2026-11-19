@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -50,9 +51,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -93,6 +99,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -110,9 +117,8 @@ import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_
 
 public class MediaSettingsActivity extends BaseAppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
-    private static final float IMAGE_DEFAULT_HEIGHT_RATIO = 0.4f;
-    private static final float IMAGE_MAX_HEIGHT_RATIO = 0.5f;
-    private static final int IMAGE_MARGIN_DP = 16;
+    private static final int TOOLBAR_HEIGHT_MULTIPLIER = 3;
+    private static final float IMAGE_HEIGHT_RATIO = 0.4f;
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
     private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
@@ -243,6 +249,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
@@ -261,10 +268,8 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         setupDetailRow(R.id.row_alt_text, Field.ALT_TEXT);
         setupDetailRow(R.id.row_description, Field.DESCRIPTION);
 
-        // the page is gray and the photo and cards are rounded, like the grouped lists on iOS
-        getWindow().setBackgroundDrawableResource(R.color.media_settings_page_background);
-        for (int id : new int[]{R.id.image_container, R.id.card_customize, R.id.card_details,
-                R.id.card_file_info}) {
+        // clip row ripples to the rounded cards
+        for (int id : new int[]{R.id.card_customize, R.id.card_details, R.id.card_file_info}) {
             findViewById(id).setClipToOutline(true);
         }
 
@@ -312,6 +317,35 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             bindDetailRows();
         }
 
+        // only show title when toolbar is collapsed
+        final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        collapsingToolbar.setCollapsedTitleTextColor(ContextExtensionsKt.getColorFromAttribute(
+                this, com.google.android.material.R.attr.colorOnSurface));
+        collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.media_settings_page_background));
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            int mScrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (mScrollRange == -1) {
+                    mScrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (mScrollRange + verticalOffset == 0) {
+                    collapsingToolbar.setTitle(getCollapsedTitle());
+                } else {
+                    collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
+                }
+            }
+        });
+
+        // make image 40% of screen height
+        mImageView.getLayoutParams().height = (int) (DisplayUtils.getWindowPixelHeight(this) * IMAGE_HEIGHT_RATIO);
+
+        // set the height of the gradient scrim that appears atop the image
+        int toolbarHeight = DisplayUtils.getActionBarHeight(this);
+        findViewById(R.id.image_gradient_scrim).getLayoutParams().height = toolbarHeight * TOOLBAR_HEIGHT_MULTIPLIER;
+
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
             View.OnClickListener listener = v -> showFullScreen();
@@ -320,6 +354,39 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             mFullScreenButton.setOnClickListener(listener);
             TooltipCompat.setTooltipText(mFullScreenButton, getString(R.string.button_preview));
         }
+
+        // keep the last rows clear of the navigation bar when drawing edge-to-edge
+        View scrollContent = findViewById(R.id.scroll_content);
+        int scrollContentPaddingBottom = scrollContent.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(scrollContent, (v, insets) -> {
+            int navBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                    scrollContentPaddingBottom + navBarHeight);
+            return insets;
+        });
+
+        enableEdgeToEdge();
+    }
+
+    /**
+     * Enable edge-to-edge API 33+, but only hide the status bar and not the navigation bar
+     */
+    private void enableEdgeToEdge() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Window window = getWindow();
+            window.setDecorFitsSystemWindows(false);
+            WindowInsetsControllerCompat controller =
+                    new WindowInsetsControllerCompat(window, window.getDecorView());
+            controller.hide(WindowInsetsCompat.Type.statusBars());
+            controller.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            );
+        }
+    }
+
+    @NonNull
+    private String getCollapsedTitle() {
+        return TextUtils.isEmpty(mMedia.getFileName()) ? mTitle : mMedia.getFileName();
     }
 
     private boolean isMediaFromEditor() {
@@ -365,8 +432,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             mTitle = getString(R.string.media_title_document_details);
         }
 
-        setTitle(TextUtils.isEmpty(mMedia.getFileName()) ? mTitle : mMedia.getFileName());
-        setImageHeight();
         mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         mFullScreenButton.setVisibility(shouldShowFullScreenButton() ? View.VISIBLE : View.GONE);
         int altTextVisibility = isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE;
@@ -601,21 +666,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             ViewCompat.replaceAccessibilityAction(urlRow, AccessibilityActionCompat.ACTION_CLICK,
                     getString(R.string.media_settings_copy_url), null);
         }
-    }
-
-    /*
-     * sizes the photo to its aspect ratio when known, otherwise to a fixed share of the screen height
-     */
-    private void setImageHeight() {
-        int displayHeight = DisplayUtils.getWindowPixelHeight(this);
-        int height = (int) (displayHeight * IMAGE_DEFAULT_HEIGHT_RATIO);
-        if ((isImage() || isVideo()) && mMedia.getWidth() > 0 && mMedia.getHeight() > 0) {
-            int width = DisplayUtils.getWindowPixelWidth(this) - 2 * DisplayUtils.dpToPx(this, IMAGE_MARGIN_DP);
-            height = Math.min((int) (displayHeight * IMAGE_MAX_HEIGHT_RATIO),
-                    width * mMedia.getHeight() / mMedia.getWidth());
-        }
-        mImageView.getLayoutParams().height = height;
-        mImageView.requestLayout();
     }
 
     private void setupDetailRow(@IdRes int rowId, @NonNull Field field) {
