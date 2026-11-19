@@ -779,7 +779,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         int toastResId;
-        if (errorType == MediaErrorType.AUTHORIZATION_REQUIRED) {
+        // a 401 arrives as AUTHORIZATION_REQUIRED and a 403 as NOT_AUTHENTICATED - both mean the
+        // site refused the request, so both get the permission message rather than "try again"
+        if (errorType == MediaErrorType.AUTHORIZATION_REQUIRED || errorType == MediaErrorType.NOT_AUTHENTICATED) {
             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
             toastResId = R.string.media_error_no_permission;
         } else {

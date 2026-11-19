@@ -177,6 +177,10 @@ public class MediaDeleteService extends Service {
 
         switch (event.error.type) {
             case AUTHORIZATION_REQUIRED:
+            case NOT_AUTHENTICATED:
+                // a 401 arrives as AUTHORIZATION_REQUIRED and a 403 as NOT_AUTHENTICATED, and
+                // neither is worth retrying for the rest of the queue - a Cloudflare WAF that
+                // blocked this request will block the next one too
                 AppLog.v(T.MEDIA, "Authorization required. Stopping MediaDeleteService.");
                 // the rest of the queue is abandoned here, so release it along with the current item
                 restoreUploadState(getDeleteQueue());
