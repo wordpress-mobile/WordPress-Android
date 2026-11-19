@@ -41,6 +41,7 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsPeriod
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
@@ -75,6 +76,10 @@ private const val YEARS_IN_3_YEARS = 3
 // pattern the old Stats date formatter and the Weekly Roundup worker parse.
 private const val WEEK_PERIOD_DATE_PATTERN = "yyyy'W'MM'W'dd"
 private const val MAX_DAYS_IN_MONTH = 31
+// The bar counts a chosen chart interval is offered between. One bar is not a chart, and much past
+// the upper bound the bars are thinner than the gaps between them at phone width.
+private const val MIN_CHART_BUCKETS = 2
+private const val MAX_CHART_BUCKETS = 400
 private const val MAX_DAYS_IN_2_YEARS = 731
 // The most a month/year step can lose to a short month (31 Jan + 1 month = 28 Feb). A forward step
 // landing within this of the present edge is that same window, not the neighbouring step.
@@ -260,6 +265,24 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod,
         dataSource: MostViewedDataSource
     ) = needsRevalidation(StatsCacheBucket.MOST_VIEWED, siteId, period, variant = dataSource.name)
+
+    /**
+     * The chart's key carries the interval, so switching it can't be answered from the bars drawn at
+     * the previous one. [ChartInterval.AUTOMATIC] encodes as no variant at all, which is the key
+     * every chart request has always written.
+     *
+     * The bottom row needs no equivalent: once it routes on the resolved unit, the only thing that
+     * still reaches [fetchBottomStats] is an hourly chart, and that call derives its own unit from
+     * the period ([calculateBottomStatsRange]) rather than from the chart's.
+     */
+    fun isChartCached(siteId: Long, period: StatsPeriod, interval: ChartInterval) =
+        isCached(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(interval))
+
+    fun chartNeedsRevalidation(siteId: Long, period: StatsPeriod, interval: ChartInterval) =
+        needsRevalidation(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(interval))
+
+    private fun chartVariant(interval: ChartInterval): String? =
+        interval.storageKey.takeIf { interval != ChartInterval.AUTOMATIC }
 
     fun isUtmCached(siteId: Long, period: StatsPeriod, keys: List<String>) =
         isCached(StatsCacheBucket.UTM, siteId, period, variant = utmVariant(keys))
@@ -800,20 +823,22 @@ class StatsRepository @Inject constructor(
     suspend fun fetchStatsForPeriod(
         siteId: Long,
         period: StatsPeriod,
+        interval: ChartInterval = ChartInterval.DEFAULT,
         forceRefresh: Boolean = false
     ): PeriodStatsResult = cached(
-        key = cacheKey(StatsCacheBucket.CHART, siteId, period),
+        key = cacheKey(StatsCacheBucket.CHART, siteId, period, variant = chartVariant(interval)),
         forceRefresh = forceRefresh,
         isCacheable = { it is PeriodStatsResult.Success }
     ) {
-        fetchStatsForPeriodFromNetwork(siteId, period)
+        fetchStatsForPeriodFromNetwork(siteId, period, interval)
     }
 
     private suspend fun fetchStatsForPeriodFromNetwork(
         siteId: Long,
-        period: StatsPeriod
+        period: StatsPeriod,
+        interval: ChartInterval
     ): PeriodStatsResult = withContext(ioDispatcher) {
-        val periodRange = calculatePeriodDates(period)
+        val periodRange = calculatePeriodDates(period, interval)
 
         val currentEndString = formatApiEndDate(periodRange.currentEnd, periodRange.unit)
         val previousEndString = formatApiEndDate(periodRange.previousEnd, periodRange.unit)
@@ -1307,34 +1332,75 @@ class StatsRepository @Inject constructor(
         return previousStart to previousEnd
     }
 
+    /**
+     * The two windows, their bucket unit and their bucket counts for [period], drawn at [interval].
+     *
+     * [interval] re-slices the windows; it never moves them. Each fork resolves
+     * `interval.unit ?: <its own derivation>` and then measures both of its windows at whatever unit
+     * came out, which is why the quantities all go through [quantityFor]: under
+     * [ChartInterval.AUTOMATIC] that is the derivation the fork already did, and under an override it
+     * is the same windows counted in different buckets.
+     */
     @Suppress("ReturnCount")
-    private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
-        if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
-        if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
+    private fun calculatePeriodDates(period: StatsPeriod, interval: ChartInterval): PeriodDateRange {
+        if (period is StatsPeriod.Today) return calculateTodayPeriodDates(interval)
+        if (period is StatsPeriod.Custom) {
+            return calculateCustomPeriodDates(period.startDate, period.endDate, interval)
+        }
 
         // One read of today() for the whole computation. The calendar path derives both the elapsed end
         // and the whole period's span from it, and reading the clock twice lets a load that straddles
         // midnight pair a window from one day with an end from the next (an 8-bucket "This Week").
         val currentWindow = currentPeriodWindow(period)
         fullCalendarWindow(period, currentWindow)?.let {
-            return calculateCalendarPeriodDates(period, currentWindow.second, it)
+            return calculateCalendarPeriodDates(period, currentWindow.second, it, interval)
         }
 
         val config = getPeriodConfig(period)
+        val unit = interval.unit ?: config.unit
         val (currentStart, currentEnd) = currentWindow
         val (previousStart, previousEnd) = previousWindowForConfig(currentStart, currentEnd, config)
 
         // [previousWindowForConfig] steps both endpoints exactly config.quantity units back, so both
         // windows request the same number of buckets, and cover the same day span, by construction.
+        // Measuring each window rather than reusing config.quantity is a no-op under AUTOMATIC: a
+        // rolling preset only ever reaches here on its own canonical window, where
+        // quantityFor(window, config.unit) == config.quantity by construction (a paged range is a
+        // Custom and takes the fork above). StatsRepositoryTest pins that for all four presets.
         return PeriodDateRange(
             currentStart = currentStart,
             currentEnd = currentEnd,
             previousStart = previousStart,
             previousEnd = previousEnd,
-            currentQuantity = config.quantity,
-            previousQuantity = config.quantity,
-            unit = config.unit
+            currentQuantity = quantityFor(currentStart, currentEnd, unit),
+            previousQuantity = quantityFor(previousStart, previousEnd, unit),
+            unit = unit
         )
+    }
+
+    /** The bucket unit the chart will actually request for [period] at [interval]. */
+    fun chartUnitFor(period: StatsPeriod, interval: ChartInterval): StatsUnit =
+        calculatePeriodDates(period, interval).unit
+
+    /**
+     * The intervals worth offering for [period]: [ChartInterval.AUTOMATIC], plus every unit that
+     * would give the charted window between [MIN_CHART_BUCKETS] and [MAX_CHART_BUCKETS] bars. One
+     * bar is not a chart, and several hundred are indistinguishable from each other at phone width.
+     *
+     * Measured on the *charted* span — the upcoming part of an unfinished calendar period included —
+     * so the menu doesn't quietly change its contents as the week fills up, for the same reason
+     * [calculateCalendarPeriodDates] takes its unit from the whole calendar period.
+     *
+     * The unit [ChartInterval.AUTOMATIC] resolves to is always among the results, since a derived
+     * unit is by construction one that fits the window.
+     */
+    fun offeredIntervals(period: StatsPeriod): List<ChartInterval> {
+        val range = calculatePeriodDates(period, ChartInterval.AUTOMATIC)
+        val chartEnd = range.upcomingEnd ?: range.currentEnd
+        return ChartInterval.entries.filter { interval ->
+            val unit = interval.unit ?: return@filter true
+            quantityFor(range.currentStart, chartEnd, unit) in MIN_CHART_BUCKETS..MAX_CHART_BUCKETS
+        }
     }
 
     /**
@@ -1368,10 +1434,11 @@ class StatsRepository @Inject constructor(
     private fun calculateCalendarPeriodDates(
         period: StatsPeriod,
         currentEnd: LocalDate,
-        fullWindow: Pair<LocalDate, LocalDate>
+        fullWindow: Pair<LocalDate, LocalDate>,
+        interval: ChartInterval
     ): PeriodDateRange {
         val (currentStart, fullEnd) = fullWindow
-        val unit = unitFor(currentStart, fullEnd)
+        val unit = interval.unit ?: unitFor(currentStart, fullEnd)
 
         val (previousStart, previousEnd) = previousCalendarWindow(currentStart, calendarUnitOf(period))
 
@@ -1543,59 +1610,52 @@ class StatsRepository @Inject constructor(
      * ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover today's 00:00–23:00 and the
      * previous window covers yesterday's — matching the day-level totals shown in the bottom row.
      */
-    private fun calculateTodayPeriodDates(): PeriodDateRange {
+    private fun calculateTodayPeriodDates(interval: ChartInterval): PeriodDateRange {
         val today = today()
         val yesterday = today.minusDays(1)
+        val unit = interval.unit ?: StatsUnit.HOUR
         return PeriodDateRange(
             currentStart = today,
             currentEnd = today,
             previousStart = yesterday,
             previousEnd = yesterday,
-            currentQuantity = HOURLY_QUANTITY,
-            previousQuantity = HOURLY_QUANTITY,
-            unit = StatsUnit.HOUR,
+            currentQuantity = quantityFor(today, today, unit),
+            previousQuantity = quantityFor(yesterday, yesterday, unit),
+            unit = unit,
             currentDisplayDate = today,
             previousDisplayDate = yesterday
         )
     }
 
-    private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
+    private fun calculateCustomPeriodDates(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        interval: ChartInterval
+    ): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
-        // Single day → hourly granularity (like Today). The hourly window ends at the day itself
-        // ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover that day's 00:00–23:00.
-        if (daysBetween == 1) {
-            val previousDate = startDate.minusDays(1)
-            return PeriodDateRange(
-                currentStart = startDate,
-                currentEnd = startDate,
-                previousStart = previousDate,
-                previousEnd = previousDate,
-                currentQuantity = HOURLY_QUANTITY,
-                previousQuantity = HOURLY_QUANTITY,
-                unit = StatsUnit.HOUR,
-                currentDisplayDate = startDate,
-                previousDisplayDate = previousDate
-            )
-        }
-
-        // Daily up to a full month (31 days), monthly up to two years, yearly beyond. Coarsening the
-        // chart to YEAR past two years (the same rule the bottom-row totals use) keeps the chart and
-        // the bottom row on one unit, so the header's Views and the bottom row's Views — and their
-        // visitor de-duplication — always agree for long Custom ranges. A coarsened window also sends
-        // its own start to the API, so it still covers the picked days and not whole buckets (see
-        // [apiStartDateOrNull]).
-        val (unit, currentQuantity) = unitAndQuantityFor(startDate, endDate)
+        // A single day is hourly (like Today), and otherwise: daily up to a full month (31 days),
+        // monthly up to two years, yearly beyond. Coarsening the chart to YEAR past two years (the
+        // same rule the bottom-row totals use) keeps the chart and the bottom row on one unit, so the
+        // header's Views and the bottom row's Views — and their visitor de-duplication — always agree
+        // for long Custom ranges. A coarsened window also sends its own start to the API, so it still
+        // covers the picked days and not whole buckets (see [apiStartDateOrNull]).
+        //
+        // An hourly window ends at the day itself ([formatApiEndDate] appends "23:00:00"), so its
+        // buckets cover 00:00–23:00 of each day in the window.
+        val unit = interval.unit
+            ?: if (daysBetween == 1) StatsUnit.HOUR else unitFor(startDate, endDate)
         val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
-        val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
 
+        // The display dates fall out of the defaults: a single-day window's end *is* its start, and
+        // every other window shows its own end.
         return PeriodDateRange(
             currentStart = startDate,
             currentEnd = endDate,
             previousStart = previousStart,
             previousEnd = previousEnd,
-            currentQuantity = currentQuantity,
-            previousQuantity = previousQuantity,
+            currentQuantity = quantityFor(startDate, endDate, unit),
+            previousQuantity = quantityFor(previousStart, previousEnd, unit),
             unit = unit
         )
     }

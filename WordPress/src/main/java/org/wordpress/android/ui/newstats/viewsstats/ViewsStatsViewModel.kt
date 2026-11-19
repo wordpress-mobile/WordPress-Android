@@ -1057,7 +1057,7 @@ class ViewsStatsViewModel @Inject constructor(
         // Fetch first and apply afterwards, so the staleness check sits between the two and every write
         // below it is known to belong to the period still on screen.
         val result = try {
-            statsRepository.fetchStatsForPeriod(site.siteId, period, forceRefresh)
+            statsRepository.fetchStatsForPeriod(site.siteId, period, forceRefresh = forceRefresh)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

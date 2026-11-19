@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import org.wordpress.android.ui.newstats.datasource.ClickDataItem
@@ -199,6 +200,61 @@ class StatsRepositoryCacheTest : BaseUnitTest() {
         verify(statsDataSource, times(WINDOWS_PER_FETCH))
             .fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
         assertThat(second).isInstanceOf(PeriodStatsResult.Success::class.java)
+    }
+
+    @Test
+    fun `given the chart was fetched, when the interval changes, then it is requested again`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(visitsData()))
+
+        repository.fetchStatsForPeriod(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.AUTOMATIC)
+        repository.fetchStatsForPeriod(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.WEEKS)
+
+        verify(statsDataSource, times(2 * WINDOWS_PER_FETCH))
+            .fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `given the chart was fetched at an interval, when it is re-fetched at that interval, then it is cached`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(visitsData()))
+
+            repository.fetchStatsForPeriod(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.WEEKS)
+            repository.fetchStatsForPeriod(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.WEEKS)
+
+            verify(statsDataSource, times(WINDOWS_PER_FETCH))
+                .fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
+        }
+
+    @Test
+    fun `given the chart was fetched implicitly, when Automatic is passed explicitly, then it is cached`() = test {
+        // Automatic encodes as no variant at all, so it must land on the key every chart request
+        // wrote before an interval existed.
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(visitsData()))
+
+        repository.fetchStatsForPeriod(SITE_ID, StatsPeriod.ThisMonth)
+        repository.fetchStatsForPeriod(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.AUTOMATIC)
+
+        verify(statsDataSource, times(WINDOWS_PER_FETCH))
+            .fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
+        assertThat(repository.isChartCached(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.AUTOMATIC)).isTrue
+        assertThat(repository.isChartCached(SITE_ID, StatsPeriod.ThisMonth, ChartInterval.WEEKS)).isFalse
+    }
+
+    @Test
+    fun `given the bottom row was fetched, then the interval does not give it a second entry`() = test {
+        // The bottom row derives its own unit from the period, so it has nothing to vary by. Only an
+        // hourly chart reaches it at all, which is why it carries no variant.
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(visitsData()))
+
+        repository.fetchBottomStats(SITE_ID, StatsPeriod.Today)
+        repository.fetchBottomStats(SITE_ID, StatsPeriod.Today)
+
+        verify(statsDataSource, times(WINDOWS_PER_FETCH))
+            .fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull())
     }
 
     // region endpoints that must stay uncached

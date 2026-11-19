@@ -145,7 +145,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
 
     @Test
     fun `selecting a metric reports it once`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
         initViewModel()
 
@@ -157,7 +157,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
 
     @Test
     fun `selecting a bar reports its bucket width, metric and total`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
         initViewModel()
         viewModel.onChartTypeChanged(ChartType.BAR)
@@ -175,7 +175,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     /** The same tap undone: reporting it would double every bar interaction. */
     @Test
     fun `tapping the selected bar again, which deselects it, reports nothing further`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
         initViewModel()
         viewModel.onChartTypeChanged(ChartType.BAR)
@@ -190,7 +190,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
 
     @Test
     fun `opening the card reports nothing by itself`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
 
         initViewModel()
