@@ -792,7 +792,10 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun buildSelectedBarHeader(loaded: ChartUiState.Loaded, index: Int): ChartUiState.Loaded {
         val current = loaded.chartData.currentPeriod.getOrNull(index) ?: return loaded
+        // An empty raw period is the slot a bucket with no counterpart is paired against (see
+        // StatsRepository's alignedPreviousBuckets), not a bucket with a name this can read.
         val previous = loaded.chartData.previousPeriod.getOrNull(index)
+            ?.takeIf { it.rawPeriod.isNotEmpty() }
         val currentValue = current.value
         val previousValue = previous?.value ?: 0L
         return loaded.copy(

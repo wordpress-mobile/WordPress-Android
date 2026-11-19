@@ -309,9 +309,12 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given both windows opening mid-bucket, when charted in weeks, then neither series is trimmed`() = test {
-        // Both slivers are the window's own leading edge, so index pairing already puts like against
-        // like; dropping one would shift every bar by a week for no gain.
+    fun `given both windows opening mid-bucket on different offsets, then the sliver loses its pair`() = test {
+        // Both slivers are a window's own leading edge, but the two windows sit a period apart, so
+        // their offsets are unrelated: 21 Oct is a Wednesday (5 days of its week) while the mirrored
+        // previous window opens on a Friday (3 days of its own). Pairing them by index compared five
+        // days against three, so the current sliver takes an empty slot instead and the comparison
+        // resumes at the first week both windows hold whole.
         stubWindows(
             current = weekBuckets("2026W10W19", "2026W10W26"),
             previous = weekBuckets("2026W10W05", "2026W10W12", "2026W10W19")
@@ -325,7 +328,51 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
 
         with(result as PeriodStatsResult.Success) {
             assertThat(previousPeriodData.map { it.period })
-                .containsExactly("2026W10W05", "2026W10W12", "2026W10W19")
+                .containsExactly("", "2026W10W12", "2026W10W19")
+        }
+    }
+
+    @Test
+    fun `given both windows opening mid-bucket alike, when charted in weeks, then neither series moves`() = test {
+        // A 14-day window's mirror opens on the same weekday, so both slivers hold the same days and
+        // pair honestly. Nothing is dropped and no slot is inserted.
+        stubWindows(
+            current = weekBuckets("2026W10W19", "2026W10W26"),
+            previous = weekBuckets("2026W10W05", "2026W10W12")
+        )
+
+        val result = repository.fetchStatsForPeriod(
+            TEST_SITE_ID,
+            customPeriod("2026-10-21", "2026-11-03"),
+            ChartInterval.WEEKS
+        )
+
+        with(result as PeriodStatsResult.Success) {
+            assertThat(previousPeriodData.map { it.period })
+                .containsExactly("2026W10W05", "2026W10W12")
+        }
+    }
+
+    @Test
+    fun `given only the current window opening mid-bucket, then the bar with the data keeps its pair`() = test {
+        // The thirty days to 29 Nov 2026 run 31 Oct - 29 Nov against 1 - 30 Oct. Charted in months
+        // the current window asks for a one-day October bucket and a whole November one, while the
+        // previous window lies inside October and so opens on a boundary, coming back as a single
+        // bucket. Without a slot for the unmatched sliver, November - the bar holding every view in
+        // the window - paired against nothing and read as a 100% rise.
+        stubWindows(
+            current = monthBuckets("2026-10-01", "2026-11-01"),
+            previous = monthBuckets("2026-10-01")
+        )
+
+        val result = repository.fetchStatsForPeriod(
+            TEST_SITE_ID,
+            customPeriod("2026-10-31", "2026-11-29"),
+            ChartInterval.MONTHS
+        )
+
+        with(result as PeriodStatsResult.Success) {
+            assertThat(previousPeriodData.map { it.period }).containsExactly("", "2026-10-01")
         }
     }
 
@@ -354,6 +401,9 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(current), StatsVisitsDataResult.Success(previous))
     }
+
+    /** [weekBuckets] for the month-keyed form, where a bucket's key is the ISO date of its 1st. */
+    private fun monthBuckets(vararg periods: String) = weekBuckets(*periods)
 
     /** One bucket per key, each carrying [BUCKET_VIEWS] views, in the shape the chart reads. */
     private fun weekBuckets(vararg periods: String) = StatsVisitsData(

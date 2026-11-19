@@ -81,6 +81,10 @@ private const val YEARS_IN_3_YEARS = 3
 // of the week's Monday, each separated by a literal "W" ("2013W07W22" is 22 July 2013). The same
 // pattern the old Stats date formatter and the Weekly Roundup worker parse.
 private const val WEEK_PERIOD_DATE_PATTERN = "yyyy'W'MM'W'dd"
+// Stands in for a previous-period bucket the current window has no counterpart for, so the two
+// series stay index-aligned past it. Deliberately not a parseable bucket key: nothing should read a
+// date off it, and a key the formatters recognise would invite one.
+private const val UNPAIRED_BUCKET_PERIOD = ""
 private const val MAX_DAYS_IN_MONTH = 31
 // The bar counts a chosen chart interval is offered between. One bar is not a chart, and much past
 // the upper bound the bars are thinner than the gaps between them at phone width.
@@ -1099,31 +1103,62 @@ class StatsRepository @Inject constructor(
      * and drew it as a +1637% rise.
      *
      * Dropping the extra leading bucket pairs whole bucket against whole bucket from there on, at the
-     * cost of shifting the comparison by the days that sliver held. Only the previous series is ever
+     * cost of shifting the comparison by the days that sliver held. The current series is never
      * trimmed: a sliver at the start of the *current* window is the user's own data for a day they are
-     * looking at, so the chart has to draw it.
+     * looking at, so the chart has to draw it. Where it has no counterpart the previous series gains
+     * an empty slot instead ([UNPAIRED_BUCKET_PERIOD]), so the comparison resumes at the first bucket
+     * both windows hold whole rather than sliding onto the wrong one.
+     *
+     * Three shapes reach here, and only the leading bucket is ever affected:
+     *
+     * - The previous window alone opens mid-bucket. Its sliver is dropped (the +1637% case above).
+     * - The current window alone opens mid-bucket. Nothing in the previous window corresponds to it —
+     *   "Last 30 days" in months on 29 November asks for a one-day October bucket and a whole
+     *   November one, while the previous window is wholly inside October and comes back as a single
+     *   bucket — so without a slot the November bar paired against nothing and read as +100%.
+     * - Both open mid-bucket, on offsets that are unrelated because the windows sit a whole period
+     *   apart. Equal slivers pair honestly; unequal ones ("This Month" in weeks beginning on a Sunday
+     *   against an October beginning on a Thursday: one day against four) take the empty slot too.
      */
     private fun alignedPreviousBuckets(
         current: List<ViewsDataPoint>,
         previous: List<ViewsDataPoint>,
         periodRange: PeriodDateRange
     ): List<ViewsDataPoint> {
-        val previousOpensMidBucket = opensMidBucket(previous, periodRange.previousStart, periodRange.unit)
-        val currentOpensMidBucket = opensMidBucket(current, periodRange.currentStart, periodRange.unit)
-        return if (previousOpensMidBucket && !currentOpensMidBucket) previous.drop(1) else previous
+        val previousLeadingDays = leadingBucketDays(previous, periodRange.previousStart, periodRange.unit)
+        val currentLeadingDays = leadingBucketDays(current, periodRange.currentStart, periodRange.unit)
+        return when {
+            previousLeadingDays != null && currentLeadingDays == null -> previous.drop(1)
+            previousLeadingDays == null && currentLeadingDays != null -> unpairedBucket() + previous
+            previousLeadingDays != null && previousLeadingDays != currentLeadingDays ->
+                unpairedBucket() + previous.drop(1)
+            else -> previous
+        }
     }
 
     /**
-     * Whether [data] opens with a bucket the API truncated at [windowStart].
+     * How many days [data]'s leading bucket covers when the API truncated it at [windowStart], or null
+     * when the window opens on a bucket boundary and the bucket is therefore whole.
      *
      * Checks the returned key as well as the date arithmetic, so that a response which omits the
      * partial bucket (or starts somewhere else entirely) is left alone rather than losing a whole one.
+     * The count is what makes two slivers comparable: a window's offset into its leading bucket says
+     * nothing about the other window's, so "both are partial" is not the same as "both are alike".
      */
-    private fun opensMidBucket(data: List<ViewsDataPoint>, windowStart: LocalDate, unit: StatsUnit): Boolean {
+    private fun leadingBucketDays(data: List<ViewsDataPoint>, windowStart: LocalDate, unit: StatsUnit): Int? {
         val start = windowStart.atStartOfDay()
         val bucketStart = bucketStart(start, unit)
-        return bucketStart != start && data.firstOrNull()?.period == bucketKey(bucketStart, unit)
+        if (bucketStart == start || data.firstOrNull()?.period != bucketKey(bucketStart, unit)) return null
+        val bucketEnd = advanceBuckets(bucketStart, 1, unit)
+        return ChronoUnit.DAYS.between(start, bucketEnd).toInt()
     }
+
+    /**
+     * The empty slot a current bucket with no counterpart is paired against, holding its place on the
+     * axis so every later bar reads the bucket the other window actually holds. It carries no values,
+     * so the chart draws no comparison over that bar at all.
+     */
+    private fun unpairedBucket() = listOf(ViewsDataPoint(period = UNPAIRED_BUCKET_PERIOD, views = 0L))
 
     /**
      * Builds the bottom-row totals from a dedicated call result, or null when the row should be
