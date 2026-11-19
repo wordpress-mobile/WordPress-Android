@@ -36,11 +36,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -66,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.EmptyContentM3
+import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.reader.viewmodels.ReaderSubsSite
 import org.wordpress.android.ui.reader.viewmodels.ReaderSubsTab
@@ -147,18 +146,12 @@ fun ReaderSubsScreen(
                     }
                 )
                 // the top bar slot isn't inset, and only the TopAppBar insets itself
-                PrimaryTabRow(
-                    selectedTabIndex = pagerState.currentPage,
+                FilterChipTabRow(
+                    labels = tabs.map { stringResource(it.labelRes) },
+                    selectedIndex = pagerState.settledPage,
+                    onSelect = { index -> scope.launch { pagerState.animateScrollToPage(index) } },
                     modifier = Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
-                ) {
-                    tabs.forEach { tab ->
-                        Tab(
-                            selected = tab.ordinal == pagerState.currentPage,
-                            onClick = { scope.launch { pagerState.animateScrollToPage(tab.ordinal) } },
-                            text = { Text(stringResource(tab.labelRes)) }
-                        )
-                    }
-                }
+                )
             }
         },
         bottomBar = { EntryBar(uiState, actions) },
