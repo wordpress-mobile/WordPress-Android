@@ -15,11 +15,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.ChartInterval
+import org.wordpress.android.ui.newstats.StatsCardsConfiguration
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -163,6 +166,9 @@ class ViewsStatsViewModel @Inject constructor(
     private var wholePeriodBottomRequest: ChartRequest? = null
 
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
+
+    // Serialises the read-modify-write cycles in [editConfiguration]; see its comment.
+    private val configWrites = Mutex()
 
     // The bucket width the chart is drawn at. [ChartInterval.AUTOMATIC] leaves it to the window, which
     // is what the chart has always done; anything else is the user overriding that derivation.
@@ -380,21 +386,16 @@ class ViewsStatsViewModel @Inject constructor(
         // Persist to preferences for cross-session restoration
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return
         viewModelScope.launch {
-            val config = cardsConfigurationRepository.getConfiguration(siteId)
-            val periodType = period.toTypeString()
-            val customStart = (period as? StatsPeriod.Custom)?.startDate?.toEpochDay()
-            val customEnd = (period as? StatsPeriod.Custom)?.endDate?.toEpochDay()
-            cardsConfigurationRepository.saveConfiguration(
-                siteId,
+            editConfiguration(siteId) { config ->
                 config.copy(
-                    selectedPeriodType = periodType,
-                    customPeriodStartDate = customStart,
-                    customPeriodEndDate = customEnd,
+                    selectedPeriodType = period.toTypeString(),
+                    customPeriodStartDate = (period as? StatsPeriod.Custom)?.startDate?.toEpochDay(),
+                    customPeriodEndDate = (period as? StatsPeriod.Custom)?.endDate?.toEpochDay(),
                     originPeriodType = origin.toTypeString(),
                     originCustomStartDate = (origin as? StatsPeriod.Custom)?.startDate?.toEpochDay(),
                     originCustomEndDate = (origin as? StatsPeriod.Custom)?.endDate?.toEpochDay()
                 )
-            )
+            }
         }
     }
 
@@ -470,14 +471,7 @@ class ViewsStatsViewModel @Inject constructor(
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId
             ?: return
         viewModelScope.launch {
-            val config =
-                cardsConfigurationRepository.getConfiguration(siteId)
-            cardsConfigurationRepository.saveConfiguration(
-                siteId,
-                config.copy(
-                    selectedChartType = chartType.storageKey
-                )
-            )
+            editConfiguration(siteId) { config -> config.copy(selectedChartType = chartType.storageKey) }
         }
     }
 
@@ -519,14 +513,7 @@ class ViewsStatsViewModel @Inject constructor(
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId
             ?: return
         viewModelScope.launch {
-            val config =
-                cardsConfigurationRepository.getConfiguration(siteId)
-            cardsConfigurationRepository.saveConfiguration(
-                siteId,
-                config.copy(
-                    selectedMetric = metric.storageKey
-                )
-            )
+            editConfiguration(siteId) { config -> config.copy(selectedMetric = metric.storageKey) }
         }
     }
 
@@ -563,16 +550,26 @@ class ViewsStatsViewModel @Inject constructor(
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId
             ?: return
         viewModelScope.launch {
-            val config = cardsConfigurationRepository.getConfiguration(siteId)
-            cardsConfigurationRepository.saveConfiguration(
-                siteId,
-                config.copy(
-                    selectedChartInterval = interval.storageKey
-                )
-            )
+            editConfiguration(siteId) { config -> config.copy(selectedChartInterval = interval.storageKey) }
         }
     }
 
+    /**
+     * Reads the stored configuration for [siteId], applies [edit] to it and writes it back, with no
+     * other write of this view model's interleaving.
+     *
+     * Every setting here lives in one blob, so persisting any of them is a read-modify-write of the
+     * whole thing: two running at once and the one that writes first is silently reverted. A single
+     * period change fires two — the period, plus the interval when the new period can't draw it —
+     * which is enough to lose the period the user just picked.
+     */
+    private suspend fun editConfiguration(
+        siteId: Long,
+        edit: (StatsCardsConfiguration) -> StatsCardsConfiguration
+    ) = configWrites.withLock {
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        cardsConfigurationRepository.saveConfiguration(siteId, edit(config))
+    }
 
     /**
      * Pins the width of one chart bar to [unit].
