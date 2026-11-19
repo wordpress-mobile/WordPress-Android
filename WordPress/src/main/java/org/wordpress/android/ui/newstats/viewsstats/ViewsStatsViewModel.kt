@@ -68,6 +68,7 @@ private const val DAYS_IN_WEEK = 7L
 
 private const val KEY_CHART_TYPE = "chart_type"
 private const val KEY_SELECTED_METRIC = "selected_metric"
+private const val KEY_CHART_INTERVAL = "chart_interval"
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -163,9 +164,9 @@ class ViewsStatsViewModel @Inject constructor(
 
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
 
-    // The interval the chart is drawn at. Still always the default here; the menu that changes it
-    // comes next.
-    private var currentInterval: ChartInterval = ChartInterval.DEFAULT
+    // The bucket width the chart is drawn at. [ChartInterval.AUTOMATIC] leaves it to the window, which
+    // is what the chart has always done; anything else is the user overriding that derivation.
+    private var currentInterval: ChartInterval = restoreIntervalFromSavedState()
 
     // The period the user last picked themselves, kept while they page back and forth. Paging turns a
     // preset into a concrete range, so by the time forward navigation lands back on the present edge
@@ -223,6 +224,19 @@ class ViewsStatsViewModel @Inject constructor(
                     currentSelectedMetric = restoredMetric
                 }
             }
+            val savedInterval = savedStateHandle.get<String>(KEY_CHART_INTERVAL)
+            if (savedInterval == null) {
+                val restoredInterval = restoreIntervalFromPreferences()
+                if (restoredInterval != null) {
+                    currentInterval = restoredInterval
+                }
+            }
+            // The period and the interval are stored separately, so a restored pairing can be one the
+            // user never saw. Dropped in memory only: a launch is not a pick, and leaving what's
+            // stored alone means the interval is still there if they go back to a period that fits it.
+            if (currentInterval !in statsRepository.offeredIntervals(currentPeriod)) {
+                currentInterval = ChartInterval.DEFAULT
+            }
             _isPeriodInitialized.value = true
         }
     }
@@ -279,6 +293,14 @@ class ViewsStatsViewModel @Inject constructor(
         // whole-period header/bottom) so no stale overlay survives into the reload.
         clearSoftSelection()
         currentPeriod = period
+        // The chosen interval carries over to the new period when that period can still draw it, and
+        // resets when it can't — a Years chart means nothing on a seven-day window. One rule for
+        // presets, custom ranges, bar drill-downs and paging alike. AUTOMATIC is always offered, so
+        // the default never trips this.
+        if (currentInterval !in statsRepository.offeredIntervals(period)) {
+            currentInterval = ChartInterval.DEFAULT
+            saveInterval(ChartInterval.DEFAULT)
+        }
         // The pick belonged to the period being left, so it no longer suppresses the fallback here.
         metricPickedOnCurrentPeriod = false
         if (!keepOrigin) periodOrigin = period
@@ -509,6 +531,59 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    private fun restoreIntervalFromSavedState(): ChartInterval =
+        ChartInterval.fromStorageKey(savedStateHandle.get<String>(KEY_CHART_INTERVAL)) ?: ChartInterval.DEFAULT
+
+    private suspend fun restoreIntervalFromPreferences(): ChartInterval? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        return ChartInterval.fromStorageKey(config.selectedChartInterval)
+    }
+
+    private fun saveInterval(interval: ChartInterval) {
+        savedStateHandle[KEY_CHART_INTERVAL] = interval.storageKey
+
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return
+        viewModelScope.launch {
+            val config = cardsConfigurationRepository.getConfiguration(siteId)
+            cardsConfigurationRepository.saveConfiguration(
+                siteId,
+                config.copy(
+                    selectedChartInterval = interval.storageKey
+                )
+            )
+        }
+    }
+
+    /**
+     * Picks the width of one chart bar. [ChartInterval.AUTOMATIC] hands the choice back to the window.
+     *
+     * Unlike a metric change, this can't be answered from what's already in memory: the buckets
+     * themselves change, so the chart is refetched — dimmed, the way paging to another period is,
+     * rather than flashing placeholders over data that is about to be replaced.
+     */
+    fun onChartIntervalSelected(interval: ChartInterval) {
+        // Reported on every pick, a re-pick included, which is what iOS reports for this event. The
+        // neighbouring chart-type event deliberately does the opposite; don't align them.
+        newStatsTracker.trackChartIntervalChanged(from = currentInterval, to = interval)
+        if (interval == currentInterval) return
+        currentInterval = interval
+        saveInterval(interval)
+        // Bar index N addresses a different bucket once the chart is re-bucketed, so no selection can
+        // survive the switch.
+        clearSoftSelection()
+        // The cached result is plotted at the old bucket width, so it can't stand in for the new one —
+        // not even for the metric switch that would otherwise re-plot from it.
+        lastChartResult = null
+        (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
+            _uiState.value = content.copy(isLoadingNewPeriod = true)
+        }
+        loadingRequest = currentRequest()
+        loadData()
+    }
+
     /**
      * Selects a metric to chart and list. Re-plots the chart from the cached period result (no network
      * call) and persists the choice. An explicit pick is always honoured, even on a single-day (hourly)
@@ -585,12 +660,12 @@ class ViewsStatsViewModel @Inject constructor(
         }
 
     /**
-     * Whether [metric] has a chartable series for [currentPeriod]. Every metric is chartable on
-     * multi-day periods; on single-day (hourly) periods the response only carries a views series, so
-     * only [StatsMetric.VIEWS] is chartable there.
+     * Whether [metric] has a chartable series at the width the chart is currently drawn. An hourly
+     * response only carries a views series, so only [StatsMetric.VIEWS] is chartable there; every
+     * metric is chartable at any coarser width.
      */
     private fun chartAvailableFor(metric: StatsMetric): Boolean =
-        metric == StatsMetric.VIEWS || fillsBottomFromChart(currentPeriod)
+        metric == StatsMetric.VIEWS || fillsBottomFromChart(currentRequest())
 
     private fun PeriodAggregates.valueFor(metric: StatsMetric): Long = when (metric) {
         StatsMetric.VIEWS -> views
@@ -964,7 +1039,7 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun isCached(siteId: Long, request: ChartRequest): Boolean =
         statsRepository.isChartCached(siteId, request.period, request.interval) &&
-            (fillsBottomFromChart(request.period) ||
+            (fillsBottomFromChart(request) ||
                 statsRepository.isCached(StatsCacheBucket.BOTTOM_STATS, siteId, request.period))
 
     /**
@@ -976,7 +1051,7 @@ class ViewsStatsViewModel @Inject constructor(
         if (isStale(request)) return
         val needsRevalidation =
             statsRepository.chartNeedsRevalidation(site.siteId, request.period, request.interval) ||
-                (!fillsBottomFromChart(request.period) && statsRepository.needsRevalidation(
+                (!fillsBottomFromChart(request) && statsRepository.needsRevalidation(
                     StatsCacheBucket.BOTTOM_STATS, site.siteId, request.period
                 ))
         if (!needsRevalidation) return
@@ -995,7 +1070,7 @@ class ViewsStatsViewModel @Inject constructor(
     ) {
         val targetRequest = currentRequest()
         try {
-            val loaded = if (fillsBottomFromChart(targetRequest.period)) {
+            val loaded = if (fillsBottomFromChart(targetRequest)) {
                 // Every non-hourly period uses a daily/monthly/yearly chart whose response already
                 // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
                 // same fetch. This makes the card issue 2 network calls instead of 4.
@@ -1111,26 +1186,17 @@ class ViewsStatsViewModel @Inject constructor(
     /**
      * Whether the bottom row can be filled from the chart's own response, which is true whenever the
      * chart isn't hourly: a non-hourly `stats/visits` response carries all five bottom-row metrics per
-     * bucket, and the chart requests the same unit, quantity and windows the row needs.
+     * bucket, and the chart requests the same unit, quantity and windows the row needs. An hourly
+     * response populates `views` alone, so an hourly chart fetches the row from a dedicated day-level
+     * call instead.
      *
-     * Only the single-day periods (Today, and a Custom range whose start and end are the same day)
-     * render an hourly chart, and an hourly response populates `views` alone — so those fetch the row
-     * from a dedicated day-level call instead.
+     * Asks the repository what the chart will actually request rather than pattern-matching the
+     * period: once the interval can be chosen, "single day" and "hourly" come apart in both
+     * directions. Days on Today is a day-bucketed chart that carries the whole row, and Hours on a
+     * fortnight is an hourly one that carries none of it.
      */
-    private fun fillsBottomFromChart(period: StatsPeriod): Boolean = when (period) {
-        is StatsPeriod.Last7Days,
-        is StatsPeriod.Last30Days,
-        is StatsPeriod.Last12Months,
-        is StatsPeriod.Last3Years,
-        is StatsPeriod.ThisWeek,
-        is StatsPeriod.ThisMonth,
-        is StatsPeriod.ThisYear -> true
-        // A multi-day Custom chart shares the bottom row's unit and quantity (both derive from the
-        // repository's span-based rule, year-coarsening included), so its response already holds the
-        // row's totals — including visitor uniques de-duplicated at the same granularity.
-        is StatsPeriod.Custom -> period.startDate != period.endDate
-        is StatsPeriod.Today -> false
-    }
+    private fun fillsBottomFromChart(request: ChartRequest): Boolean =
+        statsRepository.chartUnitFor(request.period, request.interval) != StatsUnit.HOUR
 
     /**
      * Maps the chart's period aggregates (which already carry all five metrics for the fixed periods)

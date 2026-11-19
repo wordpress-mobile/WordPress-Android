@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
@@ -88,6 +89,16 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         // assert the chart, not that line, so one fixed window stands in for every period.
         whenever(statsRepository.periodWindow(any()))
             .thenReturn(LocalDate.of(2024, 1, 14) to LocalDate.of(2024, 1, 20))
+        // The card routes its bottom row, and a metric's availability, on what the chart will actually
+        // request, so the mocked repository has to answer that the way the real one does: hourly for a
+        // single day under Automatic, and whatever was chosen otherwise.
+        whenever(statsRepository.chartUnitFor(any(), any())).thenAnswer { invocation ->
+            val period = invocation.getArgument<StatsPeriod>(0)
+            val interval = invocation.getArgument<ChartInterval>(1)
+            interval.unit ?: if (period.isSingleDay()) StatsUnit.HOUR else StatsUnit.DAY
+        }
+        // Every interval on offer unless a test narrows it, so the reset rule stays out of the way.
+        whenever(statsRepository.offeredIntervals(any())).thenReturn(ChartInterval.entries)
     }
 
     private suspend fun initViewModel(periodType: String? = null) {
@@ -2629,6 +2640,209 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
     // endregion
 
+    // region chart interval
+    @Test
+    fun `an interval change refetches, where a metric change re-plots from memory`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.LIKES)
+        advanceUntilIdle()
+        // The buckets don't change, so the cached result is re-plotted.
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any(), any())
+
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        advanceUntilIdle()
+
+        verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any(), any())
+        verify(statsRepository).fetchStatsForPeriod(any(), any(), eq(ChartInterval.WEEKS), any())
+    }
+
+    @Test
+    fun `an interval change drops a soft bar selection`() = test {
+        // Bar index N addresses a different bucket once the chart is re-bucketed.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+        viewModel.onChartIntervalSelected(ChartInterval.MONTHS)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+    }
+
+    @Test
+    fun `a chosen interval is persisted for the site`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository).saveConfiguration(
+            eq(TEST_SITE_ID),
+            argThat { selectedChartInterval == "week" }
+        )
+    }
+
+    @Test
+    fun `given a persisted interval the period can draw, when initializing, then it is requested`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedChartInterval = "week"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        verify(statsRepository).fetchStatsForPeriod(any(), any(), eq(ChartInterval.WEEKS), any())
+    }
+
+    @Test
+    fun `given a persisted interval the period cannot draw, when initializing, then it is dropped`() = test {
+        // The period and the interval are stored separately, so a stale pairing is normal: a stored
+        // "Years" must not greet the user on a seven-day window.
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedChartInterval = "year"))
+        whenever(statsRepository.offeredIntervals(any()))
+            .thenReturn(listOf(ChartInterval.AUTOMATIC, ChartInterval.DAYS))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(),
+            cardsConfigurationRepository,
+            newStatsTracker
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        verify(statsRepository).fetchStatsForPeriod(any(), any(), eq(ChartInterval.AUTOMATIC), any())
+    }
+
+    @Test
+    fun `an interval the new period can still draw survives a period change`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last30Days)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        verify(statsRepository)
+            .fetchStatsForPeriod(any(), eq(StatsPeriod.Last30Days), eq(ChartInterval.WEEKS), any())
+    }
+
+    @Test
+    fun `an interval the new period cannot draw resets to automatic`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        advanceUntilIdle()
+        whenever(statsRepository.offeredIntervals(any()))
+            .thenReturn(listOf(ChartInterval.AUTOMATIC, ChartInterval.HOURS))
+
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        verify(statsRepository)
+            .fetchStatsForPeriod(any(), eq(StatsPeriod.Today), eq(ChartInterval.AUTOMATIC), any())
+        verify(cardsConfigurationRepository).saveConfiguration(
+            eq(TEST_SITE_ID),
+            argThat { selectedChartInterval == "automatic" }
+        )
+    }
+
+    @Test
+    fun `given a refresh in flight, when the interval changes, then the refresh's response is dropped`() = test {
+        // refresh() loads outside the job loadData() cancels, so its response can arrive after the
+        // user has already re-bucketed the chart. Repainting at the old width would be wrong.
+        val refreshGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), eq(ChartInterval.AUTOMATIC), any()))
+            .doSuspendableAnswer {
+                refreshGate.await()
+                createPeriodStatsResult(currentViews = STALE_VIEWS)
+            }
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), eq(ChartInterval.WEEKS), any()))
+            .thenReturn(createPeriodStatsResult(currentViews = REBUCKETED_VIEWS))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.refresh()
+        advanceUntilIdle()
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        advanceUntilIdle()
+        refreshGate.complete(Unit)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal).isEqualTo(REBUCKETED_VIEWS)
+    }
+
+    @Test
+    fun `given Days chosen on Today, then every metric is chartable and no dedicated row is fetched`() = test {
+        // "Single day" and "hourly" come apart once the interval can be chosen: a day-bucketed Today
+        // carries all five metrics, so the Unavailable state would be wrong and the dedicated
+        // bottom-row call redundant.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.chartOrNull()).isInstanceOf(ChartUiState.Unavailable::class.java)
+
+        viewModel.onChartIntervalSelected(ChartInterval.DAYS)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartOrNull()).isInstanceOf(ChartUiState.Loaded::class.java)
+        // One call, from the hourly load before the switch; the day-bucketed one needs none.
+        verify(statsRepository, times(1)).fetchBottomStats(any(), any(), any())
+    }
+    // endregion
+
     private fun createPeriodStatsResult(
         currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
         currentVisitors: Long = TEST_CURRENT_PERIOD_VISITORS,
@@ -2735,6 +2949,10 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
         // Deliberately unlike every other total, so a row carried over from the period before shows up.
         private const val STALE_VISITORS = 4242L
+
+        // Totals that tell the two sides of an interval switch apart.
+        private const val STALE_VIEWS = 1111L
+        private const val REBUCKETED_VIEWS = 2222L
         private const val TEST_CURRENT_PERIOD_LIKES = 50L
         private const val TEST_CURRENT_PERIOD_COMMENTS = 25L
         private const val TEST_CURRENT_PERIOD_POSTS = 5L
@@ -2748,3 +2966,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         private const val UNKNOWN_ERROR = "Unknown error"
     }
 }
+
+/** Whether [this] covers exactly one day, which is what makes a chart hourly under Automatic. */
+private fun StatsPeriod.isSingleDay(): Boolean =
+    this is StatsPeriod.Today || (this is StatsPeriod.Custom && startDate == endDate)

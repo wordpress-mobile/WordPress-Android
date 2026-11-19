@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker.NavigationDirection
@@ -67,6 +68,8 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn("test_access_token")
         whenever(resourceProvider.getString(any())).thenReturn("")
+        whenever(statsRepository.chartUnitFor(any(), any())).thenReturn(StatsUnit.DAY)
+        whenever(statsRepository.offeredIntervals(any())).thenReturn(ChartInterval.entries)
         // The selector's date line resolves a preset's window through the repository. These tests
         // assert what is tracked, not that line, so one fixed window stands in for every period.
         whenever(statsRepository.periodWindow(any()))
@@ -131,6 +134,43 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
         viewModel.onChartTypeChanged(ChartType.BAR)
 
         verify(newStatsTracker).trackChartTypeChanged(from = ChartType.LINE, to = ChartType.BAR)
+    }
+
+    @Test
+    fun `changing the chart interval reports both intervals`() = test {
+        initViewModel()
+
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+
+        verify(newStatsTracker).trackChartIntervalChanged(
+            from = ChartInterval.AUTOMATIC,
+            to = ChartInterval.WEEKS
+        )
+    }
+
+    @Test
+    fun `re-picking the chart interval already on screen is still reported`() = test {
+        // The deliberate exception to this file's theme, and to the chart-type event just above:
+        // iOS reports every pick of this one, so Android has to as well for the two to be comparable.
+        initViewModel()
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+
+        verify(newStatsTracker, times(2)).trackChartIntervalChanged(any(), any())
+    }
+
+    @Test
+    fun `an interval reset caused by a period change reports nothing`() = test {
+        // The user didn't pick AUTOMATIC; the new period simply can't draw what they had picked.
+        initViewModel()
+        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        whenever(statsRepository.offeredIntervals(any()))
+            .thenReturn(listOf(ChartInterval.AUTOMATIC, ChartInterval.HOURS))
+
+        viewModel.onPresetSelected(StatsPeriod.Today)
+
+        verify(newStatsTracker, times(1)).trackChartIntervalChanged(any(), any())
     }
 
     @Test
