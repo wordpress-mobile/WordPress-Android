@@ -1092,7 +1092,6 @@ Language: ku_TR
     <string name="media_files_not_uploaded">%d dosye nehatin hilxistin</string>
     <string name="remove_image_from_post">Ji şandiyê rake</string>
     <string name="confirm_remove_media_image">Bila ev wêne ji şandiyê were rakirin?</string>
-    <string name="media_edit_customize_card_caption">Taybet bike</string>
     <string name="login_error_button">Bigire</string>
     <string name="error_generic_network">Çewtiyeke torê çêbû. Ji kerema xwe girêdana xwe kontrol bike û dîsa biceribîne.</string>
     <string name="post_settings_remove_featured_image">Wêneyê bijarde rake</string>

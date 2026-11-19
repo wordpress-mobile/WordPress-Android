@@ -2500,7 +2500,6 @@ Language: lv
     <string name="media_files_not_uploaded">%d faili nav augšupielādēti</string>
     <string name="remove_image_from_post">Noņemt no ziņas</string>
     <string name="confirm_remove_media_image">Vai noņemt šo attēlu no ziņas?</string>
-    <string name="media_edit_customize_card_caption">Pielāgot</string>
     <string name="login_error_button">Aizvērt</string>
     <string name="error_generic_network">Radās tīkla kļūda. Lūdzu, pārbaudiet savienojumu un mēģiniet vēlreiz.</string>
     <string name="post_settings_remove_featured_image">Noņemt piedāvāto attēlu</string>

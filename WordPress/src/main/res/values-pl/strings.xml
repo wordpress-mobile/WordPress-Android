@@ -2971,7 +2971,6 @@ Language: pl
     <string name="media_files_not_uploaded">Nie przesłano %d plików</string>
     <string name="remove_image_from_post">Usuń z wpisu</string>
     <string name="confirm_remove_media_image">Usunąć ten obrazek z wpisu?</string>
-    <string name="media_edit_customize_card_caption">Dostosuj</string>
     <string name="login_error_button">Zamknij</string>
     <string name="error_generic_network">Wystąpił błąd sieci. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="post_settings_remove_featured_image">Usuń obrazek wyróżniający</string>

@@ -2971,7 +2971,6 @@ Language: tr
     <string name="media_files_not_uploaded">%d dosya yüklenmedi</string>
     <string name="remove_image_from_post">Yazıdan kaldır</string>
     <string name="confirm_remove_media_image">Bu görsel yazıdan kaldırılsın mı?</string>
-    <string name="media_edit_customize_card_caption">Özelleştir</string>
     <string name="login_error_button">Kapat</string>
     <string name="error_generic_network">Bir ağ sorunu çıktı. Lütfen bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="post_settings_remove_featured_image">Öne çıkarılmış görseli kaldır</string>

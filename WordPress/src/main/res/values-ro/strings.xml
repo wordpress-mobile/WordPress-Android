@@ -2971,7 +2971,6 @@ Language: ro
     <string name="media_files_not_uploaded">%d fișiere neîncărcate</string>
     <string name="remove_image_from_post">Înlătură din articol</string>
     <string name="confirm_remove_media_image">Înlături această imagine din articol?</string>
-    <string name="media_edit_customize_card_caption">Personalizează</string>
     <string name="login_error_button">Închide</string>
     <string name="error_generic_network">A apărut o eroare de rețea. Te rog verifică-ți conexiunea și încearcă din nou.</string>
     <string name="post_settings_remove_featured_image">Înlătură imaginea reprezentativă</string>

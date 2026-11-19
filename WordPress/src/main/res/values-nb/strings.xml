@@ -1273,7 +1273,6 @@ Language: nb_NO
     <string name="media_files_not_uploaded">%d filer ikke lastet opp</string>
     <string name="remove_image_from_post">Fjern fra innlegg</string>
     <string name="confirm_remove_media_image">Fjern dette bildet fra innlegget?</string>
-    <string name="media_edit_customize_card_caption">Tilpass</string>
     <string name="login_error_button">Lukk</string>
     <string name="error_generic_network">Det oppsto en nettverksfeil. Vennligst kontroller din nettforbindelse og prøv igjen.</string>
     <string name="post_settings_remove_featured_image">Fjern fremhevet bilde</string>

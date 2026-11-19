@@ -2957,7 +2957,6 @@ Language: ja_JP
     <string name="media_files_not_uploaded">%dファイルがアップロードされませんでした</string>
     <string name="remove_image_from_post">投稿から削除</string>
     <string name="confirm_remove_media_image">この画像を投稿から削除しますか ?</string>
-    <string name="media_edit_customize_card_caption">カスタマイズ</string>
     <string name="login_error_button">閉じる</string>
     <string name="error_generic_network">ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="post_settings_remove_featured_image">アイキャッチ画像を削除</string>

@@ -2965,7 +2965,6 @@ Language: zh_CN
     <string name="media_files_not_uploaded">%d 个文件未上传</string>
     <string name="remove_image_from_post">从文章中移除</string>
     <string name="confirm_remove_media_image">是否将该图片从文章中移除?</string>
-    <string name="media_edit_customize_card_caption">自定义</string>
     <string name="login_error_button">关闭</string>
     <string name="error_generic_network">发生网络错误。请检查您的连接，然后再试一次。</string>
     <string name="post_settings_remove_featured_image">删除推荐图片</string>

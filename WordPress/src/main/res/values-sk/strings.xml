@@ -482,7 +482,6 @@ Language: sk
     <string name="media_files_not_uploaded">%d nenahratých súborov</string>
     <string name="remove_image_from_post">Odstrániť z príspevku</string>
     <string name="confirm_remove_media_image">Odstrániť tento obrázok z príspevku?</string>
-    <string name="media_edit_customize_card_caption">Prispôsobiť</string>
     <string name="login_error_button">Zavrieť</string>
     <string name="error_generic_network">Vyskytla sa chyba siete. Skontrolujte svoje pripojenie a skúste to znova.</string>
     <string name="post_settings_remove_featured_image">Odstráňte vybraný obrázok</string>

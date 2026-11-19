@@ -2906,7 +2906,6 @@ Language: pt_BR
     <string name="media_files_not_uploaded">%d arquivos não enviados</string>
     <string name="remove_image_from_post">Remover do post</string>
     <string name="confirm_remove_media_image">Remover esta imagem do post?</string>
-    <string name="media_edit_customize_card_caption">Personalizar</string>
     <string name="login_error_button">Fechar</string>
     <string name="error_generic_network">Ocorreu um erro na rede. Verifique sua conexão e tente novamente.</string>
     <string name="post_settings_remove_featured_image">Remover imagem destacada</string>

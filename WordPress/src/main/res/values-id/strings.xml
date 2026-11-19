@@ -2969,7 +2969,6 @@ Language: id
     <string name="media_files_not_uploaded">%d file belum diunggah</string>
     <string name="remove_image_from_post">Hapus dari pos</string>
     <string name="confirm_remove_media_image">Hapus gambar ini dari pos?</string>
-    <string name="media_edit_customize_card_caption">Sesuaikan</string>
     <string name="login_error_button">Tutup</string>
     <string name="error_generic_network">Terjadi error jaringan. Periksa koneksi Anda dan coba lagi.</string>
     <string name="post_settings_remove_featured_image">Hapus gambar andalan</string>

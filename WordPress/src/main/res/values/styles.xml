@@ -433,22 +433,12 @@
 
     <style name="MediaSettings" />
 
-    <style name="MediaSettings.SectionHeader">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">20dp</item>
-        <item name="android:layout_marginTop">24dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <style name="MediaSettings.Card">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">24dp</item>
         <item name="android:background">@drawable/bg_media_settings_card</item>
         <item name="android:orientation">vertical</item>
     </style>
@@ -457,6 +447,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
@@ -470,13 +461,37 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="MediaSettings.RowLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediaSettings.RowValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">end</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="MediaSettings.EditSheetTheme" parent="WordPress.BottomSheetDialogTheme">
         <item name="android:windowSoftInputMode">adjustResize|stateVisible</item>
+        <!-- the parent theme's fitsSystemWindows would replace the padding of every view in the sheet -->
+        <item name="android:fitsSystemWindows">false</item>
         <item name="bottomSheetStyle">@style/MediaSettings.EditSheetTheme.BottomSheetStyle</item>
     </style>
 
     <style name="MediaSettings.EditSheetTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/MediaSettings.EditSheetTheme.ShapeAppearanceOverlay</item>
+        <item name="shouldRemoveExpandedCorners">false</item>
     </style>
 
     <style name="MediaSettings.EditSheetTheme.ShapeAppearanceOverlay">

@@ -2959,7 +2959,6 @@ Language: zh_TW
     <string name="media_files_not_uploaded">無法上傳 %d 個檔案</string>
     <string name="remove_image_from_post">從文章中移除</string>
     <string name="confirm_remove_media_image">是否要將這張圖片從文章中移除？</string>
-    <string name="media_edit_customize_card_caption">自訂</string>
     <string name="login_error_button">關閉</string>
     <string name="error_generic_network">網路發生錯誤。請檢查你的連線並再試一次。</string>
     <string name="post_settings_remove_featured_image">移除精選圖片</string>

@@ -25,7 +25,6 @@ Language: ms
     <string name="media_files_not_uploaded">%d fail tidak dimuat naik</string>
     <string name="remove_image_from_post">Buang dari kiriman</string>
     <string name="confirm_remove_media_image">Buang imej ini dari kiriman?</string>
-    <string name="media_edit_customize_card_caption">Suai Langgan</string>
     <string name="login_error_button">Tutup</string>
     <string name="error_generic_network">Ralat rangkaian terjadi. Sila periksa sambungan anda dan cuba lagi.</string>
     <string name="post_settings_remove_featured_image">Buang imej terencana</string>

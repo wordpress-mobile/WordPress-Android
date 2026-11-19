@@ -1790,7 +1790,6 @@ Language: vi_VN
     <string name="media_files_not_uploaded">Chưa tải lên %d tập tin</string>
     <string name="remove_image_from_post">Xóa khỏi bài viết</string>
     <string name="confirm_remove_media_image">Xóa ảnh này khỏi bài viết?</string>
-    <string name="media_edit_customize_card_caption">Tùy biến</string>
     <string name="login_error_button">Đóng</string>
     <string name="error_generic_network">Lỗi kết nối mạng. Hãy kiểm tra kết nối và thử lại.</string>
     <string name="post_settings_remove_featured_image">Xóa ảnh minh họa</string>

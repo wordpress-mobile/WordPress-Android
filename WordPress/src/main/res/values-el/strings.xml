@@ -334,7 +334,6 @@ Language: el_GR
     <string name="media_files_not_uploaded">%d αρχεία δεν μεταφορτώθηκαν</string>
     <string name="remove_image_from_post">Αφαίρεση από το άρθρο</string>
     <string name="confirm_remove_media_image">Αφαίρεση αυτής της εικόνας από το άρθρο;</string>
-    <string name="media_edit_customize_card_caption">Προσαρμογή</string>
     <string name="login_error_button">Κλείσιμο</string>
     <string name="post_settings_remove_featured_image">Αφαίρεση χαρακτηριστικής εικόνας</string>
     <string name="post_settings_choose_featured_image">Επιλέξτε χαρακτηρισμένη εικόνα</string>

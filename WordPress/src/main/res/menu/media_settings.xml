@@ -6,12 +6,14 @@
         android:id="@+id/menu_save"
         android:icon="@drawable/ic_download_white_24dp"
         android:title="@string/save"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share_link"
+        app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom"/>
 
     <item

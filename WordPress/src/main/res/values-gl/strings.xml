@@ -2971,7 +2971,6 @@ Language: gl_ES
     <string name="media_files_not_uploaded">%d arquivos non subidos</string>
     <string name="remove_image_from_post">Quitar da entrada</string>
     <string name="confirm_remove_media_image">Quitar esta imaxe da entrada?</string>
-    <string name="media_edit_customize_card_caption">Personalizar</string>
     <string name="login_error_button">Pechar</string>
     <string name="error_generic_network">Ocorreu un erro na rede. Por favor, revisa a túa conexión e inténtao de novo.</string>
     <string name="post_settings_remove_featured_image">Quitar imaxe destacada</string>

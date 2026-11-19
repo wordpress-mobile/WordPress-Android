@@ -2971,7 +2971,6 @@ Language: nl
     <string name="media_files_not_uploaded">%d bestanden niet geüpload</string>
     <string name="remove_image_from_post">Uit bericht verwijderen</string>
     <string name="confirm_remove_media_image">Deze afbeelding verwijderen uit het bericht?</string>
-    <string name="media_edit_customize_card_caption">Aanpassen</string>
     <string name="login_error_button">Sluiten</string>
     <string name="error_generic_network">Er is een netwerkfout opgetreden. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="post_settings_remove_featured_image">Uitgelichte afbeelding verwijderen</string>

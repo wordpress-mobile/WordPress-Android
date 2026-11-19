@@ -3065,7 +3065,6 @@ Language: de
     <string name="media_files_not_uploaded">%d Dateien nicht hochgeladen</string>
     <string name="remove_image_from_post">Aus Beitrag entfernen</string>
     <string name="confirm_remove_media_image">Möchtest du dieses Bild aus dem Beitrag entfernen?</string>
-    <string name="media_edit_customize_card_caption">Anpassen</string>
     <string name="login_error_button">Schließen</string>
     <string name="error_generic_network">Es ist ein Netzwerkfehler aufgetreten. Bitte überprüfe deine Verbindung und versuche es erneut.</string>
     <string name="post_settings_remove_featured_image">Beitragsbild entfernen</string>

@@ -2960,7 +2960,6 @@ Language: fr
     <string name="media_files_not_uploaded">%d fichiers non téléversés</string>
     <string name="remove_image_from_post">Retirer de l’article</string>
     <string name="confirm_remove_media_image">Retirer cette image de l’article ?</string>
-    <string name="media_edit_customize_card_caption">Personnaliser</string>
     <string name="login_error_button">Fermer</string>
     <string name="error_generic_network">Une erreur réseau est survenue. Veuillez vérifier votre connexion et essayer à nouveau.</string>
     <string name="post_settings_remove_featured_image">Retirer l’image mise en avant</string>

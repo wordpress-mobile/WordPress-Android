@@ -2941,7 +2941,6 @@ Language: sq_AL
     <string name="media_files_not_uploaded">S’u ngarkuan %d kartela</string>
     <string name="remove_image_from_post">Hiqe prej postimi</string>
     <string name="confirm_remove_media_image">Të hiqet kjo figurë nga postimi?</string>
-    <string name="media_edit_customize_card_caption">Përshtateni</string>
     <string name="login_error_button">Mbylle</string>
     <string name="error_generic_network">Ndodhi një gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="post_settings_remove_featured_image">Hiqe figurën e zgjedhur</string>

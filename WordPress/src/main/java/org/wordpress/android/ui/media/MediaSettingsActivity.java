@@ -28,8 +28,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -49,19 +47,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -101,7 +93,6 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -119,7 +110,9 @@ import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_
 
 public class MediaSettingsActivity extends BaseAppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
-    private static final int TOOLBAR_HEIGHT_MULTIPLIER = 3;
+    private static final float IMAGE_DEFAULT_HEIGHT_RATIO = 0.4f;
+    private static final float IMAGE_MAX_HEIGHT_RATIO = 0.5f;
+    private static final int IMAGE_MARGIN_DP = 16;
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
     private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
@@ -127,9 +120,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     private static final String STATE_CAPTION = "state_caption";
     private static final String STATE_ALT_TEXT = "state_alt_text";
     private static final String STATE_DESCRIPTION = "state_description";
-    private static final int FILE_INFO_COLUMN_GAP_DP = 12;
-    private static final int FILE_INFO_ROW_GAP_DP = 4;
-    private static final String META_SEPARATOR = " · ";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
@@ -253,7 +243,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         }
@@ -271,7 +260,13 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         setupDetailRow(R.id.row_caption, Field.CAPTION);
         setupDetailRow(R.id.row_alt_text, Field.ALT_TEXT);
         setupDetailRow(R.id.row_description, Field.DESCRIPTION);
-        ((TextView) findViewById(R.id.row_description).findViewById(R.id.row_value)).setMaxLines(2);
+
+        // the page is gray and the photo and cards are rounded, like the grouped lists on iOS
+        getWindow().setBackgroundDrawableResource(R.color.media_settings_page_background);
+        for (int id : new int[]{R.id.image_container, R.id.card_customize, R.id.card_details,
+                R.id.card_file_info}) {
+            findViewById(id).setClipToOutline(true);
+        }
 
         getSupportFragmentManager().setFragmentResultListener(MediaFieldEditBottomSheet.REQUEST_KEY, this,
                 (requestKey, result) -> {
@@ -317,57 +312,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             bindDetailRows();
         }
 
-        // only show title when toolbar is collapsed
-        final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        collapsingToolbar.setCollapsedTitleTextColor(AppCompatResources.getColorStateList(
-                        this,
-                        ContextExtensionsKt.getColorResIdFromAttribute(
-                                this,
-                                com.google.android.material.R.attr.colorOnSurface
-                        )
-        ));
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
-
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedColor = elevationOverlayProvider
-                .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
-                        appbarElevation);
-        collapsingToolbar.setContentScrimColor(elevatedColor);
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            int mScrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (mScrollRange == -1) {
-                    mScrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (mScrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(mTitle);
-                } else {
-                    collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
-                }
-            }
-        });
-
-        // make image 40% of screen height
-        int displayHeight = DisplayUtils.getWindowPixelHeight(this);
-        int imageHeight = (int) (displayHeight * 0.4);
-        mImageView.getLayoutParams().height = imageHeight;
-
-        // position progress in middle of image
-        View progressView = findViewById(R.id.progress);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) progressView.getLayoutParams();
-        int topMargin = (imageHeight / 2) - (progressView.getHeight() / 2);
-        params.setMargins(0, topMargin, 0, 0);
-
-        // set the height of the gradient scrim that appears atop the image
-        int toolbarHeight = DisplayUtils.getActionBarHeight(this);
-        ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
-        imgScrim.getLayoutParams().height = toolbarHeight * TOOLBAR_HEIGHT_MULTIPLIER;
-
         // tap to show full screen view (not supported for documents)
         if (!isDocument()) {
             View.OnClickListener listener = v -> showFullScreen();
@@ -375,34 +319,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             mImagePlay.setOnClickListener(listener);
             mFullScreenButton.setOnClickListener(listener);
             TooltipCompat.setTooltipText(mFullScreenButton, getString(R.string.button_preview));
-        }
-
-        // keep the last rows clear of the navigation bar when drawing edge-to-edge
-        View scrollContent = findViewById(R.id.scroll_content);
-        int scrollContentPaddingBottom = scrollContent.getPaddingBottom();
-        ViewCompat.setOnApplyWindowInsetsListener(scrollContent, (v, insets) -> {
-            int navBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
-                    scrollContentPaddingBottom + navBarHeight);
-            return insets;
-        });
-
-        enableEdgeToEdge();
-    }
-
-    /**
-     * Enable edge-to-edge API 33+, but only hide the status bar and not the navigation bar
-     */
-    private void enableEdgeToEdge() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Window window = getWindow();
-            window.setDecorFitsSystemWindows(false);
-            WindowInsetsControllerCompat controller =
-                    new WindowInsetsControllerCompat(window, window.getDecorView());
-            controller.hide(WindowInsetsCompat.Type.statusBars());
-            controller.setSystemBarsBehavior(
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            );
         }
     }
 
@@ -449,6 +365,8 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             mTitle = getString(R.string.media_title_document_details);
         }
 
+        setTitle(TextUtils.isEmpty(mMedia.getFileName()) ? mTitle : mMedia.getFileName());
+        setImageHeight();
         mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
         mFullScreenButton.setVisibility(shouldShowFullScreenButton() ? View.VISIBLE : View.GONE);
         int altTextVisibility = isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE;
@@ -669,16 +587,35 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         bindDetailRows();
         showFileInfo();
 
-        TextView txtUrl = findViewById(R.id.text_url);
-        txtUrl.setText(mMedia.getUrl());
-
-        boolean hasUrl = !TextUtils.isEmpty(mMedia.getUrl());
-        View txtCopyUrl = findViewById(R.id.text_copy_url);
-        txtCopyUrl.setVisibility(hasUrl ? View.VISIBLE : View.GONE);
-        if (hasUrl) {
-            txtCopyUrl.setOnClickListener(v -> copyMediaUrlToClipboard());
-            TooltipCompat.setTooltipText(txtCopyUrl, getString(R.string.media_settings_copy_url));
+        // tapping the URL copies it
+        String url = StringUtils.notNullStr(mMedia.getUrl());
+        ((TextView) findViewById(R.id.text_url)).setText(url);
+        View urlRow = findViewById(R.id.row_url);
+        urlRow.setContentDescription(getString(R.string.media_settings_row_value,
+                getString(R.string.media_edit_url_caption), url));
+        if (url.isEmpty()) {
+            urlRow.setOnClickListener(null);
+            urlRow.setClickable(false);
+        } else {
+            urlRow.setOnClickListener(v -> copyMediaUrlToClipboard());
+            ViewCompat.replaceAccessibilityAction(urlRow, AccessibilityActionCompat.ACTION_CLICK,
+                    getString(R.string.media_settings_copy_url), null);
         }
+    }
+
+    /*
+     * sizes the photo to its aspect ratio when known, otherwise to a fixed share of the screen height
+     */
+    private void setImageHeight() {
+        int displayHeight = DisplayUtils.getWindowPixelHeight(this);
+        int height = (int) (displayHeight * IMAGE_DEFAULT_HEIGHT_RATIO);
+        if ((isImage() || isVideo()) && mMedia.getWidth() > 0 && mMedia.getHeight() > 0) {
+            int width = DisplayUtils.getWindowPixelWidth(this) - 2 * DisplayUtils.dpToPx(this, IMAGE_MARGIN_DP);
+            height = Math.min((int) (displayHeight * IMAGE_MAX_HEIGHT_RATIO),
+                    width * mMedia.getHeight() / mMedia.getWidth());
+        }
+        mImageView.getLayoutParams().height = height;
+        mImageView.requestLayout();
     }
 
     private void setupDetailRow(@IdRes int rowId, @NonNull Field field) {
@@ -728,114 +665,58 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     }
 
     private void bindDetailRows() {
-        bindDetailRow(R.id.row_title, R.string.media_edit_title_text, mTitleValue,
-                R.string.media_settings_add_title, 0);
-        bindDetailRow(R.id.row_caption, R.string.media_edit_caption_text, mCaptionValue,
-                R.string.media_settings_add_caption, 0);
-        bindDetailRow(R.id.row_alt_text, R.string.media_edit_alttext_text, mAltTextValue,
-                R.string.media_settings_add_alt_text, R.string.media_settings_alt_text_row_helper);
-        bindDetailRow(R.id.row_description, R.string.media_edit_description_text, mDescriptionValue,
-                R.string.media_settings_add_description, 0);
+        bindDetailRow(R.id.row_title, R.string.media_edit_title_text, mTitleValue);
+        bindDetailRow(R.id.row_caption, R.string.media_edit_caption_text, mCaptionValue);
+        bindDetailRow(R.id.row_description, R.string.media_edit_description_text, mDescriptionValue);
+        bindDetailRow(R.id.row_alt_text, R.string.media_edit_alttext_text, mAltTextValue);
     }
 
-    private void bindDetailRow(@IdRes int rowId, @StringRes int labelRes, @NonNull String value,
-                               @StringRes int emptyPromptRes, @StringRes int helperRes) {
+    private void bindDetailRow(@IdRes int rowId, @StringRes int labelRes, @NonNull String value) {
         View row = findViewById(rowId);
         String label = getString(labelRes);
-        boolean isEmpty = value.isEmpty();
-
         ((TextView) row.findViewById(R.id.row_label)).setText(label);
-
-        TextView valueView = row.findViewById(R.id.row_value);
-        valueView.setText(isEmpty ? getString(emptyPromptRes) : value);
-        valueView.setTextColor(ContextExtensionsKt.getColorFromAttribute(this, isEmpty
-                ? androidx.appcompat.R.attr.colorPrimary
-                : com.google.android.material.R.attr.colorOnSurface));
-
-        TextView helperView = row.findViewById(R.id.row_helper);
-        helperView.setVisibility(helperRes != 0 ? View.VISIBLE : View.GONE);
-        if (helperRes != 0) {
-            helperView.setText(helperRes);
-        }
-
-        row.setContentDescription(isEmpty
+        ((TextView) row.findViewById(R.id.row_value)).setText(value);
+        row.setContentDescription(value.isEmpty()
                 ? getString(R.string.media_settings_row_not_set, label)
                 : getString(R.string.media_settings_row_value, label, value));
     }
 
     /*
-     * shows the file name and meta line under the image, and the read-only file info grid
+     * shows the read-only file info rows below the URL, skipping any value that's unknown
      */
     private void showFileInfo() {
-        String fileType = StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT);
-        String fileSize = getFormattedFileSize();
         // dimensions aren't shown for images in a post since the size settings determine them
         String dimensions = !isMediaFromEditor() && mMedia.getWidth() > 0 && mMedia.getHeight() > 0
                 ? mMedia.getWidth() + " × " + mMedia.getHeight() : null;
         String duration = mMedia.getLength() > 0 ? DateUtils.formatElapsedTime(mMedia.getLength()) : null;
 
-        List<Pair<Integer, String>> cells = new ArrayList<>();
-        addFileInfoCell(cells, R.string.media_settings_file_type, fileType);
-        addFileInfoCell(cells, R.string.media_settings_file_size, fileSize);
-        addFileInfoCell(cells, R.string.media_settings_dimensions, dimensions);
-        addFileInfoCell(cells, R.string.media_edit_duration_caption, duration);
-        addFileInfoCell(cells, R.string.media_settings_uploaded, getFormattedUploadDate());
-        showFileInfoGrid(cells);
+        List<Pair<Integer, String>> rows = new ArrayList<>();
+        addFileInfoRow(rows, R.string.media_settings_file_name, mMedia.getFileName());
+        addFileInfoRow(rows, R.string.media_settings_file_type,
+                StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT));
+        addFileInfoRow(rows, R.string.media_settings_file_size, getFormattedFileSize());
+        addFileInfoRow(rows, R.string.media_settings_dimensions, dimensions);
+        addFileInfoRow(rows, R.string.media_edit_duration_caption, duration);
+        addFileInfoRow(rows, R.string.media_settings_uploaded, getFormattedUploadDate());
 
-        // the meta line shows duration instead of dimensions for video and audio
-        List<String> metaParts = new ArrayList<>();
-        String dimensionsOrDuration = (isVideo() || isAudio()) && duration != null ? duration : dimensions;
-        for (String part : new String[]{fileType, dimensionsOrDuration, fileSize}) {
-            if (!TextUtils.isEmpty(part)) {
-                metaParts.add(part);
-            }
-        }
-        TextView txtMeta = findViewById(R.id.text_meta);
-        txtMeta.setText(TextUtils.join(META_SEPARATOR, metaParts));
-        txtMeta.setVisibility(metaParts.isEmpty() ? View.GONE : View.VISIBLE);
-
-        TextView txtFilename = findViewById(R.id.text_filename);
-        txtFilename.setText(mMedia.getFileName());
-        txtFilename.setVisibility(TextUtils.isEmpty(mMedia.getFileName()) ? View.GONE : View.VISIBLE);
-    }
-
-    private void addFileInfoCell(@NonNull List<Pair<Integer, String>> cells, @StringRes int labelRes,
-                                 @Nullable String value) {
-        if (!TextUtils.isEmpty(value)) {
-            cells.add(new Pair<>(labelRes, value));
-        }
-    }
-
-    /*
-     * lays out the file info cells two per row so hidden cells simply drop out of the grid
-     */
-    private void showFileInfoGrid(@NonNull List<Pair<Integer, String>> cells) {
-        LinearLayout grid = findViewById(R.id.file_info_grid);
-        grid.removeAllViews();
-        grid.setVisibility(cells.isEmpty() ? View.GONE : View.VISIBLE);
-
+        LinearLayout container = findViewById(R.id.file_info_rows);
+        container.removeAllViews();
         LayoutInflater inflater = getLayoutInflater();
-        LinearLayout row = null;
-        for (int i = 0; i < cells.size(); i++) {
-            if (i % 2 == 0) {
-                row = new LinearLayout(this);
-                row.setOrientation(LinearLayout.HORIZONTAL);
-                row.setWeightSum(2);
-                LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                if (i > 0) {
-                    rowParams.topMargin = DisplayUtils.dpToPx(this, FILE_INFO_ROW_GAP_DP);
-                }
-                grid.addView(row, rowParams);
-            }
-            View cell = inflater.inflate(R.layout.media_settings_info_cell, row, false);
-            ((TextView) cell.findViewById(R.id.cell_label)).setText(cells.get(i).first);
-            ((TextView) cell.findViewById(R.id.cell_value)).setText(cells.get(i).second);
-            if (i % 2 == 1) {
-                ((ViewGroup.MarginLayoutParams) cell.getLayoutParams())
-                        .setMarginStart(DisplayUtils.dpToPx(this, FILE_INFO_COLUMN_GAP_DP));
-            }
-            row.addView(cell);
+        for (Pair<Integer, String> item : rows) {
+            inflater.inflate(R.layout.media_settings_divider, container, true);
+            View row = inflater.inflate(R.layout.media_settings_info_row, container, false);
+            String label = getString(item.first);
+            ((TextView) row.findViewById(R.id.row_label)).setText(label);
+            ((TextView) row.findViewById(R.id.row_value)).setText(item.second);
+            row.setContentDescription(getString(R.string.media_settings_row_value, label, item.second));
+            container.addView(row);
+        }
+    }
+
+    private void addFileInfoRow(@NonNull List<Pair<Integer, String>> rows, @StringRes int labelRes,
+                                @Nullable String value) {
+        if (!TextUtils.isEmpty(value)) {
+            rows.add(new Pair<>(labelRes, value));
         }
     }
 

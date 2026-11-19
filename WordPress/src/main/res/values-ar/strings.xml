@@ -2950,7 +2950,6 @@ Language: ar
     <string name="media_files_not_uploaded">لم يتم رفع %d من الملفات</string>
     <string name="remove_image_from_post">إزالة من المقالة</string>
     <string name="confirm_remove_media_image">هل تريد إزالة هذه الصورة من المقالة؟</string>
-    <string name="media_edit_customize_card_caption">تخصيص</string>
     <string name="login_error_button">إغلاق</string>
     <string name="error_generic_network">حدثت مشكلة في الشبكة. يرجى التحقق من اتصالك والمحاولة لاحقًا.</string>
     <string name="post_settings_remove_featured_image">إزالة الصورة البارزة</string>

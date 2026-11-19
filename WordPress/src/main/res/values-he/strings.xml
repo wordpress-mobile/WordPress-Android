@@ -2959,7 +2959,6 @@ Language: he_IL
     <string name="media_files_not_uploaded">%d קבצים לא הועלו</string>
     <string name="remove_image_from_post">הסרה מהפוסט</string>
     <string name="confirm_remove_media_image">האם להסיר את התמונה הזו מהפוסט?</string>
-    <string name="media_edit_customize_card_caption">התאמה אישית</string>
     <string name="login_error_button">סגור</string>
     <string name="error_generic_network">אירעה שגיאת רשת. יש לבדוק את החיבור ולנסות שוב.</string>
     <string name="post_settings_remove_featured_image">הסרת התמונה המרכזית</string>

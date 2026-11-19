@@ -2967,7 +2967,6 @@ Language: ko_KR
     <string name="media_files_not_uploaded">%d개 파일 업로드되지 않음</string>
     <string name="remove_image_from_post">글에서 제거</string>
     <string name="confirm_remove_media_image">글에서 이 이미지를 제거할까요?</string>
-    <string name="media_edit_customize_card_caption">사용자 정의</string>
     <string name="login_error_button">닫기</string>
     <string name="error_generic_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="post_settings_remove_featured_image">특성 이미지 제거</string>
