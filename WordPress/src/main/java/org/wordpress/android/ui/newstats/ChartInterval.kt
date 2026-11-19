@@ -9,6 +9,11 @@ import org.wordpress.android.ui.newstats.datasource.StatsUnit
  * chart has always done. Every other entry overrides that derivation with its own [unit] — which is
  * the whole mechanism, and why [unit] is nullable.
  *
+ * [AUTOMATIC] is never shown: the menu lists units, and the one it ticks is the unit the chart is
+ * drawn at, so under [AUTOMATIC] the tick sits on whatever the window resolved to. It is the "not
+ * chosen" state rather than a choice, which is what lets the chart keep re-deriving its bucket
+ * width as the user moves between periods.
+ *
  * An override changes only the *bucketing*, never the window. The chart, the bottom row and the
  * list cards are deliberately kept on one window (decoupling them is how CMM-2489 happened), and
  * holding the window still is also what keeps a comparison like-for-like: the previous window is
@@ -32,5 +37,8 @@ enum class ChartInterval(val storageKey: String, val unit: StatsUnit?) {
 
         /** The interval [key] was persisted as, or null when it was never persisted or no longer exists. */
         fun fromStorageKey(key: String?): ChartInterval? = entries.firstOrNull { it.storageKey == key }
+
+        /** The interval that pins the chart to [unit]. Every unit has one, so this never fails. */
+        fun of(unit: StatsUnit): ChartInterval = entries.first { it.unit == unit }
     }
 }

@@ -225,21 +225,21 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
     }
     // endregion
 
-    // region offeredIntervals
+    // region offeredUnits
     @Test
-    fun `offeredIntervals covers each window's band`() {
-        assertThat(repository.offeredIntervals(StatsPeriod.Today))
-            .containsExactly(ChartInterval.AUTOMATIC, ChartInterval.HOURS)
-        assertThat(repository.offeredIntervals(StatsPeriod.Last7Days))
-            .containsExactly(ChartInterval.AUTOMATIC, ChartInterval.HOURS, ChartInterval.DAYS, ChartInterval.WEEKS)
-        assertThat(repository.offeredIntervals(StatsPeriod.Last30Days))
-            .containsExactly(ChartInterval.AUTOMATIC, ChartInterval.DAYS, ChartInterval.WEEKS, ChartInterval.MONTHS)
-        assertThat(repository.offeredIntervals(StatsPeriod.Last3Years))
-            .containsExactly(ChartInterval.AUTOMATIC, ChartInterval.WEEKS, ChartInterval.MONTHS, ChartInterval.YEARS)
+    fun `offeredUnits covers each window's band`() {
+        assertThat(repository.offeredUnits(StatsPeriod.Today))
+            .containsExactly(StatsUnit.HOUR)
+        assertThat(repository.offeredUnits(StatsPeriod.Last7Days))
+            .containsExactly(StatsUnit.HOUR, StatsUnit.DAY, StatsUnit.WEEK)
+        assertThat(repository.offeredUnits(StatsPeriod.Last30Days))
+            .containsExactly(StatsUnit.DAY, StatsUnit.WEEK, StatsUnit.MONTH)
+        assertThat(repository.offeredUnits(StatsPeriod.Last3Years))
+            .containsExactly(StatsUnit.WEEK, StatsUnit.MONTH, StatsUnit.YEAR)
     }
 
     @Test
-    fun `offeredIntervals always contains the unit Automatic resolves to`() {
+    fun `offeredUnits always contains the unit Automatic resolves to`() {
         val periods = listOf(
             StatsPeriod.Today,
             StatsPeriod.Last7Days,
@@ -256,30 +256,31 @@ class StatsRepositoryChartIntervalTest : BaseUnitTest() {
 
         periods.forEach { period ->
             val derived = repository.chartUnitFor(period, ChartInterval.AUTOMATIC)
-            assertThat(repository.offeredIntervals(period).mapNotNull { it.unit })
+            assertThat(repository.offeredUnits(period))
                 .describedAs("offered units for %s", period)
                 .contains(derived)
         }
     }
 
     @Test
-    fun `offeredIntervals measures the whole calendar period, not the part of it that has elapsed`() {
+    fun `offeredUnits measures the whole calendar period, not the part of it that has elapsed`() {
         // This Week is five days old on a Thursday but charts the whole Monday-to-Sunday span, so the
         // menu must not gain and lose entries as the week fills up.
-        assertThat(repository.offeredIntervals(StatsPeriod.ThisWeek))
-            .containsExactly(ChartInterval.AUTOMATIC, ChartInterval.HOURS, ChartInterval.DAYS, ChartInterval.WEEKS)
+        assertThat(repository.offeredUnits(StatsPeriod.ThisWeek))
+            .containsExactly(StatsUnit.HOUR, StatsUnit.DAY, StatsUnit.WEEK)
     }
 
     @Test
-    fun `offeredIntervals drops a unit that would draw a single bar or several hundred`() {
-        // One bar is not a chart: a day is one day, one week and one month alike.
-        assertThat(repository.offeredIntervals(StatsPeriod.Today))
-            .doesNotContain(ChartInterval.DAYS, ChartInterval.WEEKS, ChartInterval.MONTHS, ChartInterval.YEARS)
+    fun `offeredUnits drops a unit that would draw a single bar or several hundred`() {
+        // One bar is not a chart: a day is one day, one week and one month alike. Today is left with
+        // a single unit, which is how the menu knows to hide itself rather than offer a lone entry.
+        assertThat(repository.offeredUnits(StatsPeriod.Today))
+            .doesNotContain(StatsUnit.DAY, StatsUnit.WEEK, StatsUnit.MONTH, StatsUnit.YEAR)
         // 16 days is 384 hourly bars; 17 is 408.
-        assertThat(repository.offeredIntervals(customPeriod("2026-11-01", "2026-11-16")))
-            .contains(ChartInterval.HOURS)
-        assertThat(repository.offeredIntervals(customPeriod("2026-11-01", "2026-11-17")))
-            .doesNotContain(ChartInterval.HOURS)
+        assertThat(repository.offeredUnits(customPeriod("2026-11-01", "2026-11-16")))
+            .contains(StatsUnit.HOUR)
+        assertThat(repository.offeredUnits(customPeriod("2026-11-01", "2026-11-17")))
+            .doesNotContain(StatsUnit.HOUR)
     }
     // endregion
 

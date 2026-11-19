@@ -1383,22 +1383,22 @@ class StatsRepository @Inject constructor(
         calculatePeriodDates(period, interval).unit
 
     /**
-     * The intervals worth offering for [period]: [ChartInterval.AUTOMATIC], plus every unit that
-     * would give the charted window between [MIN_CHART_BUCKETS] and [MAX_CHART_BUCKETS] bars. One
-     * bar is not a chart, and several hundred are indistinguishable from each other at phone width.
+     * The bucket units worth offering for [period]: every one that would give the charted window
+     * between [MIN_CHART_BUCKETS] and [MAX_CHART_BUCKETS] bars. One bar is not a chart, and several
+     * hundred are indistinguishable from each other at phone width.
      *
      * Measured on the *charted* span — the upcoming part of an unfinished calendar period included —
      * so the menu doesn't quietly change its contents as the week fills up, for the same reason
      * [calculateCalendarPeriodDates] takes its unit from the whole calendar period.
      *
      * The unit [ChartInterval.AUTOMATIC] resolves to is always among the results, since a derived
-     * unit is by construction one that fits the window.
+     * unit is by construction one that fits the window. The menu leans on that: it has no Automatic
+     * entry, and ticks the unit the chart is drawn at.
      */
-    fun offeredIntervals(period: StatsPeriod): List<ChartInterval> {
+    fun offeredUnits(period: StatsPeriod): List<StatsUnit> {
         val range = calculatePeriodDates(period, ChartInterval.AUTOMATIC)
         val chartEnd = range.upcomingEnd ?: range.currentEnd
-        return ChartInterval.entries.filter { interval ->
-            val unit = interval.unit ?: return@filter true
+        return StatsUnit.entries.filter { unit ->
             quantityFor(range.currentStart, chartEnd, unit) in MIN_CHART_BUCKETS..MAX_CHART_BUCKETS
         }
     }

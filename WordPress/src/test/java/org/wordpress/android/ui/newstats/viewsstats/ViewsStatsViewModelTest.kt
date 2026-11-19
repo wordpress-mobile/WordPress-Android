@@ -98,7 +98,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
             interval.unit ?: if (period.isSingleDay()) StatsUnit.HOUR else StatsUnit.DAY
         }
         // Every interval on offer unless a test narrows it, so the reset rule stays out of the way.
-        whenever(statsRepository.offeredIntervals(any())).thenReturn(ChartInterval.entries)
+        whenever(statsRepository.offeredUnits(any())).thenReturn(StatsUnit.entries)
     }
 
     private suspend fun initViewModel(periodType: String? = null) {
@@ -2654,11 +2654,32 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         // The buckets don't change, so the cached result is re-plotted.
         verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any(), any())
 
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
         advanceUntilIdle()
 
         verify(statsRepository, times(2)).fetchStatsForPeriod(any(), any(), any(), any())
         verify(statsRepository).fetchStatsForPeriod(any(), any(), eq(ChartInterval.WEEKS), any())
+    }
+
+    @Test
+    fun `picking the width the chart is already at leaves it on the derived default`() = test {
+        // The menu has no Automatic entry, so the ticked unit is whatever the window derived.
+        // Tapping it must not freeze that derivation into an override, or the chart would stop
+        // adapting as the user moves between periods — and it must not refetch what is on screen.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartIntervalSelected(StatsUnit.DAY)
+        advanceUntilIdle()
+
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any(), any(), any())
+        verify(cardsConfigurationRepository, never()).saveConfiguration(
+            eq(TEST_SITE_ID),
+            argThat { selectedChartInterval == "day" }
+        )
     }
 
     @Test
@@ -2674,7 +2695,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         advanceUntilIdle()
         assertThat(viewModel.uiState.value.selectedBar()).isNotNull
 
-        viewModel.onChartIntervalSelected(ChartInterval.MONTHS)
+        viewModel.onChartIntervalSelected(StatsUnit.MONTH)
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.selectedBar()).isNull()
@@ -2689,7 +2710,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
         advanceUntilIdle()
 
         verify(cardsConfigurationRepository).saveConfiguration(
@@ -2727,8 +2748,8 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         // "Years" must not greet the user on a seven-day window.
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration(selectedChartInterval = "year"))
-        whenever(statsRepository.offeredIntervals(any()))
-            .thenReturn(listOf(ChartInterval.AUTOMATIC, ChartInterval.DAYS))
+        whenever(statsRepository.offeredUnits(any()))
+            .thenReturn(listOf(StatsUnit.DAY))
         whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(createPeriodStatsResult())
 
@@ -2755,7 +2776,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
         initViewModel()
         advanceUntilIdle()
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
         advanceUntilIdle()
 
         viewModel.onPeriodChanged(StatsPeriod.Last30Days)
@@ -2775,10 +2796,10 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
         initViewModel()
         advanceUntilIdle()
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
         advanceUntilIdle()
-        whenever(statsRepository.offeredIntervals(any()))
-            .thenReturn(listOf(ChartInterval.AUTOMATIC, ChartInterval.HOURS))
+        whenever(statsRepository.offeredUnits(any()))
+            .thenReturn(listOf(StatsUnit.HOUR))
 
         viewModel.onPeriodChanged(StatsPeriod.Today)
         viewModel.loadDataIfNeeded()
@@ -2810,7 +2831,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
 
         viewModel.refresh()
         advanceUntilIdle()
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
         advanceUntilIdle()
         refreshGate.complete(Unit)
         advanceUntilIdle()
@@ -2834,7 +2855,7 @@ class ViewsStatsViewModelTest : StatsDateUnitTest() {
         advanceUntilIdle()
         assertThat(viewModel.uiState.value.chartOrNull()).isInstanceOf(ChartUiState.Unavailable::class.java)
 
-        viewModel.onChartIntervalSelected(ChartInterval.DAYS)
+        viewModel.onChartIntervalSelected(StatsUnit.DAY)
         advanceUntilIdle()
 
         assertThat(viewModel.uiState.value.chartOrNull()).isInstanceOf(ChartUiState.Loaded::class.java)

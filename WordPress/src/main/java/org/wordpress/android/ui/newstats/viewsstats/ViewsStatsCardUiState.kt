@@ -34,16 +34,16 @@ sealed class ViewsStatsCardUiState {
 /**
  * The state of the chart's interval menu.
  *
- * [selected] and [effectiveUnit] are deliberately separate: the menu's checkmark follows what the
- * user chose, while the row that opens it names the width the bars are actually drawn at, which
- * under [ChartInterval.AUTOMATIC] is the one the window resolved to. iOS splits them the same way.
+ * There is no Automatic entry: the menu is a list of bucket widths, and the one it ticks is
+ * [effectiveUnit] — the width the bars are actually drawn at. Under [ChartInterval.AUTOMATIC] that
+ * is whatever the window resolved to, so the default shows up as an ordinary pick rather than as a
+ * mode the user has to reason about.
  *
- * @param offered the intervals this period can sensibly draw, [ChartInterval.AUTOMATIC] included.
- * The menu row is hidden when there is nothing to choose between.
+ * @param offered the units this period can sensibly draw. The menu row is hidden when there is
+ * nothing to choose between, which is every period short enough to leave only one.
  */
 data class ChartIntervalUiState(
-    val selected: ChartInterval = ChartInterval.DEFAULT,
-    val offered: List<ChartInterval> = emptyList(),
+    val offered: List<StatsUnit> = emptyList(),
     val effectiveUnit: StatsUnit = StatsUnit.DAY
 )
 

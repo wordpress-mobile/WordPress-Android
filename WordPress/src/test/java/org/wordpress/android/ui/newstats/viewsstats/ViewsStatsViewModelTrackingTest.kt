@@ -68,8 +68,10 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn("test_access_token")
         whenever(resourceProvider.getString(any())).thenReturn("")
-        whenever(statsRepository.chartUnitFor(any(), any())).thenReturn(StatsUnit.DAY)
-        whenever(statsRepository.offeredIntervals(any())).thenReturn(ChartInterval.entries)
+        whenever(statsRepository.chartUnitFor(any(), any())).thenAnswer { invocation ->
+            invocation.getArgument<ChartInterval>(1).unit ?: StatsUnit.DAY
+        }
+        whenever(statsRepository.offeredUnits(any())).thenReturn(StatsUnit.entries)
         // The selector's date line resolves a preset's window through the repository. These tests
         // assert what is tracked, not that line, so one fixed window stands in for every period.
         whenever(statsRepository.periodWindow(any()))
@@ -140,7 +142,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     fun `changing the chart interval reports both intervals`() = test {
         initViewModel()
 
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
 
         verify(newStatsTracker).trackChartIntervalChanged(
             from = ChartInterval.AUTOMATIC,
@@ -152,10 +154,11 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     fun `re-picking the chart interval already on screen is still reported`() = test {
         // The deliberate exception to this file's theme, and to the chart-type event just above:
         // iOS reports every pick of this one, so Android has to as well for the two to be comparable.
+        // The second pick changes nothing — the chart is already weekly — and is reported anyway.
         initViewModel()
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
 
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
 
         verify(newStatsTracker, times(2)).trackChartIntervalChanged(any(), any())
     }
@@ -164,9 +167,9 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     fun `an interval reset caused by a period change reports nothing`() = test {
         // The user didn't pick AUTOMATIC; the new period simply can't draw what they had picked.
         initViewModel()
-        viewModel.onChartIntervalSelected(ChartInterval.WEEKS)
-        whenever(statsRepository.offeredIntervals(any()))
-            .thenReturn(listOf(ChartInterval.AUTOMATIC, ChartInterval.HOURS))
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
+        whenever(statsRepository.offeredUnits(any()))
+            .thenReturn(listOf(StatsUnit.HOUR))
 
         viewModel.onPresetSelected(StatsPeriod.Today)
 

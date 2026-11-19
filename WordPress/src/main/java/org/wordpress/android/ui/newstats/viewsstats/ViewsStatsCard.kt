@@ -90,7 +90,6 @@ import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
-import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -135,7 +134,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
-    onChartIntervalSelected: (ChartInterval) -> Unit,
+    onChartIntervalSelected: (StatsUnit) -> Unit,
     onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
@@ -249,7 +248,7 @@ private fun BottomStatsPlaceholder() {
 private fun ContentCard(
     state: ViewsStatsCardUiState.Content,
     onChartTypeChanged: (ChartType) -> Unit,
-    onChartIntervalSelected: (ChartInterval) -> Unit,
+    onChartIntervalSelected: (StatsUnit) -> Unit,
     onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
@@ -525,8 +524,8 @@ private fun ChartUnavailableBox(onShowViews: () -> Unit) {
 /**
  * The chart's interval, as a row that opens a sub-menu of the widths this period can draw.
  *
- * The row names the width the bars are actually at while the checkmark sits on what was picked, so
- * Automatic reads as "Interval — Days" with the tick next to Automatic rather than next to Days.
+ * The row names the width the bars are at and the sub-menu ticks it, so the derived default needs
+ * no Automatic entry to explain — it simply reads as "Interval — Days" with the tick on Days.
  * Hidden when there is nothing to choose between.
  *
  * Nested the way "Move card" is in [StatsCardMenu]; picking closes both levels, since a
@@ -535,7 +534,7 @@ private fun ChartUnavailableBox(onShowViews: () -> Unit) {
 @Composable
 private fun ChartIntervalMenuItem(
     state: ChartIntervalUiState,
-    onIntervalSelected: (ChartInterval) -> Unit
+    onIntervalSelected: (StatsUnit) -> Unit
 ) {
     if (state.offered.size < 2) return
     var expanded by remember { mutableStateOf(false) }
@@ -569,15 +568,15 @@ private fun ChartIntervalMenuItem(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            state.offered.forEach { interval ->
+            state.offered.forEach { unit ->
                 DropdownMenuItem(
-                    text = { Text(text = stringResource(interval.labelRes())) },
+                    text = { Text(text = stringResource(unit.labelRes())) },
                     onClick = {
                         expanded = false
-                        onIntervalSelected(interval)
+                        onIntervalSelected(unit)
                     },
                     trailingIcon = {
-                        if (interval == state.selected) {
+                        if (unit == state.effectiveUnit) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = null,
@@ -590,11 +589,6 @@ private fun ChartIntervalMenuItem(
         }
     }
 }
-
-/** An interval's own name; the five units share [StatsUnit.labelRes]. */
-@StringRes
-private fun ChartInterval.labelRes(): Int =
-    unit?.labelRes() ?: R.string.stats_chart_interval_automatic
 
 @StringRes
 private fun StatsUnit.labelRes(): Int = when (this) {
@@ -1276,8 +1270,7 @@ private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Conte
             )
         ),
         interval = ChartIntervalUiState(
-            selected = ChartInterval.AUTOMATIC,
-            offered = listOf(ChartInterval.AUTOMATIC, ChartInterval.DAYS, ChartInterval.WEEKS),
+            offered = listOf(StatsUnit.DAY, StatsUnit.WEEK),
             effectiveUnit = StatsUnit.DAY
         )
     )

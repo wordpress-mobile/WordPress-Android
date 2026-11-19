@@ -234,7 +234,7 @@ class ViewsStatsViewModel @Inject constructor(
             // The period and the interval are stored separately, so a restored pairing can be one the
             // user never saw. Dropped in memory only: a launch is not a pick, and leaving what's
             // stored alone means the interval is still there if they go back to a period that fits it.
-            if (currentInterval !in statsRepository.offeredIntervals(currentPeriod)) {
+            if (!intervalFitsPeriod(currentInterval, currentPeriod)) {
                 currentInterval = ChartInterval.DEFAULT
             }
             _isPeriodInitialized.value = true
@@ -295,9 +295,8 @@ class ViewsStatsViewModel @Inject constructor(
         currentPeriod = period
         // The chosen interval carries over to the new period when that period can still draw it, and
         // resets when it can't — a Years chart means nothing on a seven-day window. One rule for
-        // presets, custom ranges, bar drill-downs and paging alike. AUTOMATIC is always offered, so
-        // the default never trips this.
-        if (currentInterval !in statsRepository.offeredIntervals(period)) {
+        // presets, custom ranges, bar drill-downs and paging alike.
+        if (!intervalFitsPeriod(currentInterval, period)) {
             currentInterval = ChartInterval.DEFAULT
             saveInterval(ChartInterval.DEFAULT)
         }
@@ -532,14 +531,21 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * What the interval menu shows: the pick, the intervals this period can draw, and the width the
-     * bars are actually at — which under [ChartInterval.AUTOMATIC] is whatever the window resolved to.
+     * What the interval menu shows: the units this period can draw, and the one the bars are
+     * actually at — which under [ChartInterval.AUTOMATIC] is whatever the window resolved to, and
+     * is what the menu ticks either way.
      */
     private fun intervalUiState() = ChartIntervalUiState(
-        selected = currentInterval,
-        offered = statsRepository.offeredIntervals(currentPeriod),
+        offered = statsRepository.offeredUnits(currentPeriod),
         effectiveUnit = statsRepository.chartUnitFor(currentPeriod, currentInterval)
     )
+
+    /**
+     * Whether [interval] still means something on [period]. [ChartInterval.AUTOMATIC] always does:
+     * it is the absence of a choice, and the window derives a unit for every period.
+     */
+    private fun intervalFitsPeriod(interval: ChartInterval, period: StatsPeriod): Boolean =
+        interval == ChartInterval.AUTOMATIC || interval.unit in statsRepository.offeredUnits(period)
 
     private fun restoreIntervalFromSavedState(): ChartInterval =
         ChartInterval.fromStorageKey(savedStateHandle.get<String>(KEY_CHART_INTERVAL)) ?: ChartInterval.DEFAULT
@@ -567,18 +573,25 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+
     /**
-     * Picks the width of one chart bar. [ChartInterval.AUTOMATIC] hands the choice back to the window.
+     * Pins the width of one chart bar to [unit].
      *
-     * Unlike a metric change, this can't be answered from what's already in memory: the buckets
-     * themselves change, so the chart is refetched — dimmed, the way paging to another period is,
-     * rather than flashing placeholders over data that is about to be replaced.
+     * Picking the width the chart is already at changes nothing — including under
+     * [ChartInterval.AUTOMATIC], where the pick is dropped rather than frozen into an override, so
+     * the chart goes on deriving its width as the user moves between periods. That is why the test
+     * is on the resolved unit and not on the stored interval.
+     *
+     * Unlike a metric change, a real switch can't be answered from what's already in memory: the
+     * buckets themselves change, so the chart is refetched — dimmed, the way paging to another
+     * period is, rather than flashing placeholders over data that is about to be replaced.
      */
-    fun onChartIntervalSelected(interval: ChartInterval) {
+    fun onChartIntervalSelected(unit: StatsUnit) {
+        val interval = ChartInterval.of(unit)
         // Reported on every pick, a re-pick included, which is what iOS reports for this event. The
         // neighbouring chart-type event deliberately does the opposite; don't align them.
         newStatsTracker.trackChartIntervalChanged(from = currentInterval, to = interval)
-        if (interval == currentInterval) return
+        if (statsRepository.chartUnitFor(currentPeriod, currentInterval) == unit) return
         currentInterval = interval
         saveInterval(interval)
         // Bar index N addresses a different bucket once the chart is re-bucketed, so no selection can
