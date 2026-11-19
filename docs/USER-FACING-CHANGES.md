@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Tapping a Reader comment opens it**
+  Tapping one of the comments shown under a Reader post opens the post's comments, scrolled to that comment and highlighted. Before, only the View all comments button did anything. In the comments list, tapping a comment opens it by itself, under the post's title. Above it, a line shows which comment it replies to. Below it are its direct replies. Tapping that line opens the comment it replies to, and tapping a reply opens the reply. Reply, like, share and the moderation menu work the same as in the list. Back steps through the opened comments in turn, then returns to the list at the same place.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Reader → a post → the comments under the post; Reader → a post → Comments → tap a comment
+  - **Notes:** The list stops indenting replies after two levels, so on deep threads the "In reply to" line is the only way to see which comment a reply answers. A comment that's unapproved, spammed or trashed from the single-comment view closes it. Undoing the action brings the comment back in the list but doesn't reopen it.
+
 - **Reader saved posts sync with your WordPress.com account**
   Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the app opens after updating. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving and unsaving work offline: the change shows straight away and reaches the account once the device is back online.
   - **Apps:** Both

@@ -97,6 +97,8 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
             onLoadMore = viewModel::onLoadMore,
             onScrollHandled = viewModel::onScrollHandled,
             onHeaderClick = viewModel::onHeaderClicked,
+            onCommentClick = viewModel::onCommentClicked,
+            onDetailBack = viewModel::onDetailBack,
             onAuthorClick = viewModel::onAuthorClicked,
             onReplyClick = viewModel::onReplyClicked,
             onLikeClick = viewModel::onLikeClicked,

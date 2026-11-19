@@ -26,10 +26,12 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion
+import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -73,8 +75,12 @@ class ReaderCommentListViewModel @Inject constructor(
             savedStateHandle[ReaderConstants.ARG_COMMENT_ID] = value
         }
 
+    // the header opens the post when the list was opened for a comment - unless it was opened from that post
     private val _uiState = MutableStateFlow(
-        ReaderCommentListUiState(isHeaderClickable = directOperation != null)
+        ReaderCommentListUiState(
+            isHeaderClickable = directOperation != null && savedStateHandle.get<String>(ReaderConstants.ARG_SOURCE) !=
+                ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS.sourceDescription
+        )
     )
     val uiState: StateFlow<ReaderCommentListUiState> = _uiState.asStateFlow()
 
@@ -102,6 +108,13 @@ class ReaderCommentListViewModel @Inject constructor(
         get() = savedStateHandle[KEY_REPLY_TO_COMMENT_ID] ?: 0L
         set(value) {
             savedStateHandle[KEY_REPLY_TO_COMMENT_ID] = value
+        }
+
+    // the comments opened in the detail, most recent last
+    private var detailStack: LongArray
+        get() = savedStateHandle[KEY_DETAIL_STACK] ?: LongArray(0)
+        set(value) {
+            savedStateHandle[KEY_DETAIL_STACK] = value
         }
 
     private val isLoggedIn get() = accountStore.hasAccessToken()
@@ -187,6 +200,17 @@ class ReaderCommentListViewModel @Inject constructor(
         if (_uiState.value.isHeaderClickable) {
             _events.trySend(ReaderCommentListEvent.OpenPostDetail(blogId, postId))
         }
+    }
+
+    fun onCommentClicked(commentId: Long) {
+        if (findComment(commentId) == null) return
+        detailStack += commentId
+        rebuildItems()
+    }
+
+    fun onDetailBack() {
+        detailStack = detailStack.copyOf(maxOf(detailStack.size - 1, 0))
+        rebuildItems()
     }
 
     fun onAuthorClicked(commentId: Long) {
@@ -486,35 +510,52 @@ class ReaderCommentListViewModel @Inject constructor(
         val showLike = post.canLikePost()
         val isLoggedIn = isLoggedIn
         val canReply = canReply()
+        fun ReaderComment.toItem(level: Int) = ReaderCommentItem(
+            commentId = commentId,
+            indentLevel = level,
+            authorName = authorName.orEmpty(),
+            avatarUrl = authorAvatar.orEmpty(),
+            published = published.orEmpty(),
+            html = text.orEmpty(),
+            isPostAuthor = authorId == post.authorId,
+            showLike = showLike,
+            isLikeEnabled = isLoggedIn,
+            isLiked = isLikedByCurrentUser,
+            numLikes = numLikes,
+            canReply = canReply,
+            isReplyTarget = commentId == replyToCommentId,
+            isHighlighted = commentId == highlightedCommentId ||
+                commentId == replyToCommentId || commentId == pendingCommentId,
+            isPending = commentId == pendingCommentId,
+            canModerate = canModerate
+        )
+
         // leveled after filtering, so replies to a comment hidden by a pending moderation are hidden with it
-        val items = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
-            .map { comment ->
-                ReaderCommentItem(
-                    commentId = comment.commentId,
-                    indentLevel = comment.level.coerceAtMost(MAX_INDENT_LEVEL),
-                    authorName = comment.authorName.orEmpty(),
-                    avatarUrl = comment.authorAvatar.orEmpty(),
-                    published = comment.published.orEmpty(),
-                    html = comment.text.orEmpty(),
-                    isPostAuthor = comment.authorId == post.authorId,
-                    showLike = showLike,
-                    isLikeEnabled = isLoggedIn,
-                    isLiked = comment.isLikedByCurrentUser,
-                    numLikes = comment.numLikes,
-                    canReply = canReply,
-                    isReplyTarget = comment.commentId == replyToCommentId,
-                    isHighlighted = comment.commentId == highlightedCommentId ||
-                        comment.commentId == replyToCommentId || comment.commentId == pendingCommentId,
-                    isPending = comment.commentId == pendingCommentId,
-                    canModerate = canModerate
-                )
-            }
+        val visible = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
+        val items = visible.map { it.toItem(it.level.coerceAtMost(MAX_INDENT_LEVEL)) }
+
+        // a comment that's been moderated away drops out of the detail
+        val visibleById = visible.associateBy { it.commentId }
+        val stack = detailStack.filter { visibleById.containsKey(it) }.toLongArray()
+        if (stack.size != detailStack.size) detailStack = stack
+        val detail = stack.lastOrNull()?.let { visibleById[it] }?.let { comment ->
+            val parent = visibleById[comment.parentId]
+            ReaderCommentDetailUiState(
+                depth = stack.size,
+                comment = comment.toItem(0),
+                parentId = parent?.commentId ?: 0L,
+                parentAuthorName = parent?.authorName.orEmpty(),
+                parentSnippet = parent?.text?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+                replies = visible.filter { it.parentId == comment.commentId }.map { it.toItem(0) }
+            )
+        }
+
         val replyHint = if (replyToCommentId == 0L) {
             R.string.reader_hint_comment_on_post
         } else {
             R.string.reader_hint_comment_on_comment
         }
-        _uiState.update { it.copy(comments = items, replyHint = replyHint) }
+        _uiState.update { it.copy(comments = items, detail = detail, replyHint = replyHint) }
         updateEmptyMessage()
     }
 
@@ -541,6 +582,7 @@ class ReaderCommentListViewModel @Inject constructor(
         private const val KEY_HAS_UPDATED_COMMENTS = "has_updated_comments"
         private const val KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id"
         private const val KEY_EDITED_COMMENT_ID = "edited_comment_id"
+        private const val KEY_DETAIL_STACK = "detail_stack"
     }
 }
 
@@ -560,7 +602,21 @@ data class ReaderCommentListUiState(
     val isReplySheetShown: Boolean = false,
     val isSubmitting: Boolean = false,
     val scrollToCommentId: Long? = null,
-    val suggestions: List<Suggestion> = emptyList()
+    val suggestions: List<Suggestion> = emptyList(),
+    val detail: ReaderCommentDetailUiState? = null
+)
+
+/**
+ * A single comment opened from the list, with the comment it replies to and its direct replies
+ */
+data class ReaderCommentDetailUiState(
+    // how many comments deep this is, so opening and backing out can animate in opposite directions
+    val depth: Int,
+    val comment: ReaderCommentItem,
+    val parentId: Long,
+    val parentAuthorName: String,
+    val parentSnippet: String,
+    val replies: List<ReaderCommentItem>
 )
 
 data class ReaderCommentItem(
