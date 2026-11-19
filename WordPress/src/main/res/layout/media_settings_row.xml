@@ -28,8 +28,8 @@
     <ImageView
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_chevron_end_24dp"
+        android:src="@drawable/ic_pencil_white_24dp"
         app:tint="?attr/wpColorOnSurfaceMedium" />
 </LinearLayout>
