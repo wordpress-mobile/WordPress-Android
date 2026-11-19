@@ -25,14 +25,14 @@ internal fun ReaderCommentDetail(
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item(key = "header") { PostHeader(uiState, actions.onHeaderClick) }
-        if (detail.parentId != 0L) {
+        detail.parent?.let { parent ->
             item(key = "parent") {
                 HorizontalDivider(modifier = Modifier.padding(start = 24.dp))
                 CommentParentStrip(
-                    parentAuthorName = detail.parentAuthorName,
-                    parentSnippet = detail.parentSnippet,
+                    parentAuthorName = parent.authorName,
+                    parentSnippet = parent.snippet,
                     modifier = Modifier
-                        .clickable { actions.onCommentClick(detail.parentId) }
+                        .clickable { actions.onCommentClick(parent.commentId) }
                         .padding(start = 24.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
                 )
             }

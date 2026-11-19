@@ -233,11 +233,16 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
             ReaderCommentListEvent.ClearReply -> replyText.value = TextFieldValue("")
             is ReaderCommentListEvent.RestoreReply ->
                 replyText.value = TextFieldValue(event.text, TextRange(event.text.length))
-            is ReaderCommentListEvent.OpenPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
-                this@ReaderCommentListActivity,
-                event.blogId,
-                event.postId
-            )
+            // opened for a result means opened from the post itself, so go back to it rather than open it again
+            is ReaderCommentListEvent.OpenPostDetail -> if (callingActivity != null) {
+                finish()
+            } else {
+                ReaderActivityLauncher.showReaderPostDetail(
+                    this@ReaderCommentListActivity,
+                    event.blogId,
+                    event.postId
+                )
+            }
             is ReaderCommentListEvent.OpenBlogPreview -> ReaderActivityLauncher.showReaderBlogPreview(
                 this@ReaderCommentListActivity,
                 event.blogId,

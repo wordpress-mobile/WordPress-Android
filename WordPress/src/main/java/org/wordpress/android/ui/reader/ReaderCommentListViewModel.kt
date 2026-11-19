@@ -26,7 +26,6 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -75,12 +74,8 @@ class ReaderCommentListViewModel @Inject constructor(
             savedStateHandle[ReaderConstants.ARG_COMMENT_ID] = value
         }
 
-    // the header opens the post when the list was opened for a comment - unless it was opened from that post
     private val _uiState = MutableStateFlow(
-        ReaderCommentListUiState(
-            isHeaderClickable = directOperation != null && savedStateHandle.get<String>(ReaderConstants.ARG_SOURCE) !=
-                ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS.sourceDescription
-        )
+        ReaderCommentListUiState(isHeaderClickable = directOperation != null)
     )
     val uiState: StateFlow<ReaderCommentListUiState> = _uiState.asStateFlow()
 
@@ -209,7 +204,7 @@ class ReaderCommentListViewModel @Inject constructor(
     }
 
     fun onDetailBack() {
-        detailStack = detailStack.copyOf(maxOf(detailStack.size - 1, 0))
+        detailStack = detailStack.dropLast(1).toLongArray()
         rebuildItems()
     }
 
@@ -539,13 +534,16 @@ class ReaderCommentListViewModel @Inject constructor(
         val stack = detailStack.filter { visibleById.containsKey(it) }.toLongArray()
         if (stack.size != detailStack.size) detailStack = stack
         val detail = stack.lastOrNull()?.let { visibleById[it] }?.let { comment ->
-            val parent = visibleById[comment.parentId]
             ReaderCommentDetailUiState(
                 depth = stack.size,
                 comment = comment.toItem(0),
-                parentId = parent?.commentId ?: 0L,
-                parentAuthorName = parent?.authorName.orEmpty(),
-                parentSnippet = parent?.text?.let { HtmlUtils.fastStripHtml(it).trim() }.orEmpty(),
+                parent = visibleById[comment.parentId]?.let { parent ->
+                    ReaderCommentParent(
+                        commentId = parent.commentId,
+                        authorName = parent.authorName.orEmpty(),
+                        snippet = HtmlUtils.fastStripHtml(parent.text.orEmpty()).trim()
+                    )
+                },
                 replies = visible.filter { it.parentId == comment.commentId }.map { it.toItem(0) }
             )
         }
@@ -613,11 +611,11 @@ data class ReaderCommentDetailUiState(
     // how many comments deep this is, so opening and backing out can animate in opposite directions
     val depth: Int,
     val comment: ReaderCommentItem,
-    val parentId: Long,
-    val parentAuthorName: String,
-    val parentSnippet: String,
+    val parent: ReaderCommentParent?,
     val replies: List<ReaderCommentItem>
 )
+
+data class ReaderCommentParent(val commentId: Long, val authorName: String, val snippet: String)
 
 data class ReaderCommentItem(
     val commentId: Long,
