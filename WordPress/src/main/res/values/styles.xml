@@ -461,6 +461,18 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="MediaSettings.Row">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
     <style name="MediaSettings.RowLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -482,10 +494,8 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="MediaSettings.EditSheetTheme" parent="WordPress.BottomSheetDialogTheme">
+    <style name="MediaSettings.EditSheetTheme" parent="WordPress.BottomSheetDialogTheme.NonTranslucent">
         <item name="android:windowSoftInputMode">adjustResize|stateVisible</item>
-        <!-- the parent theme's fitsSystemWindows would replace the padding of every view in the sheet -->
-        <item name="android:fitsSystemWindows">false</item>
         <item name="bottomSheetStyle">@style/MediaSettings.EditSheetTheme.BottomSheetStyle</item>
     </style>
 
@@ -494,12 +504,10 @@
         <item name="shouldRemoveExpandedCorners">false</item>
     </style>
 
-    <style name="MediaSettings.EditSheetTheme.ShapeAppearanceOverlay">
-        <item name="cornerFamily">rounded</item>
+    <style name="MediaSettings.EditSheetTheme.ShapeAppearanceOverlay"
+        parent="WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay">
         <item name="cornerSizeTopRight">28dp</item>
         <item name="cornerSizeTopLeft">28dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
     <style name="EmptyListText">

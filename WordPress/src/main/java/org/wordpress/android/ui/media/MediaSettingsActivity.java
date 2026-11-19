@@ -23,7 +23,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,17 +40,14 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -99,7 +95,6 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -108,8 +103,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -122,10 +118,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
     private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
-    private static final String STATE_TITLE = "state_title";
-    private static final String STATE_CAPTION = "state_caption";
-    private static final String STATE_ALT_TEXT = "state_alt_text";
-    private static final String STATE_DESCRIPTION = "state_description";
+    private static final String STATE_FIELD_PREFIX = "state_field_";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
     private long mDownloadId;
@@ -143,10 +136,8 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     private ImageView mImageView;
     private ImageView mImagePlay;
     // in-memory values of the editable fields, read by saveChanges()
-    private String mTitleValue = "";
-    private String mCaptionValue = "";
-    private String mAltTextValue = "";
-    private String mDescriptionValue = "";
+    private final EnumMap<Field, String> mFieldValues = new EnumMap<>(Field.class);
+    private final EnumMap<Field, View> mDetailRows = new EnumMap<>(Field.class);
 
     private EditText mLinkView;
     private CheckBox mLinkTargetNewWindowView;
@@ -263,13 +254,19 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         mAlignmentSpinnerView = findViewById(org.wordpress.android.editor.R.id.alignment_spinner);
         mFullScreenButton = findViewById(R.id.button_fullscreen);
 
-        setupDetailRow(R.id.row_title, Field.TITLE);
-        setupDetailRow(R.id.row_caption, Field.CAPTION);
-        setupDetailRow(R.id.row_alt_text, Field.ALT_TEXT);
-        setupDetailRow(R.id.row_description, Field.DESCRIPTION);
+        mDetailRows.put(Field.TITLE, findViewById(R.id.row_title));
+        mDetailRows.put(Field.CAPTION, findViewById(R.id.row_caption));
+        mDetailRows.put(Field.DESCRIPTION, findViewById(R.id.row_description));
+        mDetailRows.put(Field.ALT_TEXT, findViewById(R.id.row_alt_text));
+        for (Map.Entry<Field, View> entry : mDetailRows.entrySet()) {
+            Field field = entry.getKey();
+            entry.getValue().setOnClickListener(v -> showFieldEditor(field));
+            ViewCompat.replaceAccessibilityAction(entry.getValue(), AccessibilityActionCompat.ACTION_CLICK,
+                    getString(R.string.edit), null);
+        }
 
         // clip row ripples to the rounded cards
-        for (int id : new int[]{R.id.card_customize, R.id.card_details, R.id.card_file_info}) {
+        for (int id : new int[]{R.id.media_customisation_options, R.id.card_details, R.id.card_file_info}) {
             findViewById(id).setClipToOutline(true);
         }
 
@@ -277,7 +274,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
                 (requestKey, result) -> {
                     String fieldName = result.getString(MediaFieldEditBottomSheet.KEY_FIELD);
                     if (fieldName != null) {
-                        setFieldValue(Field.valueOf(fieldName),
+                        mFieldValues.put(Field.valueOf(fieldName),
                                 StringUtils.notNullStr(result.getString(MediaFieldEditBottomSheet.KEY_VALUE)));
                         bindDetailRows();
                     }
@@ -310,19 +307,16 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         }
 
         if (savedInstanceState != null) {
-            mTitleValue = StringUtils.notNullStr(savedInstanceState.getString(STATE_TITLE));
-            mCaptionValue = StringUtils.notNullStr(savedInstanceState.getString(STATE_CAPTION));
-            mAltTextValue = StringUtils.notNullStr(savedInstanceState.getString(STATE_ALT_TEXT));
-            mDescriptionValue = StringUtils.notNullStr(savedInstanceState.getString(STATE_DESCRIPTION));
+            for (Field field : Field.values()) {
+                mFieldValues.put(field,
+                        StringUtils.notNullStr(savedInstanceState.getString(STATE_FIELD_PREFIX + field.name())));
+            }
             bindDetailRows();
         }
 
         // only show title when toolbar is collapsed
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        collapsingToolbar.setCollapsedTitleTextColor(ContextExtensionsKt.getColorFromAttribute(
-                this, com.google.android.material.R.attr.colorOnSurface));
-        collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.media_settings_page_background));
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int mScrollRange = -1;
 
@@ -332,7 +326,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
                     mScrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (mScrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getCollapsedTitle());
+                    collapsingToolbar.setTitle(mTitle);
                 } else {
                     collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
                 }
@@ -352,7 +346,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             mImageView.setOnClickListener(listener);
             mImagePlay.setOnClickListener(listener);
             mFullScreenButton.setOnClickListener(listener);
-            TooltipCompat.setTooltipText(mFullScreenButton, getString(R.string.button_preview));
         }
 
         // keep the last rows clear of the navigation bar when drawing edge-to-edge
@@ -382,11 +375,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             );
         }
-    }
-
-    @NonNull
-    private String getCollapsedTitle() {
-        return TextUtils.isEmpty(mMedia.getFileName()) ? mTitle : mMedia.getFileName();
     }
 
     private boolean isMediaFromEditor() {
@@ -489,10 +477,9 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
-        outState.putString(STATE_TITLE, mTitleValue);
-        outState.putString(STATE_CAPTION, mCaptionValue);
-        outState.putString(STATE_ALT_TEXT, mAltTextValue);
-        outState.putString(STATE_DESCRIPTION, mDescriptionValue);
+        for (Field field : Field.values()) {
+            outState.putString(STATE_FIELD_PREFIX + field.name(), getFieldValue(field));
+        }
 
         if (mDeleteMediaConfirmationDialog != null) {
             outState.putBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, mDeleteMediaConfirmationDialog.isShowing());
@@ -630,9 +617,9 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
     }
 
     private void showMetaData() {
-        mTitleValue = StringUtils.notNullStr(mMedia.getTitle());
-        mAltTextValue = StringUtils.notNullStr(mMedia.getAlt());
-        mCaptionValue = StringUtils.notNullStr(mMedia.getCaption());
+        mFieldValues.put(Field.TITLE, StringUtils.notNullStr(mMedia.getTitle()));
+        mFieldValues.put(Field.ALT_TEXT, StringUtils.notNullStr(mMedia.getAlt()));
+        mFieldValues.put(Field.CAPTION, StringUtils.notNullStr(mMedia.getCaption()));
 
         if (isMediaFromEditor()) {
             mLinkView.setText(mEditorImageMetaData.getLinkUrl());
@@ -644,7 +631,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             setupAlignmentSpinner();
             setupImageSizeSeekBar();
         } else {
-            mDescriptionValue = StringUtils.notNullStr(mMedia.getDescription());
+            mFieldValues.put(Field.DESCRIPTION, StringUtils.notNullStr(mMedia.getDescription()));
 
             findViewById(R.id.media_customisation_options).setVisibility(View.GONE);
         }
@@ -668,13 +655,6 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         }
     }
 
-    private void setupDetailRow(@IdRes int rowId, @NonNull Field field) {
-        View row = findViewById(rowId);
-        row.setOnClickListener(v -> showFieldEditor(field));
-        ViewCompat.replaceAccessibilityAction(row, AccessibilityActionCompat.ACTION_CLICK,
-                getString(R.string.edit), null);
-    }
-
     private void showFieldEditor(@NonNull Field field) {
         if (getSupportFragmentManager().findFragmentByTag(MediaFieldEditBottomSheet.TAG) != null) {
             return;
@@ -685,50 +665,20 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
 
     @NonNull
     private String getFieldValue(@NonNull Field field) {
-        switch (field) {
-            case TITLE:
-                return mTitleValue;
-            case CAPTION:
-                return mCaptionValue;
-            case ALT_TEXT:
-                return mAltTextValue;
-            default:
-                return mDescriptionValue;
-        }
-    }
-
-    private void setFieldValue(@NonNull Field field, @NonNull String value) {
-        switch (field) {
-            case TITLE:
-                mTitleValue = value;
-                break;
-            case CAPTION:
-                mCaptionValue = value;
-                break;
-            case ALT_TEXT:
-                mAltTextValue = value;
-                break;
-            default:
-                mDescriptionValue = value;
-                break;
-        }
+        return StringUtils.notNullStr(mFieldValues.get(field));
     }
 
     private void bindDetailRows() {
-        bindDetailRow(R.id.row_title, R.string.media_edit_title_text, mTitleValue);
-        bindDetailRow(R.id.row_caption, R.string.media_edit_caption_text, mCaptionValue);
-        bindDetailRow(R.id.row_description, R.string.media_edit_description_text, mDescriptionValue);
-        bindDetailRow(R.id.row_alt_text, R.string.media_edit_alttext_text, mAltTextValue);
-    }
-
-    private void bindDetailRow(@IdRes int rowId, @StringRes int labelRes, @NonNull String value) {
-        View row = findViewById(rowId);
-        String label = getString(labelRes);
-        ((TextView) row.findViewById(R.id.row_label)).setText(label);
-        ((TextView) row.findViewById(R.id.row_value)).setText(value);
-        row.setContentDescription(value.isEmpty()
-                ? getString(R.string.media_settings_row_not_set, label)
-                : getString(R.string.media_settings_row_value, label, value));
+        for (Map.Entry<Field, View> entry : mDetailRows.entrySet()) {
+            View row = entry.getValue();
+            String label = getString(entry.getKey().getTitleRes());
+            String value = getFieldValue(entry.getKey());
+            ((TextView) row.findViewById(R.id.row_label)).setText(label);
+            ((TextView) row.findViewById(R.id.row_value)).setText(value);
+            row.setContentDescription(value.isEmpty()
+                    ? getString(R.string.media_settings_row_not_set, label)
+                    : getString(R.string.media_settings_row_value, label, value));
+        }
     }
 
     /*
@@ -740,34 +690,29 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
                 ? mMedia.getWidth() + " × " + mMedia.getHeight() : null;
         String duration = mMedia.getLength() > 0 ? DateUtils.formatElapsedTime(mMedia.getLength()) : null;
 
-        List<Pair<Integer, String>> rows = new ArrayList<>();
-        addFileInfoRow(rows, R.string.media_settings_file_name, mMedia.getFileName());
-        addFileInfoRow(rows, R.string.media_settings_file_type,
-                StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT));
-        addFileInfoRow(rows, R.string.media_settings_file_size, getFormattedFileSize());
-        addFileInfoRow(rows, R.string.media_settings_dimensions, dimensions);
-        addFileInfoRow(rows, R.string.media_edit_duration_caption, duration);
-        addFileInfoRow(rows, R.string.media_settings_uploaded, getFormattedUploadDate());
-
         LinearLayout container = findViewById(R.id.file_info_rows);
         container.removeAllViews();
-        LayoutInflater inflater = getLayoutInflater();
-        for (Pair<Integer, String> item : rows) {
-            inflater.inflate(R.layout.media_settings_divider, container, true);
-            View row = inflater.inflate(R.layout.media_settings_info_row, container, false);
-            String label = getString(item.first);
-            ((TextView) row.findViewById(R.id.row_label)).setText(label);
-            ((TextView) row.findViewById(R.id.row_value)).setText(item.second);
-            row.setContentDescription(getString(R.string.media_settings_row_value, label, item.second));
-            container.addView(row);
-        }
+        addFileInfoRow(container, R.string.media_settings_file_name, mMedia.getFileName());
+        addFileInfoRow(container, R.string.media_settings_file_type,
+                StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT));
+        addFileInfoRow(container, R.string.media_settings_file_size, getFormattedFileSize());
+        addFileInfoRow(container, R.string.media_settings_dimensions, dimensions);
+        addFileInfoRow(container, R.string.media_edit_duration_caption, duration);
+        addFileInfoRow(container, R.string.media_settings_uploaded, getFormattedUploadDate());
     }
 
-    private void addFileInfoRow(@NonNull List<Pair<Integer, String>> rows, @StringRes int labelRes,
-                                @Nullable String value) {
-        if (!TextUtils.isEmpty(value)) {
-            rows.add(new Pair<>(labelRes, value));
+    private void addFileInfoRow(@NonNull LinearLayout container, @StringRes int labelRes, @Nullable String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
         }
+        LayoutInflater inflater = getLayoutInflater();
+        inflater.inflate(R.layout.media_settings_divider, container, true);
+        View row = inflater.inflate(R.layout.media_settings_info_row, container, false);
+        String label = getString(labelRes);
+        ((TextView) row.findViewById(R.id.row_label)).setText(label);
+        ((TextView) row.findViewById(R.id.row_value)).setText(value);
+        row.setContentDescription(getString(R.string.media_settings_row_value, label, value));
+        container.addView(row);
     }
 
     @Nullable
@@ -982,10 +927,10 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
             return;
         }
 
-        String thisTitle = mTitleValue;
-        String thisCaption = mCaptionValue;
-        String thisAltText = mAltTextValue;
-        String thisDescription = mDescriptionValue;
+        String thisTitle = getFieldValue(Field.TITLE);
+        String thisCaption = getFieldValue(Field.CAPTION);
+        String thisAltText = getFieldValue(Field.ALT_TEXT);
+        String thisDescription = getFieldValue(Field.DESCRIPTION);
 
         if (!isMediaFromEditor()) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMedia.getId());

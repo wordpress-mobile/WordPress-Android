@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Redesigned media details screen**
-  The media details screen now uses the iOS app's layout below the photo: every field is a one-line row (label on the left, value on the right) in white cards on a gray page. The photo still fills the top of the screen, and the toolbar shows the file name once the photo scrolls away. Title, Caption, Description and Alt text are no longer text boxes: tapping one opens a sheet with a single text field and Cancel and Save buttons. Tapping the URL copies it, replacing the Copy button. The green full-screen button is replaced by a smaller button in the photo's corner, and tapping the photo still opens it full screen. Trash (and Remove image when opened from the editor) moved to the toolbar's overflow menu.
+  The media details screen now uses the iOS app's layout below the photo: every field is a one-line row (label on the left, value on the right) in white cards on a gray page. The photo still fills the top of the screen. Title, Caption, Description and Alt text are no longer text boxes: tapping one opens a sheet with a single text field and Cancel and Save buttons. Tapping the URL copies it, replacing the Copy button. The green full-screen button is replaced by a smaller button in the photo's corner, and tapping the photo still opens it full screen. Trash (and Remove image when opened from the editor) moved to the toolbar's overflow menu.
   - **Apps:** Both
   - **Type:** Changed
   - **Availability:** Everyone
