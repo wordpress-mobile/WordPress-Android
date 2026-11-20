@@ -9,6 +9,8 @@ data class ReaderCommentListActions(
     val onLoadMore: () -> Unit,
     val onScrollHandled: () -> Unit,
     val onHeaderClick: () -> Unit,
+    val onCommentClick: (Long) -> Unit,
+    val onDetailBack: () -> Unit,
     val onAuthorClick: (Long) -> Unit,
     val onReplyClick: (Long) -> Unit,
     val onLikeClick: (Long) -> Unit,

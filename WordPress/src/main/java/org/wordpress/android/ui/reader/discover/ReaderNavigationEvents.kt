@@ -18,7 +18,9 @@ sealed class ReaderNavigationEvents {
     data class ShowReaderComments(
         val blogId: Long,
         val postId: Long,
-        val source: ThreadedCommentsActionSource
+        val source: ThreadedCommentsActionSource,
+        // the comment to jump to, or 0 for the top of the list
+        val commentId: Long = 0L
     ) : ReaderNavigationEvents()
 
     object ShowNoSitesToReblog : ReaderNavigationEvents()

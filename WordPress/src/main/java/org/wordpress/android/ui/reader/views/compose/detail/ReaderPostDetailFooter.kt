@@ -89,6 +89,7 @@ class ReaderPostDetailFooterActions(
     val onLikesClick: () -> Unit,
     val onTagsExpandToggled: () -> Unit,
     val onCommentImageClick: (String) -> Unit,
+    val onCommentClick: (CommentSnippetItemState.CommentState) -> Unit,
     /** Reports where a related posts section is, so the fragment can tell when it's scrolled into view */
     val onRelatedPostsPositioned: (isGlobal: Boolean, coordinates: LayoutCoordinates) -> Unit,
 )
@@ -131,6 +132,7 @@ fun ReaderPostDetailFooter(
                     state = it,
                     followState = followConversationState,
                     onImageClick = actions.onCommentImageClick,
+                    onCommentClick = actions.onCommentClick,
                     modifier = Modifier.padding(horizontal = margin),
                 )
             }
@@ -388,6 +390,7 @@ private fun CommentSnippet(
     state: CommentSnippetUiState,
     followState: FollowConversationUiState?,
     onImageClick: (String) -> Unit,
+    onCommentClick: (CommentSnippetItemState.CommentState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -414,12 +417,16 @@ private fun CommentSnippet(
             modifier = Modifier.padding(bottom = Margin.Large.value),
             color = colorResource(R.color.reader_separator),
         )
-        state.snippetItems.forEach { item -> CommentSnippetItem(item, onImageClick) }
+        state.snippetItems.forEach { item -> CommentSnippetItem(item, onImageClick, onCommentClick) }
     }
 }
 
 @Composable
-private fun CommentSnippetItem(item: CommentSnippetItemState, onImageClick: (String) -> Unit) {
+private fun CommentSnippetItem(
+    item: CommentSnippetItemState,
+    onImageClick: (String) -> Unit,
+    onCommentClick: (CommentSnippetItemState.CommentState) -> Unit,
+) {
     val margin = dimensionResource(R.dimen.reader_detail_margin)
     when (item) {
         is CommentSnippetItemState.LoadingState -> Box(
@@ -430,7 +437,7 @@ private fun CommentSnippetItem(item: CommentSnippetItemState, onImageClick: (Str
         ) {
             CircularProgressIndicator()
         }
-        is CommentSnippetItemState.CommentState -> SnippetComment(item, onImageClick)
+        is CommentSnippetItemState.CommentState -> SnippetComment(item, onImageClick) { onCommentClick(item) }
         is CommentSnippetItemState.ButtonState -> OutlinedButton(
             onClick = { item.onCommentSnippetClicked(item.postId, item.blogId) },
             modifier = Modifier.fillMaxWidth(),
@@ -450,8 +457,18 @@ private fun CommentSnippetItem(item: CommentSnippetItemState, onImageClick: (Str
 }
 
 @Composable
-private fun SnippetComment(comment: CommentSnippetItemState.CommentState, onImageClick: (String) -> Unit) {
-    Column(modifier = Modifier.padding(bottom = Margin.Large.value)) {
+private fun SnippetComment(
+    comment: CommentSnippetItemState.CommentState,
+    onImageClick: (String) -> Unit,
+    onClick: () -> Unit,
+) {
+    // the gap below sits outside the tap target, and the tap target spans the row whatever the comment's length
+    Column(
+        modifier = Modifier
+            .padding(bottom = Margin.Large.value)
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CircleAvatar(
                 url = comment.avatarUrl,
