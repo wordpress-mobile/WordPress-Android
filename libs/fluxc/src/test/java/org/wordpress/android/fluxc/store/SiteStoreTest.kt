@@ -455,7 +455,7 @@ class SiteStoreTest {
         }
 
     @Test
-    fun `fetchSitesXmlRpc AP fallback stores the site via WPAPI without persisting an xmlrpc endpoint`() =
+    fun `fetchSitesXmlRpcFromApplicationPassword falls back to WPAPI without persisting an xmlrpc endpoint`() =
         test {
             org.mockito.Mockito.mockStatic(
                 org.wordpress.android.util.AppLog::class.java

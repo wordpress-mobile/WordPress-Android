@@ -991,6 +991,7 @@ private fun TrafficTabContent(
                     StatsCardType.VIEWS_STATS -> ViewsStatsCard(
                         uiState = viewsStatsUiState,
                         onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
+                        onChartIntervalSelected = viewsStatsViewModel::onChartIntervalSelected,
                         onMetricSelected = viewsStatsViewModel::onMetricSelected,
                         onBarTapped = viewsStatsViewModel::onBarTapped,
                         onDrillIntoSelectedBar = viewsStatsViewModel::onDrillIntoSelectedBar,

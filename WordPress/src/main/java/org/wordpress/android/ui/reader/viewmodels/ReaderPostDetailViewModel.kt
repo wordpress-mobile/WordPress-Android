@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
@@ -546,6 +547,21 @@ class ReaderPostDetailViewModel @Inject constructor(
             blogId,
             COMMENTS,
             ReaderTracker.SOURCE_POST_DETAIL_COMMENT_SNIPPET
+        )
+    }
+
+    /*
+     * opens the comments list scrolled to the tapped comment
+     */
+    fun onSnippetCommentClicked(blogId: Long, postId: Long, commentId: Long) {
+        if (!commentsSnippetFeatureConfig.isEnabled()) return
+        _navigationEvents.value = Event(
+            ReaderNavigationEvents.ShowReaderComments(
+                blogId,
+                postId,
+                ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS,
+                commentId
+            )
         )
     }
 

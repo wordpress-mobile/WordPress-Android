@@ -5,6 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsCardType
@@ -25,6 +27,8 @@ class StatsCardsConfigurationRepository @Inject constructor(
         .registerTypeAdapterFactory(EnumWithFallbackValueTypeAdapterFactory())
         .create()
 
+    private val configWrites = Mutex()
+
     // StateFlow to notify observers of configuration changes
     private val _configurationFlow = MutableStateFlow<Pair<Long, StatsCardsConfiguration>?>(null)
     val configurationFlow: StateFlow<Pair<Long, StatsCardsConfiguration>?> =
@@ -41,67 +45,83 @@ class StatsCardsConfigurationRepository @Inject constructor(
         persistConfiguration(siteId, configuration)
     }
 
+    /**
+     * Reads [siteId]'s configuration, applies [edit] to it and writes it back, with no other edit
+     * interleaving.
+     *
+     * Every setting a card persists lives in one blob, so changing any of them is a read-modify-write
+     * of the whole thing: two running at once and the one that writes first is silently reverted. The
+     * lock lives here rather than in a caller because this class is the single writer of that blob and
+     * is a singleton, while its callers are not — a lock held by one view model cannot order its
+     * writes against a card reorder issued from another.
+     *
+     * Deliberately reads through [loadAndMigrate] and writes through [persistConfiguration] rather
+     * than the suspending accessors above, so a future lock on either cannot deadlock this.
+     *
+     * An [edit] that changes nothing writes nothing, so the callers whose move is already a no-op
+     * (a card at the top asked to move up) stay the no-ops they were and don't re-emit
+     * [configurationFlow]. Any migration [loadAndMigrate] applied has already persisted itself.
+     */
+    suspend fun update(
+        siteId: Long,
+        edit: (StatsCardsConfiguration) -> StatsCardsConfiguration
+    ): Unit = withContext(ioDispatcher) {
+        configWrites.withLock {
+            val current = loadAndMigrate(siteId)
+            val edited = edit(current)
+            if (edited != current) {
+                persistConfiguration(siteId, edited)
+            }
+        }
+    }
+
     private fun persistConfiguration(siteId: Long, configuration: StatsCardsConfiguration) {
         appPrefsWrapper.setStatsCardsConfigurationJson(siteId, gson.toJson(configuration))
         _configurationFlow.value = siteId to configuration
     }
 
-    suspend fun removeCard(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
+    suspend fun removeCard(siteId: Long, cardType: StatsCardType) = update(siteId) { current ->
         // For non-MOST_VIEWED cards, remove from visibleCards
         val newVisibleCards = current.visibleCards.toMutableList()
         newVisibleCards.remove(cardType)
-        saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        current.copy(visibleCards = newVisibleCards)
     }
 
-    suspend fun addCard(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
-        val newVisibleCards = current.visibleCards + cardType
-        saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+    suspend fun addCard(siteId: Long, cardType: StatsCardType) = update(siteId) { current ->
+        current.copy(visibleCards = current.visibleCards + cardType)
     }
 
-    suspend fun moveCardUp(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
+    suspend fun moveCardUp(siteId: Long, cardType: StatsCardType) = update(siteId) { current ->
         val index = current.visibleCards.indexOf(cardType)
-        if (index > 0) {
-            moveCardToIndex(siteId, current, cardType, index - 1)
-        }
+        if (index > 0) moveCardToIndex(current, cardType, index - 1) else current
     }
 
-    suspend fun moveCardToTop(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
+    suspend fun moveCardToTop(siteId: Long, cardType: StatsCardType) = update(siteId) { current ->
         val index = current.visibleCards.indexOf(cardType)
-        if (index > 0) {
-            moveCardToIndex(siteId, current, cardType, 0)
-        }
+        if (index > 0) moveCardToIndex(current, cardType, 0) else current
     }
 
-    suspend fun moveCardDown(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
+    suspend fun moveCardDown(siteId: Long, cardType: StatsCardType) = update(siteId) { current ->
         val index = current.visibleCards.indexOf(cardType)
-        if (index >= 0 && index < current.visibleCards.size - 1) {
-            moveCardToIndex(siteId, current, cardType, index + 1)
-        }
+        val isMovable = index >= 0 && index < current.visibleCards.size - 1
+        if (isMovable) moveCardToIndex(current, cardType, index + 1) else current
     }
 
-    suspend fun moveCardToBottom(siteId: Long, cardType: StatsCardType): Unit = withContext(ioDispatcher) {
-        val current = getConfiguration(siteId)
+    suspend fun moveCardToBottom(siteId: Long, cardType: StatsCardType) = update(siteId) { current ->
         val index = current.visibleCards.indexOf(cardType)
-        if (index >= 0 && index < current.visibleCards.size - 1) {
-            moveCardToIndex(siteId, current, cardType, current.visibleCards.size - 1)
-        }
+        val isMovable = index >= 0 && index < current.visibleCards.size - 1
+        if (isMovable) moveCardToIndex(current, cardType, current.visibleCards.size - 1) else current
     }
 
-    private suspend fun moveCardToIndex(
-        siteId: Long,
+    private fun moveCardToIndex(
         current: StatsCardsConfiguration,
         cardType: StatsCardType,
         newIndex: Int
-    ) {
+    ): StatsCardsConfiguration {
         val newVisibleCards = current.visibleCards.toMutableList()
         newVisibleCards.remove(cardType)
         newVisibleCards.add(newIndex, cardType)
-        saveConfiguration(siteId, current.copy(visibleCards = newVisibleCards))
+        return current.copy(visibleCards = newVisibleCards)
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,9 +22,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.ShowChart
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -86,6 +92,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
@@ -127,6 +134,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
+    onChartIntervalSelected: (StatsUnit) -> Unit,
     onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
@@ -156,8 +164,9 @@ fun ViewsStatsCard(
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
             is ViewsStatsCardUiState.Content -> ContentCard(
-                uiState, onChartTypeChanged, onMetricSelected, onBarTapped, onRetry, onRemoveCard,
-                onDrillIntoSelectedBar, cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+                uiState, onChartTypeChanged, onChartIntervalSelected, onMetricSelected, onBarTapped,
+                onRetry, onRemoveCard, onDrillIntoSelectedBar, cardPosition, onMoveUp, onMoveToTop,
+                onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
                 uiState, onRetry, onRemoveCard,
@@ -235,9 +244,11 @@ private fun BottomStatsPlaceholder() {
 }
 
 @Composable
+@Suppress("LongParameterList")
 private fun ContentCard(
     state: ViewsStatsCardUiState.Content,
     onChartTypeChanged: (ChartType) -> Unit,
+    onChartIntervalSelected: (StatsUnit) -> Unit,
     onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
@@ -258,16 +269,22 @@ private fun ContentCard(
                 .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
         ) {
             // Title + menu are always shown so the card controls stay reachable in every state.
-            // Chart-type options only make sense once the chart has loaded. The soft-selected bar's
+            // Chart-type options only make sense once the chart has loaded; the interval is offered
+            // alongside an unavailable chart too, since choosing Hours on a non-views metric is one
+            // of the ways to land there and the menu is the way back out. The soft-selected bar's
             // date sits inline next to the title, so selecting a bar doesn't add a row or resize card.
             CardTitleRow(
                 title = stringResource(state.selectedMetric.labelRes),
                 selectedBar = state.selectedBar,
                 onDrillIntoSelectedBar = onDrillIntoSelectedBar,
-                chartTypeMenu = if (chart is ChartUiState.Loaded) {
-                    { ChartTypeMenuItems(chart.chartType, onChartTypeChanged) }
-                } else {
-                    null
+                chartMenu = { dismiss ->
+                    ChartIntervalMenuItem(state.interval) {
+                        onChartIntervalSelected(it)
+                        dismiss()
+                    }
+                    if (chart is ChartUiState.Loaded) {
+                        ChartTypeMenuItems(chart.chartType, onChartTypeChanged)
+                    }
                 },
                 onRemoveCard = onRemoveCard,
                 cardPosition = cardPosition,
@@ -332,7 +349,7 @@ private fun CardTitleRow(
     title: String,
     selectedBar: SelectedBar?,
     onDrillIntoSelectedBar: () -> Unit,
-    chartTypeMenu: @Composable (() -> Unit)?,
+    chartMenu: @Composable ((dismiss: () -> Unit) -> Unit)?,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -384,7 +401,7 @@ private fun CardTitleRow(
             onMoveToTop = onMoveToTop,
             onMoveDown = onMoveDown,
             onMoveToBottom = onMoveToBottom,
-            additionalContent = chartTypeMenu
+            additionalContent = chartMenu
         )
     }
 }
@@ -502,6 +519,84 @@ private fun ChartUnavailableBox(onShowViews: () -> Unit) {
             }
         }
     }
+}
+
+/**
+ * The chart's interval, as a row that opens a sub-menu of the widths this period can draw.
+ *
+ * The row names the width the bars are at and the sub-menu ticks it, so the derived default needs
+ * no Automatic entry to explain — it simply reads as "Interval — Days" with the tick on Days.
+ * Hidden when there is nothing to choose between.
+ *
+ * Nested the way "Move card" is in [StatsCardMenu]; picking closes both levels, since a
+ * [DropdownMenuItem] dismisses neither on its own.
+ */
+@Composable
+private fun ChartIntervalMenuItem(
+    state: ChartIntervalUiState,
+    onIntervalSelected: (StatsUnit) -> Unit
+) {
+    if (state.offered.size < 2) return
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        DropdownMenuItem(
+            text = { Text(text = stringResource(R.string.stats_chart_interval)) },
+            onClick = { expanded = true },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.CalendarMonth,
+                    contentDescription = null
+                )
+            },
+            trailingIcon = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(state.effectiveUnit.labelRes()),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = stringResource(R.string.stats_chart_interval_submenu)
+                    )
+                }
+            }
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            state.offered.forEach { unit ->
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(unit.labelRes())) },
+                    onClick = {
+                        expanded = false
+                        onIntervalSelected(unit)
+                    },
+                    trailingIcon = {
+                        if (unit == state.effectiveUnit) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+@StringRes
+private fun StatsUnit.labelRes(): Int = when (this) {
+    StatsUnit.HOUR -> R.string.stats_timeframe_hours
+    StatsUnit.DAY -> R.string.stats_timeframe_days
+    StatsUnit.WEEK -> R.string.stats_timeframe_weeks
+    StatsUnit.MONTH -> R.string.stats_timeframe_months
+    StatsUnit.YEAR -> R.string.stats_timeframe_years
 }
 
 /**
@@ -1124,6 +1219,7 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
+            onChartIntervalSelected = {},
             onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
@@ -1172,6 +1268,10 @@ private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Conte
                     StatChange.Positive(SAMPLE_POSTS_PERCENTAGE)
                 )
             )
+        ),
+        interval = ChartIntervalUiState(
+            offered = listOf(StatsUnit.DAY, StatsUnit.WEEK),
+            effectiveUnit = StatsUnit.DAY
         )
     )
 }
@@ -1183,6 +1283,7 @@ private fun ViewsStatsCardLoadedPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onChartIntervalSelected = {},
             onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
@@ -1198,6 +1299,7 @@ private fun ViewsStatsCardLoadedLineChartPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.LINE),
             onChartTypeChanged = {},
+            onChartIntervalSelected = {},
             onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
@@ -1215,6 +1317,7 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
+            onChartIntervalSelected = {},
             onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
@@ -1230,6 +1333,7 @@ private fun ViewsStatsCardLoadedDarkPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onChartIntervalSelected = {},
             onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
@@ -1246,6 +1350,7 @@ private fun ViewsStatsCardLoadedRtlPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onChartIntervalSelected = {},
             onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},

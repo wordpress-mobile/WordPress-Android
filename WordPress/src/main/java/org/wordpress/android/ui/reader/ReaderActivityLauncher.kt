@@ -342,7 +342,8 @@ object ReaderActivityLauncher {
         fragment: Fragment,
         blogId: Long,
         postId: Long,
-        source: String?
+        source: String?,
+        commentId: Long = 0L
     ) {
         if (fragment.context == null) {
             return
@@ -351,8 +352,8 @@ object ReaderActivityLauncher {
             context = fragment.requireContext(),
             blogId = blogId,
             postId = postId,
-            directOperation = null,
-            commentId = 0L,
+            directOperation = if (commentId != 0L) DirectOperation.COMMENT_JUMP else null,
+            commentId = commentId,
             interceptedUri = null,
             source = source
         )
