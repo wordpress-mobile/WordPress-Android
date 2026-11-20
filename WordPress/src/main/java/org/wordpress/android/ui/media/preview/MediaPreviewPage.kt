@@ -165,7 +165,8 @@ private fun VideoPlayer(
         },
         update = { it.player = player },
         onRelease = { it.player = null },
-        modifier = Modifier.fillMaxSize()
+        // keeps the playback controls clear of the navigation bar
+        modifier = Modifier.fillMaxSize().navigationBarsPadding()
     )
 }
 
