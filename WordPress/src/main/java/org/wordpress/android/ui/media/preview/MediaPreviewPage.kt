@@ -109,7 +109,8 @@ private fun MediaPlayerPage(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_START -> if (player == null) {
-                    player = createPlayer(context, item.uri, position, playWhenReady, buildMediaSource) {
+                    val mediaSource = buildMediaSource(item.uri.toUri())
+                    player = createPlayer(context, mediaSource, position, playWhenReady) {
                         isBuffering = it
                     }
                 }
@@ -209,10 +210,9 @@ private fun AudioPlayer(player: SimpleExoPlayer?, title: String?) {
 
 private fun createPlayer(
     context: Context,
-    uri: String,
+    mediaSource: MediaSource?,
     position: Long,
     playWhenReady: Boolean,
-    buildMediaSource: (Uri) -> MediaSource?,
     onBufferingChanged: (Boolean) -> Unit
 ) = SimpleExoPlayer.Builder(context).build().apply {
     addListener(object : Player.EventListener {
@@ -220,7 +220,7 @@ private fun createPlayer(
             onBufferingChanged(state == Player.STATE_BUFFERING)
         }
     })
-    buildMediaSource(uri.toUri())?.let { setMediaSource(it, position) }
+    mediaSource?.let { setMediaSource(it, position) }
     this.playWhenReady = playWhenReady
     prepare()
 }
