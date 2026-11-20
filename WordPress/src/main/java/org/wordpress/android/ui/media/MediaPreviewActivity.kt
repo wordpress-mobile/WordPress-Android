@@ -42,7 +42,7 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var exoPlayerUtils: ExoPlayerUtils
 
-    private var site: SiteModel? = null
+    private val site by lazy { intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE) }
     private var maxImageWidth = 0
 
     /** posted when the user swipes to another item, so the media details screen can follow along */
@@ -58,17 +58,15 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
             return
         }
 
-        site = intent.getSerializableExtraCompat(WordPress.SITE)
         // use the larger window dimension so the image is cached the same regardless of orientation
         maxImageWidth = max(DisplayUtils.getWindowPixelWidth(this), DisplayUtils.getWindowPixelHeight(this))
 
         val mediaId = intent.getIntExtra(ARG_MEDIA_ID, 0)
-        val mediaIds = intent.getStringArrayListExtra(ARG_ID_LIST)?.mapNotNull { it.toIntOrNull() }
-        val sources = if (mediaIds != null && mediaIds.size > 1) {
-            mediaIds.map { MediaPreviewSource(mediaId = it, fallbackUri = null) }
-        } else {
-            listOf(MediaPreviewSource(mediaId = mediaId, fallbackUri = contentUri))
-        }
+        val sources = intent.getStringArrayListExtra(ARG_ID_LIST)
+            ?.mapNotNull { it.toIntOrNull() }
+            ?.takeIf { it.size > 1 }
+            ?.map { MediaPreviewSource(mediaId = it, fallbackUri = null) }
+            ?: listOf(MediaPreviewSource(mediaId = mediaId, fallbackUri = contentUri))
         val initialPage = sources.indexOfFirst { it.mediaId == mediaId }.coerceAtLeast(0)
 
         setContent {
@@ -78,11 +76,7 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
                     initialPage = initialPage,
                     resolve = ::resolve,
                     buildMediaSource = exoPlayerUtils::buildMediaSource,
-                    onPageChanged = { page ->
-                        if (sources.size > 1) {
-                            EventBus.getDefault().post(MediaPreviewSwiped(sources[page].mediaId))
-                        }
-                    },
+                    onPageChanged = { page -> EventBus.getDefault().post(MediaPreviewSwiped(sources[page].mediaId)) },
                     onBack = onBackPressedDispatcher::onBackPressed
                 )
             }
@@ -104,7 +98,7 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
     private suspend fun resolve(source: MediaPreviewSource): MediaPreviewItem = withContext(Dispatchers.IO) {
         val media = source.mediaId.takeIf { it != 0 }?.let { mediaStore.getMediaWithLocalId(it) }
         val uri = media?.url?.takeIf { it.isNotEmpty() } ?: source.fallbackUri.orEmpty()
-        val kind = resolveKind(uri)
+        val kind = resolveKind(uri, media?.mimeType)
         MediaPreviewItem(
             uri = if (kind == MediaPreviewKind.IMAGE) getImageUrl(uri) else uri,
             kind = kind,
@@ -113,12 +107,14 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * The MediaUtils checks look at the file extension, which a content:// URI doesn't have, so ask the content
-     * provider for the MIME type first. Only a type we recognize is trusted: anything else (application/octet-stream
-     * and the like) falls through to the extension checks rather than silently counting as an image.
+     * Prefers the MIME type the media model already has. Otherwise the MediaUtils checks look at the file extension,
+     * which a content:// URI doesn't have, so ask the content provider for the MIME type first. Only a type we
+     * recognize is trusted: anything else (application/octet-stream and the like) falls through to the extension
+     * checks rather than silently counting as an image.
      */
-    private fun resolveKind(uri: String): MediaPreviewKind {
-        val mimeType = WPMediaUtils.resolveMimeType(applicationContext, uri)
+    private fun resolveKind(uri: String, knownMimeType: String?): MediaPreviewKind {
+        val mimeType = knownMimeType?.takeIf { it.isNotEmpty() }
+            ?: WPMediaUtils.resolveMimeType(applicationContext, uri)
         return when {
             mimeType?.startsWith("image/") == true -> MediaPreviewKind.IMAGE
             mimeType?.startsWith("video/") == true -> MediaPreviewKind.VIDEO
@@ -167,9 +163,7 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
                 .putExtra(ARG_MEDIA_ID, media.id)
                 .putExtra(ARG_MEDIA_CONTENT_URI, media.url)
             site?.let { intent.putExtra(WordPress.SITE, it) }
-            if (mediaIdList != null && mediaIdList.size > 1) {
-                intent.putStringArrayListExtra(ARG_ID_LIST, mediaIdList)
-            }
+            mediaIdList?.let { intent.putStringArrayListExtra(ARG_ID_LIST, it) }
             startIntent(context, intent)
         }
 

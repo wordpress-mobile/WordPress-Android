@@ -41,18 +41,18 @@ private const val MAX_SCALE = 4f
 private const val DOUBLE_TAP_SCALE = 2.5f
 
 /**
- * A full-screen photo that pinches, pans and double-taps to zoom. [model] is anything Coil can load (a URL or a
- * content:// URI); the optional [loResModel] shows while it loads. A photo that failed to load is retried when its
+ * A full-screen photo that pinches, pans and double-taps to zoom. [model] is a URL, a file path or a content:// URI;
+ * the optional [loResModel] shows while it loads. A photo that failed to load is retried when its
  * page becomes current again.
  */
 @Composable
 fun ZoomablePhoto(
-    model: Any?,
-    contentDescription: String?,
+    model: String?,
+    contentDescription: String,
     errorText: String,
     isCurrentPage: Boolean,
     onTap: () -> Unit,
-    loResModel: Any? = null
+    loResModel: String? = null
 ) {
     val zoomState = remember { ZoomState() }
     var isLoResLoaded by remember { mutableStateOf(false) }

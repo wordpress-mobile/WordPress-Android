@@ -22,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -74,7 +75,8 @@ fun MediaPreviewScreen(
         toolbarShowCount++
     }
 
-    val currentKind = items[pagerState.currentPage]?.kind
+    // derived so the screen only recomposes when the current page's kind changes, not on every swipe
+    val currentKind by remember { derivedStateOf { items[pagerState.currentPage]?.kind } }
     LaunchedEffect(toolbarShowCount, currentKind) {
         if (currentKind == MediaPreviewKind.IMAGE) {
             delay(TOOLBAR_FADE_DELAY_MS)
