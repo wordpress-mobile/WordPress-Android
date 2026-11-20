@@ -217,17 +217,20 @@ class ReaderCommentListViewModel @Inject constructor(
         }
     }
 
-    // the composer bar replies to the comment that's open, otherwise to whatever's being replied to
+    // the composer bar opens the sheet for whatever's being replied to - the open comment, if nothing else is
     fun onComposerClicked() {
         val openCommentId = _uiState.value.detail?.comment?.commentId
         when {
-            openCommentId != null -> onReplyClicked(openCommentId)
+            openCommentId != null && replyToCommentId == 0L -> onReplyClicked(openCommentId)
             !_uiState.value.isSubmitting -> _uiState.update { it.copy(isReplySheetShown = true) }
         }
     }
 
     fun onReplyClicked(commentId: Long) {
         if (!canReply()) return
+        // a reply's own replies aren't shown in the detail, so it's opened first to show the new one under it
+        val openCommentId = _uiState.value.detail?.comment?.commentId
+        if (openCommentId != null && openCommentId != commentId) detailStack += commentId
         setReplyTarget(commentId)
         _uiState.update { it.copy(isReplySheetShown = true, scrollToCommentId = commentId) }
     }

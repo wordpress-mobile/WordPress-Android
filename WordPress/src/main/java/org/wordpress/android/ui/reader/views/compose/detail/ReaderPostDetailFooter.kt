@@ -462,10 +462,12 @@ private fun SnippetComment(
     onImageClick: (String) -> Unit,
     onClick: () -> Unit,
 ) {
+    // the gap below sits outside the tap target, and the tap target spans the row whatever the comment's length
     Column(
         modifier = Modifier
-            .clickable(onClick = onClick)
             .padding(bottom = Margin.Large.value)
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CircleAvatar(
