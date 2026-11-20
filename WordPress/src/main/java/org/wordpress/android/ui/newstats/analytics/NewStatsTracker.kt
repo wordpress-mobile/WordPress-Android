@@ -5,6 +5,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.InsightsCardType
 import org.wordpress.android.ui.newstats.StatsCardType
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsTab
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -247,6 +248,21 @@ class NewStatsTracker @Inject constructor(
         )
     )
 
+    /**
+     * The Views chart's interval, reported on every pick.
+     *
+     * The property names are the bare `from`/`to` rather than the `from_granularity`/`to_granularity`
+     * its neighbours above use, because that is what iOS sends for this event and the two platforms
+     * have to land in one column. Don't "fix" them to match the file.
+     */
+    fun trackChartIntervalChanged(from: ChartInterval, to: ChartInterval) = track(
+        Stat.JETPACK_STATS_CHART_GRANULARITY_CHANGED,
+        mapOf(
+            FROM to from.analyticsName,
+            TO to to.analyticsName
+        )
+    )
+
     // endregion
 
     // region Lists
@@ -326,6 +342,8 @@ class NewStatsTracker @Inject constructor(
         private const val FROM_TYPE = "from_type"
         private const val TO_TYPE = "to_type"
         private const val METRIC = "metric"
+        private const val FROM = "from"
+        private const val TO = "to"
         private const val FROM_GRANULARITY = "from_granularity"
         private const val TO_GRANULARITY = "to_granularity"
         private const val VALUE = "value"

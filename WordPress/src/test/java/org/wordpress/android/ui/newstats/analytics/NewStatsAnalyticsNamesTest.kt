@@ -6,6 +6,7 @@ import org.wordpress.android.ui.newstats.InsightsCardType
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsTab
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.devices.DeviceType
 import org.wordpress.android.ui.newstats.locations.LocationType
@@ -85,6 +86,20 @@ class NewStatsAnalyticsNamesTest {
                 // iOS calls the bar chart `columns`; this deliberately differs from the enum's
                 // own persisted storage key ("bar"), which cannot be renamed to match.
                 ChartType.BAR to "columns"
+            )
+        )
+    }
+
+    @Test
+    fun `chart intervals report the iOS granularity names, the default included`() {
+        assertThat(ChartInterval.entries.associateWith { it.analyticsName }).isEqualTo(
+            mapOf(
+                ChartInterval.AUTOMATIC to "automatic",
+                ChartInterval.HOURS to "hour",
+                ChartInterval.DAYS to "day",
+                ChartInterval.WEEKS to "week",
+                ChartInterval.MONTHS to "month",
+                ChartInterval.YEARS to "year"
             )
         )
     }

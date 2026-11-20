@@ -11,6 +11,11 @@ data class StatsCardsConfiguration(
     val customPeriodEndDate: Long? = null,
     val selectedChartType: String? = null,
     val selectedMetric: String? = null,
+    // The bucket width the user picked for the Views chart, or null for the automatic derivation —
+    // which is also how every configuration written before this existed reads, so there is nothing
+    // to migrate. Validated against the restored period on launch: the two are stored separately,
+    // so a stale pairing (Years with a seven-day window) is normal rather than exceptional.
+    val selectedChartInterval: String? = null,
     // The period the user last picked themselves, stored alongside the range they paged to so that
     // navigation resumes against the picked preset after a restart rather than against a concrete
     // range that several presets could describe (CMM-2415). Null for configurations written before
