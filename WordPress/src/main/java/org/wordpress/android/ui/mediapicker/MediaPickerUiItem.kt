@@ -34,6 +34,7 @@ sealed class MediaPickerUiItem(
         val identifier: Identifier,
         val fileName: String,
         val fileExtension: String? = null,
+        val mimeType: String? = null,
         val isSelected: Boolean = false,
         val selectedOrder: Int? = null,
         val showOrderCounter: Boolean = false,

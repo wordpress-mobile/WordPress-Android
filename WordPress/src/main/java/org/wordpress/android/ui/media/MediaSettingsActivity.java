@@ -39,7 +39,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -436,11 +435,9 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         // audio & documents show a placeholder on top of a gradient, otherwise we show a thumbnail
         if (isAudio() || isDocument()) {
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
-            @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
-                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.neutral_30);
+                    WPMediaUtils.getPlaceholder(uriFilePath, mMedia.getMimeType()), R.color.neutral_30);
             mImageView.setPadding(padding, padding * 2, padding, padding);
-            mImageView.setImageResource(imageRes);
         } else {
             loadImage();
         }
