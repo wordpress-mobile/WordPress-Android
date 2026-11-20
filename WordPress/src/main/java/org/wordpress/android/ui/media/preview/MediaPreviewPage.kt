@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.view.View
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -36,9 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -79,9 +77,9 @@ fun MediaPreviewPage(
 }
 
 /**
- * Plays a video or an audio file. As with the old pager, a page has a prepared player while it's composed (the
- * current page or a neighbour) and the screen is started, so a neighbouring video already shows its first frame when
- * the user swipes to it. Only the current page plays, and the position is kept for when the player is rebuilt.
+ * Plays a video or an audio file. A page has a prepared player while it's composed (the current page or a
+ * neighbour) and the screen is started, so a neighbouring video already shows its first frame when the user swipes
+ * to it. Only the current page plays, and the position is kept for when the player is rebuilt.
  */
 @Composable
 private fun MediaPlayerPage(
@@ -92,15 +90,17 @@ private fun MediaPlayerPage(
     onVideoControlsVisibilityChanged: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
     var position by rememberSaveable { mutableLongStateOf(0L) }
     var playWhenReady by rememberSaveable { mutableStateOf(autoPlay) }
     var player by remember { mutableStateOf<SimpleExoPlayer?>(null) }
     var isBuffering by remember { mutableStateOf(false) }
     val currentIsCurrentPage by rememberUpdatedState(isCurrentPage)
 
-    DisposableEffect(lifecycleOwner) {
-        fun release() {
+    LifecycleStartEffect(Unit) {
+        val mediaSource = buildMediaSource(item.uri.toUri())
+        val shouldPlay = playWhenReady && currentIsCurrentPage
+        player = createPlayer(context, mediaSource, position, shouldPlay) { isBuffering = it }
+        onStopOrDispose {
             player?.let {
                 position = it.currentPosition
                 playWhenReady = it.playWhenReady
@@ -108,23 +108,6 @@ private fun MediaPlayerPage(
             }
             player = null
             isBuffering = false
-        }
-
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_START -> if (player == null) {
-                    val mediaSource = buildMediaSource(item.uri.toUri())
-                    val shouldPlay = playWhenReady && currentIsCurrentPage
-                    player = createPlayer(context, mediaSource, position, shouldPlay) { isBuffering = it }
-                }
-                Lifecycle.Event.ON_STOP -> release()
-                else -> Unit
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-            release()
         }
     }
 
@@ -187,7 +170,7 @@ private fun VideoPlayer(
 }
 
 @Composable
-private fun AudioPlayer(player: SimpleExoPlayer?, isCurrentPage: Boolean, title: String?) {
+private fun BoxScope.AudioPlayer(player: SimpleExoPlayer?, isCurrentPage: Boolean, title: String?) {
     var controlView by remember { mutableStateOf<PlayerControlView?>(null) }
 
     // focus the controls so a keyboard or D-pad controls playback
@@ -195,43 +178,41 @@ private fun AudioPlayer(player: SimpleExoPlayer?, isCurrentPage: Boolean, title:
         if (isCurrentPage && player != null) controlView?.requestFocus()
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.align(Alignment.Center).padding(16.dp)
-        ) {
-            if (!title.isNullOrEmpty()) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
-            Icon(
-                painter = painterResource(R.drawable.ic_audio_white_24dp),
-                contentDescription = stringResource(R.string.media_preview_audio_desc),
-                tint = colorResource(R.color.neutral_30),
-                modifier = Modifier.size(128.dp)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.align(Alignment.Center).padding(16.dp)
+    ) {
+        if (!title.isNullOrEmpty()) {
+            Text(
+                text = title,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
-        AndroidView(
-            factory = { context ->
-                PlayerControlView(context).apply {
-                    showTimeoutMs = 0
-                    controlView = this
-                }
-            },
-            update = { it.player = player },
-            onRelease = { it.player = null },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .navigationBarsPadding()
+        Icon(
+            painter = painterResource(R.drawable.ic_audio_white_24dp),
+            contentDescription = stringResource(R.string.media_preview_audio_desc),
+            tint = colorResource(R.color.neutral_30),
+            modifier = Modifier.size(128.dp)
         )
     }
+    AndroidView(
+        factory = { context ->
+            PlayerControlView(context).apply {
+                showTimeoutMs = 0
+                controlView = this
+            }
+        },
+        update = { it.player = player },
+        onRelease = { it.player = null },
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .fillMaxWidth()
+            .navigationBarsPadding()
+    )
 }
 
 private fun createPlayer(

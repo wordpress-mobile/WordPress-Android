@@ -13,7 +13,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -38,6 +36,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.LoadingState
 
 private const val TOOLBAR_FADE_DELAY_MS = 3000L
 private const val TOOLBAR_ALPHA = 0.4f
@@ -92,16 +91,14 @@ fun MediaPreviewScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-        // keeps a neighbour loaded either side, as the old ViewPager did
+        // keeps a neighbour loaded either side
         HorizontalPager(state = pagerState, beyondViewportPageCount = 1, modifier = Modifier.fillMaxSize()) { page ->
             LaunchedEffect(page) {
                 if (page !in items) items[page] = resolve(sources[page])
             }
             val item = items[page]
             if (item == null) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
+                LoadingState()
             } else {
                 MediaPreviewPage(
                     item = item,
@@ -110,9 +107,7 @@ fun MediaPreviewScreen(
                     autoPlay = page == initialPage,
                     buildMediaSource = buildMediaSource,
                     onImageTap = ::showToolbar,
-                    onVideoControlsVisibilityChanged = { isVisible ->
-                        if (isVisible) showToolbar() else isToolbarVisible = false
-                    }
+                    onVideoControlsVisibilityChanged = { isToolbarVisible = it }
                 )
             }
         }
