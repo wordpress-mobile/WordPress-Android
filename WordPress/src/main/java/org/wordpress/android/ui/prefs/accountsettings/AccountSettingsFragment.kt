@@ -365,8 +365,11 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 action = PRIMARY_SITE_CHANGED
             }
             webAddressPreference -> {
-                viewModel.onWebAddressChanged(newValue.toString())
-                action = WEB_ADDRESS_CHANGED
+                // An empty field is valid, so OK can be tapped without changes; skip the no-op save.
+                if (webAddressPreference.summary?.toString().orEmpty() != newValue.toString()) {
+                    viewModel.onWebAddressChanged(newValue.toString())
+                    action = WEB_ADDRESS_CHANGED
+                }
             }
             changePasswordPreference -> {
                 viewModel.onPasswordChanged(newValue.toString())
