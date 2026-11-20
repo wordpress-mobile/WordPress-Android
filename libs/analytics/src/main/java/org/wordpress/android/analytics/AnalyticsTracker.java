@@ -203,6 +203,7 @@ public final class AnalyticsTracker {
         JETPACK_STATS_CHART_TYPE_CHANGED,
         JETPACK_STATS_CHART_METRIC_SELECTED,
         JETPACK_STATS_CHART_BAR_SELECTED,
+        JETPACK_STATS_CHART_GRANULARITY_CHANGED,
         // Reports `item_type` only. iOS also sends a `metric` on this event, since its top lists
         // are ranked by a metric the reader picks and Android's are not.
         JETPACK_STATS_TOP_LIST_ITEM_TAPPED,

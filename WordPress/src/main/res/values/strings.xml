@@ -1479,6 +1479,9 @@
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_comments" translatable="false">@string/comments</string>
+    <!-- The Views chart's interval menu. The unit names themselves reuse stats_timeframe_*. -->
+    <string name="stats_chart_interval">Interval</string>
+    <string name="stats_chart_interval_submenu">Open interval options</string>
     <string name="stats_chart_type_lines">Lines</string>
     <string name="stats_chart_type_bars">Bars</string>
     <!-- Average XX -->

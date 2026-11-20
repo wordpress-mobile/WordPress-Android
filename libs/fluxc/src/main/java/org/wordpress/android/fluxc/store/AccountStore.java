@@ -22,9 +22,6 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountFetchUsernameSuggestionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
@@ -408,12 +405,6 @@ public class AccountStore extends Store {
         public boolean isEmailVerified;
     }
 
-    public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
-        public String xmlRpcEndpoint;
-        public String wpRestEndpoint;
-        public String failedEndpoint;
-    }
-
     public static class OnNewUserCreated extends OnChanged<NewUserError> {
         public boolean dryRun;
     }
@@ -743,15 +734,12 @@ public class AccountStore extends Store {
     private Authenticator mAuthenticator;
     private AccountModel mAccount;
     private AccessToken mAccessToken;
-    private SelfHostedEndpointFinder mSelfHostedEndpointFinder;
 
     @Inject public AccountStore(Dispatcher dispatcher, AccountRestClient accountRestClient,
-                        SelfHostedEndpointFinder selfHostedEndpointFinder, Authenticator authenticator,
-                        AccessToken accessToken) {
+                        Authenticator authenticator, AccessToken accessToken) {
         super(dispatcher);
         mAuthenticator = authenticator;
         mAccountRestClient = accountRestClient;
-        mSelfHostedEndpointFinder = selfHostedEndpointFinder;
         mAccount = loadAccount();
         mAccessToken = accessToken;
     }
@@ -897,12 +885,6 @@ public class AccountStore extends Store {
             case AUTHENTICATE_ERROR:
                 handleAuthenticateError((AuthenticateErrorPayload) payload);
                 break;
-            case DISCOVER_ENDPOINT:
-                discoverEndPoint((String) payload);
-                break;
-            case DISCOVERY_RESULT:
-                discoveryResult((DiscoveryResultPayload) payload);
-                break;
             case START_SECURITY_KEY_CHALLENGE:
                 requestWebauthnChallenge((StartWebauthnChallengePayload) payload);
                 break;
@@ -919,22 +901,6 @@ public class AccountStore extends Store {
         OnAuthenticationChanged event = new OnAuthenticationChanged();
         event.error = payload.error;
         emitChange(event);
-    }
-
-    private void discoverEndPoint(@NonNull String payload) {
-        mSelfHostedEndpointFinder.findEndpoint(payload);
-    }
-
-    private void discoveryResult(DiscoveryResultPayload payload) {
-        OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
-        if (payload.isError()) {
-            discoveryResponse.error = payload.error;
-            discoveryResponse.failedEndpoint = payload.failedEndpoint;
-        } else {
-            discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
-            discoveryResponse.wpRestEndpoint = payload.wpRestEndpoint;
-        }
-        emitChange(discoveryResponse);
     }
 
     private void handleFetchAccountCompleted(AccountRestPayload payload) {

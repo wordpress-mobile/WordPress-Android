@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker
 import org.wordpress.android.ui.newstats.analytics.NewStatsTracker.NavigationDirection
@@ -67,6 +68,10 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(testSite)
         whenever(accountStore.accessToken).thenReturn("test_access_token")
         whenever(resourceProvider.getString(any())).thenReturn("")
+        whenever(statsRepository.chartUnitFor(any(), any())).thenAnswer { invocation ->
+            invocation.getArgument<ChartInterval>(1).unit ?: StatsUnit.DAY
+        }
+        whenever(statsRepository.offeredUnits(any())).thenReturn(StatsUnit.entries)
         // The selector's date line resolves a preset's window through the repository. These tests
         // assert what is tracked, not that line, so one fixed window stands in for every period.
         whenever(statsRepository.periodWindow(any()))
@@ -134,6 +139,44 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     }
 
     @Test
+    fun `changing the chart interval reports both intervals`() = test {
+        initViewModel()
+
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
+
+        verify(newStatsTracker).trackChartIntervalChanged(
+            from = ChartInterval.AUTOMATIC,
+            to = ChartInterval.WEEKS
+        )
+    }
+
+    @Test
+    fun `re-picking the chart interval already on screen is still reported`() = test {
+        // The deliberate exception to this file's theme, and to the chart-type event just above:
+        // iOS reports every pick of this one, so Android has to as well for the two to be comparable.
+        // The second pick changes nothing — the chart is already weekly — and is reported anyway.
+        initViewModel()
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
+
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
+
+        verify(newStatsTracker, times(2)).trackChartIntervalChanged(any(), any())
+    }
+
+    @Test
+    fun `an interval reset caused by a period change reports nothing`() = test {
+        // The user didn't pick AUTOMATIC; the new period simply can't draw what they had picked.
+        initViewModel()
+        viewModel.onChartIntervalSelected(StatsUnit.WEEK)
+        whenever(statsRepository.offeredUnits(any()))
+            .thenReturn(listOf(StatsUnit.HOUR))
+
+        viewModel.onPresetSelected(StatsPeriod.Today)
+
+        verify(newStatsTracker, times(1)).trackChartIntervalChanged(any(), any())
+    }
+
+    @Test
     fun `re-picking the chart type already on screen reports nothing`() = test {
         initViewModel()
         viewModel.onChartTypeChanged(ChartType.LINE)
@@ -145,7 +188,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
 
     @Test
     fun `selecting a metric reports it once`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
         initViewModel()
 
@@ -157,7 +200,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
 
     @Test
     fun `selecting a bar reports its bucket width, metric and total`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
         initViewModel()
         viewModel.onChartTypeChanged(ChartType.BAR)
@@ -175,7 +218,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
     /** The same tap undone: reporting it would double every bar interaction. */
     @Test
     fun `tapping the selected bar again, which deselects it, reports nothing further`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
         initViewModel()
         viewModel.onChartTypeChanged(ChartType.BAR)
@@ -190,7 +233,7 @@ class ViewsStatsViewModelTrackingTest : StatsDateUnitTest() {
 
     @Test
     fun `opening the card reports nothing by itself`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any()))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any(), any(), any()))
             .thenReturn(periodStatsResult())
 
         initViewModel()
