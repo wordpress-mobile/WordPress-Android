@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.action;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateTwoFactorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
@@ -17,14 +16,10 @@ public enum AuthenticationAction implements IAction {
     AUTHENTICATE,
     @Action(payloadType = AuthenticateTwoFactorPayload.class)
     AUTHENTICATE_TWO_FACTOR,
-    @Action(payloadType = String.class)
-    DISCOVER_ENDPOINT,
 
     // Remote responses
     @Action(payloadType = AuthenticateErrorPayload.class)
     AUTHENTICATE_ERROR,
-    @Action(payloadType = DiscoveryResultPayload.class)
-    DISCOVERY_RESULT,
     @Action(payloadType = StartWebauthnChallengePayload.class)
     START_SECURITY_KEY_CHALLENGE,
 

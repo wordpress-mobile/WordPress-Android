@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PRIVATE_ATOMIC_COOKIE
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PROFILE_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
@@ -37,10 +36,8 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCH_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_PLANS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_POST_FORMATS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_PRIVATE_ATOMIC_COOKIE
-import org.wordpress.android.fluxc.action.SiteAction.FETCH_PROFILE_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES
-import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API
@@ -145,12 +142,6 @@ open class SiteStore @Inject constructor(
     data class CompleteQuickStartPayload(
         @JvmField val site: SiteModel,
         @JvmField val variant: String
-    ) : Payload<BaseNetworkError>()
-
-    data class RefreshSitesXMLRPCPayload(
-        @JvmField val username: String = "",
-        @JvmField val password: String = "",
-        @JvmField val url: String = ""
     ) : Payload<BaseNetworkError>()
 
     data class RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
@@ -420,7 +411,6 @@ open class SiteStore @Inject constructor(
     data class QuickStartError(@JvmField val type: QuickStartErrorType, @JvmField val message: String?) : OnChangedError
 
     // OnChanged Events
-    data class OnProfileFetched(@JvmField val site: SiteModel) : OnChanged<SiteError>()
     data class OnSiteChanged(
         @JvmField val rowsAffected: Int = 0,
         @JvmField val updatedSites: List<SiteModel> = emptyList()
@@ -1050,16 +1040,11 @@ open class SiteStore @Inject constructor(
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? SiteAction ?: return
         when (actionType) {
-            FETCH_PROFILE_XML_RPC -> fetchProfileXmlRpc(action.payload as SiteModel)
-            FETCHED_PROFILE_XML_RPC -> updateSiteProfile(action.payload as SiteModel)
             FETCH_SITE -> coroutineEngine.launch(T.MAIN, this, "Fetch site") {
                 emitChange(fetchSite(action.payload as SiteModel))
             }
             FETCH_SITES -> coroutineEngine.launch(T.MAIN, this, "Fetch sites") {
                 emitChange(fetchSites(action.payload as FetchSitesPayload))
-            }
-            FETCH_SITES_XML_RPC -> coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites") {
-                emitChange(fetchSitesXmlRpc(action.payload as RefreshSitesXMLRPCPayload))
             }
             FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD ->
                 coroutineEngine.launch(T.MAIN, this, "Fetch XMLRPC sites from Application Password") {
@@ -1158,23 +1143,6 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    private fun fetchProfileXmlRpc(site: SiteModel) {
-        if (site.xmlRpcUrl.isNullOrEmpty()) {
-            AppLog.w(
-                T.API,
-                "fetchProfileXmlRpc: skipping, xmlRpcUrl is null"
-            )
-            val event = OnProfileFetched(site)
-            event.error = SiteError(
-                SiteErrorType.GENERIC_ERROR,
-                "XML-RPC is unavailable for this site"
-            )
-            emitChange(event)
-            return
-        }
-        siteXMLRPCClient.fetchProfile(site)
-    }
-
     suspend fun fetchSite(site: SiteModel): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch site") {
             // Refresh from the stored row rather than the caller's copy. An in-memory SiteModel can
@@ -1196,12 +1164,6 @@ open class SiteStore @Inject constructor(
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
             val result = siteRestClient.fetchSites(payload.filters, payload.filterJetpackConnectedPackageSite)
             handleFetchedSitesWPComRest(result)
-        }
-    }
-
-    suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
-        return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
-            updateSites(siteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password))
         }
     }
 
@@ -1326,22 +1288,6 @@ open class SiteStore @Inject constructor(
                 )
             }
         }
-    }
-
-    @Suppress("ForbiddenComment", "SwallowedException")
-    private fun updateSiteProfile(siteModel: SiteModel) {
-        val event = OnProfileFetched(siteModel)
-        if (siteModel.isError) {
-            // TODO: what kind of error could we get here?
-            event.error = SiteErrorUtils.genericToSiteError(siteModel.error)
-        } else {
-            try {
-                siteSqlUtils.insertOrUpdateSite(siteModel)
-            } catch (e: DuplicateSiteException) {
-                event.error = SiteError(DUPLICATE_SITE)
-            }
-        }
-        emitChange(event)
     }
 
     @Suppress("ForbiddenComment", "SwallowedException", "NestedBlockDepth")

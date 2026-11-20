@@ -4,10 +4,8 @@ import com.android.volley.RequestQueue
 import kotlinx.coroutines.delay
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC.GET_OPTIONS
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC.GET_POST_FORMATS
-import org.wordpress.android.fluxc.generated.endpoint.XMLRPC.GET_PROFILE
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC.GET_USERS_SITES
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -45,24 +43,6 @@ class SiteXMLRPCClient @Inject constructor(
     httpAuthManager: HTTPAuthManager?,
     private val xmlrpcRequestBuilder: XMLRPCRequestBuilder
 ) : BaseXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager) {
-    fun fetchProfile(site: SiteModel) {
-        val params: MutableList<Any> = ArrayList()
-        params.add(site.selfHostedSiteId)
-        params.add(site.getUserNameProcessed())
-        params.add(site.getPasswordProcessed())
-        val request = xmlrpcRequestBuilder.buildGetRequest(site.xmlRpcUrl, GET_PROFILE, params, Map::class.java,
-                { response ->
-                    val updatedSite = profileResponseToAccountModel(response, site)
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(updatedSite))
-                }
-        ) { error ->
-            val site = SiteModel()
-            site.error = error
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedProfileXmlRpcAction(site))
-        }
-        add(request)
-    }
-
     suspend fun fetchSitesFromApplicationPassword(
         xmlrpcUrl: String,
         apiRootUrl: String,
@@ -186,13 +166,6 @@ class SiteXMLRPCClient @Inject constructor(
                 payload
             }
         }
-    }
-
-    private fun profileResponseToAccountModel(response: Map<*, *>?, site: SiteModel): SiteModel? {
-        if (response == null) return null
-        site.email = MapUtils.getMapStr(response, "email")
-        site.displayName = MapUtils.getMapStr(response, "display_name")
-        return site
     }
 
     private fun sitesResponseToSitesModel(response: Array<Any>?, username: String, password: String): SitesModel? {
