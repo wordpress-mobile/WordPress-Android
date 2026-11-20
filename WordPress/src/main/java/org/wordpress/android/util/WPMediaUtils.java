@@ -528,24 +528,42 @@ public class WPMediaUtils {
     public static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
             return R.drawable.ic_image_white_24dp;
-        } else if (MediaUtils.isDocument(url) || isPlainText(url)) {
-            return R.drawable.ic_pages_white_24dp;
-        } else if (MediaUtils.isPowerpoint(url)) {
-            return R.drawable.media_powerpoint;
-        } else if (MediaUtils.isSpreadsheet(url)) {
-            return R.drawable.media_spreadsheet;
         } else if (MediaUtils.isVideo(url)) {
             return R.drawable.ic_video_camera_white_24dp;
         } else if (MediaUtils.isAudio(url)) {
             return R.drawable.ic_audio_white_24dp;
-        } else {
-            return R.drawable.ic_image_multiple_white_24dp;
         }
-    }
 
-    // utils' MediaUtils.isDocument() doesn't cover .txt
-    private static boolean isPlainText(String url) {
-        return url != null && url.toLowerCase(Locale.ROOT).endsWith(".txt");
+        String extension = url == null ? "" : url.substring(url.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+        switch (extension) {
+            case "pdf":
+                return R.drawable.ic_file_pdf_white_24dp;
+            case "doc":
+            case "docx":
+            case "odt":
+            case "rtf":
+            case "pages":
+                return R.drawable.ic_file_document_white_24dp;
+            case "txt":
+                return R.drawable.ic_file_text_white_24dp;
+            case "xls":
+            case "xlsx":
+            case "ods":
+            case "csv":
+            case "numbers":
+                return R.drawable.ic_file_spreadsheet_white_24dp;
+            case "ppt":
+            case "pptx":
+            case "pps":
+            case "ppsx":
+            case "odp":
+            case "key":
+                return R.drawable.ic_file_presentation_white_24dp;
+            case "zip":
+                return R.drawable.ic_file_archive_white_24dp;
+            default:
+                return R.drawable.ic_file_generic_white_24dp;
+        }
     }
 
     /**
