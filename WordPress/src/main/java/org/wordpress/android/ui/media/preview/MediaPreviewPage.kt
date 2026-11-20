@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
@@ -45,6 +47,8 @@ import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ZoomablePhoto
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 
 @Composable
 fun MediaPreviewPage(
@@ -75,8 +79,9 @@ fun MediaPreviewPage(
 }
 
 /**
- * Plays a video or an audio file. The player only exists while this is the page in front of the user and the
- * screen is started, so swiping away or leaving the app releases it; the position is kept for when it comes back.
+ * Plays a video or an audio file. As with the old pager, a page has a prepared player while it's composed (the
+ * current page or a neighbour) and the screen is started, so a neighbouring video already shows its first frame when
+ * the user swipes to it. Only the current page plays, and the position is kept for when the player is rebuilt.
  */
 @Composable
 private fun MediaPlayerPage(
@@ -92,10 +97,9 @@ private fun MediaPlayerPage(
     var playWhenReady by rememberSaveable { mutableStateOf(autoPlay) }
     var player by remember { mutableStateOf<SimpleExoPlayer?>(null) }
     var isBuffering by remember { mutableStateOf(false) }
+    val currentIsCurrentPage by rememberUpdatedState(isCurrentPage)
 
-    DisposableEffect(isCurrentPage, lifecycleOwner) {
-        if (!isCurrentPage) return@DisposableEffect onDispose {}
-
+    DisposableEffect(lifecycleOwner) {
         fun release() {
             player?.let {
                 position = it.currentPosition
@@ -110,9 +114,8 @@ private fun MediaPlayerPage(
             when (event) {
                 Lifecycle.Event.ON_START -> if (player == null) {
                     val mediaSource = buildMediaSource(item.uri.toUri())
-                    player = createPlayer(context, mediaSource, position, playWhenReady) {
-                        isBuffering = it
-                    }
+                    val shouldPlay = playWhenReady && currentIsCurrentPage
+                    player = createPlayer(context, mediaSource, position, shouldPlay) { isBuffering = it }
                 }
                 Lifecycle.Event.ON_STOP -> release()
                 else -> Unit
@@ -127,11 +130,19 @@ private fun MediaPlayerPage(
         }
     }
 
+    // swiping away pauses, and swiping back doesn't resume playback on its own
+    LaunchedEffect(isCurrentPage) {
+        if (!isCurrentPage) {
+            player?.playWhenReady = false
+            playWhenReady = false
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         if (item.kind == MediaPreviewKind.VIDEO) {
             VideoPlayer(player, isCurrentPage, onVideoControlsVisibilityChanged)
         } else {
-            AudioPlayer(player, item.title)
+            AudioPlayer(player, isCurrentPage, item.title)
         }
         if (isBuffering) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -148,6 +159,18 @@ private fun VideoPlayer(
     // only the page the user is actually looking at may drive the toolbar
     val currentIsCurrentPage by rememberUpdatedState(isCurrentPage)
     val currentOnControlsVisibilityChanged by rememberUpdatedState(onControlsVisibilityChanged)
+    var playerView by remember { mutableStateOf<PlayerView?>(null) }
+
+    // when this page comes to the front or its player is rebuilt, sync the toolbar with the controls (they may
+    // already be showing, which fires no change) and focus the player so a keyboard or D-pad controls playback
+    LaunchedEffect(isCurrentPage, player) {
+        val view = playerView
+        if (isCurrentPage && player != null && view != null) {
+            currentOnControlsVisibilityChanged(view.isControllerVisible)
+            view.requestFocus()
+        }
+    }
+
     AndroidView(
         factory = { context ->
             PlayerView(context).apply {
@@ -156,24 +179,24 @@ private fun VideoPlayer(
                 setControllerVisibilityListener { visibility ->
                     if (currentIsCurrentPage) currentOnControlsVisibilityChanged(visibility == View.VISIBLE)
                 }
+                playerView = this
             }
         },
-        update = { view ->
-            if (view.player !== player) {
-                view.player = player
-                // a rebuilt player may come back with its controls already showing, which fires no change
-                if (player != null && currentIsCurrentPage) {
-                    currentOnControlsVisibilityChanged(view.isControllerVisible)
-                }
-            }
-        },
+        update = { it.player = player },
         onRelease = { it.player = null },
         modifier = Modifier.fillMaxSize()
     )
 }
 
 @Composable
-private fun AudioPlayer(player: SimpleExoPlayer?, title: String?) {
+private fun AudioPlayer(player: SimpleExoPlayer?, isCurrentPage: Boolean, title: String?) {
+    var controlView by remember { mutableStateOf<PlayerControlView?>(null) }
+
+    // focus the controls so a keyboard or D-pad controls playback
+    LaunchedEffect(isCurrentPage, player) {
+        if (isCurrentPage && player != null) controlView?.requestFocus()
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -197,7 +220,12 @@ private fun AudioPlayer(player: SimpleExoPlayer?, title: String?) {
             )
         }
         AndroidView(
-            factory = { context -> PlayerControlView(context).apply { showTimeoutMs = 0 } },
+            factory = { context ->
+                PlayerControlView(context).apply {
+                    showTimeoutMs = 0
+                    controlView = this
+                }
+            },
             update = { it.player = player },
             onRelease = { it.player = null },
             modifier = Modifier
@@ -218,6 +246,10 @@ private fun createPlayer(
     addListener(object : Player.EventListener {
         override fun onPlaybackStateChanged(state: Int) {
             onBufferingChanged(state == Player.STATE_BUFFERING)
+        }
+
+        override fun onPlayerError(error: ExoPlaybackException) {
+            AppLog.e(T.MEDIA, "Media preview playback failed", error)
         }
     })
     mediaSource?.let { setMediaSource(it, position) }

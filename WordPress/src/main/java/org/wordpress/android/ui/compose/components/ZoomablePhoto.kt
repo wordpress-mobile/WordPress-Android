@@ -12,7 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -32,7 +32,12 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntSize
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -42,8 +47,8 @@ private const val DOUBLE_TAP_SCALE = 2.5f
 
 /**
  * A full-screen photo that pinches, pans and double-taps to zoom. [model] is a URL, a file path or a content:// URI;
- * the optional [loResModel] shows while it loads. A photo that failed to load is retried when its
- * page becomes current again.
+ * the optional [loResModel] shows while it loads. A photo that failed to load is retried when its page becomes
+ * current again or the screen resumes, as the user may have come back online.
  */
 @Composable
 fun ZoomablePhoto(
@@ -60,15 +65,23 @@ fun ZoomablePhoto(
     var hasHiResFailed by remember { mutableStateOf(false) }
     var loadAttempt by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(isCurrentPage) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(isCurrentPage, lifecycleOwner) {
         if (!isCurrentPage) {
             // the pager keeps its neighbours composed, so a photo swiped away would otherwise stay zoomed
             zoomState.reset()
-        } else if (hasHiResFailed) {
-            // a neighbour pre-loaded while offscreen may have failed, so try again now it's in front
-            hasHiResFailed = false
-            loadAttempt++
+            return@DisposableEffect onDispose {}
         }
+        // adding the observer replays ON_RESUME when the screen is already resumed, so this also covers the page
+        // coming to the front after a pre-load that failed while it was offscreen
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME && hasHiResFailed) {
+                hasHiResFailed = false
+                loadAttempt++
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -110,7 +123,10 @@ fun ZoomablePhoto(
                         isHiResLoaded = true
                         zoomState.imageSize = it.painter.intrinsicSize
                     },
-                    onError = { hasHiResFailed = true },
+                    onError = {
+                        AppLog.e(T.MEDIA, "Failed to load photo", it.result.throwable)
+                        hasHiResFailed = true
+                    },
                     modifier = Modifier.fillMaxSize()
                 )
             }

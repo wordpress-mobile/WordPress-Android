@@ -75,8 +75,9 @@ fun MediaPreviewScreen(
         toolbarShowCount++
     }
 
-    // derived so the screen only recomposes when the current page's kind changes, not on every swipe
-    val currentKind by remember { derivedStateOf { items[pagerState.currentPage]?.kind } }
+    // the settled page rather than currentPage, which changes mid-drag, so a drag that's pulled back doesn't count
+    // as a page change. Derived so the screen only recomposes when the kind changes, not on every swipe.
+    val currentKind by remember { derivedStateOf { items[pagerState.settledPage]?.kind } }
     LaunchedEffect(toolbarShowCount, currentKind) {
         if (currentKind == MediaPreviewKind.IMAGE) {
             delay(TOOLBAR_FADE_DELAY_MS)
@@ -84,7 +85,7 @@ fun MediaPreviewScreen(
         }
     }
     LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.drop(1).collect { page ->
+        snapshotFlow { pagerState.settledPage }.drop(1).collect { page ->
             showToolbar()
             onPageChanged(page)
         }
