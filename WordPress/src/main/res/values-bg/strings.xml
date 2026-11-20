@@ -73,7 +73,6 @@ Language: bg
     <string name="application_password_required">Изисква се парола на приложението</string>
     <string name="menu_html_mode">Редактор на код</string>
     <string name="taxonomies_title">Категоризации</string>
-    <string name="media_edit_file_size_caption">Размер на файла</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Неуспешен вход в WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Свързване с WordPress.com</string>
     <string name="dataview_default_empty_message">Тук няма нищо</string>
