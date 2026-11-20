@@ -49,6 +49,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         container: View,
         imgThumbnail: ImageView,
         fileName: String,
+        mimeType: String?,
         isSelected: Boolean,
         clickAction: ClickAction,
         toggleAction: ToggleAction,
@@ -57,7 +58,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         imageManager.cancelRequestAndClearImageView(imgThumbnail)
 
         // not an image or video, so show file name and file type
-        val placeholderResId = WPMediaUtils.getPlaceholder(fileName)
+        val placeholderResId = WPMediaUtils.getPlaceholder(fileName, mimeType)
         setImageResourceWithTint(
             imgThumbnail, placeholderResId,
             R.color.neutral_30

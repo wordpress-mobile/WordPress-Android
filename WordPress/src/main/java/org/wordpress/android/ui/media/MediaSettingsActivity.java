@@ -436,7 +436,7 @@ public class MediaSettingsActivity extends BaseAppCompatActivity
         if (isAudio() || isDocument()) {
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
-                    WPMediaUtils.getPlaceholder(uriFilePath), R.color.neutral_30);
+                    WPMediaUtils.getPlaceholder(uriFilePath, mMedia.getMimeType()), R.color.neutral_30);
             mImageView.setPadding(padding, padding * 2, padding, padding);
         } else {
             loadImage();

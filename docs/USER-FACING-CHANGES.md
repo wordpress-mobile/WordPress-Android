@@ -8,14 +8,6 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
-- **Media library documents show an icon for their file type**
-  Documents in the media library show an icon that matches their type: PDF, document, plain text, spreadsheet, presentation or ZIP archive. Before, PDFs, Word documents and text files all shared one icon, and other file types showed a generic image icon.
-  - **Apps:** Both
-  - **Type:** Changed
-  - **Availability:** Everyone
-  - **Where:** My Site → Media; the media details screen; the media picker's document list
-  - **Notes:** Unrecognised file types show a generic file icon.
-
 - **The Web Address in Account Settings can be cleared**
   Deleting your Web Address and tapping OK now removes it from your profile. Before, the OK button was disabled whenever the field was empty, so an address could be changed but never removed.
   - **Apps:** Both

@@ -31,6 +31,7 @@ class FileThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewU
             container,
             imgThumbnail,
             item.fileName,
+            item.mimeType,
             item.isSelected,
             item.clickAction,
             item.toggleAction,

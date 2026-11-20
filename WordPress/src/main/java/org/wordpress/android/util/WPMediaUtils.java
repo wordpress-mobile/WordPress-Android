@@ -525,18 +525,22 @@ public class WPMediaUtils {
         return intent;
     }
 
-    public static int getPlaceholder(String url) {
-        if (MediaUtils.isValidImage(url)) {
+    public static int getPlaceholder(@Nullable String url, @Nullable String mimeType) {
+        String mime = StringUtils.notNullStr(mimeType);
+        if (mime.startsWith("image/") || MediaUtils.isValidImage(url)) {
             return R.drawable.ic_image_white_24dp;
-        } else if (MediaUtils.isVideo(url)) {
+        } else if (mime.startsWith("video/") || MediaUtils.isVideo(url)) {
             return R.drawable.ic_video_camera_white_24dp;
-        } else if (MediaUtils.isAudio(url)) {
+        } else if (mime.startsWith("audio/") || MediaUtils.isAudio(url)) {
             return R.drawable.ic_audio_white_24dp;
         }
 
-        String extension = StringUtils.notNullStr(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(url))
-                                      .toLowerCase(Locale.ROOT);
-        switch (extension) {
+        // fall back to the MIME type's extension when the name has none, e.g. a picked "Quarterly report"
+        String extension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(url);
+        if (extension == null) {
+            extension = MediaUtils.getExtensionForMimeType(mimeType);
+        }
+        switch (extension.toLowerCase(Locale.ROOT)) {
             case "pdf":
                 return R.drawable.ic_file_pdf_white_24dp;
             case "doc":
