@@ -491,7 +491,6 @@ Language: tr
     <string name="application_password_required">Uygulama Şifreleri Gerekli</string>
     <string name="menu_html_mode">Kod Düzenleyici</string>
     <string name="taxonomies_title">Sınıflandırmalar</string>
-    <string name="media_edit_file_size_caption">Dosya Boyutu</string>
     <string name="jetpack_rest_connection_error_login_wpcom">WordPress.com\'da oturum açılamıyor</string>
     <string name="jetpack_rest_connection_step_connect_site">Siteyi WordPress.com\'a bağlayın</string>
     <string name="dataview_default_empty_message">Burada bir şey yok</string>
@@ -3089,8 +3088,6 @@ Language: tr
     <string name="media_files_not_uploaded">%d dosya yüklenmedi</string>
     <string name="remove_image_from_post">Yazıdan kaldır</string>
     <string name="confirm_remove_media_image">Bu görsel yazıdan kaldırılsın mı?</string>
-    <string name="media_edit_customize_card_caption">Özelleştir</string>
-    <string name="media_edit_file_details_card_caption">Dosya bilgileri</string>
     <string name="login_error_button">Kapat</string>
     <string name="error_generic_network">Bir ağ sorunu çıktı. Lütfen bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="post_settings_remove_featured_image">Öne çıkarılmış görseli kaldır</string>
@@ -3124,13 +3121,7 @@ Language: tr
     <string name="media_title_audio_details">Ses bilgileri</string>
     <string name="media_title_video_details">Video bilgileri</string>
     <string name="media_title_image_details">Görsel bilgileri</string>
-    <string name="fab_content_description_preview">Ön izleme</string>
-    <string name="media_edit_upload_date_caption">Yüklenme tarihi</string>
     <string name="media_edit_duration_caption">Süre</string>
-    <string name="media_edit_video_dimensions_caption">Video boyutları</string>
-    <string name="media_edit_image_dimensions_caption">Görsel boyutları</string>
-    <string name="media_edit_filetype_caption">Dosya türü</string>
-    <string name="media_edit_filename_caption">Dosya adı</string>
     <string name="media_edit_url_caption">Adres</string>
     <string name="media_edit_alttext_text">Alt metni</string>
     <string name="connect_site">Site bağla</string>
@@ -3178,7 +3169,6 @@ Language: tr
     <string name="login_checking_site_address" a8c-src-lib="module:login">Site adresi denetleniyor</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site adresi</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Bağlanmak istediğiniz WordPress sitesinin adresini yazın.</string>
-    <string name="login_already_logged_in_wpcom">Zaten WordPress.com oturumu açılmış</string>
     <string name="login_continue" a8c-src-lib="module:login">İlerle</string>
     <string name="connect_more">Başka siteye bağlan</string>
     <string name="next">Sonraki</string>

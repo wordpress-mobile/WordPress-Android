@@ -488,7 +488,6 @@ Language: he_IL
     <string name="application_password_required">נדרשת סיסמת אפליקציה</string>
     <string name="menu_html_mode">עורך קוד</string>
     <string name="taxonomies_title">טקסונומיות</string>
-    <string name="media_edit_file_size_caption">גודל הקובץ</string>
     <string name="jetpack_rest_connection_error_login_wpcom">אין אפשרות להתחבר אל WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">לחבר את האתר שלך ל-WordPress.com</string>
     <string name="dataview_default_empty_message">אין פה שום דבר</string>
@@ -3076,8 +3075,6 @@ Language: he_IL
     <string name="media_files_not_uploaded">%d קבצים לא הועלו</string>
     <string name="remove_image_from_post">הסרה מהפוסט</string>
     <string name="confirm_remove_media_image">האם להסיר את התמונה הזו מהפוסט?</string>
-    <string name="media_edit_customize_card_caption">התאמה אישית</string>
-    <string name="media_edit_file_details_card_caption">פרטי הקובץ</string>
     <string name="login_error_button">סגור</string>
     <string name="error_generic_network">אירעה שגיאת רשת. יש לבדוק את החיבור ולנסות שוב.</string>
     <string name="post_settings_remove_featured_image">הסרת התמונה המרכזית</string>
@@ -3111,13 +3108,7 @@ Language: he_IL
     <string name="media_title_audio_details">פרטי אודיו</string>
     <string name="media_title_video_details">פרטי וידאו</string>
     <string name="media_title_image_details">פרטי תמונה</string>
-    <string name="fab_content_description_preview">תצוגה מקדימה</string>
-    <string name="media_edit_upload_date_caption">תאריך העלאה</string>
     <string name="media_edit_duration_caption">משך זמן</string>
-    <string name="media_edit_video_dimensions_caption">ממדי הווידאו</string>
-    <string name="media_edit_image_dimensions_caption">ממדי התמונה</string>
-    <string name="media_edit_filetype_caption">סוג קובץ</string>
-    <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
     <string name="connect_site">חיבור אתר</string>
@@ -3165,7 +3156,6 @@ Language: he_IL
     <string name="login_checking_site_address" a8c-src-lib="module:login">בודק את כתובת האתר</string>
     <string name="login_site_address" a8c-src-lib="module:login">כתובת אתר</string>
     <string name="enter_site_address" a8c-src-lib="module:login">יש להזין את כתובת האתר ב-WordPress שאליו ברצונך להתחבר.</string>
-    <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">המשך</string>
     <string name="connect_more">חיבור אתר נוסף</string>
     <string name="next">הבא</string>

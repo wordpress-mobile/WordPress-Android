@@ -491,7 +491,6 @@ Language: sv_SE
     <string name="application_password_required">Applikationslösenord krävs</string>
     <string name="menu_html_mode">Kodredigerare</string>
     <string name="taxonomies_title">Taxonomier</string>
-    <string name="media_edit_file_size_caption">Filstorlek</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Kan inte logga in på WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Anslut webbplats till WordPress.com</string>
     <string name="dataview_default_empty_message">Det finns ingenting här</string>
@@ -3089,8 +3088,6 @@ Language: sv_SE
     <string name="media_files_not_uploaded">%d filer har inte laddats upp</string>
     <string name="remove_image_from_post">Ta bort ur inlägget</string>
     <string name="confirm_remove_media_image">Ta bort denna bild ur inlägget?</string>
-    <string name="media_edit_customize_card_caption">Anpassa</string>
-    <string name="media_edit_file_details_card_caption">Filinformation</string>
     <string name="login_error_button">Stäng</string>
     <string name="error_generic_network">Ett nätverksfel har inträffat. Kontrollera anslutningen och försök igen.</string>
     <string name="post_settings_remove_featured_image">Ta bort den utvalda bilden</string>
@@ -3124,13 +3121,7 @@ Language: sv_SE
     <string name="media_title_audio_details">Information om ljud</string>
     <string name="media_title_video_details">Information om video</string>
     <string name="media_title_image_details">Information om bild</string>
-    <string name="fab_content_description_preview">Förhandsgranskning</string>
-    <string name="media_edit_upload_date_caption">Uppladdningsdatum</string>
     <string name="media_edit_duration_caption">Längd</string>
-    <string name="media_edit_video_dimensions_caption">Videons bildstorlek</string>
-    <string name="media_edit_image_dimensions_caption">Bildstorlek</string>
-    <string name="media_edit_filetype_caption">Filtyp</string>
-    <string name="media_edit_filename_caption">Filnamn</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-text</string>
     <string name="connect_site">Anslut en webbplats</string>
@@ -3178,7 +3169,6 @@ Language: sv_SE
     <string name="login_checking_site_address" a8c-src-lib="module:login">Webbplatsadressen kontrolleras</string>
     <string name="login_site_address" a8c-src-lib="module:login">Webbplatsadress</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Skriv in adressen för den WordPress-webbplats du vill ansluta.</string>
-    <string name="login_already_logged_in_wpcom">Redan inloggad på WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortsätt</string>
     <string name="connect_more">Anslut ytterligare en webbplats</string>
     <string name="next">Nästa</string>
