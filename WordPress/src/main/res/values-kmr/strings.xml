@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-09-22 08:41:02+0000
+Translation-Revision-Date: 2026-11-20 13:03:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: ku_TR
@@ -67,8 +67,27 @@ Language: ku_TR
     <string name="suggestion_user">bikarhêner</string>
     <string name="backup">Yedek</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Çewtî</string>
+    <string name="activity_log_date_range_filter_label">Navbera Dîrokan</string>
+    <string name="activity_log_activity_type_filter_label">Cureya Çalakiyê</string>
+    <string name="button_copy">Dubare</string>
+    <string name="dialog_confirm_copy_local_title">Nakokiya hevdengkirina şandiyê</string>
+    <string name="dialog_confirm_copy_local_edit_button">Pêşî şandiyê sererast bike</string>
+    <string name="dialog_confirm_copy_local_copy_button">Guhertoya ji vê sepanê kopî bike</string>
+    <string name="activity_log_activity_type_filter_header">Li gorî Cureya Çalakiyê parzûn bike</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URLya pelgeyê kopî bike</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pelgeyê sererast bike</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tomarkirina pelgeyan bi ser neket.\nJi kerema xwe ji bo vebijêrkan bitikîne.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hilxistina pelgeyan bi ser neket.\nJi kerema xwe ji bo vebijêrkan bitikîne.</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sazkariyên bloka pelgeyê</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navê pelgeyê</string>
+    <string name="reader_follow_comments_get_status_error">Di anîna rewşa şopandinê ya ji bo şandiyê de çewtî çêbû</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Nekarî şîroveyên vê şandiyê bişopîne</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Nekarî şopandina şîroveyên vê şandiyê rake</string>
+    <string name="new_site_creation_domain_header_title">Navperekê hilbijêre</string>
     <string name="activity_log_activity_type_filter_apply">Bisepîne</string>
     <string name="activity_log_activity_type_filter_clear">Paqij bike</string>
+    <string name="reader_follow_comments_null_response">Tu bersiv nehat wergirtin</string>
+    <string name="reader_follow_comments_bad_format_response">Bersiva nederbasdar hat wergirtin</string>
     <string name="label_done_button">Qediya</string>
     <string name="hpp_retry_error">Ji kerema xwe, girêdana înterneta xwe kontrol bike û dîsa biceribîne.</string>
     <string name="hpp_error_title">Di derhêlbûnê(offline) de raxistin ne berdest in</string>
@@ -143,6 +162,7 @@ Language: ku_TR
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wêne Hilbijêre</string>
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok hat rakirin</string>
     <string name="enter_your_site_address">Navnîşana malpera xwe ya heyî bikevê</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Veguherîne girêdanê</string>
     <string name="get_started" a8c-src-lib="module:login">Dest Pê Bike</string>
     <string name="reader_error_request_failed_title">Di hêrana daxwazê de pirsgirêkek derket. Ji kerema xwe paşê dîsa biceribîne.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê ew ê guhertinên derhêlî jî rake. Tu bi rastî jî dixwazî dewam bikî?</string>
@@ -194,6 +214,7 @@ Language: ku_TR
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menuya çalakiyên blokê veke</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bibe jor</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Behskirinê tevlî bike</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo Rûpela Çalakiyan bi vebijarkên berdest re vebe, ducar bitikîne</string>
@@ -239,6 +260,7 @@ Language: ku_TR
     <string name="reader_reblog_error">Dîsblog bi ser neket</string>
     <string name="comment_q_action_copied_url">Girêdan hat kopîkirin</string>
     <string name="button_insert">Tevlî bike</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hejmara stûnan</string>
     <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokê veguhezîne rastê</string>
     <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokê veguhezîne çepê</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo blokê veguhezînî rastê, ducar bitikîne</string>
@@ -251,6 +273,7 @@ Language: ku_TR
     <string name="new_site_creation_creating_site_loading_title">Bijî!\nHindik ma biqede</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Malpera te ew ê di demeke kin de amade be</string>
     <string name="new_site_creation_creating_site_loading_1">Stendina URL\'ya malperê</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sazkariyên blokê</string>
     <string name="pages_and_posts_cancel_auto_upload">Hilxistinê betal bike</string>
     <string name="weekday_saturday">Şemî</string>
     <string name="weekday_friday">În</string>
@@ -299,9 +322,13 @@ Language: ku_TR
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Naveroka şandiyê nîşan bide</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Girêdana:</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tenê jêgirtinê nîşan bide</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sazkariyên Girêdanê</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dirêjahiya jêgirtinê (peyv)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Medyaya rûpêçê sererast bike</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">BITAYBETÎNE</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URLya Girêdana Bişkokê</string>
     <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloka Pragrafê tevlî bike</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nîvçapê Sînor</string>
     <string name="create_post_page_fab_tooltip_contributors">Şandiyekê biafirîne</string>
     <string name="post_list_tab_trashed_posts">Jêçûyî</string>
     <string name="post_list_tab_scheduled_posts">Demsazkirî</string>
@@ -327,6 +354,7 @@ Language: ku_TR
     <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sernivîsa vîdyoyê. %s</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Vîdyoyê sererast bike</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kurtekodekê tevlî bike…</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Medyayê sererast bike</string>
     <string name="stats_box_type_very_high">pir bilind</string>
     <string name="stats_box_type_high">bilind</string>
     <string name="stats_box_type_medium">navîn</string>
@@ -341,6 +369,7 @@ Language: ku_TR
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Şandî an jî rûpelekê biafirîne</string>
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sernivîsa galeriyê. %s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wêneyê biguherîne</string>
     <string name="content_description_person_building_website">Malpera ji destê mirovan</string>
     <string name="stock_media_picker_list_content_description">Wênegeh</string>
     <string name="photo_picker_image_thumbnail_unselected">Wêne nehat hilbijartin</string>
@@ -372,6 +401,7 @@ Language: ku_TR
     <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo alîkariyê nişan bidî, bitikîne</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Vîdyo Bikişîne</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Wêneyekî Bikişîne</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nehatiye piştgirîkirin</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokê jê bike</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloka %s. Di vê blokê de naveroka nederbasdar heye</string>
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bloka %s. Vala</string>
@@ -399,6 +429,7 @@ Language: ku_TR
     <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo blokê veguhezînî jêrê, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo vî nirxî sererast bikî, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo blokekê tevlê bikî, ducar bitikîne</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji bo sererastkirinê du caran bitikîne û bigire</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ji cîhazê hilbijêre</string>
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nirxê heyî %s ye</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nivîsa alternatîv</string>
@@ -408,6 +439,7 @@ Language: ku_TR
     <string name="reader_acessibility_list_loaded">\"%1$d hêman li lîsteyê hatin barkirin.\"</string>
     <string name="reader_empty_saved_posts_content_description">Ji bo tu şandiyekê li lîsteya xwe qeyd bikî, ji bo tomarkirina şandiyan li \"Tevlî bike\"yê bitikîne.</string>
     <string name="notifications_tab_dialog_switch_desc">Danezan</string>
+    <string name="main_switch_default_title_on">Vekirî</string>
     <string name="pick_media">Vîdyo an jî wêne tevlî bike</string>
     <string name="error_post_not_submitted_retrying">Me nekarî vê şandiyê bişînin ji bo vekolînê lê em ê piştre dîsa biceribînin. </string>
     <string name="error_post_not_scheduled_retrying">Me nekarî vê şandiyê demsaz bikin lê em ê piştre dîsa biceribînin.</string>
@@ -770,6 +802,7 @@ Language: ku_TR
     <string name="page_status_change_error">Di guhertina rewşa rûpelê de pirsgirêkek derket</string>
     <string name="page_delete_error">Di jêbirina rûpelê de pirsgirêkek derket</string>
     <string name="set_parent">Dêûbav diyar bike</string>
+    <string name="dismiss">Bigire</string>
     <string name="content_description_more">Zêdetir</string>
     <string name="my_site_create_new_site_title">Ti malperên te tune ye</string>
     <string name="jetpack">Jetpack</string>
@@ -806,6 +839,7 @@ Language: ku_TR
     <string name="support_contact_email">Emaila têkiliyê</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Ji bo domandinê ji kerema xwe, email û navê xwe bikevê</string>
     <string name="support_push_notification_message">Peyameke nû ji \'Alîkarî û Piştgirî\'yê heye</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Pêvajoya vegerandinê</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Malpera te bi serkeftî hat vegerandin</string>
     <string name="activity_log_currently_restoring_title">Malpera te niha tê vegerandin</string>
     <string name="activity_log_button">Bişkoka Tomargeha Çalakiyan</string>
@@ -1139,6 +1173,7 @@ Language: ku_TR
     <string name="notification_settings_category_other">Ya din</string>
     <string name="notification_settings_category_your_sites">Malperên Te</string>
     <string name="max_video_resolution">Mezinahiya vîdyoyê - maksîmûm</string>
+    <string name="notification_settings_main_status_on">Vekirî</string>
     <string name="max_thumbnail_px_size">Mezinahiya wêneyê - maksîmûm</string>
     <string name="error_upload_post_media_param">Dema ku medya li vê şandiyê dihat hilxistin çewtiyek derket: %s.</string>
     <string name="error_upload_post_param">Dema ku ev şandî dihat hilxistin çewtiyek derket: %s.</string>
@@ -1303,6 +1338,7 @@ Language: ku_TR
     <string name="error_all_media_upload_canceled">Ji ber çewtiyeke nenas hilxistina hemû medayayan hatin betalkirin. Ji kerema xwe hilxistinê dîsa biceribîne</string>
     <string name="error_unknown_post_type">Formata şandiya nenas</string>
     <string name="submit_for_review">Bişîne</string>
+    <string name="title_subscriber">Şopîner</string>
     <string name="already_logged_in_wpcom">Jixwe tu di hesabê xwe yê WordPress.com\'ê de têketî ye, tu nikarî malpereke WordPress.com\'ê ya ku girêdayî hesabekî din e lê zêde bikî.</string>
     <string name="error_media_load">Medya nayê barkirin</string>
     <string name="error_media_refresh_no_connection">Ji bo nûkirina medyagehê înternet hewce ye</string>
@@ -1340,6 +1376,7 @@ Language: ku_TR
     <string name="signout">Derkeve</string>
     <string name="sign_in_wpcom">Têkeve WordPress.com\'ê</string>
     <string name="reader_label_global_related_posts">Zêdetir li ser WordPress.com\'ê</string>
+    <string name="reader_label_local_related_posts">Zêdetir ji %s</string>
     <string name="preference_open_device_settings">Sazkariyên cîhazê veke</string>
     <string name="invite_invalid_email">%s: Emaila nederbasdar</string>
     <string name="invite_user_blocked_invites">%s: Vexwendinên astengkirî</string>
@@ -1516,6 +1553,7 @@ Language: ku_TR
     <string name="site_settings_rp_show_header_title">Sernavê nîşan bide</string>
     <string name="site_settings_rp_switch_summary">Şandiyên Têkildar di bin şandiyên te de naverokên guncav ji malpera te nîşan dide.</string>
     <string name="site_settings_rp_switch_title">Şandiyên Têkildar Nîşan Bide</string>
+    <string name="site_settings_denylist_hint">Şîroveyên ku bi parzûnekê re li hev tên wekî spam têne nîşankirin</string>
     <string name="site_settings_moderation_hold_hint">Şîroveyên ku bi fîltreyê re hevber dibin dikevin dora kontrolê</string>
     <string name="site_settings_multiple_links_hint">Ji bikarhênerên naskirî re sînorê girêdanê paşguh dike</string>
     <string name="site_settings_user_account_required_hint">Ji bo şîrovekirinê divê bikarhêner tomar bibin û têketînê bikin</string>
@@ -1539,6 +1577,8 @@ Language: ku_TR
     <string name="site_settings_address_hint">Guherandina navnîşana te vê gavê nayê piştgirîkirin</string>
     <string name="site_settings_tagline_hint">Raveyeke kurt an jî hevokek balkêş ji bo danasîna bloga te</string>
     <string name="site_settings_title_hint">Bi çend gotinan rave bike ka ev malper li ser çi ye</string>
+    <string name="site_settings_allowlist_known_summary">Şîroveyên ji bikarhênerên naskirî</string>
+    <string name="site_settings_allowlist_all_summary">Şîroveyên ji hemû bikarhêneran</string>
     <string name="site_settings_threading_summary">asta %d</string>
     <string name="site_settings_privacy_private_summary">Taybet</string>
     <string name="site_settings_privacy_hidden_summary">Veşartî</string>
@@ -1653,6 +1693,7 @@ Language: ku_TR
     <string name="site_picker_add_self_hosted">Malpereke xwe-hewan tevlî bike</string>
     <string name="my_site_btn_switch_site">Malperê Biguherîne</string>
     <string name="site_picker_title">Malperê hilbijêre</string>
+    <string name="my_site_btn_blog_posts">Şandî</string>
     <string name="reader_label_new_posts_subtitle">Ji bo wan nîşan bide, bitikîne</string>
     <string name="select_all">Hemûyan hilbijêre</string>
     <string name="language">Ziman</string>
@@ -1707,6 +1748,7 @@ Language: ku_TR
     <string name="comment_trashed">Şîrove betal bû</string>
     <string name="comment_reply_to_user">Vêya %s bibersivîne</string>
     <string name="posts_empty_list">Hîn ti şandî tune ye. Ka em şandiyekê çêkin?</string>
+    <string name="help_and_support">Alîkarî û Piştgirî</string>
     <string name="reader_toast_err_generic">Ev çalakî nayê pêkanîn</string>
     <string name="schedule_verb">Demsaz bike</string>
     <string name="update_verb">Hildemîne</string>
@@ -1779,6 +1821,7 @@ Language: ku_TR
     <string name="reader_likes_multi">%,d kes ev eciband</string>
     <string name="reader_likes_you_and_multi">Te û %,d kesên din ev eciband</string>
     <string name="comment_spammed">Şîrove wekî spam hat nîşankirin</string>
+    <string name="comment_unapproved">Şîrove nehat pejirandin</string>
     <string name="pick_video">Vîdyo hilbijêre</string>
     <string name="pick_photo">Wêne hilbijêre</string>
     <string name="reader_likes_you_and_one">Te û kesekî din ev eciband</string>
@@ -1837,6 +1880,7 @@ Language: ku_TR
     <string name="anonymous">Anonîm</string>
     <string name="posts">Şandî</string>
     <string name="no_network_title">Înternet tune ye</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Wekî wêneyê bijartî bi kar bîne</string>
     <string name="ok">BAŞ e</string>
     <string name="done">qediya</string>
     <string name="link_enter_url">URL</string>
@@ -1855,9 +1899,11 @@ Language: ku_TR
     <string name="categories">Kategorî</string>
     <string name="sdcard_title">SD Kart Pêwîst e</string>
     <string name="media">Medya</string>
+    <string name="updating_cat_success">Qatêgorî bi serkeftî hat hildemkirin</string>
     <string name="delete">Jê bibe</string>
     <string name="approve">Bipejirîne</string>
     <string name="none">Hîç</string>
+    <string name="updating_cat_failed">Hildemkirina qatêgoriyê bi ser neket</string>
     <string name="error">Çewtî</string>
     <string name="no">Na</string>
     <string name="yes">Erê</string>
