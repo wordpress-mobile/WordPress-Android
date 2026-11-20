@@ -944,7 +944,7 @@ class ReaderPostListViewModel @Inject constructor(
             description = blog.description.ifEmpty { null },
             imageUrl = blog.imageUrl.ifEmpty { null },
             isP2orA8C = blog.isP2orA8C,
-            subscriberCount = blog.numSubscribers,
+            subscriberCount = blog.numSubscribers.takeIf { it > 0 },
             isFollowed = blog.isFollowing,
             isFollowInProgress = isSiteHeaderFollowInProgress,
             showSettings = blog.isFollowing && !isFeed && accountStore.hasAccessToken()
@@ -1195,7 +1195,9 @@ class ReaderPostListViewModel @Inject constructor(
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         val post = findPost(state.blogId, state.postId) ?: return
         launch {
-            val items = moreMenuBuilder.buildMoreMenuItems(post, true, cardButtonClicked)
+            // the card's own save button covers saving, except for a post it can't save, such as a feed post
+            val includeBookmark = !state.bookmarkAction.isEnabled
+            val items = moreMenuBuilder.buildMoreMenuItems(post, includeBookmark, cardButtonClicked)
             moreMenu = post to items
             updateUiState()
         }

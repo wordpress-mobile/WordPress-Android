@@ -1092,8 +1092,6 @@ Language: ku_TR
     <string name="media_files_not_uploaded">%d dosye nehatin hilxistin</string>
     <string name="remove_image_from_post">Ji şandiyê rake</string>
     <string name="confirm_remove_media_image">Bila ev wêne ji şandiyê were rakirin?</string>
-    <string name="media_edit_customize_card_caption">Taybet bike</string>
-    <string name="media_edit_file_details_card_caption">Hûrgiliyên Dosyeyê</string>
     <string name="login_error_button">Bigire</string>
     <string name="error_generic_network">Çewtiyeke torê çêbû. Ji kerema xwe girêdana xwe kontrol bike û dîsa biceribîne.</string>
     <string name="post_settings_remove_featured_image">Wêneyê bijarde rake</string>
@@ -1126,14 +1124,8 @@ Language: ku_TR
     <string name="media_title_document_details">Hûrgiliyên dosyeyê</string>
     <string name="media_title_video_details">Hûrgiliyên vîdyoyê</string>
     <string name="media_title_image_details">Hûrgiliyên wêneyê</string>
-    <string name="fab_content_description_preview">Pêşdîtin</string>
-    <string name="media_edit_upload_date_caption">Dîroka Hilxistinê</string>
-    <string name="media_edit_video_dimensions_caption">Pîvanên Vîdyoyê</string>
     <string name="media_edit_duration_caption">Dirêjî</string>
-    <string name="media_edit_image_dimensions_caption">Pîvanên Wêneyê</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_filetype_caption">Cûreya Dosyeyê</string>
-    <string name="media_edit_filename_caption">Navê Dosyeyê</string>
     <string name="media_edit_alttext_text">Nivîsa alternatîv</string>
     <string name="connect_site">Malperekê lê girêde</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Ronahiyê bigire - veke</string>
@@ -1174,7 +1166,6 @@ Language: ku_TR
     <string name="login_checking_site_address" a8c-src-lib="module:login">Navnîşana malperê tê kontrolkirin</string>
     <string name="login_site_address" a8c-src-lib="module:login">Navnîşana malperê</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Navnîşana Malpera WordPressê ya ku tu dixwazî lê girêdî binivîsî.</string>
-    <string name="login_already_logged_in_wpcom">Jixwe di WordPress.com\'ê de têketin pêk hatiye</string>
     <string name="login_continue" a8c-src-lib="module:login">Bidomîne</string>
     <string name="connect_more">Malpereke din girêde</string>
     <string name="next">Pêşve</string>

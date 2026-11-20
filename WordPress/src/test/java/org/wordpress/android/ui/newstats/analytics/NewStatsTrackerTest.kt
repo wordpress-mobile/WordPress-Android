@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.InsightsCardType
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsTab
@@ -302,6 +303,20 @@ class NewStatsTrackerTest {
                 "from_granularity" to "week",
                 "metric" to "likes",
                 "value" to 42L
+            )
+        )
+    }
+
+    @Test
+    fun `a changed chart interval reports bare from and to, the way iOS does`() {
+        tracker.trackChartIntervalChanged(from = ChartInterval.AUTOMATIC, to = ChartInterval.WEEKS)
+
+        // Not "from_granularity"/"to_granularity": this event's properties are iOS's, so that the two
+        // platforms land in one column.
+        assertThat(propertiesOf(Stat.JETPACK_STATS_CHART_GRANULARITY_CHANGED)).isEqualTo(
+            mapOf(
+                "from" to "automatic",
+                "to" to "week"
             )
         )
     }

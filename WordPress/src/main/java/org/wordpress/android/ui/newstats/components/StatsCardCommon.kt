@@ -21,6 +21,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -288,6 +290,21 @@ fun StatsListHeader(
 }
 
 /**
+ * Expand/collapse chevron shown on a stats row that reveals child rows when tapped.
+ */
+@Composable
+fun StatsExpandChevron(expanded: Boolean) {
+    Icon(
+        imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+        contentDescription = stringResource(
+            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
+        ),
+        modifier = Modifier.size(16.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
+/**
  * "Opens a link" affordance shown on a stats row that navigates to a URL when tapped.
  */
 @Composable
@@ -336,19 +353,29 @@ fun StatsListRowContainer(
 /**
  * Common views column with count and change indicator.
  * Used in list rows to display views count and change percentage.
+ *
+ * @param leading Optional content drawn immediately before the views count, e.g. the expand
+ * chevron on an author row. Null leaves the column exactly as it was.
  */
 @Composable
 fun StatsViewsColumn(
     views: Long,
-    change: StatsViewChange
+    change: StatsViewChange,
+    leading: (@Composable () -> Unit)? = null
 ) {
     Column(horizontalAlignment = Alignment.End) {
-        Text(
-            text = formatStatValue(views),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (leading != null) {
+                leading()
+                Spacer(modifier = Modifier.width(4.dp))
+            }
+            Text(
+                text = formatStatValue(views),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
         StatsChangeIndicator(change = change)
     }
 }
@@ -394,6 +421,8 @@ fun StatsPositionNumber(position: Int) {
  * @param views The views count
  * @param change The change compared to previous period
  * @param icon Composable slot for the icon (flag, avatar, etc.)
+ * @param modifier Applied to the row container, e.g. to make the row clickable
+ * @param viewsLeading Optional content drawn before the views count (see [StatsViewsColumn])
  */
 @Composable
 fun StatsListItem(
@@ -401,9 +430,11 @@ fun StatsListItem(
     name: String,
     views: Long,
     change: StatsViewChange,
-    icon: @Composable () -> Unit
+    icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    viewsLeading: (@Composable () -> Unit)? = null
 ) {
-    StatsListRowContainer(percentage = percentage) {
+    StatsListRowContainer(percentage = percentage, modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -414,7 +445,7 @@ fun StatsListItem(
             Spacer(modifier = Modifier.width(12.dp))
             StatsItemName(name = name, modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(12.dp))
-            StatsViewsColumn(views = views, change = change)
+            StatsViewsColumn(views = views, change = change, leading = viewsLeading)
         }
     }
 }
@@ -429,6 +460,8 @@ fun StatsListItem(
  * @param views The views count
  * @param change The change compared to previous period
  * @param icon Composable slot for the icon (flag, avatar, etc.)
+ * @param modifier Applied to the row container, e.g. to make the row clickable
+ * @param viewsLeading Optional content drawn before the views count (see [StatsViewsColumn])
  */
 @Composable
 fun StatsDetailListItem(
@@ -437,9 +470,11 @@ fun StatsDetailListItem(
     name: String,
     views: Long,
     change: StatsViewChange,
-    icon: @Composable () -> Unit
+    icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    viewsLeading: (@Composable () -> Unit)? = null
 ) {
-    StatsListRowContainer(percentage = percentage) {
+    StatsListRowContainer(percentage = percentage, modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -451,7 +486,7 @@ fun StatsDetailListItem(
             Spacer(modifier = Modifier.width(12.dp))
             StatsItemName(name = name, modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(12.dp))
-            StatsViewsColumn(views = views, change = change)
+            StatsViewsColumn(views = views, change = change, leading = viewsLeading)
         }
     }
 }

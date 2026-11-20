@@ -191,18 +191,22 @@
     <string name="media_edit_link_text">Link to</string>
     <string name="media_edit_link_hint">Open link in a new window/tab</string>
     <string name="media_edit_failure">Failed to update</string>
-    <string name="media_edit_file_details_card_caption">File Details</string>
-    <string name="media_edit_customize_card_caption">Customize</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_filename_caption">File Name</string>
-    <string name="media_edit_filetype_caption">File Type</string>
-    <string name="media_edit_file_size_caption">File Size</string>
-    <string name="media_edit_image_dimensions_caption">Image Dimensions</string>
-    <string name="media_edit_video_dimensions_caption">Video Dimensions</string>
     <string name="media_edit_duration_caption">Duration</string>
-    <string name="media_edit_upload_date_caption">Upload Date</string>
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
-    <string name="fab_content_description_preview">Preview</string>
+    <string name="media_settings_file_name">File name</string>
+    <string name="media_settings_file_type">File type</string>
+    <string name="media_settings_file_size">File size</string>
+    <string name="media_settings_dimensions">Dimensions</string>
+    <string name="media_settings_uploaded">Uploaded</string>
+    <string name="media_settings_alt_text_sheet_explanation">Describe what\'s in the image for people who use screen readers. Leave it empty if the image is decorative.</string>
+    <string name="media_settings_caption_sheet_explanation">Shown below the image in posts.</string>
+    <string name="media_settings_description_sheet_explanation">Shown on the attachment page.</string>
+    <string name="media_settings_alt_text_sheet_helper">Aim for a sentence or two</string>
+    <string name="media_settings_copy_url">Copy URL</string>
+    <!-- Accessibility descriptions of a media field row, e.g. "Alt text, not set" and "Caption, A dog on a beach" -->
+    <string name="media_settings_row_not_set">%1$s, not set</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
 
     <!-- Media settings title -->
     <string name="media_title_image_details">Image details</string>
@@ -1475,6 +1479,9 @@
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_comments" translatable="false">@string/comments</string>
+    <!-- The Views chart's interval menu. The unit names themselves reuse stats_timeframe_*. -->
+    <string name="stats_chart_interval">Interval</string>
+    <string name="stats_chart_interval_submenu">Open interval options</string>
     <string name="stats_chart_type_lines">Lines</string>
     <string name="stats_chart_type_bars">Bars</string>
     <!-- Average XX -->
@@ -1694,6 +1701,7 @@
     <string name="stats_period_last_7_days">Last 7 days</string>
     <string name="stats_period_last_30_days">Last 30 days</string>
     <string name="stats_period_last_12_months">Last 12 months</string>
+    <string name="stats_period_last_3_years">Last 3 years</string>
     <string name="stats_period_this_week">This Week</string>
     <string name="stats_period_this_month">This Month</string>
     <string name="stats_period_this_year">This Year</string>
@@ -2475,6 +2483,8 @@
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
+    <string name="reader_saved_posts_limit_reached">You\'ve reached the limit of saved posts. Remove some to save more.</string>
+    <string name="reader_saved_post_removed">Removed from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_blog_notifications_off">Turn off blog notifications</string>
@@ -2623,6 +2633,7 @@
 
     <!-- dialogs -->
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
+    <string name="reader_save_posts_synced_dialog_message">Saved posts sync with your WordPress.com account, so they\'re on all your devices.</string>
     <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices.</string>
 
     <!-- Reader tags feed -->
@@ -3383,7 +3394,7 @@
     <string name="connect_more">Connect another site</string>
     <string name="connect_site">Connect a site</string>
     <string name="login_continue" a8c-src-lib="module:login">Continue</string>
-    <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
+    <string name="login_session_expired">Your login session has expired. Please try again.</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site address</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Checking site address</string>

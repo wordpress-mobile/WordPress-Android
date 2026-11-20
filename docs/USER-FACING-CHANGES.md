@@ -16,6 +16,78 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Me → Account Settings → Web Address
   - **Notes:** A field containing only spaces still counts as invalid and keeps OK disabled.
 
+- **Stats chart bars can be grouped by hour, day, week, month or year**
+  The redesigned Stats Traffic chart has a new Interval option in the Views card's menu. It picks how wide each bar is — Hours, Days, Weeks, Months or Years — instead of leaving it to the period, so Last 12 months can be charted week by week and Last 3 years month by month. The row that opens the sub-menu names the width the bars are currently at, and the sub-menu's checkmark sits on that same width, so a period nobody has changed the interval on shows the width it picked for itself. Only the widths that give the chosen period a sensible number of bars are offered — the option is hidden entirely when that leaves only one, as on Today — and the choice is remembered per site.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → Views card → ⋮ menu → Interval
+  - **Notes:** Picking the width the chart is already at does nothing, and in particular does not pin it: a period whose interval has never been changed goes on choosing its own width as you move between periods. The interval only changes how the period is sliced into bars — the period itself, the totals' comparison window, and every card below the chart stay where they were. A leading or trailing bar can therefore be partial: Last 7 days charted by Weeks draws two part-weeks, not two whole ones, and tapping such a bar drills into the part that is inside the period. A first bar is only compared against the previous period's when both periods cut it the same way: Last 12 months by Weeks begins on a Monday this year but mid-week a year ago, so the comparison drops its part-week rather than drawing it under a whole one. Where the two part-bars cover different numbers of days, or only the period on screen has one at all, that bar is drawn with no comparison rather than against a mismatched slice of one. Either way the bars after it still line up with the right ones, and the first bar isn't reported as an enormous rise against a single day. Selecting a bar names it in full above the chart: a weekly bar shows the week it covers ("Nov 9 - 15") rather than its first day, and an hourly bar shows its date alongside the time, since Hours can now span more than one day. The interval is kept when the new period can still draw it, and otherwise that period goes back to choosing its own width, so paging back and forth keeps a chosen interval but switching from Last 3 years to Last 7 days clears it. With Views, Likes, Comments or Posts selected the total above the chart does not change with the interval; with **Visitors** it does, because a visitor seen on two days counts once in a weekly bar and twice in two daily bars — this matches the iOS app and the web version. Choosing Hours while a metric other than Views is selected shows "Hourly data not available" with a "Show views" button, since the hourly data only carries views.
+
+- **Redesigned media details screen**
+  The media details screen now uses the iOS app's layout below the photo: every field is a one-line row (label on the left, value on the right) in white cards on a gray page. The photo still fills the top of the screen. Title, Caption, Description and Alt text are no longer text boxes: tapping one opens a sheet with a single text field and Cancel and Save buttons. Tapping the URL copies it, replacing the Copy button. The green full-screen button is replaced by a smaller button in the photo's corner, and tapping the photo still opens it full screen. Trash (and Remove image when opened from the editor) moved to the toolbar's overflow menu.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item; image settings opened from the post editor
+  - **Notes:** Edits still save when you leave the screen. Tapping Save in the sheet only updates the field, and Cancel, Back or swiping the sheet down discards the edit. Section headings ("File Details", "Customize") are gone, "Image Dimensions" and "Video Dimensions" are now "Dimensions", and "Upload Date" is now "Uploaded".
+
+- **Reader saved posts sync with your WordPress.com account**
+  Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the app opens after updating. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving and unsaving work offline: the change shows straight away and reaches the account once the device is back online.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Reader → Saved; the bookmark button on Reader posts
+  - **Notes:** Needs a WordPress.com account; without one, posts are still saved only on the device. Until the device's saves have been added to the account, the Saved tab keeps showing the device's own list. Saving a post when the account already holds its limit of 1,000 says the limit was reached. Saves past the limit that were made offline or imported stay saved and are added once there's room; a save the account refuses is undone. A one-time dialog on the first save says saved posts sync across devices; it shows even to people who already saw the old "only on this device" dialog. Signing out removes from the device the saved posts the account holds, and keeps the rest; signing back in to the same account adds them to it. A post saved elsewhere can't be opened offline.
+
+- **Stats can chart a year at a time again**
+  The Traffic period menu in the redesigned Stats offers a new option, Last 3 years, below Last 12 months. It draws one bar per year, so a site's years can be compared side by side, and the totals and every card below the chart cover the same three years. The old Stats had this as the Years option in its period dropdown; the redesigned Stats had no equivalent until now.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Traffic → period menu
+  - **Notes:** The current year's bar covers the year so far, the same way Last 12 months ends on a part-finished month, and the selector's second line names the years ("2024 - 2026") rather than exact dates. The totals above the chart compare the three years against the three before them, not each year against the previous one. Stepping back and forward with the arrows moves three years at a time. Tapping a year's bar selects that whole year, so the cards below the chart cover it; the current year's bar covers the year up to today. The iOS app and the web version offer the same preset.
+
+- **Email login links no longer sign you in to the app**
+  Opening a `wordpress://magic-login` or `jetpack://magic-login` link no longer signs the app in to WordPress.com. The app stopped sending these links when its login screens were replaced, so the only links still around come from older app versions. Log in from the app's login screen instead.
+  - **Apps:** Both
+  - **Type:** Moved
+  - **Availability:** Everyone
+  - **Where:** Tapping a "log in to the app" link from a WordPress.com login email
+  - **Notes:** Older app versions emailed these links from their "Send me a login link" option. The current app logs in through WordPress.com's own login page instead.
+
+- **WordPress.com login only completes logins started in the app**
+  Finishing a WordPress.com login now only works for a login started from the app. Starting a new login keeps an earlier one valid for 10 more minutes. Finishing a login the app no longer recognizes — replaced more than 10 minutes ago, already finished, or not started from the app — shows "Your login session has expired. Please try again." instead of a network error. If the login screen is already open, a link the app didn't start is ignored.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Log in → Continue with WordPress.com; Me → Log in to WordPress.com
+  - **Notes:** The current login never expires. The 10-minute limit only applies to an earlier login that a newer one replaced, e.g. after "Open in browser" and starting again in the app.
+
+- **Experimental block editor needs an application password on private Atomic sites**
+  Opening the experimental block editor on a private or Coming Soon WordPress.com site with hosting features (Atomic) now requires an application password, as it already did for public Atomic sites. The app creates one automatically when the site is selected in My Site, so most people won't notice. If none exists yet, the editor shows "Application Password Required" instead of opening, and choosing Create shows a generic error.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → opening a post or page on a private or Coming Soon Atomic site
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. To recover, switch to another site and back in My Site, which creates the password, then open the post again. Before, the editor opened using the WordPress.com account's sign-in instead of a password for the site. The dialog's text calls the site "self-hosted", and My Site shows "This site is private, so we can't reconnect to it" while no password exists.
+
+- **Authors in Stats list each author's posts again**
+  Rows in the redesigned Stats' Authors card, and in its full list, now expand to show that author's posts in the period with the views each one got, and tapping a post opens that post's stats — what the old Stats' Authors block did. An author the Stats API reports no posts for has no chevron and does not react to a tap.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Flag: android_new_stats
+  - **Where:** My Site → Stats → Authors card, and the card's Show all
+  - **Notes:** The posts come from the Stats response the card already fetches, so nothing extra is requested. How many posts an author lists is whatever the API returns for the period, and the views under an expanded author can add up to less than the author's own total when the API reports only their top posts.
+
+- **Subscriptions to sites the Reader can't read are listed again**
+  A site you subscribe to now appears in your subscriptions even when WordPress.com returns no details for it, which it does for sites it treats as private. Such a subscription used to be left out of the subscribed sites list and of the Reader's site filter, so subscribing to the site looked as if it had silently failed, and entering its address again subscribed a second time instead of saying you were already subscribed.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Reader → Subscriptions → site or tag filter → Manage → Subscribed blogs
+  - **Notes:** The subscription was always created on the server; only the app's list left it out. Such a site may be listed with its address as the name and no icon, depending on what WordPress.com returns for it, and opening one may show no posts. A site's header also no longer says "0 subscribers" when the subscriber count isn't known.
+
 - **Reader post screen's bars and sections rebuilt**
   The top bar, the bottom bar (Save, Reblog, Comment, Like), the header above the post and the tags, likes, comments and related posts below it were rebuilt with the app's newer UI toolkit. They look and work as before, with small visual differences: the More menu, the Subscribe button and the "+N" tags chip use the newer styles. When a post is opened from a notification, Back now closes full-screen video first, as it already did when the post was opened from the Reader.
   - **Apps:** Both

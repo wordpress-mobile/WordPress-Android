@@ -1273,8 +1273,6 @@ Language: nb_NO
     <string name="media_files_not_uploaded">%d filer ikke lastet opp</string>
     <string name="remove_image_from_post">Fjern fra innlegg</string>
     <string name="confirm_remove_media_image">Fjern dette bildet fra innlegget?</string>
-    <string name="media_edit_customize_card_caption">Tilpass</string>
-    <string name="media_edit_file_details_card_caption">Fildetaljer</string>
     <string name="login_error_button">Lukk</string>
     <string name="error_generic_network">Det oppsto en nettverksfeil. Vennligst kontroller din nettforbindelse og prøv igjen.</string>
     <string name="post_settings_remove_featured_image">Fjern fremhevet bilde</string>
@@ -1308,13 +1306,7 @@ Language: nb_NO
     <string name="media_title_audio_details">Lyddetaljer</string>
     <string name="media_title_video_details">Videodetaljer</string>
     <string name="media_title_image_details">Bildedetaljer</string>
-    <string name="fab_content_description_preview">Forhåndsvisning</string>
-    <string name="media_edit_upload_date_caption">Opplastningsdato</string>
     <string name="media_edit_duration_caption">Varighet</string>
-    <string name="media_edit_video_dimensions_caption">Video-størrelsesforhold</string>
-    <string name="media_edit_image_dimensions_caption">Bilde-størrelsesforhold</string>
-    <string name="media_edit_filetype_caption">Filtype</string>
-    <string name="media_edit_filename_caption">Filnavn</string>
     <string name="media_edit_url_caption">Nettadresse</string>
     <string name="media_edit_alttext_text">Alternativ tekst</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>
@@ -1362,7 +1354,6 @@ Language: nb_NO
     <string name="login_checking_site_address" a8c-src-lib="module:login">Sjekker sideadressen</string>
     <string name="login_site_address" a8c-src-lib="module:login">Nettstedsadresse</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Oppgi adressen til det WordPress-nettstedet du ønsker å koble til.</string>
-    <string name="login_already_logged_in_wpcom">Du er allerede logget på WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortsett</string>
     <string name="connect_more">Koble til et annet nettsted</string>
     <string name="next">Neste</string>

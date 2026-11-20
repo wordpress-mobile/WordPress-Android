@@ -258,14 +258,14 @@ class StatsDateFormatterTest {
     }
 
     @Test
-    fun `a preset's resolved window is named by day, or by month when it is bucketed that way`() {
+    fun `a preset's resolved window is named at the granularity its chart is bucketed in`() {
         setLocale(Locale.UK)
 
         assertThat(
             formatPresetRange(
                 LocalDate.of(2026, 10, 21),
                 LocalDate.of(2026, 10, 27),
-                monthGranularity = false
+                PresetRangeGranularity.DAY
             )
         ).isEqualTo("21-27 Oct 2026")
 
@@ -273,9 +273,32 @@ class StatsDateFormatterTest {
             formatPresetRange(
                 LocalDate.of(2025, 11, 1),
                 LocalDate.of(2026, 10, 27),
-                monthGranularity = true
+                PresetRangeGranularity.MONTH
             )
         ).isEqualTo("Nov 2025 - Oct 2026")
+
+        // Last 3 years, loaded in October: the window ends mid-2026, but the label names the year
+        // buckets the chart draws, exactly as the month-bucketed one above names months.
+        assertThat(
+            formatPresetRange(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2026, 10, 27),
+                PresetRangeGranularity.YEAR
+            )
+        ).isEqualTo("2024 - 2026")
+    }
+
+    @Test
+    fun `a year-bucketed preset within one year is named as that year alone`() {
+        setLocale(Locale.JAPAN)
+
+        assertThat(
+            formatPresetRange(
+                LocalDate.of(2026, 1, 1),
+                LocalDate.of(2026, 10, 27),
+                PresetRangeGranularity.YEAR
+            )
+        ).isEqualTo("2026")
     }
 
     @Test
@@ -283,11 +306,11 @@ class StatsDateFormatterTest {
         val today = LocalDate.of(2026, 10, 27)
 
         setLocale(Locale.UK)
-        assertThat(formatPresetRange(today, today, monthGranularity = false))
+        assertThat(formatPresetRange(today, today, PresetRangeGranularity.DAY))
             .isEqualTo("27 Oct 2026")
 
         setLocale(Locale.JAPAN)
-        assertThat(formatPresetRange(today, today, monthGranularity = false))
+        assertThat(formatPresetRange(today, today, PresetRangeGranularity.DAY))
             .isEqualTo("2026年10月27日")
     }
 

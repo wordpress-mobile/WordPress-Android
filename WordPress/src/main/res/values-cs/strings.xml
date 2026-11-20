@@ -375,7 +375,6 @@ Language: cs_CZ
     <string name="term_delete_confirmation_message">Opravdu chcete smazat „%1$s“?</string>
     <string name="menu_html_mode">Editor kódu</string>
     <string name="taxonomies_title">Taxonomie</string>
-    <string name="media_edit_file_size_caption">Velikost souboru</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Přihlášení na WordPress.com se nezdařilo</string>
     <string name="jetpack_rest_connection_step_connect_site">Připojit web k WordPress.com</string>
     <string name="dataview_default_empty_message">Tady nic není</string>
@@ -2972,8 +2971,6 @@ Language: cs_CZ
     <string name="media_files_not_uploaded">%d souborů se nepodařilo nahrát</string>
     <string name="remove_image_from_post">Odstranit z příspěvku</string>
     <string name="confirm_remove_media_image">Odstranit tento obrázek z příspěvku?</string>
-    <string name="media_edit_customize_card_caption">Přizpůsobit</string>
-    <string name="media_edit_file_details_card_caption">Podrobnosti souboru</string>
     <string name="login_error_button">Zavřít</string>
     <string name="error_generic_network">Vyskytla se chyba sítě. Zkontrolujte připojení a zkuste znovu.</string>
     <string name="post_settings_remove_featured_image">Odstranit náhledový obrázek</string>
@@ -3006,15 +3003,9 @@ Language: cs_CZ
     <string name="media_title_document_details">Podrobnosti o dokumentu</string>
     <string name="media_title_audio_details">Podrobnosti o zvuku</string>
     <string name="media_title_video_details">Podrobnosti o videu</string>
-    <string name="fab_content_description_preview">Náhled</string>
     <string name="media_title_image_details">Podrobnosti o obrázku</string>
-    <string name="media_edit_upload_date_caption">Datum nahrání</string>
     <string name="media_edit_duration_caption">Délka trvání</string>
-    <string name="media_edit_video_dimensions_caption">Rozlišení videa</string>
-    <string name="media_edit_image_dimensions_caption">Rozlišení obrázků</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_filetype_caption">Typ souboru</string>
-    <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="connect_site">Připojit web</string>
@@ -3061,7 +3052,6 @@ Language: cs_CZ
     <string name="login_checking_site_address" a8c-src-lib="module:login">Kontrola adresy webu</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresa webu</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Zadejte adresu WordPress webu, ke kterému se chcete připojit.</string>
-    <string name="login_already_logged_in_wpcom">Již jste přihlášeni na WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Pokračovat</string>
     <string name="connect_more">Připojit se k jinému webu</string>
     <string name="next">Další</string>

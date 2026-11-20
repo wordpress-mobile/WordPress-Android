@@ -127,7 +127,6 @@ Language: eu_ES
     <string name="plugin_installed_version">%s bertsioa instalatuta</string>
     <string name="plugin_home_page">Pluginaren hasiera orrialdea</string>
     <string name="confirm_remove_media_image">Kendu irudia bidalketatik?</string>
-    <string name="media_edit_customize_card_caption">Pertsonalizatu</string>
     <string name="jetpack_send_wp_notifications_title">Bidali push jakinarazpena</string>
     <string name="jetpack_send_email_notifications_title">Bidali email jakinarazpena</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Nire gune guztiak</string>

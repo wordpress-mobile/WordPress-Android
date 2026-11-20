@@ -48,10 +48,6 @@
     <dimen name="snackbar_radius">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
-    <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
-    <dimen name="media_settings_margin_tablet">48dp</dimen>
-    <dimen name="media_settings_margin_tablet_large">96dp</dimen>
-    <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
     <dimen name="media_picker_selection_dot">20dp</dimen>
     <dimen name="media_picker_action_mode_dot">16dp</dimen>
@@ -651,4 +647,5 @@
     <dimen name="switch_vertical_padding">4dp</dimen>
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
     <dimen name="navbar_me_icon_padding">4dp</dimen>
+    <dimen name="media_settings_content_max_width">600dp</dimen>
 </resources>
