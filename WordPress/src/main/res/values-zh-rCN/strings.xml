@@ -372,7 +372,6 @@ Language: zh_CN
     <string name="application_password_required">必须提供应用程序密码</string>
     <string name="menu_html_mode">代码编辑器</string>
     <string name="taxonomies_title">分类</string>
-    <string name="media_edit_file_size_caption">文件尺寸</string>
     <string name="jetpack_rest_connection_error_login_wpcom">无法登录 WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">将站点关联到 WordPress.com</string>
     <string name="dataview_default_empty_message">暂无内容</string>
@@ -2966,8 +2965,6 @@ Language: zh_CN
     <string name="media_files_not_uploaded">%d 个文件未上传</string>
     <string name="remove_image_from_post">从文章中移除</string>
     <string name="confirm_remove_media_image">是否将该图片从文章中移除?</string>
-    <string name="media_edit_customize_card_caption">自定义</string>
-    <string name="media_edit_file_details_card_caption">文件详细信息</string>
     <string name="login_error_button">关闭</string>
     <string name="error_generic_network">发生网络错误。请检查您的连接，然后再试一次。</string>
     <string name="post_settings_remove_featured_image">删除推荐图片</string>
@@ -3001,13 +2998,7 @@ Language: zh_CN
     <string name="media_title_audio_details">音频详情</string>
     <string name="media_title_video_details">视频详情</string>
     <string name="media_title_image_details">图片详情</string>
-    <string name="fab_content_description_preview">预览</string>
-    <string name="media_edit_upload_date_caption">上传日期</string>
     <string name="media_edit_duration_caption">持续时间</string>
-    <string name="media_edit_video_dimensions_caption">视频尺寸</string>
-    <string name="media_edit_image_dimensions_caption">图片尺寸</string>
-    <string name="media_edit_filetype_caption">文件类型</string>
-    <string name="media_edit_filename_caption">文件名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文本</string>
     <string name="connect_site">连接站点</string>

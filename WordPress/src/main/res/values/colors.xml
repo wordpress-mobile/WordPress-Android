@@ -97,4 +97,7 @@
 
     <!-- Post Editing -->
     <color name="post_editing_updating">#EDD6C5</color>
+    <!-- media details screen: grouped list on a gray page, like iOS -->
+    <color name="media_settings_page_background">@color/neutral_0</color>
+    <color name="media_settings_card_background">@color/white</color>
 </resources>

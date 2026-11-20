@@ -373,7 +373,6 @@ Language: ko_KR
     <string name="application_password_required">애플리케이션 비밀번호 필요</string>
     <string name="menu_html_mode">코드 편집기</string>
     <string name="taxonomies_title">분류</string>
-    <string name="media_edit_file_size_caption">파일 크기</string>
     <string name="jetpack_rest_connection_error_login_wpcom">워드프레스닷컴에 로그인할 수 없음</string>
     <string name="jetpack_rest_connection_step_connect_site">워드프레스닷컴에 사이트 연결</string>
     <string name="dataview_default_empty_message">여기에 아무것도 없음</string>
@@ -2968,8 +2967,6 @@ Language: ko_KR
     <string name="media_files_not_uploaded">%d개 파일 업로드되지 않음</string>
     <string name="remove_image_from_post">글에서 제거</string>
     <string name="confirm_remove_media_image">글에서 이 이미지를 제거할까요?</string>
-    <string name="media_edit_customize_card_caption">사용자 정의</string>
-    <string name="media_edit_file_details_card_caption">파일 세부정보</string>
     <string name="login_error_button">닫기</string>
     <string name="error_generic_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="post_settings_remove_featured_image">특성 이미지 제거</string>
@@ -3003,13 +3000,7 @@ Language: ko_KR
     <string name="media_title_audio_details">오디오 세부정보</string>
     <string name="media_title_video_details">비디오 세부정보</string>
     <string name="media_title_image_details">이미지 세부정보</string>
-    <string name="fab_content_description_preview">미리보기</string>
-    <string name="media_edit_upload_date_caption">업로드 날짜</string>
     <string name="media_edit_duration_caption">기간</string>
-    <string name="media_edit_video_dimensions_caption">비디오 크기</string>
-    <string name="media_edit_image_dimensions_caption">이미지 크기</string>
-    <string name="media_edit_filetype_caption">파일 형식</string>
-    <string name="media_edit_filename_caption">파일 이름</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">대체 텍스트</string>
     <string name="connect_site">사이트 연결하기</string>

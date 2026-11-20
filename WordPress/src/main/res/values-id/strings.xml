@@ -374,7 +374,6 @@ Language: id
     <string name="application_password_required">Kata Sandi Aplikasi Diperlukan</string>
     <string name="menu_html_mode">Editor Kode</string>
     <string name="taxonomies_title">Taksonomi</string>
-    <string name="media_edit_file_size_caption">Ukuran berkas</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Tidak dapat login ke WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Hubungkan situs ke WordPress.com</string>
     <string name="dataview_default_empty_message">Tidak ada apa pun di sini</string>
@@ -2970,8 +2969,6 @@ Language: id
     <string name="media_files_not_uploaded">%d file belum diunggah</string>
     <string name="remove_image_from_post">Hapus dari pos</string>
     <string name="confirm_remove_media_image">Hapus gambar ini dari pos?</string>
-    <string name="media_edit_customize_card_caption">Sesuaikan</string>
-    <string name="media_edit_file_details_card_caption">Detail File</string>
     <string name="login_error_button">Tutup</string>
     <string name="error_generic_network">Terjadi error jaringan. Periksa koneksi Anda dan coba lagi.</string>
     <string name="post_settings_remove_featured_image">Hapus gambar andalan</string>
@@ -3005,13 +3002,7 @@ Language: id
     <string name="media_title_audio_details">Detail audio</string>
     <string name="media_title_video_details">Detail video</string>
     <string name="media_title_image_details">Detail gambar</string>
-    <string name="fab_content_description_preview">Pratinjau</string>
-    <string name="media_edit_upload_date_caption">Tanggal Unggahan</string>
     <string name="media_edit_duration_caption">Durasi</string>
-    <string name="media_edit_video_dimensions_caption">Dimensi Video</string>
-    <string name="media_edit_image_dimensions_caption">Dimensi Gambar</string>
-    <string name="media_edit_filetype_caption">Tipe File</string>
-    <string name="media_edit_filename_caption">Nama File</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
     <string name="connect_site">Hubungkan situs</string>

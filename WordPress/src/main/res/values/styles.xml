@@ -433,24 +433,81 @@
 
     <style name="MediaSettings" />
 
-    <style name="MediaSettings.Divider">
+    <style name="MediaSettings.Card">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:background">@drawable/bg_media_settings_card</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="MediaSettings.InsetDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
         <item name="android:background">?android:attr/listDivider</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MediaSettings.Label">
-        <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
-        <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="MediaSettings.Value">
-        <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
-        <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:alpha">@dimen/material_emphasis_medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediaSettings.Row">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="MediaSettings.RowLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediaSettings.RowValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">end</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediaSettings.EditSheetTheme" parent="WordPress.BottomSheetDialogTheme.NonTranslucent">
+        <item name="android:windowSoftInputMode">adjustResize|stateVisible</item>
+        <item name="bottomSheetStyle">@style/MediaSettings.EditSheetTheme.BottomSheetStyle</item>
+    </style>
+
+    <style name="MediaSettings.EditSheetTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/MediaSettings.EditSheetTheme.ShapeAppearanceOverlay</item>
+        <item name="shouldRemoveExpandedCorners">false</item>
+    </style>
+
+    <style name="MediaSettings.EditSheetTheme.ShapeAppearanceOverlay"
+        parent="WordPress.BottomSheetDialogTheme.ShapeAppearanceOverlay">
+        <item name="cornerSizeTopRight">28dp</item>
+        <item name="cornerSizeTopLeft">28dp</item>
     </style>
 
     <style name="EmptyListText">

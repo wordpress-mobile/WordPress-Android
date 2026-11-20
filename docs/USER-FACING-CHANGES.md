@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Reader → a post → the comments under the post; Reader → a post → Comments → tap a comment
   - **Notes:** Before, tapping a comment did nothing. In the single-comment view, tapping the "In reply to" line or a reply opens that comment, and Back steps out one comment at a time, then returns to the list at the same place. Reply, like, share and moderation work as in the list, and the reply bar at the bottom replies to the open comment. Pull to refresh only works in the list. The list stops indenting replies after two levels, so on deep threads the "In reply to" line is the only way to see which comment a reply answers. Moderating the open comment closes it, and Undo brings it back in the list without reopening it.
 
+- **Redesigned media details screen**
+  The media details screen now uses the iOS app's layout below the photo: every field is a one-line row (label on the left, value on the right) in white cards on a gray page. The photo still fills the top of the screen. Title, Caption, Description and Alt text are no longer text boxes: tapping one opens a sheet with a single text field and Cancel and Save buttons. Tapping the URL copies it, replacing the Copy button. The green full-screen button is replaced by a smaller button in the photo's corner, and tapping the photo still opens it full screen. Trash (and Remove image when opened from the editor) moved to the toolbar's overflow menu.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item; image settings opened from the post editor
+  - **Notes:** Edits still save when you leave the screen. Tapping Save in the sheet only updates the field, and Cancel, Back or swiping the sheet down discards the edit. Section headings ("File Details", "Customize") are gone, "Image Dimensions" and "Video Dimensions" are now "Dimensions", and "Upload Date" is now "Uploaded".
+
 - **Reader saved posts sync with your WordPress.com account**
   Posts saved in the Reader are saved to the WordPress.com account instead of only on the device, so they appear on the web and in the iOS app, and saves made there appear here. Posts already saved on the device are added to the account the first time the app opens after updating. Saved posts show as the same cards as the Reader's other post lists, with only the save and comment buttons; tap the filled save icon to remove a post. Saving and unsaving work offline: the change shows straight away and reaches the account once the device is back online.
   - **Apps:** Both
