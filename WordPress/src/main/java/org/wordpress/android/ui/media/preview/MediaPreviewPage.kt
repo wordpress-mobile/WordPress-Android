@@ -125,8 +125,6 @@ private fun MediaPlayerPage(
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
             release()
-            // swiping back to this page later shouldn't resume playback on its own
-            playWhenReady = false
         }
     }
 
