@@ -534,7 +534,8 @@ public class WPMediaUtils {
             return R.drawable.ic_audio_white_24dp;
         }
 
-        String extension = url == null ? "" : url.substring(url.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+        String extension = StringUtils.notNullStr(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(url))
+                                      .toLowerCase(Locale.ROOT);
         switch (extension) {
             case "pdf":
                 return R.drawable.ic_file_pdf_white_24dp;
