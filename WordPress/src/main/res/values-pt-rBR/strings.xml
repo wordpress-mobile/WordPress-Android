@@ -311,6 +311,7 @@ Language: pt_BR
     <string name="application_password_required">Senha do aplicativo obrigatória</string>
     <string name="menu_html_mode">Editor de código</string>
     <string name="taxonomies_title">Taxonomias</string>
+    <string name="media_edit_file_size_caption">Tamanho do arquivo</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Não foi possível fazer login no WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Conectar site ao WordPress.com</string>
     <string name="dataview_default_empty_message">Não tem nada aqui</string>
@@ -2906,6 +2907,8 @@ Language: pt_BR
     <string name="media_files_not_uploaded">%d arquivos não enviados</string>
     <string name="remove_image_from_post">Remover do post</string>
     <string name="confirm_remove_media_image">Remover esta imagem do post?</string>
+    <string name="media_edit_customize_card_caption">Personalizar</string>
+    <string name="media_edit_file_details_card_caption">Detalhes do arquivo</string>
     <string name="login_error_button">Fechar</string>
     <string name="error_generic_network">Ocorreu um erro na rede. Verifique sua conexão e tente novamente.</string>
     <string name="post_settings_remove_featured_image">Remover imagem destacada</string>
@@ -2939,7 +2942,13 @@ Language: pt_BR
     <string name="media_title_audio_details">Detalhes do áudio</string>
     <string name="media_title_video_details">Detalhes do vídeo</string>
     <string name="media_title_image_details">Detalhes da imagem</string>
+    <string name="fab_content_description_preview">Visualizar</string>
+    <string name="media_edit_upload_date_caption">Data de upload</string>
     <string name="media_edit_duration_caption">Duração</string>
+    <string name="media_edit_video_dimensions_caption">Dimensões do vídeo</string>
+    <string name="media_edit_image_dimensions_caption">Dimensões da imagem</string>
+    <string name="media_edit_filetype_caption">Tipo de arquivo</string>
+    <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
     <string name="connect_site">Conectar um site</string>
@@ -2987,6 +2996,7 @@ Language: pt_BR
     <string name="login_checking_site_address" a8c-src-lib="module:login">Verificando o endereço do site</string>
     <string name="login_site_address" a8c-src-lib="module:login">Endereço do site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Digite o endereço do site WordPress que você deseja conectar.</string>
+    <string name="login_already_logged_in_wpcom">Já conectado no WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Continuar</string>
     <string name="connect_more">Conectar outro site</string>
     <string name="next">Próximo</string>

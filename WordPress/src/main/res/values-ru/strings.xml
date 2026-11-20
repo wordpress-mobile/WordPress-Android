@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-24 18:59:03+0000
+Translation-Revision-Date: 2026-11-18 15:55:00+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Перезагрузить редактор</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Перезагрузите редактор, чтобы продолжить редактирование.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Редактор перестал работать</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Неизвестная ошибка</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ошибка при загрузке редактора</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Камера недоступна на этом устройстве</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Камера</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Фотографии</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Нет блоков, соответствующих «%1$s»</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Нет результатов</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Очистить поиск</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Недавние</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Закрыть</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Добавить блок</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Блоки поиска</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Не удалось отобразить вставку блока.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Предложено</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Часто используемые</string>
+    <string name="comment_detail_in_reply_to">В ответ на %1$s:</string>
+    <string name="comment_author_info_guest">Гость</string>
+    <string name="comment_author_info_registered">Зарегистрированный пользователь</string>
+    <string name="comment_author_info_bio">Данные профиля</string>
+    <string name="comment_author_info_posted_from">Опубликовано от</string>
+    <string name="comment_author_info_send_email">Послать сообщение по эл. почте</string>
+    <string name="comment_author_info_email">Адрес эл. почты</string>
+    <string name="comment_author_info_website">Веб-сайт</string>
+    <string name="comment_author_info_posted_at">Опубликовано в</string>
+    <string name="comment_author_info_show">Показать сведения об авторе</string>
+    <string name="comment_detail_on_post">на %1$s</string>
+    <string name="comment_reply_continue">Продолжить отвечать</string>
+    <string name="comment_reply_save_draft">Сохранить черновик</string>
+    <string name="comment_reply_delete_draft">Удалить черновик</string>
+    <string name="comment_reply_keep_editing">Продолжить редактирование</string>
+    <string name="comment_reply_unsent">У вас есть неотправленный ответ.</string>
+    <string name="comment_trash_has_replies">У этого комментария есть ответы. Они не будут перемещены в корзину вместе с ним.</string>
+    <string name="content_list_density_show_comfortable">Показать развёрнутый список</string>
+    <string name="content_list_density_show_condensed">Показать сжатый список</string>
+    <string name="content_list_comment_count_plural">Комментарии: %1$s</string>
+    <string name="content_list_comment_count_singular">Комментарии: %1$s</string>
+    <string name="content_list_view_count_plural">Просмотры: %1$s</string>
+    <string name="content_list_view_count_singular">Просмотры: %1$s</string>
+    <string name="content_list_fab_write">Пишите</string>
+    <string name="content_list_group_earlier_in">Ранее в %1$s</string>
+    <string name="content_list_group_this_week">На этой неделе</string>
+    <string name="content_list_group_yesterday">Вчера</string>
+    <string name="content_list_group_today">Сегодня</string>
+    <string name="unified_support_related_label">Похожее:</string>
+    <string name="unified_support_attachment_link_content_description">Открыть ссылку: %1$s</string>
+    <string name="unified_support_status_ai_assistant">Помощник на базе ИИ</string>
+    <string name="he_support_status_ongoing">Текущий</string>
+    <string name="he_support_reply_sent_confirmation">Ваш ответ отправлен. Проверьте электронную почту, чтобы узнать об обновлениях.</string>
+    <string name="he_support_add_more_info_button">Добавьте ещё информации</string>
+    <string name="application_password_private_site_card">Этот сайт закрытый, поэтому мы не можем повторно к нему подключиться.</string>
+    <string name="application_password_private_site_error">Этот сайт закрытый, поэтому мы не можем прочитать его настройки, чтобы выполнить вход.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Удалить метку %1$s</string>
+    <string name="prepublishing_tags_add_hint">Добавить тег</string>
+    <string name="photo_picker_choose_other_files">Другие файлы</string>
+    <string name="photo_picker_choose_photo_or_video">Фотографии и видео</string>
+    <string name="editor_saving_locked_leave">Покинуть страницу</string>
+    <string name="editor_saving_locked_continue">Продолжить</string>
+    <string name="editor_saving_locked_keep_editing">Продолжить редактирование</string>
+    <string name="editor_saving_locked_leave_message">Если вы покинете страницу сейчас, все незавершённые процессы, например загрузка медиафайлов, остановятся, а в вашей записи могут пропасть или некорректно отображаться данные.</string>
+    <string name="editor_saving_locked_save_message">Какая-то задача в редакторе, например загрузка медиафайла, всё ещё выполняется. Если вы продолжите, он может отсутствовать или отображаться некорректно в вашей записи.</string>
+    <string name="editor_saving_locked_title">Ваша запись ещё не готова</string>
+    <string name="domain_registration_purchase_unconfirmed">Кредит вашего домена использован, но мы не смогли подтвердить результат. Проверьте свои домены, прежде чем повторить попытку, и обратитесь в службу поддержки, если домен %s отсутствует.</string>
+    <string name="domain_registration_purchase_incomplete">Кредит вашего домена использован, но %s невозможно зарегистрировать. Обратитесь в службу поддержки.</string>
+    <string name="support_screen_login_description">Войдите в WordPress.com, чтобы получить доступ к чату поддержки.</string>
+    <string name="site_picker_add_site_menu_expanded">Меню добавления сайта развёрнуто</string>
+    <string name="site_picker_add_site_menu_collapsed">Меню добавления сайта свёрнуто</string>
+    <string name="site_picker_add_a_site_expand">Показать способы для добавления сайта</string>
+    <string name="site_picker_add_a_site_collapse">Закрыть меню для добавления сайта</string>
+    <string name="get_likes_empty_state_no_likes">Отметок «Нравится» пока нет</string>
+    <string name="stats_archives_section_taxonomies">Таксономии</string>
+    <string name="stats_archives_section_other">Другое</string>
+    <string name="stats_archives_section_aggregated">Агрегированный</string>
+    <string name="stats_archives_section_error">Ошибка</string>
+    <string name="stats_archives_section_dates">Даты</string>
+    <string name="stats_archives_section_authors">Авторы</string>
+    <string name="stats_archives_section_tags">Метки</string>
+    <string name="stats_archives_section_categories">Рубрики</string>
+    <string name="stats_archives_section_search">Поисковые запросы</string>
+    <string name="stats_archives_title_label">Страницы архива</string>
+    <string name="stats_archives_title">Архивы</string>
+    <string name="stats_view_selected_period_content_description">Просмотреть статистику за выбранный период</string>
+    <string name="stats_period_next_content_description">Следующий период</string>
+    <string name="stats_period_previous_content_description">Предыдущий период</string>
+    <string name="stats_period_this_year">Текущий год</string>
+    <string name="stats_period_this_month">Текущий месяц</string>
+    <string name="stats_feature_gate_plans_unavailable">Не удалось открыть страницу тарифных планов для этого сайта</string>
+    <string name="stats_feature_gate_explore_plans">Посмотреть тарифные планы</string>
+    <string name="stats_feature_gate_message">Перейдите на другой тарифный план, чтобы получить доступ к расширенным возможностям аналитики</string>
+    <string name="stats_error_not_available">Эта статистика недоступна для данного сайта</string>
+    <string name="stats_next_day">На день вперёд</string>
+    <string name="stats_previous_day">На день назад</string>
+    <string name="stats_post_detail_average">Среднее значение</string>
+    <string name="stats_post_detail_total">Итого</string>
+    <string name="stats_post_detail_activity_more">Ещё</string>
+    <string name="stats_post_detail_activity_less">Меньше</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Опубликовано %1$s</string>
+    <string name="stats_post_detail_title">Статистика по записям</string>
+    <string name="stats_open_link">Открыть ссылку</string>
+    <string name="stats_traffic_date_range_content_description">С %1$s по %2$s</string>
+    <string name="stats_show_views">Показать просмотры</string>
+    <string name="stats_hourly_data_not_available">Почасовые данные недоступны</string>
+    <string name="rs_date_trashed">Отправлено в корзину: %s</string>
+    <string name="rs_date_modified">Изменено: %s</string>
+    <string name="rs_date_now">Сейчас</string>
+    <string name="stats_new_stats_feedback_dialog_message">Вы готовы поделиться отзывом о работе с новой статистикой?</string>
+    <string name="deleting_tag_failed">Не удалось удалить метку</string>
+    <string name="comments_rs_moderation_failed_multiple">Не удалось обновить комментарии: %1$d из %2$d</string>
+    <string name="comments_rs_moderation_failed_single">Не удалось обновить комментарий</string>
+    <string name="comments_rs_search_nothing_found">Нет комментариев по вашему поисковому запросу</string>
+    <string name="comments_rs_search_prompt">Поиск комментариев</string>
+    <string name="web_view_log_in_to_site">Войти на сайт</string>
     <string name="support_screen_unified_support_description">Получайте ответы от нашей службы поддержки в любое время</string>
     <string name="support_screen_unified_support_title">Справка</string>
     <string name="unified_support_attachment_match_score">Совпадение %1$d%%</string>
@@ -93,6 +208,7 @@ Language: ru
     <string name="gutenberg_kit_announcement_learn_more">Узнать больше</string>
     <string name="gutenberg_kit_announcement_maybe_later">Возможно позже</string>
     <string name="gutenberg_kit_announcement_activate">Активировать</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">К концу 2026 года он станет редактором по умолчанию для всех. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Редактор блоков нового поколения готов к работе, и вас ждёт множество новых функций.</string>
     <string name="gutenberg_kit_announcement_title">Совсем скоро: улучшенный редактор блоков</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Переключитесь на новый блочный редактор одним из первых.</string>
@@ -375,6 +491,7 @@ Language: ru
     <string name="application_password_required">Требуется пароль приложения</string>
     <string name="menu_html_mode">Редактор кода</string>
     <string name="taxonomies_title">Таксономии</string>
+    <string name="media_edit_file_size_caption">Размер файла</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Не удалось войти в WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Подключите сайт к WordPress.com</string>
     <string name="dataview_default_empty_message">Здесь ничего нет</string>
@@ -1197,6 +1314,7 @@ Language: ru
     <string name="photo_picker_media_thumbnail_content_description">Миниатюра медиафайла</string>
     <string name="stats_insights_popular_title">🔥 Самое популярное время</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_period_this_week">Текущая неделя</string>
     <string name="scan_vault_press_active_on_site_button_text">Перейти в консоль</string>
     <string name="scan_vault_press_active_on_site_subtitle">Ваш сайт уже защищается VaultPress. Ссылка на консоль VailtPress находится ниже.</string>
     <string name="scan_vault_press_active_on_site_title">На вашем сайте включён VaultPress</string>
@@ -2971,6 +3089,8 @@ Language: ru
     <string name="media_files_not_uploaded">%d файлов не загружено</string>
     <string name="remove_image_from_post">Удалить из записи</string>
     <string name="confirm_remove_media_image">Удалить это изображение из записи?</string>
+    <string name="media_edit_customize_card_caption">Настроить</string>
+    <string name="media_edit_file_details_card_caption">Информация о файле</string>
     <string name="login_error_button">Закрыть</string>
     <string name="error_generic_network">Возникла ошибка сети. Проверьте ваше подключение и попробуйте снова.</string>
     <string name="post_settings_remove_featured_image">Убрать изображение записи</string>
@@ -3004,7 +3124,13 @@ Language: ru
     <string name="media_title_audio_details">Сведения об аудио</string>
     <string name="media_title_video_details">Сведения о видео</string>
     <string name="media_title_image_details">Сведения об изображении</string>
+    <string name="fab_content_description_preview">Предварительный просмотр</string>
+    <string name="media_edit_upload_date_caption">Дата загрузки</string>
     <string name="media_edit_duration_caption">Продолжительность</string>
+    <string name="media_edit_video_dimensions_caption">Размер видео</string>
+    <string name="media_edit_image_dimensions_caption">Размер изображения</string>
+    <string name="media_edit_filetype_caption">Тип файла</string>
+    <string name="media_edit_filename_caption">Имя файла</string>
     <string name="media_edit_url_caption">URL-адрес</string>
     <string name="media_edit_alttext_text">Атрибут Alt</string>
     <string name="connect_site">Подключить сайт</string>
@@ -3052,6 +3178,7 @@ Language: ru
     <string name="login_checking_site_address" a8c-src-lib="module:login">Проверка адреса сайта</string>
     <string name="login_site_address" a8c-src-lib="module:login">Адрес сайта</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Введите адрес сайта WordPress, к которому требуется подключиться.</string>
+    <string name="login_already_logged_in_wpcom">Вы уже вошли на WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Продолжить</string>
     <string name="connect_more">Подключить ещё один сайт</string>
     <string name="next">Вперед</string>

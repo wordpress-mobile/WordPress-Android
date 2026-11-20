@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-25 20:51:09+0000
+Translation-Revision-Date: 2026-11-18 15:58:21+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">エディターを再読み込み</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">編集を続けるには、エディターを再読み込みしてください。</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">エディターの機能が停止しました</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">不明なエラー</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">エディターの読み込みに失敗しました</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">この端末ではカメラを利用できません</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">カメラ</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">写真</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">「%1$s」に一致するブロックがありません</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">結果なし</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">検索をクリア</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">最近</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">閉じる</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">ブロックを追加</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">ブロック検索</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">ブロックインサーターを表示できません。</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">推奨</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">よく使う項目</string>
+    <string name="comment_detail_in_reply_to">%1$sへの返信:</string>
+    <string name="comment_author_info_guest">ゲスト</string>
+    <string name="comment_author_info_registered">登録済みユーザー</string>
+    <string name="comment_author_info_bio">プロフィール</string>
+    <string name="comment_author_info_posted_from">投稿元</string>
+    <string name="comment_author_info_send_email">メールを送信</string>
+    <string name="comment_author_info_email">メールアドレス</string>
+    <string name="comment_author_info_website">サイト</string>
+    <string name="comment_author_info_posted_at">投稿先</string>
+    <string name="comment_author_info_show">作成者詳細を表示</string>
+    <string name="comment_detail_on_post">%1$s上</string>
+    <string name="comment_reply_continue">返信を続行</string>
+    <string name="comment_reply_save_draft">下書きを保存</string>
+    <string name="comment_reply_delete_draft">下書きを削除</string>
+    <string name="comment_reply_keep_editing">編集を続行</string>
+    <string name="comment_reply_unsent">未送信の返信があります。</string>
+    <string name="comment_trash_has_replies">このコメントには返信があります。 一緒にゴミ箱に移動されることはありません。</string>
+    <string name="content_list_density_show_comfortable">展開リストを表示</string>
+    <string name="content_list_density_show_condensed">縮小リストを表示</string>
+    <string name="content_list_comment_count_plural">コメント%1$s件</string>
+    <string name="content_list_comment_count_singular">コメント%1$s件</string>
+    <string name="content_list_view_count_plural">表示回数%1$s回</string>
+    <string name="content_list_view_count_singular">表示回数%1$s回</string>
+    <string name="content_list_fab_write">ライティング</string>
+    <string name="content_list_group_earlier_in">以前 (対象: %1$s)</string>
+    <string name="content_list_group_this_week">今週</string>
+    <string name="content_list_group_yesterday">昨日</string>
+    <string name="content_list_group_today">今日</string>
+    <string name="unified_support_related_label">関連:</string>
+    <string name="unified_support_attachment_link_content_description">リンクを開く: %1$s</string>
+    <string name="unified_support_status_ai_assistant">AI アシスタント</string>
+    <string name="he_support_status_ongoing">進行中</string>
+    <string name="he_support_reply_sent_confirmation">返信を送信しました。 メールをチェックして最新情報を確認してください。</string>
+    <string name="he_support_add_more_info_button">さらなる情報を追加</string>
+    <string name="application_password_private_site_card">このサイトは非公開のため、当方で再接続できません。</string>
+    <string name="application_password_private_site_error">このサイトは非公開のため、当方で設定を読み込んでサインインさせることができません。</string>
+    <string name="prepublishing_tags_remove_tag_desc">タグ %1$s を削除</string>
+    <string name="prepublishing_tags_add_hint">タグを追加</string>
+    <string name="photo_picker_choose_other_files">その他のファイル</string>
+    <string name="photo_picker_choose_photo_or_video">写真と動画</string>
+    <string name="editor_saving_locked_leave">ページを離れる</string>
+    <string name="editor_saving_locked_continue">続行</string>
+    <string name="editor_saving_locked_keep_editing">編集を続行</string>
+    <string name="editor_saving_locked_leave_message">今すぐページを離れると、メディアのアップロードなどの進行中の処理が停止し、投稿に欠落や破損が生じる可能性があります。</string>
+    <string name="editor_saving_locked_save_message">メディアのアップロードなど、エディター内の処理がまだ進行中です。 続行すると、投稿に欠落や破損が生じる可能性があります。</string>
+    <string name="editor_saving_locked_title">まだ投稿の準備ができていません</string>
+    <string name="domain_registration_purchase_unconfirmed">ドメインクレジットは使用されましたが、結果を確認できませんでした。 ドメインを確認してから再試行してください。%s が見つからない場合はサポートにご連絡ください。</string>
+    <string name="domain_registration_purchase_incomplete">ドメインクレジットは使用されましたが、%s が登録できませんでした。 サポートにご連絡ください。</string>
+    <string name="support_screen_login_description">WordPress.com にログインしてサポートチャットにアクセスしてください。</string>
+    <string name="site_picker_add_site_menu_expanded">サイトを追加メニューを展開しました</string>
+    <string name="site_picker_add_site_menu_collapsed">サイトを追加メニューが折りたたまれました</string>
+    <string name="site_picker_add_a_site_expand">サイトを追加する方法を表示</string>
+    <string name="site_picker_add_a_site_collapse">サイトを追加メニューを閉じる</string>
+    <string name="get_likes_empty_state_no_likes">まだ「いいね」はありません</string>
+    <string name="stats_archives_section_taxonomies">タクソノミー</string>
+    <string name="stats_archives_section_other">その他</string>
+    <string name="stats_archives_section_aggregated">集約</string>
+    <string name="stats_archives_section_error">エラー</string>
+    <string name="stats_archives_section_dates">日付</string>
+    <string name="stats_archives_section_authors">投稿者</string>
+    <string name="stats_archives_section_tags">タグ</string>
+    <string name="stats_archives_section_categories">カテゴリー</string>
+    <string name="stats_archives_section_search">検索キーワード</string>
+    <string name="stats_archives_title_label">アーカイブページ</string>
+    <string name="stats_archives_title">アーカイブ</string>
+    <string name="stats_view_selected_period_content_description">選択した期間の統計情報を表示</string>
+    <string name="stats_period_next_content_description">次の期間</string>
+    <string name="stats_period_previous_content_description">前の期間</string>
+    <string name="stats_period_this_year">今年</string>
+    <string name="stats_period_this_month">今月</string>
+    <string name="stats_feature_gate_plans_unavailable">このサイトのプランページを開けません</string>
+    <string name="stats_feature_gate_explore_plans">プランの内容を見る</string>
+    <string name="stats_feature_gate_message">プランをアップグレードして高度な分析にアクセスする</string>
+    <string name="stats_error_not_available">これらの統計情報はこのサイトでは利用できません</string>
+    <string name="stats_next_day">翌日</string>
+    <string name="stats_previous_day">前日</string>
+    <string name="stats_post_detail_average">平均</string>
+    <string name="stats_post_detail_total">合計</string>
+    <string name="stats_post_detail_activity_more">多い</string>
+    <string name="stats_post_detail_activity_less">少ない</string>
+    <string name="stats_post_detail_more_likers">%1$s以上</string>
+    <string name="stats_post_detail_published">%1$sに公開</string>
+    <string name="stats_post_detail_title">投稿統計情報</string>
+    <string name="stats_open_link">リンクを開く</string>
+    <string name="stats_traffic_date_range_content_description">%1$s～%2$s</string>
+    <string name="stats_show_views">表示数を表示</string>
+    <string name="stats_hourly_data_not_available">時間別データは利用できません</string>
+    <string name="rs_date_trashed">ゴミ箱への移動: %s</string>
+    <string name="rs_date_modified">更新: %s</string>
+    <string name="rs_date_now">現在</string>
+    <string name="stats_new_stats_feedback_dialog_message">新しい統計の利用体験についてフィードバックを共有しますか ?</string>
+    <string name="deleting_tag_failed">タグを削除できませんでした</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d/%2$d件のコメントを更新できませんでした</string>
+    <string name="comments_rs_moderation_failed_single">コメントを更新できませんでした</string>
+    <string name="comments_rs_search_nothing_found">検索に一致するコメントはありません</string>
+    <string name="comments_rs_search_prompt">コメントを検索</string>
+    <string name="web_view_log_in_to_site">このサイトにログイン</string>
     <string name="support_screen_unified_support_description">いつでもサポートチームから回答を得られます</string>
     <string name="support_screen_unified_support_title">ヘルプ</string>
     <string name="unified_support_attachment_match_score">%1$d%% 一致</string>
@@ -93,6 +208,7 @@ Language: ja_JP
     <string name="gutenberg_kit_announcement_learn_more">さらに詳しく</string>
     <string name="gutenberg_kit_announcement_maybe_later">後で確認する</string>
     <string name="gutenberg_kit_announcement_activate">有効化</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">2026年末までには、全ユーザーのデフォルトエディターになる予定です。 %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">次世代ブロックエディターの準備ができました。たくさんの新機能があります。</string>
     <string name="gutenberg_kit_announcement_title">より高性能のブロックエディターが登場します</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">まずブロックエディターに切り替えてから、新しいエディターをお試しください。</string>
@@ -373,6 +489,7 @@ Language: ja_JP
     <string name="application_password_required">アプリケーションパスワードが必須です</string>
     <string name="menu_html_mode">コードエディター</string>
     <string name="taxonomies_title">タクソノミー</string>
+    <string name="media_edit_file_size_caption">ファイルサイズ</string>
     <string name="jetpack_rest_connection_error_login_wpcom">WordPress.com にログインできません</string>
     <string name="jetpack_rest_connection_step_connect_site">サイトを WordPress.com に連携</string>
     <string name="dataview_default_empty_message">ここには何もありません</string>
@@ -2957,6 +3074,8 @@ Language: ja_JP
     <string name="media_files_not_uploaded">%dファイルがアップロードされませんでした</string>
     <string name="remove_image_from_post">投稿から削除</string>
     <string name="confirm_remove_media_image">この画像を投稿から削除しますか ?</string>
+    <string name="media_edit_customize_card_caption">カスタマイズ</string>
+    <string name="media_edit_file_details_card_caption">ファイルの詳細</string>
     <string name="login_error_button">閉じる</string>
     <string name="error_generic_network">ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="post_settings_remove_featured_image">アイキャッチ画像を削除</string>
@@ -2990,7 +3109,13 @@ Language: ja_JP
     <string name="media_title_audio_details">音声の詳細</string>
     <string name="media_title_video_details">動画の詳細</string>
     <string name="media_title_image_details">画像の詳細</string>
+    <string name="fab_content_description_preview">プレビュー</string>
+    <string name="media_edit_upload_date_caption">アップロード日</string>
     <string name="media_edit_duration_caption">所要時間</string>
+    <string name="media_edit_video_dimensions_caption">動画サイズ</string>
+    <string name="media_edit_image_dimensions_caption">画像サイズ</string>
+    <string name="media_edit_filetype_caption">ファイルタイプ</string>
+    <string name="media_edit_filename_caption">ファイル名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">代替テキスト</string>
     <string name="connect_site">サイトと連携</string>
@@ -3038,6 +3163,7 @@ Language: ja_JP
     <string name="login_checking_site_address" a8c-src-lib="module:login">サイトアドレスの確認</string>
     <string name="login_site_address" a8c-src-lib="module:login">サイトアドレス</string>
     <string name="enter_site_address" a8c-src-lib="module:login">連携する WordPress サイトのアドレスを入力してください。</string>
+    <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
     <string name="login_continue" a8c-src-lib="module:login">次へ</string>
     <string name="connect_more">別のサイトと連携</string>
     <string name="next">次へ</string>

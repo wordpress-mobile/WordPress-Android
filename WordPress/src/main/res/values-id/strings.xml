@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-23 09:56:04+0000
+Translation-Revision-Date: 2026-11-18 15:58:16+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Muat ulang Editor</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Muat ulang editor untuk melanjutkan pengeditan.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor berhenti berfungsi</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Error tidak diketahui</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Gagal memuat editor</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kamera tidak tersedia di perangkat ini</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kamera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Foto</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Tidak ada blok yang cocok dengan “%1$s”</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Tidak ada hasil</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Hapus pencarian</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Terbaru</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Tutup</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Tambahkan blok</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Cari blok</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Tidak dapat menampilkan penyisip blok.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Disarankan</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Paling banyak digunakan</string>
+    <string name="comment_detail_in_reply_to">Balasan untuk %1$s:</string>
+    <string name="comment_author_info_guest">Tamu</string>
+    <string name="comment_author_info_registered">Pengguna terdaftar</string>
+    <string name="comment_author_info_bio">Bio</string>
+    <string name="comment_author_info_posted_from">Diposkan dari</string>
+    <string name="comment_author_info_send_email">Kirim email</string>
+    <string name="comment_author_info_email">Email</string>
+    <string name="comment_author_info_website">Situs web</string>
+    <string name="comment_author_info_posted_at">Diposkan pada</string>
+    <string name="comment_author_info_show">Tampilkan detail penulis</string>
+    <string name="comment_detail_on_post">pada %1$s</string>
+    <string name="comment_reply_continue">Lanjutkan balasan</string>
+    <string name="comment_reply_save_draft">Simpan Konsep</string>
+    <string name="comment_reply_delete_draft">Hapus Konsep</string>
+    <string name="comment_reply_keep_editing">Lanjutkan Mengedit</string>
+    <string name="comment_reply_unsent">Anda mempunyai balasan yang belum dikirim.</string>
+    <string name="comment_trash_has_replies">Komentar ini memiliki balasan. Balasan tidak akan ikut dipindahkan ke tempat sampah.</string>
+    <string name="content_list_density_show_comfortable">Perluas tampilan daftar</string>
+    <string name="content_list_density_show_condensed">Tampilkan daftar ringkas</string>
+    <string name="content_list_comment_count_plural">%1$s komentar</string>
+    <string name="content_list_comment_count_singular">%1$s komentar</string>
+    <string name="content_list_view_count_plural">%1$s kali dilihat</string>
+    <string name="content_list_view_count_singular">%1$s kali dilihat</string>
+    <string name="content_list_fab_write">Tulis</string>
+    <string name="content_list_group_earlier_in">Sebelumnya pada %1$s</string>
+    <string name="content_list_group_this_week">Minggu ini</string>
+    <string name="content_list_group_yesterday">Kemarin</string>
+    <string name="content_list_group_today">Hari ini</string>
+    <string name="unified_support_related_label">Terkait:</string>
+    <string name="unified_support_attachment_link_content_description">Buka tautan: %1$s</string>
+    <string name="unified_support_status_ai_assistant">Asisten AI</string>
+    <string name="he_support_status_ongoing">Berlangsung</string>
+    <string name="he_support_reply_sent_confirmation">Balasan Anda telah dikirim. Periksa email Anda untuk pembaruan.</string>
+    <string name="he_support_add_more_info_button">Tambahkan info selengkapnya</string>
+    <string name="application_password_private_site_card">Situs ini berstatus privat, jadi kami tidak dapat terhubung kembali.</string>
+    <string name="application_password_private_site_error">Situs ini berstatus privat, jadi kami tidak dapat membaca pengaturannya untuk mengizinkan Anda login.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Hapus tag %1$s</string>
+    <string name="prepublishing_tags_add_hint">Tambahkan tag</string>
+    <string name="photo_picker_choose_other_files">Berkas lainnya</string>
+    <string name="photo_picker_choose_photo_or_video">Foto dan video</string>
+    <string name="editor_saving_locked_leave">Tinggalkan</string>
+    <string name="editor_saving_locked_continue">Lanjutkan</string>
+    <string name="editor_saving_locked_keep_editing">Lanjutkan mengedit</string>
+    <string name="editor_saving_locked_leave_message">Jika Anda tinggalkan halaman ini sekarang, semua yang masih berlangsung, seperti pengunggahan media, akan dihentikan dan mungkin hilang atau rusak di pos Anda.</string>
+    <string name="editor_saving_locked_save_message">Di editor, ada proses yang masih berjalan, misalnya pengunggahan media. Jika Anda melanjutkan, elemen itu mungkin hilang atau rusak di pos Anda.</string>
+    <string name="editor_saving_locked_title">Pos Anda belum siap</string>
+    <string name="domain_registration_purchase_unconfirmed">Kredit domain Anda telah digunakan, tetapi kami tidak dapat mengonfirmasi hasilnya. Periksa domain Anda sebelum mencoba lagi, dan hubungi dukungan jika %s belum ada.</string>
+    <string name="domain_registration_purchase_incomplete">Kredit domain Anda telah digunakan, tetapi %s tidak dapat didaftarkan. Mohon hubungi dukungan.</string>
+    <string name="support_screen_login_description">Login ke WordPress.com untuk mengakses obrolan dukungan.</string>
+    <string name="site_picker_add_site_menu_expanded">Menu tambahkan situs diperluas</string>
+    <string name="site_picker_add_site_menu_collapsed">Menu tambahkan situs diciutkan</string>
+    <string name="site_picker_add_a_site_expand">Tampilkan cara untuk menambahkan situs</string>
+    <string name="site_picker_add_a_site_collapse">Tutup menu tambahkan situs</string>
+    <string name="get_likes_empty_state_no_likes">Belum ada suka</string>
+    <string name="stats_archives_section_taxonomies">Taksonomi</string>
+    <string name="stats_archives_section_other">Lainnya</string>
+    <string name="stats_archives_section_aggregated">Gabungan</string>
+    <string name="stats_archives_section_error">Error</string>
+    <string name="stats_archives_section_dates">Tanggal</string>
+    <string name="stats_archives_section_authors">Penulis</string>
+    <string name="stats_archives_section_tags">Tag</string>
+    <string name="stats_archives_section_categories">Kategori</string>
+    <string name="stats_archives_section_search">Istilah pencarian</string>
+    <string name="stats_archives_title_label">Halaman arsip</string>
+    <string name="stats_archives_title">Arsip</string>
+    <string name="stats_view_selected_period_content_description">Lihat statistik untuk periode yang dipilih</string>
+    <string name="stats_period_next_content_description">Periode selanjutnya</string>
+    <string name="stats_period_previous_content_description">Periode sebelumnya</string>
+    <string name="stats_period_this_year">Tahun Ini</string>
+    <string name="stats_period_this_month">Bulan Ini</string>
+    <string name="stats_feature_gate_plans_unavailable">Tidak dapat membuka halaman paket untuk situs ini</string>
+    <string name="stats_feature_gate_explore_plans">Pelajari Paket</string>
+    <string name="stats_feature_gate_message">Upgrade paket Anda untuk mendapatkan akses ke analitik tingkat lanjut</string>
+    <string name="stats_error_not_available">Statistik ini tidak tersedia untuk situs ini</string>
+    <string name="stats_next_day">Hari berikutnya</string>
+    <string name="stats_previous_day">Hari sebelumnya</string>
+    <string name="stats_post_detail_average">Rata-rata</string>
+    <string name="stats_post_detail_total">Total</string>
+    <string name="stats_post_detail_activity_more">Selengkapnya</string>
+    <string name="stats_post_detail_activity_less">Lebih sedikit</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Dipublikasikan %1$s</string>
+    <string name="stats_post_detail_title">Statistik Pos</string>
+    <string name="stats_open_link">Buka tautan</string>
+    <string name="stats_traffic_date_range_content_description">%1$s hingga %2$s</string>
+    <string name="stats_show_views">Tampilkan Penayangan</string>
+    <string name="stats_hourly_data_not_available">Data per jam tidak tersedia</string>
+    <string name="rs_date_trashed">Dibuang: %s</string>
+    <string name="rs_date_modified">Diubah: %s</string>
+    <string name="rs_date_now">Sekarang</string>
+    <string name="stats_new_stats_feedback_dialog_message">Apakah Anda bersedia berbagi feedback mengenai pengalaman dengan Statistik yang baru?</string>
+    <string name="deleting_tag_failed">Gagal menghapus tag</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d dari %2$d komentar tidak dapat diperbarui</string>
+    <string name="comments_rs_moderation_failed_single">Komentar tidak dapat diperbarui</string>
+    <string name="comments_rs_search_nothing_found">Tidak ada komentar yang cocok dengan pencarian Anda</string>
+    <string name="comments_rs_search_prompt">Cari komentar</string>
+    <string name="web_view_log_in_to_site">Login ke situs ini</string>
     <string name="support_screen_unified_support_description">Dapatkan jawaban dari tim dukungan kami, kapan saja</string>
     <string name="support_screen_unified_support_title">Dapatkan bantuan</string>
     <string name="unified_support_attachment_match_score">%1$d%% pertandingan</string>
@@ -93,6 +208,7 @@ Language: id
     <string name="gutenberg_kit_announcement_learn_more">Baca selengkapnya</string>
     <string name="gutenberg_kit_announcement_maybe_later">Mungkin nanti</string>
     <string name="gutenberg_kit_announcement_activate">Aktifkan</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Pada akhir tahun 2026, ini akan menjadi editor default untuk semua pengguna. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Editor blok generasi baru telah siap dan menghadirkan lebih banyak fitur baru.</string>
     <string name="gutenberg_kit_announcement_title">Editor blok yang lebih baik akan segera hadir</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Beralih ke editor blok terlebih dahulu untuk mencoba editor baru.</string>
@@ -374,6 +490,7 @@ Language: id
     <string name="application_password_required">Kata Sandi Aplikasi Diperlukan</string>
     <string name="menu_html_mode">Editor Kode</string>
     <string name="taxonomies_title">Taksonomi</string>
+    <string name="media_edit_file_size_caption">Ukuran berkas</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Tidak dapat login ke WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Hubungkan situs ke WordPress.com</string>
     <string name="dataview_default_empty_message">Tidak ada apa pun di sini</string>
@@ -2969,6 +3086,8 @@ Language: id
     <string name="media_files_not_uploaded">%d file belum diunggah</string>
     <string name="remove_image_from_post">Hapus dari pos</string>
     <string name="confirm_remove_media_image">Hapus gambar ini dari pos?</string>
+    <string name="media_edit_customize_card_caption">Sesuaikan</string>
+    <string name="media_edit_file_details_card_caption">Detail File</string>
     <string name="login_error_button">Tutup</string>
     <string name="error_generic_network">Terjadi error jaringan. Periksa koneksi Anda dan coba lagi.</string>
     <string name="post_settings_remove_featured_image">Hapus gambar andalan</string>
@@ -3002,7 +3121,13 @@ Language: id
     <string name="media_title_audio_details">Detail audio</string>
     <string name="media_title_video_details">Detail video</string>
     <string name="media_title_image_details">Detail gambar</string>
+    <string name="fab_content_description_preview">Pratinjau</string>
+    <string name="media_edit_upload_date_caption">Tanggal Unggahan</string>
     <string name="media_edit_duration_caption">Durasi</string>
+    <string name="media_edit_video_dimensions_caption">Dimensi Video</string>
+    <string name="media_edit_image_dimensions_caption">Dimensi Gambar</string>
+    <string name="media_edit_filetype_caption">Tipe File</string>
+    <string name="media_edit_filename_caption">Nama File</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
     <string name="connect_site">Hubungkan situs</string>
@@ -3050,6 +3175,7 @@ Language: id
     <string name="login_checking_site_address" a8c-src-lib="module:login">Memeriksa alamat situs</string>
     <string name="login_site_address" a8c-src-lib="module:login">Alamat situs</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Masukkan alamat situs WordPress yang ingin Anda hubungkan.</string>
+    <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Lanjutkan</string>
     <string name="connect_more">Hubungkan situs lainnya</string>
     <string name="next">Selanjutnya</string>

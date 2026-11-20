@@ -375,6 +375,7 @@ Language: pl
     <string name="application_password_required">Wymagane hasło aplikacji</string>
     <string name="menu_html_mode">Edytor kodu</string>
     <string name="taxonomies_title">Taksonomie</string>
+    <string name="media_edit_file_size_caption">Rozmiar pliku</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Nie można zalogować się do WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Połącz witrynę z WordPress.com</string>
     <string name="dataview_default_empty_message">Nic tu nie ma</string>
@@ -2971,6 +2972,8 @@ Language: pl
     <string name="media_files_not_uploaded">Nie przesłano %d plików</string>
     <string name="remove_image_from_post">Usuń z wpisu</string>
     <string name="confirm_remove_media_image">Usunąć ten obrazek z wpisu?</string>
+    <string name="media_edit_file_details_card_caption">Szczegóły pliku</string>
+    <string name="media_edit_customize_card_caption">Dostosuj</string>
     <string name="login_error_button">Zamknij</string>
     <string name="error_generic_network">Wystąpił błąd sieci. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="post_settings_remove_featured_image">Usuń obrazek wyróżniający</string>
@@ -3004,8 +3007,14 @@ Language: pl
     <string name="media_title_audio_details">Szczegóły pliku dźwiękowego</string>
     <string name="media_title_video_details">Szczegóły filmu</string>
     <string name="media_title_image_details">Szczegóły obrazka</string>
+    <string name="fab_content_description_preview">Podgląd</string>
+    <string name="media_edit_upload_date_caption">Data przesłania</string>
     <string name="media_edit_duration_caption">Czas trwania</string>
+    <string name="media_edit_video_dimensions_caption">Wymiary filmu</string>
+    <string name="media_edit_image_dimensions_caption">Wymiary obrazka</string>
+    <string name="media_edit_filename_caption">Nazwa pliku</string>
     <string name="media_edit_url_caption">Adres URL</string>
+    <string name="media_edit_filetype_caption">Rodzaj pliku</string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
     <string name="connect_site">Połącz witrynę</string>
@@ -3052,6 +3061,7 @@ Language: pl
     <string name="login_checking_site_address" a8c-src-lib="module:login">Sprawdzanie adresu witryny</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adres witryny</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Wprowadź adres witryny WordPress, którą chciałbyś połączyć.</string>
+    <string name="login_already_logged_in_wpcom">Jesteś już zalogowany na WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Kontynuuj</string>
     <string name="connect_more">Połącz kolejną witrynę</string>
     <string name="next">Następny</string>

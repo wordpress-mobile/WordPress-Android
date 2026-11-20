@@ -1790,6 +1790,8 @@ Language: vi_VN
     <string name="media_files_not_uploaded">Chưa tải lên %d tập tin</string>
     <string name="remove_image_from_post">Xóa khỏi bài viết</string>
     <string name="confirm_remove_media_image">Xóa ảnh này khỏi bài viết?</string>
+    <string name="media_edit_customize_card_caption">Tùy biến</string>
+    <string name="media_edit_file_details_card_caption">Chi tiết tập tin</string>
     <string name="login_error_button">Đóng</string>
     <string name="error_generic_network">Lỗi kết nối mạng. Hãy kiểm tra kết nối và thử lại.</string>
     <string name="post_settings_remove_featured_image">Xóa ảnh minh họa</string>
@@ -1823,7 +1825,13 @@ Language: vi_VN
     <string name="media_title_audio_details">Chi tiết âm thanh</string>
     <string name="media_title_video_details">Chi tiết video</string>
     <string name="media_title_image_details">Chi tiết hình ảnh</string>
+    <string name="fab_content_description_preview">Xem trước</string>
+    <string name="media_edit_upload_date_caption">Ngày tải lên</string>
     <string name="media_edit_duration_caption">Thời lượng</string>
+    <string name="media_edit_video_dimensions_caption">Độ phân giải</string>
+    <string name="media_edit_image_dimensions_caption">Kích thước ảnh</string>
+    <string name="media_edit_filetype_caption">Định dạng tập tin</string>
+    <string name="media_edit_filename_caption">Tên tập tin</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Văn bản thay thế</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Chớp đèn</string>
@@ -1871,6 +1879,7 @@ Language: vi_VN
     <string name="login_checking_site_address" a8c-src-lib="module:login">Đang kiểm tra địa chỉ blog</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Nhập địa chỉ trang WordPress mà bạn muốn kết nối.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Địa chỉ blog</string>
+    <string name="login_already_logged_in_wpcom">Đã đăng nhập WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Tiếp tục</string>
     <string name="connect_more">Kết nối blog khác</string>
     <string name="next">Kế</string>

@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-29 19:54:44+0000
+Translation-Revision-Date: 2026-11-20 14:21:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ladda om redigeraren</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ladda om redigeraren för att fortsätta redigera.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Redigeraren slutade fungera</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Okänt fel</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Dett gick inte att ladda redigeraren</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kameran är inte tillgänglig på denna enhet</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kamera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Foton</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Inga block matchar \"%1$s\"</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Inga resultat</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Rensa sökning</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Senaste</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Stäng</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Lägg till block</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Sök block</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kan inte visa blockinfogaren.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Föreslaget</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Mest använda</string>
+    <string name="comment_detail_in_reply_to">Som svar till %1$s:</string>
+    <string name="comment_author_info_guest">Gäst</string>
+    <string name="comment_author_info_registered">Registrerad användare</string>
+    <string name="comment_author_info_bio">Biografi</string>
+    <string name="comment_author_info_posted_from">Publicerad från</string>
+    <string name="comment_author_info_send_email">Skicka e-post</string>
+    <string name="comment_author_info_email">E-post</string>
+    <string name="comment_author_info_website">Webbplats</string>
+    <string name="comment_author_info_posted_at">Publicerat på</string>
+    <string name="comment_author_info_show">Visa författarinformation</string>
+    <string name="comment_detail_on_post">på %1$s</string>
+    <string name="comment_reply_continue">Fortsätt svar</string>
+    <string name="comment_reply_save_draft">Spara utkast</string>
+    <string name="comment_reply_delete_draft">Ta bort utkast</string>
+    <string name="comment_reply_keep_editing">Fortsätt redigera</string>
+    <string name="comment_reply_unsent">Du har ett oskickat svar.</string>
+    <string name="comment_trash_has_replies">Denna kommentar har svar. De kommer inte att flyttas med den till papperskorgen.</string>
+    <string name="content_list_density_show_comfortable">Visa expanderad lista</string>
+    <string name="content_list_density_show_condensed">Visa komprimerad lista</string>
+    <string name="content_list_comment_count_plural">%1$s kommentarer</string>
+    <string name="content_list_comment_count_singular">%1$s kommentar</string>
+    <string name="content_list_view_count_plural">%1$s visningar</string>
+    <string name="content_list_view_count_singular">%1$s visning</string>
+    <string name="content_list_fab_write">Skriv</string>
+    <string name="content_list_group_earlier_in">Tidigare i %1$s</string>
+    <string name="content_list_group_this_week">Denna vecka</string>
+    <string name="content_list_group_yesterday">Igår</string>
+    <string name="content_list_group_today">Idag</string>
+    <string name="unified_support_related_label">Relaterat:</string>
+    <string name="unified_support_attachment_link_content_description">Öppna länk: %1$s</string>
+    <string name="unified_support_status_ai_assistant">AI-assistent</string>
+    <string name="he_support_status_ongoing">Pågående</string>
+    <string name="he_support_reply_sent_confirmation">Ditt svar har skickats. Kolla din e-post för uppdateringar.</string>
+    <string name="he_support_add_more_info_button">Lägg till mer information</string>
+    <string name="application_password_private_site_card">Denna webbplats är privat, så vi kan inte återansluta till den.</string>
+    <string name="application_password_private_site_error">Denna webbplats är privat, så vi kan inte läsa dess inställningar för att logga in dig.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Ta bort etiketten %1$s</string>
+    <string name="prepublishing_tags_add_hint">Lägg till en etikett</string>
+    <string name="photo_picker_choose_other_files">Övriga filer</string>
+    <string name="photo_picker_choose_photo_or_video">Foton och videoklipp</string>
+    <string name="editor_saving_locked_leave">Lämna</string>
+    <string name="editor_saving_locked_continue">Fortsätt</string>
+    <string name="editor_saving_locked_keep_editing">Fortsätt redigera</string>
+    <string name="editor_saving_locked_leave_message">Om du lämnar nu stoppas allt som fortfarande pågår, t.ex. en mediauppladdning, och kan saknas eller vara trasigt i ditt inlägg.</string>
+    <string name="editor_saving_locked_save_message">Något i redigeraren, som en mediauppladdning, pågår fortfarande. Om du fortsätter kan det saknas eller vara trasigt i ditt inlägg.</string>
+    <string name="editor_saving_locked_title">Ditt inlägg är inte klart än</string>
+    <string name="domain_registration_purchase_unconfirmed">Din domänkredit användes, men vi kunde inte bekräfta resultatet. Kontrollera dina domäner innan du försöker igen, och kontakta supporten om %s saknas.</string>
+    <string name="domain_registration_purchase_incomplete">Din domänkredit användes, men %s kunde inte registreras. Kontakta supporten.</string>
+    <string name="support_screen_login_description">Logga in på WordPress.com för att komma åt supportchatten.</string>
+    <string name="site_picker_add_site_menu_expanded">Lägg till webbplats-meny expanderad</string>
+    <string name="site_picker_add_site_menu_collapsed">Lägg till webbplats-meny minimerad</string>
+    <string name="site_picker_add_a_site_expand">Visa sätt att lägga till en webbplats</string>
+    <string name="site_picker_add_a_site_collapse">Stäng Lägg till webbplats-menyn</string>
+    <string name="get_likes_empty_state_no_likes">Inga gilla-markeringar än</string>
+    <string name="stats_archives_section_taxonomies">Taxonomier</string>
+    <string name="stats_archives_section_other">Övrigt</string>
+    <string name="stats_archives_section_aggregated">Aggregerad</string>
+    <string name="stats_archives_section_error">Fel</string>
+    <string name="stats_archives_section_dates">Datum</string>
+    <string name="stats_archives_section_authors">Författare</string>
+    <string name="stats_archives_section_tags">Etiketter</string>
+    <string name="stats_archives_section_categories">Kategorier</string>
+    <string name="stats_archives_section_search">Söktermer</string>
+    <string name="stats_archives_title_label">Arkivsidor</string>
+    <string name="stats_archives_title">Arkiv</string>
+    <string name="stats_view_selected_period_content_description">Visa statistik för den valda perioden</string>
+    <string name="stats_period_next_content_description">Nästa period</string>
+    <string name="stats_period_previous_content_description">Föregående period</string>
+    <string name="stats_period_this_year">Det här året</string>
+    <string name="stats_period_this_month">Denna månad</string>
+    <string name="stats_feature_gate_plans_unavailable">Kunde inte öppna paketsidan för denna webbplats</string>
+    <string name="stats_feature_gate_explore_plans">Utforska paket</string>
+    <string name="stats_feature_gate_message">Uppgradera ditt paket för att få åtkomst till avancerad analys</string>
+    <string name="stats_error_not_available">Den här statistiken är inte tillgänglig för denna webbplats</string>
+    <string name="stats_next_day">Nästa dag</string>
+    <string name="stats_previous_day">Föregående dag</string>
+    <string name="stats_post_detail_average">Genomsnittligt</string>
+    <string name="stats_post_detail_total">Totalt</string>
+    <string name="stats_post_detail_activity_more">Mer</string>
+    <string name="stats_post_detail_activity_less">Mindre</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Publicerat %1$s</string>
+    <string name="stats_post_detail_title">Inläggsstatus</string>
+    <string name="stats_open_link">Öppna länk</string>
+    <string name="stats_traffic_date_range_content_description">%1$s till %2$s</string>
+    <string name="stats_show_views">Visa visningar</string>
+    <string name="stats_hourly_data_not_available">Inga timdata är tillgängliga</string>
+    <string name="rs_date_trashed">Borttaget: %s</string>
+    <string name="rs_date_modified">Ändrat: %s</string>
+    <string name="rs_date_now">Nu</string>
+    <string name="stats_new_stats_feedback_dialog_message">Är du villig att dela feedback om den nya Stats-upplevelsen?</string>
+    <string name="deleting_tag_failed">Det gick inte att ta bort etiketten</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d av %2$d kommentarer kunde inte uppdateras</string>
+    <string name="comments_rs_moderation_failed_single">Kommentaren kunde inte uppdateras.</string>
+    <string name="comments_rs_search_nothing_found">Inga kommentarer matchar din sökning</string>
+    <string name="comments_rs_search_prompt">Sök kommentarer</string>
+    <string name="web_view_log_in_to_site">Logga in på denna webbplats</string>
     <string name="support_screen_unified_support_description">Få svar från vårt supportteam när som helst</string>
     <string name="support_screen_unified_support_title">Skaffa hjälp</string>
     <string name="unified_support_attachment_match_score">%1$d%% matcha</string>
@@ -93,6 +208,7 @@ Language: sv_SE
     <string name="gutenberg_kit_announcement_learn_more">Lär dig mer</string>
     <string name="gutenberg_kit_announcement_maybe_later">Kanske senare</string>
     <string name="gutenberg_kit_announcement_activate">Aktivera</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">I slutet av 2026 kommer det att bli standardredigeraren för alla. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Nästa generations blockredigerare är redo och ger fler nya funktioner.</string>
     <string name="gutenberg_kit_announcement_title">En bättre blockredigerare är på väg</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Byt till blockredigeraren först för att testa den nya redigeraren.</string>
@@ -375,6 +491,7 @@ Language: sv_SE
     <string name="application_password_required">Applikationslösenord krävs</string>
     <string name="menu_html_mode">Kodredigerare</string>
     <string name="taxonomies_title">Taxonomier</string>
+    <string name="media_edit_file_size_caption">Filstorlek</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Kan inte logga in på WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Anslut webbplats till WordPress.com</string>
     <string name="dataview_default_empty_message">Det finns ingenting här</string>
@@ -1197,6 +1314,7 @@ Language: sv_SE
     <string name="photo_picker_media_thumbnail_content_description">Miniatyr av mediafil</string>
     <string name="stats_insights_popular_title">🔥 Populäraste tidpunkten</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_period_this_week">Denna vecka</string>
     <string name="scan_vault_press_active_on_site_button_text">Besök adminpanelen</string>
     <string name="scan_vault_press_active_on_site_subtitle">Din webbplats är redan skyddad av VaultPress. Du kan hitta en länk till din adminpanel för VaultPress nedan.</string>
     <string name="scan_vault_press_active_on_site_title">Din webbplats har VaultPress</string>
@@ -2971,6 +3089,8 @@ Language: sv_SE
     <string name="media_files_not_uploaded">%d filer har inte laddats upp</string>
     <string name="remove_image_from_post">Ta bort ur inlägget</string>
     <string name="confirm_remove_media_image">Ta bort denna bild ur inlägget?</string>
+    <string name="media_edit_customize_card_caption">Anpassa</string>
+    <string name="media_edit_file_details_card_caption">Filinformation</string>
     <string name="login_error_button">Stäng</string>
     <string name="error_generic_network">Ett nätverksfel har inträffat. Kontrollera anslutningen och försök igen.</string>
     <string name="post_settings_remove_featured_image">Ta bort den utvalda bilden</string>
@@ -3004,7 +3124,13 @@ Language: sv_SE
     <string name="media_title_audio_details">Information om ljud</string>
     <string name="media_title_video_details">Information om video</string>
     <string name="media_title_image_details">Information om bild</string>
+    <string name="fab_content_description_preview">Förhandsgranskning</string>
+    <string name="media_edit_upload_date_caption">Uppladdningsdatum</string>
     <string name="media_edit_duration_caption">Längd</string>
+    <string name="media_edit_video_dimensions_caption">Videons bildstorlek</string>
+    <string name="media_edit_image_dimensions_caption">Bildstorlek</string>
+    <string name="media_edit_filetype_caption">Filtyp</string>
+    <string name="media_edit_filename_caption">Filnamn</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-text</string>
     <string name="connect_site">Anslut en webbplats</string>
@@ -3052,6 +3178,7 @@ Language: sv_SE
     <string name="login_checking_site_address" a8c-src-lib="module:login">Webbplatsadressen kontrolleras</string>
     <string name="login_site_address" a8c-src-lib="module:login">Webbplatsadress</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Skriv in adressen för den WordPress-webbplats du vill ansluta.</string>
+    <string name="login_already_logged_in_wpcom">Redan inloggad på WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Fortsätt</string>
     <string name="connect_more">Anslut ytterligare en webbplats</string>
     <string name="next">Nästa</string>

@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 09:55:36+0000
+Translation-Revision-Date: 2026-11-18 15:54:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">טעינה מחדש של העורך</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">יש לטעון מחדש את העורך כדי להמשיך בעריכה.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">העורך הפסיק לעבוד</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">שגיאה לא ידועה</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">טעינת העורך נכשלה</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">המצלמה אינה זמינה במכשיר זה</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">מצלמה</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">תמונות</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">לא נמצאו בלוקים שתואמים ל-\'⁦%1$s⁩\'</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">אין תוצאות</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">ניקוי החיפוש</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">אחרונים</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">סגירה</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">הוספת בלוק</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">בלוקים של חיפוש</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">לא ניתן להציג את מוסיף הבלוקים.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">מומלצים</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">הכי נפוצים</string>
+    <string name="comment_detail_in_reply_to">בתגובה ל-⁦%1$s⁩:</string>
+    <string name="comment_author_info_guest">אורח</string>
+    <string name="comment_author_info_registered">משתמש רשום</string>
+    <string name="comment_author_info_bio">ביו</string>
+    <string name="comment_author_info_posted_from">פורסם מ</string>
+    <string name="comment_author_info_send_email">שליחת אימייל</string>
+    <string name="comment_author_info_email">אימייל</string>
+    <string name="comment_author_info_website">אתר</string>
+    <string name="comment_author_info_posted_at">פורסם ב</string>
+    <string name="comment_author_info_show">הצגת פרטי המחבר</string>
+    <string name="comment_detail_on_post">ב-⁦%1$s⁩</string>
+    <string name="comment_reply_continue">המשך תגובה</string>
+    <string name="comment_reply_save_draft">שמירת טיוטה</string>
+    <string name="comment_reply_delete_draft">מחיקת טיוטה</string>
+    <string name="comment_reply_keep_editing">המשך עריכה</string>
+    <string name="comment_reply_unsent">יש לך תשובה שלא נשלחה.</string>
+    <string name="comment_trash_has_replies">לתגובה זו יש תשובות. הן לא יועברו לפח יחד איתה.</string>
+    <string name="content_list_density_show_comfortable">הצגת רשימה מורחבת</string>
+    <string name="content_list_density_show_condensed">הצגת רשימה מצומצמת</string>
+    <string name="content_list_comment_count_plural">⁦%1$s⁩ תגובות</string>
+    <string name="content_list_comment_count_singular">תגובה ⁦%1$s⁩</string>
+    <string name="content_list_view_count_plural">⁦%1$s⁩ צפיות</string>
+    <string name="content_list_view_count_singular">צפייה ⁦%1$s⁩</string>
+    <string name="content_list_fab_write">כתיבה</string>
+    <string name="content_list_group_earlier_in">מוקדם יותר ב-⁦%1$s⁩</string>
+    <string name="content_list_group_this_week">השבוע</string>
+    <string name="content_list_group_yesterday">אתמול</string>
+    <string name="content_list_group_today">היום</string>
+    <string name="unified_support_related_label">קשור:</string>
+    <string name="unified_support_attachment_link_content_description">פתיחת קישור: ⁦%1$s⁩</string>
+    <string name="unified_support_status_ai_assistant">סייען בינה מלאכותית</string>
+    <string name="he_support_status_ongoing">בתהליך</string>
+    <string name="he_support_reply_sent_confirmation">התשובה שלך נשלחה. יש לבדוק אם קיימים עדכונים בכתובת האימייל.</string>
+    <string name="he_support_add_more_info_button">הוספת מידע נוסף</string>
+    <string name="application_password_private_site_card">האתר הזה פרטי, ולכן אין לנו אפשרות להתחבר אליו מחדש.</string>
+    <string name="application_password_private_site_error">אתר זה פרטי, ולכן אין לנו אפשרות לקרוא את ההגדרות שלו כדי לחבר אותך.</string>
+    <string name="prepublishing_tags_remove_tag_desc">הסרת תגית ⁦%1$s⁩</string>
+    <string name="prepublishing_tags_add_hint">הוספת תגית</string>
+    <string name="photo_picker_choose_other_files">קבצים אחרים</string>
+    <string name="photo_picker_choose_photo_or_video">תמונות וסרטונים</string>
+    <string name="editor_saving_locked_leave">יציאה</string>
+    <string name="editor_saving_locked_continue">המשך</string>
+    <string name="editor_saving_locked_keep_editing">המשך עריכה</string>
+    <string name="editor_saving_locked_leave_message">אם ברצונך לצאת עכשיו, כל פעולה שעדיין מתבצעת, כמו העלאת מדיה, תיעצר, והתוכן שהעלית עלול להיות חסר או פגום בפוסט שלך.</string>
+    <string name="editor_saving_locked_save_message">פעולה כלשהי בעורך, כמו העלאת מדיה, עדיין מתבצעת. אם ברצונך להמשיך, התוכן עלול להיות חסר או פגום בפוסט שלך.</string>
+    <string name="editor_saving_locked_title">הפוסט שלך עדיין אינו מוכן</string>
+    <string name="domain_registration_purchase_unconfirmed">מכסת הקרדיט לרישום דומיין נוצלה, אך לא הצלחנו לאמת את התוצאה. יש לבדוק את הדומיינים שלך לפני ביצוע ניסיון חוזר, ולפנות לתמיכה אם %s חסר.</string>
+    <string name="domain_registration_purchase_incomplete">מכסת הקרדיט לרישום דומיין נוצלה, אך לא ניתן היה לרשום את %s. כדאי לפנות לתמיכה.</string>
+    <string name="support_screen_login_description">יש לבצע כניסה אל WordPress.com כדי לקבל גישה לצ\'אט התמיכה.</string>
+    <string name="site_picker_add_site_menu_expanded">תפריט הוספת האתר הורחב</string>
+    <string name="site_picker_add_site_menu_collapsed">תפריט הוספת האתר כווץ</string>
+    <string name="site_picker_add_a_site_expand">הצגת דרכים להוספת אתר</string>
+    <string name="site_picker_add_a_site_collapse">סגירת תפריט הוספת האתר</string>
+    <string name="get_likes_empty_state_no_likes">עדיין אין לייקים</string>
+    <string name="stats_archives_section_taxonomies">טקסונומיות</string>
+    <string name="stats_archives_section_other">אחר</string>
+    <string name="stats_archives_section_aggregated">נצבר</string>
+    <string name="stats_archives_section_error">שגיאה</string>
+    <string name="stats_archives_section_dates">תאריכים</string>
+    <string name="stats_archives_section_authors">מחברים</string>
+    <string name="stats_archives_section_tags">תגיות</string>
+    <string name="stats_archives_section_categories">קטגוריות</string>
+    <string name="stats_archives_section_search">מונחי חיפוש</string>
+    <string name="stats_archives_title_label">עמודים בארכיון</string>
+    <string name="stats_archives_title">ארכיונים</string>
+    <string name="stats_view_selected_period_content_description">הצגת נתונים סטטיסטיים עבור התקופה שנבחרה</string>
+    <string name="stats_period_next_content_description">התקופה הבאה</string>
+    <string name="stats_period_previous_content_description">התקופה הקודמת</string>
+    <string name="stats_period_this_year">השנה</string>
+    <string name="stats_period_this_month">החודש</string>
+    <string name="stats_feature_gate_plans_unavailable">אין אפשרות לפתוח את עמוד התוכניות עבור אתר זה</string>
+    <string name="stats_feature_gate_explore_plans">עיון בתוכניות</string>
+    <string name="stats_feature_gate_message">יש לשדרג את התוכנית שלך כדי לקבל גישה לנתונים אנליטיים מתקדמים</string>
+    <string name="stats_error_not_available">הנתונים הסטטיסטיים האלה אינם זמינים עבור אתר זה</string>
+    <string name="stats_next_day">היום הבא</string>
+    <string name="stats_previous_day">היום הקודם</string>
+    <string name="stats_post_detail_average">ממוצע</string>
+    <string name="stats_post_detail_total">סך הכול</string>
+    <string name="stats_post_detail_activity_more">יותר</string>
+    <string name="stats_post_detail_activity_less">פחות</string>
+    <string name="stats_post_detail_more_likers">%1$s+</string>
+    <string name="stats_post_detail_published">פורסם בתאריך ⁦%1$s⁩</string>
+    <string name="stats_post_detail_title">נתונים סטטיסטיים של הפוסט</string>
+    <string name="stats_open_link">פתיחת קישור</string>
+    <string name="stats_traffic_date_range_content_description">⁦%1$s⁩ עד ⁦%2$s⁩</string>
+    <string name="stats_show_views">הצגת צפיות</string>
+    <string name="stats_hourly_data_not_available">הנתונים השעתיים אינם זמינים</string>
+    <string name="rs_date_trashed">הועבר לפח: %s</string>
+    <string name="rs_date_modified">שונה: %s</string>
+    <string name="rs_date_now">עכשיו</string>
+    <string name="stats_new_stats_feedback_dialog_message">האם תרצה לשתף משוב על החוויה החדשה ב-Stats?</string>
+    <string name="deleting_tag_failed">מחיקת התגית נכשלה</string>
+    <string name="comments_rs_moderation_failed_multiple">לא ניתן היה לעדכן ⁦%1$d⁩ תגובות מתוך ⁦%2$d⁩</string>
+    <string name="comments_rs_moderation_failed_single">לא ניתן היה לעדכן את התגובה</string>
+    <string name="comments_rs_search_nothing_found">לא נמצאו תגובות שמתאימות לחיפוש שלך</string>
+    <string name="comments_rs_search_prompt">חיפוש בתגובות</string>
+    <string name="web_view_log_in_to_site">ביצוע כניסה לאתר זה</string>
     <string name="support_screen_unified_support_description">קבלת תשובות מצוות התמיכה שלנו בכל עת</string>
     <string name="support_screen_unified_support_title">קבלת עזרה</string>
     <string name="unified_support_attachment_match_score">%1$d%% התאמה</string>
@@ -93,6 +208,7 @@ Language: he_IL
     <string name="gutenberg_kit_announcement_learn_more">למידע נוסף</string>
     <string name="gutenberg_kit_announcement_maybe_later">אולי מאוחר יותר</string>
     <string name="gutenberg_kit_announcement_activate">הפעלה</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">עד סוף 2026, הוא יהפוך לעורך ברירת המחדל עבור כולם. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">עורך הבלוקים מהדור הבא מוכן, והוא מביא איתו תכונות חדשות.</string>
     <string name="gutenberg_kit_announcement_title">עורך בלוקים משופר בדרך</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">יש לעבור לעורך הבלוקים כדי לנסות את העורך החדש.</string>
@@ -372,6 +488,7 @@ Language: he_IL
     <string name="application_password_required">נדרשת סיסמת אפליקציה</string>
     <string name="menu_html_mode">עורך קוד</string>
     <string name="taxonomies_title">טקסונומיות</string>
+    <string name="media_edit_file_size_caption">גודל הקובץ</string>
     <string name="jetpack_rest_connection_error_login_wpcom">אין אפשרות להתחבר אל WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">לחבר את האתר שלך ל-WordPress.com</string>
     <string name="dataview_default_empty_message">אין פה שום דבר</string>
@@ -2959,6 +3076,8 @@ Language: he_IL
     <string name="media_files_not_uploaded">%d קבצים לא הועלו</string>
     <string name="remove_image_from_post">הסרה מהפוסט</string>
     <string name="confirm_remove_media_image">האם להסיר את התמונה הזו מהפוסט?</string>
+    <string name="media_edit_customize_card_caption">התאמה אישית</string>
+    <string name="media_edit_file_details_card_caption">פרטי הקובץ</string>
     <string name="login_error_button">סגור</string>
     <string name="error_generic_network">אירעה שגיאת רשת. יש לבדוק את החיבור ולנסות שוב.</string>
     <string name="post_settings_remove_featured_image">הסרת התמונה המרכזית</string>
@@ -2992,7 +3111,13 @@ Language: he_IL
     <string name="media_title_audio_details">פרטי אודיו</string>
     <string name="media_title_video_details">פרטי וידאו</string>
     <string name="media_title_image_details">פרטי תמונה</string>
+    <string name="fab_content_description_preview">תצוגה מקדימה</string>
+    <string name="media_edit_upload_date_caption">תאריך העלאה</string>
     <string name="media_edit_duration_caption">משך זמן</string>
+    <string name="media_edit_video_dimensions_caption">ממדי הווידאו</string>
+    <string name="media_edit_image_dimensions_caption">ממדי התמונה</string>
+    <string name="media_edit_filetype_caption">סוג קובץ</string>
+    <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
     <string name="connect_site">חיבור אתר</string>
@@ -3040,6 +3165,7 @@ Language: he_IL
     <string name="login_checking_site_address" a8c-src-lib="module:login">בודק את כתובת האתר</string>
     <string name="login_site_address" a8c-src-lib="module:login">כתובת אתר</string>
     <string name="enter_site_address" a8c-src-lib="module:login">יש להזין את כתובת האתר ב-WordPress שאליו ברצונך להתחבר.</string>
+    <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">המשך</string>
     <string name="connect_more">חיבור אתר נוסף</string>
     <string name="next">הבא</string>

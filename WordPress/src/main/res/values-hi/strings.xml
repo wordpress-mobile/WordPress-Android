@@ -50,9 +50,13 @@ Language: hi_IN
     <string name="media_title_audio_details">ऑडियो का विवरण</string>
     <string name="media_title_document_details">दस्तावेज़ का विवरण</string>
     <string name="media_title_video_details">वीडियो का विवरण</string>
+    <string name="fab_content_description_preview">पूर्वावलोकन</string>
     <string name="media_title_image_details">छवि का विवरण</string>
     <string name="media_edit_duration_caption">अवधि</string>
+    <string name="media_edit_upload_date_caption">अपलोड की तारीख</string>
     <string name="media_edit_url_caption">यूआरएल</string>
+    <string name="media_edit_filename_caption">फ़ाइल का नाम</string>
+    <string name="media_edit_filetype_caption">फाइल का प्रकार</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">लाइट टिमटिमाये </string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">ध्वनि चुनें</string>
     <string name="notification_settings_category_sights_and_sounds">दृश्य और ध्वनि </string>
