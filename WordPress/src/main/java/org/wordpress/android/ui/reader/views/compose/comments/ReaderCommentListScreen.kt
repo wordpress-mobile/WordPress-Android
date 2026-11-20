@@ -1,6 +1,13 @@
 package org.wordpress.android.ui.reader.views.compose.comments
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -52,6 +60,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,6 +70,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -91,12 +101,19 @@ fun ReaderCommentListScreen(
     actions: ReaderCommentListActions,
     snackbarHostState: SnackbarHostState
 ) {
+    // hoisted so the list keeps its position while a comment's detail replaces it
+    val listState = rememberLazyListState()
+    val detail = uiState.detail
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    BackHandler(enabled = detail != null, onBack = actions.onDetailBack)
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.reader_title_comments)) },
+                title = {
+                    Text(stringResource(if (detail != null) R.string.comment else R.string.reader_title_comments))
+                },
                 navigationIcon = {
-                    IconButton(onClick = actions.onBack) {
+                    IconButton(onClick = if (detail != null) actions.onDetailBack else actions.onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
@@ -109,9 +126,28 @@ fun ReaderCommentListScreen(
         ContentListPullToRefreshBox(
             isRefreshing = uiState.isRefreshing,
             onRefresh = actions.onRefresh,
-            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier.padding(contentPadding),
+            // a refresh drops comments past the first page, which would close a comment opened from there
+            enabled = detail == null
         ) {
-            CommentList(uiState, actions)
+            AnimatedContent(
+                targetState = detail,
+                contentKey = { it?.comment?.commentId },
+                transitionSpec = {
+                    // opening a comment slides it in from the end; backing out slides the other way
+                    val isOpening = (targetState?.depth ?: 0) > (initialState?.depth ?: 0)
+                    val direction = (if (isOpening) 1 else -1) * (if (isRtl) -1 else 1)
+                    (slideInHorizontally { direction * it } + fadeIn())
+                        .togetherWith(slideOutHorizontally { -direction * it / SLIDE_OUT_FRACTION } + fadeOut())
+                },
+                label = "commentDetail"
+            ) { shownDetail ->
+                if (shownDetail != null) {
+                    ReaderCommentDetail(uiState, shownDetail, actions)
+                } else {
+                    CommentList(uiState, actions, listState)
+                }
+            }
             when {
                 uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 uiState.emptyMessage != null -> Text(
@@ -143,8 +179,11 @@ fun ReaderCommentListScreen(
 }
 
 @Composable
-private fun CommentList(uiState: ReaderCommentListUiState, actions: ReaderCommentListActions) {
-    val listState = rememberLazyListState()
+private fun CommentList(
+    uiState: ReaderCommentListUiState,
+    actions: ReaderCommentListActions,
+    listState: LazyListState
+) {
     LoadMoreOnScrollToEnd(
         listState = listState,
         itemCount = uiState.comments.size,
@@ -161,14 +200,14 @@ private fun CommentList(uiState: ReaderCommentListUiState, actions: ReaderCommen
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         item(key = "header") { PostHeader(uiState, actions.onHeaderClick) }
         items(uiState.comments, key = { it.commentId }) { comment ->
-            CommentRow(comment, actions)
+            CommentRow(comment, actions, onClick = { actions.onCommentClick(comment.commentId) })
         }
         if (uiState.isLoadingMore) contentListLoadingMoreItem()
     }
 }
 
 @Composable
-private fun PostHeader(uiState: ReaderCommentListUiState, onClick: () -> Unit) {
+internal fun PostHeader(uiState: ReaderCommentListUiState, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -190,7 +229,11 @@ private fun PostHeader(uiState: ReaderCommentListUiState, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CommentRow(comment: ReaderCommentItem, actions: ReaderCommentListActions) {
+internal fun CommentRow(
+    comment: ReaderCommentItem,
+    actions: ReaderCommentListActions,
+    onClick: (() -> Unit)?
+) {
     val indentPerLevel = dimensionResource(R.dimen.reader_comment_indent_per_level)
     Column {
         // replies sit under their parent without a divider
@@ -199,6 +242,10 @@ private fun CommentRow(comment: ReaderCommentItem, actions: ReaderCommentListAct
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
+                // a comment that's still sending can't be opened, since its id changes once it's sent
+                .then(
+                    if (onClick != null && !comment.isPending) Modifier.clickable(onClick = onClick) else Modifier
+                )
                 .background(
                     if (comment.isHighlighted) {
                         MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHT_ALPHA)
@@ -514,4 +561,5 @@ internal fun FollowConversationActions(
 }
 
 private const val HIGHLIGHT_ALPHA = 0.12f
+private const val SLIDE_OUT_FRACTION = 4
 private const val DISABLED_ALPHA = 0.38f

@@ -441,6 +441,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         },
         onTagsExpandToggled = { readerTracker.track(AnalyticsTracker.Stat.READER_CHIPS_MORE_TOGGLED) },
         onCommentImageClick = ::showCommentImage,
+        onCommentClick = { viewModel.onSnippetCommentClicked(it.blogId, it.postId, it.commentId) },
         onRelatedPostsPositioned = { isGlobal, coordinates ->
             relatedPostsCoordinates[isGlobal] = coordinates
             trackRelatedPostsIfShowing()
@@ -704,7 +705,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 this@ReaderPostDetailFragment,
                 blogId,
                 postId,
-                this.source.sourceDescription
+                this.source.sourceDescription,
+                this.commentId
             )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog ->

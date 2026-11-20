@@ -16,6 +16,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Me → Account Settings → Web Address
   - **Notes:** A field containing only spaces still counts as invalid and keeps OK disabled.
 
+- **Tapping a Reader comment opens it**
+  Tapping a comment below a Reader post opens the post's comments scrolled to that comment. Tapping a comment in the comments list opens it on its own, with the comment it replies to and its direct replies.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** Reader → a post → the comments under the post; Reader → a post → Comments → tap a comment
+  - **Notes:** Before, tapping a comment did nothing. In the single-comment view, tapping the "In reply to" line or a reply opens that comment, and Back steps out one comment at a time, then returns to the list at the same place. Reply, like, share and moderation work as in the list, and the reply bar at the bottom replies to the open comment. Pull to refresh only works in the list. The list stops indenting replies after two levels, so on deep threads the "In reply to" line is the only way to see which comment a reply answers. Moderating the open comment closes it, and Undo brings it back in the list without reopening it.
+
 - **Stats chart bars can be grouped by hour, day, week, month or year**
   The redesigned Stats Traffic chart has a new Interval option in the Views card's menu. It picks how wide each bar is — Hours, Days, Weeks, Months or Years — instead of leaving it to the period, so Last 12 months can be charted week by week and Last 3 years month by month. The row that opens the sub-menu names the width the bars are currently at, and the sub-menu's checkmark sits on that same width, so a period nobody has changed the interval on shows the width it picked for itself. Only the widths that give the chosen period a sensible number of bars are offered — the option is hidden entirely when that leaves only one, as on Today — and the choice is remembered per site.
   - **Apps:** Both
