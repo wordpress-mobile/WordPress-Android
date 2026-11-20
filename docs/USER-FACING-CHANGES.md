@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **The Web Address in Account Settings can be cleared**
+  Deleting your Web Address and tapping OK now removes it from your profile. Before, the OK button was disabled whenever the field was empty, so an address could be changed but never removed.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Me → Account Settings → Web Address
+  - **Notes:** A field containing only spaces still counts as invalid and keeps OK disabled.
+
 - **Tapping a Reader comment opens it**
   Tapping a comment below a Reader post opens the post's comments scrolled to that comment. Tapping a comment in the comments list opens it on its own, with the comment it replies to and its direct replies.
   - **Apps:** Both
