@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ZoomablePhoto
 
 private const val TOOLBAR_FADE_DELAY_MS = 3000L
 private const val TRANSLUCENT_ALPHA = 0.5f
@@ -73,7 +74,10 @@ fun ReaderPhotoViewerScreen(photos: List<ReaderPhoto>, initialPage: Int, onBack:
         // keeps a neighbour loaded either side, as the old ViewPager did
         HorizontalPager(state = pagerState, beyondViewportPageCount = 1, modifier = Modifier.fillMaxSize()) { page ->
             ZoomablePhoto(
-                photo = photos[page],
+                model = photos[page].hiResUrl,
+                loResModel = photos[page].loResUrl,
+                contentDescription = stringResource(R.string.reader_photo_view_desc),
+                errorText = stringResource(R.string.reader_toast_err_view_image),
                 isCurrentPage = pagerState.settledPage == page,
                 onTap = {
                     isCountVisible = !isCountVisible

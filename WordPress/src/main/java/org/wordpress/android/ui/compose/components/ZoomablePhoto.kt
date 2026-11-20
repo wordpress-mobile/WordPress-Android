@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.views.compose.photoviewer
+package org.wordpress.android.ui.compose.components
 
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -15,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,10 +31,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
 import coil.compose.AsyncImage
-import org.wordpress.android.R
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -41,19 +41,34 @@ private const val MAX_SCALE = 4f
 private const val DOUBLE_TAP_SCALE = 2.5f
 
 /**
- * A full-screen photo that pinches, pans and double-taps to zoom. The low-res version shows while the high-res
- * one loads.
+ * A full-screen photo that pinches, pans and double-taps to zoom. [model] is anything Coil can load (a URL or a
+ * content:// URI); the optional [loResModel] shows while it loads. A photo that failed to load is retried when its
+ * page becomes current again.
  */
 @Composable
-fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit) {
+fun ZoomablePhoto(
+    model: Any?,
+    contentDescription: String?,
+    errorText: String,
+    isCurrentPage: Boolean,
+    onTap: () -> Unit,
+    loResModel: Any? = null
+) {
     val zoomState = remember { ZoomState() }
     var isLoResLoaded by remember { mutableStateOf(false) }
     var isHiResLoaded by remember { mutableStateOf(false) }
     var hasHiResFailed by remember { mutableStateOf(false) }
+    var loadAttempt by remember { mutableIntStateOf(0) }
 
-    // the pager keeps its neighbours composed, so a photo swiped away would otherwise stay zoomed
     LaunchedEffect(isCurrentPage) {
-        if (!isCurrentPage) zoomState.reset()
+        if (!isCurrentPage) {
+            // the pager keeps its neighbours composed, so a photo swiped away would otherwise stay zoomed
+            zoomState.reset()
+        } else if (hasHiResFailed) {
+            // a neighbour pre-loaded while offscreen may have failed, so try again now it's in front
+            hasHiResFailed = false
+            loadAttempt++
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -74,9 +89,9 @@ fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit)
                     translationY = zoomState.offset.y
                 }
         ) {
-            if (!isHiResLoaded) {
+            if (loResModel != null && !isHiResLoaded) {
                 AsyncImage(
-                    model = photo.loResUrl,
+                    model = loResModel,
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     onSuccess = {
@@ -86,22 +101,24 @@ fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit)
                     modifier = Modifier.fillMaxSize()
                 )
             }
-            AsyncImage(
-                model = photo.hiResUrl,
-                contentDescription = stringResource(R.string.reader_photo_view_desc),
-                contentScale = ContentScale.Fit,
-                onSuccess = {
-                    isHiResLoaded = true
-                    zoomState.imageSize = it.painter.intrinsicSize
-                },
-                onError = { hasHiResFailed = true },
-                modifier = Modifier.fillMaxSize()
-            )
+            key(loadAttempt) {
+                AsyncImage(
+                    model = model,
+                    contentDescription = contentDescription,
+                    contentScale = ContentScale.Fit,
+                    onSuccess = {
+                        isHiResLoaded = true
+                        zoomState.imageSize = it.painter.intrinsicSize
+                    },
+                    onError = { hasHiResFailed = true },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
         when {
             isHiResLoaded || isLoResLoaded -> Unit
             hasHiResFailed -> Text(
-                text = stringResource(R.string.reader_toast_err_view_image),
+                text = errorText,
                 color = Color.White,
                 style = MaterialTheme.typography.titleMedium
             )

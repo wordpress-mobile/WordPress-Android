@@ -454,7 +454,6 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     implementation(libs.android.installreferrer)
-    implementation(libs.photoview)
     implementation(libs.greenrobot.eventbus.main)
     implementation(libs.greenrobot.eventbus.java)
     implementation(libs.squareup.retrofit)
