@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-20 14:21:31+0000
+Translation-Revision-Date: 2026-11-20 19:44:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="stats_period_last_3_years">Senaste 3 åren</string>
+    <string name="stats_chart_interval">Intervall</string>
+    <string name="post_rs_local_drafts_upload_failed">Uppladdningen misslyckades</string>
+    <string name="post_rs_local_drafts_title">Inte uppladdad</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_uploaded">Uppladdad</string>
+    <string name="media_settings_file_size">Filstorlek</string>
+    <string name="media_settings_file_type">Filtyp</string>
+    <string name="media_settings_file_name">Filnamn</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ladda om redigeraren</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ladda om redigeraren för att fortsätta redigera.</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Redigeraren slutade fungera</string>
@@ -3603,6 +3612,7 @@ Language: sv_SE
     <string name="reader_err_get_post_generic">Kunde inte hämta detta inlägg</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Inga nya inlägg</string>
     <string name="media_edit_copy_url_toast">URL kopierad till urklipp</string>
+    <string name="media_settings_copy_url">Kopiera URL</string>
     <string name="selected_theme">Valt tema</string>
     <string name="could_not_load_theme">Kunde inte ladda tema</string>
     <string name="theme_activation_error">Något gick fel. Kunde inte aktivera tema</string>
@@ -3687,6 +3697,7 @@ Language: sv_SE
     <string name="my_site_btn_blog_posts">Inlägg</string>
     <string name="reader_label_new_posts_subtitle">Knacka för att visa dem</string>
     <string name="select_all">Välj alla</string>
+    <string name="media_settings_dimensions">Dimensioner</string>
     <string name="language">Språk</string>
     <string name="reader_empty_posts_request_failed">Kunde inte hämta inlägg</string>
     <string name="error_notification_open">Kunde inte öppna aviseringen</string>
