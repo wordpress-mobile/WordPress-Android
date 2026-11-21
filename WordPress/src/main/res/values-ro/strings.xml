@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-20 05:48:47+0000
+Translation-Revision-Date: 2026-11-20 22:58:24+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -3603,6 +3603,7 @@ Language: ro
     <string name="reader_err_get_post_generic">Acest articol nu poate fi regăsit</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Niciun articol recent</string>
     <string name="media_edit_copy_url_toast">Am copiat URL-ul în clipboard</string>
+    <string name="media_settings_copy_url">Copiază URL-ul</string>
     <string name="selected_theme">Tema selectată</string>
     <string name="could_not_load_theme">Nu pot încărca tema</string>
     <string name="theme_activation_error">Ceva a mers prost. Nu pot activa tema</string>
@@ -3688,6 +3689,7 @@ Language: ro
     <string name="reader_label_new_posts_subtitle">Atinge pentru a le arăta</string>
     <string name="select_all">Selectează tot</string>
     <string name="language">Limbă</string>
+    <string name="media_settings_dimensions">Dimensiuni</string>
     <string name="error_notification_open">Nu pot deschide notificarea</string>
     <string name="stats_view_authors">Autori</string>
     <string name="stats_search_terms_unknown_search_terms">Termeni de căutare necunoscuți</string>
@@ -3722,6 +3724,7 @@ Language: ro
     <string name="themes_fetching">Se aduc teme…</string>
     <string name="ssl_certificate_details">Detalii</string>
     <string name="cab_selected">%d selectate</string>
+    <string name="confirm_delete_multi_media">Ștergi %1$d elemente Media?</string>
     <string name="reader_title_photo_viewer">%1$d din %2$d</string>
     <string name="help_and_support">Ajutor și suport</string>
     <string name="reader_empty_comments">Niciun comentariu încă</string>

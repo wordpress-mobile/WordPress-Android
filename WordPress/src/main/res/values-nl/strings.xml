@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-12 07:35:33+0000
+Translation-Revision-Date: 2026-11-20 19:31:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Je chat met AI van %1$s ondersteuning.</string>
+    <string name="login_session_expired">Je login sessie is verlopen. Probeer het nog eens.</string>
+    <string name="reader_save_posts_synced_dialog_message">Opgeslagen berichten worden gesynchroniseerd met je WordPress.com account, zodat ze op al je apparaten staan.</string>
+    <string name="reader_saved_post_removed">Verwijderen uit opgeslagen berichten</string>
+    <string name="reader_saved_posts_limit_reached">Je hebt de beperking voor opgeslagen berichten bereikt. Verwijder er een paar om meer te kunnen opslaan.</string>
+    <string name="stats_period_last_3_years">Laatste 3 jaar</string>
+    <string name="stats_chart_interval_submenu">Intervalopties openen</string>
+    <string name="stats_chart_interval">Interval</string>
+    <string name="post_rs_local_drafts_retry_description">Probeer het uploaden van \"%s\" nog eens</string>
+    <string name="post_rs_local_drafts_upload_failed">Upload mislukt</string>
+    <string name="post_rs_local_drafts_subtitle">Deze berichten staan alleen op dit apparaat.</string>
+    <string name="post_rs_local_drafts_title">Niet geüpload</string>
+    <string name="confirm_delete_single_media">%1$d geselecteerde items verwijderen?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, niet ingesteld</string>
+    <string name="media_settings_alt_text_sheet_helper">Probeer het bij één of twee zinnen te houden</string>
+    <string name="media_settings_description_sheet_explanation">Geplaatst op de bijlagepagina.</string>
+    <string name="media_settings_caption_sheet_explanation">Wordt onder de afbeelding in berichten weergegeven.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Beschrijf wat er op de afbeelding staat voor mensen die een schermlezer gebruiken. Laat het veld leeg als de afbeelding alleen ter versiering is.</string>
+    <string name="media_settings_uploaded">Geüpload</string>
+    <string name="media_settings_file_size">Bestand grootte</string>
+    <string name="media_settings_file_type">Bestandstype</string>
+    <string name="media_settings_file_name">Bestandsnaam</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor opnieuw laden</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor herladen om door te bewerken.</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">De editor stopte met werken</string>
@@ -3603,6 +3626,7 @@ Language: nl
     <string name="reader_err_get_post_generic">Niet in staat om dit bericht op te halen</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
     <string name="media_edit_copy_url_toast">URL gekopieerd naar klembord</string>
+    <string name="media_settings_copy_url">URL kopiëren</string>
     <string name="selected_theme">Geselecteerd thema</string>
     <string name="could_not_load_theme">Kon thema niet laden</string>
     <string name="theme_activation_error">Er is iets fout gegaan. Kan thema niet activeren</string>
@@ -3687,6 +3711,7 @@ Language: nl
     <string name="my_site_btn_blog_posts">Berichten</string>
     <string name="reader_label_new_posts_subtitle">Tikken om ze te tonen</string>
     <string name="select_all">Alles selecteren</string>
+    <string name="media_settings_dimensions">Dimensies</string>
     <string name="language">Taal</string>
     <string name="reader_empty_posts_request_failed">Niet in staat om berichten op te halen</string>
     <string name="error_notification_open">Kon melding niet openen</string>
@@ -3721,6 +3746,7 @@ Language: nl
     <string name="stats_timeframe_years">Jaren</string>
     <string name="themes_fetching">Thema\'s an het ophalen…</string>
     <string name="ssl_certificate_details">Details</string>
+    <string name="confirm_delete_multi_media">%1$d geselecteerde items verwijderen?</string>
     <string name="cab_selected">%d geselecteerd</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_empty_comments">Nog geen reacties</string>
