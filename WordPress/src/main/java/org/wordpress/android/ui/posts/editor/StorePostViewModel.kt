@@ -33,6 +33,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.enqueueUploadWorkRequestForSite
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.viewmodel.Event
@@ -103,6 +104,11 @@ class StorePostViewModel
             )
             SAVED_ONLINE
         } else {
+            runCatching {
+                enqueueUploadWorkRequestForSite(site)
+            }.onFailure { error ->
+                AppLog.w(AppLog.T.POSTS, "Failed to enqueue upload work request: ${error.message}")
+            }
             SAVED_LOCALLY
         }
     }
