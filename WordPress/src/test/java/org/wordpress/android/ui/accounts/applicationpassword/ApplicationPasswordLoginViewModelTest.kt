@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
@@ -203,7 +204,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 assertEquals(expectedResult, awaitItem())
                 verify(dispatcher, never()).dispatch(any())
-                verify(crashLogging, never()).sendReport(any(), any(), any())
+                verify(crashLogging, never()).sendReport(any(), any(), anyOrNull())
                 cancelAndIgnoreRemainingEvents()
             }
         }
