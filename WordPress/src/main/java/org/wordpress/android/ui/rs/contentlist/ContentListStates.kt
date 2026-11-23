@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -111,9 +113,26 @@ fun LazyListScope.contentListLoadingMoreItem() {
     }
 }
 
+/** [contentListLoadingMoreItem] for a lazy grid, spanning the full row. */
+fun LazyGridScope.contentListLoadingMoreItem() {
+    item(key = "loading_more", span = { GridItemSpan(maxLineSpan) }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MESSAGE_PADDING),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(SPINNER_SIZE),
+                strokeWidth = SPINNER_STROKE
+            )
+        }
+    }
+}
+
 /** Scrollable so the message still reaches the user when the keyboard is up on a short screen. */
 @Composable
-private fun ContentListMessageColumn(
+internal fun ContentListMessageColumn(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {

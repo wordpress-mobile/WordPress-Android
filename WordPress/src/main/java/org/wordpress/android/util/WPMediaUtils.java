@@ -10,7 +10,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.ViewConfiguration;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
@@ -611,15 +610,6 @@ public class WPMediaUtils {
         boolean isSelfHosted = !site.isUsingWpComRestApi();
         // self-hosted sites don't have capabilities so always return true
         return isSelfHosted || site.getHasCapabilityUploadFiles();
-    }
-
-    /*
-     * returns the minimum distance for a fling which determines whether to disable loading
-     * thumbnails in the media grid or photo picker - used to conserve memory usage during
-     * a reasonably-sized fling
-     */
-    public static int getFlingDistanceToDisableThumbLoading(@NonNull Context context) {
-        return ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
     }
 
 

@@ -75,7 +75,6 @@ import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -163,7 +162,6 @@ import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActi
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
-import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_LIST_TYPE_KEY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY;
@@ -647,7 +645,6 @@ public class ActivityLauncher {
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
@@ -1554,21 +1551,6 @@ public class ActivityLauncher {
                 null
         );
         context.startActivity(intent);
-    }
-
-    public static void viewMediaPickerForResult(Activity activity,
-                                                @NonNull SiteModel site,
-                                                @NonNull MediaBrowserType browserType) {
-        Intent intent = new Intent(activity, MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(ARG_BROWSER_TYPE, browserType);
-        int requestCode;
-        if (browserType.canMultiselect()) {
-            requestCode = RequestCodes.MULTI_SELECT_MEDIA_PICKER;
-        } else {
-            requestCode = RequestCodes.SINGLE_SELECT_MEDIA_PICKER;
-        }
-        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void viewSuggestionsForResult(@NonNull Activity activity,

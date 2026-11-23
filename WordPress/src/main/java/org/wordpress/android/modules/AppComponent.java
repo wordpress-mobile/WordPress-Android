@@ -46,9 +46,6 @@ import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView;
-import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaGridAdapter;
-import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
@@ -215,10 +212,6 @@ public interface AppComponent {
 
     void inject(PeopleInviteDialogFragment object);
 
-    void inject(MediaBrowserActivity object);
-
-    void inject(MediaGridFragment object);
-
     void inject(MediaPreviewActivity object);
 
     void inject(MediaPreviewFragment object);
@@ -311,8 +304,6 @@ public interface AppComponent {
     void inject(SuggestionAdapter object);
 
     void inject(WordPressGlideModule object);
-
-    void inject(MediaGridAdapter object);
 
     void inject(PagesFragment object);
 
