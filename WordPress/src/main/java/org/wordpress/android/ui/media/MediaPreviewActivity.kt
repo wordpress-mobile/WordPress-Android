@@ -145,7 +145,7 @@ class MediaPreviewActivity : BaseAppCompatActivity() {
          * @param contentUri URI of the media - can be local or remote
          */
         @JvmStatic
-        fun showPreview(context: Context, site: SiteModel?, contentUri: String) {
+        fun showPreview(context: Context, site: SiteModel?, contentUri: String?) {
             val intent = Intent(context, MediaPreviewActivity::class.java)
                 .putExtra(ARG_MEDIA_CONTENT_URI, contentUri)
             site?.let { intent.putExtra(WordPress.SITE, it) }

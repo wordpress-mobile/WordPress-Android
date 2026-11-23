@@ -120,7 +120,7 @@ fun MediaPreviewScreen(
             TopAppBar(
                 title = {
                     if (sources.size > 1) {
-                        Text(stringResource(R.string.media_preview_title, pagerState.currentPage + 1, sources.size))
+                        Text(stringResource(R.string.media_preview_title, pagerState.settledPage + 1, sources.size))
                     }
                 },
                 navigationIcon = {

@@ -6,8 +6,11 @@ import android.view.View
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -111,10 +116,14 @@ private fun MediaPlayerPage(
         }
     }
 
-    // swiping away pauses, and swiping back doesn't resume playback on its own
+    // swiping away pauses, and swiping back doesn't resume playback on its own. The position is kept here rather
+    // than only on release: when the pager disposes a page, its saved state is captured before onStopOrDispose runs
     LaunchedEffect(isCurrentPage) {
         if (!isCurrentPage) {
-            player?.playWhenReady = false
+            player?.let {
+                position = it.currentPosition
+                it.playWhenReady = false
+            }
             playWhenReady = false
         }
     }
@@ -141,6 +150,9 @@ private fun VideoPlayer(
     val currentIsCurrentPage by rememberUpdatedState(isCurrentPage)
     val currentOnControlsVisibilityChanged by rememberUpdatedState(onControlsVisibilityChanged)
     var playerView by remember { mutableStateOf<PlayerView?>(null) }
+    val navBarPadding = WindowInsets.navigationBars.asPaddingValues()
+    val layoutDirection = LocalLayoutDirection.current
+    val density = LocalDensity.current
 
     // when this page comes to the front or its player is rebuilt, sync the toolbar with the controls (they may
     // already be showing, which fires no change) and focus the player so a keyboard or D-pad controls playback
@@ -163,10 +175,20 @@ private fun VideoPlayer(
                 playerView = this
             }
         },
-        update = { it.player = player },
+        update = { view ->
+            view.player = player
+            // only the controls need to clear the navigation bar; the video itself stays full screen
+            with(density) {
+                view.findViewById<View>(com.google.android.exoplayer2.R.id.exo_controller)?.setPadding(
+                    navBarPadding.calculateLeftPadding(layoutDirection).roundToPx(),
+                    0,
+                    navBarPadding.calculateRightPadding(layoutDirection).roundToPx(),
+                    navBarPadding.calculateBottomPadding().roundToPx()
+                )
+            }
+        },
         onRelease = { it.player = null },
-        // keeps the playback controls clear of the navigation bar
-        modifier = Modifier.fillMaxSize().navigationBarsPadding()
+        modifier = Modifier.fillMaxSize()
     )
 }
 

@@ -569,6 +569,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     // - Jetpack Compose - Other
     implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
     implementation(libs.coil.video)
     implementation(libs.airbnb.lottie.compose)
     // - Jetpack Compose - UI Tests
