@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-20 13:03:28+0000
+Translation-Revision-Date: 2026-11-21 07:19:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: ku_TR
@@ -260,6 +260,7 @@ Language: ku_TR
     <string name="reader_reblog_error">Dîsblog bi ser neket</string>
     <string name="comment_q_action_copied_url">Girêdan hat kopîkirin</string>
     <string name="button_insert">Tevlî bike</string>
+    <string name="reader_no_blog_to_reblog_title">Ti blogên WordPress.comê yên berdest tune ne</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hejmara stûnan</string>
     <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokê veguhezîne rastê</string>
     <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokê veguhezîne çepê</string>
@@ -436,6 +437,7 @@ Language: ku_TR
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Çewtiyeke nenas qewimî. Jkx dîsa hewl bide.</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">BLOKÊ TEVLÎ VIR BIKE</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL tevlî bike</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Vîdeoyê zêde bike</string>
     <string name="reader_acessibility_list_loaded">\"%1$d hêman li lîsteyê hatin barkirin.\"</string>
     <string name="reader_empty_saved_posts_content_description">Ji bo tu şandiyekê li lîsteya xwe qeyd bikî, ji bo tomarkirina şandiyan li \"Tevlî bike\"yê bitikîne.</string>
     <string name="notifications_tab_dialog_switch_desc">Danezan</string>
@@ -649,6 +651,7 @@ Language: ku_TR
     <string name="schedule_for">Demsaz bike ji bo: %s</string>
     <string name="scheduled_for">Demsazkirî ji bo: %s</string>
     <string name="stats_detail_average_views_per_day">Dîtinên rojane kêm-zêde</string>
+    <string name="new_site_creation_preview_subtitle">Tu yê piştre karibî xuyang û hestê malpera xwe xwerû bikî</string>
     <string name="stats_insights_today_stats">Îro</string>
     <string name="stats_insights_best_day">Roja Herî Baş</string>
     <string name="stats_insights_best_hour">Demjimêra Herî Baş</string>
@@ -814,6 +817,7 @@ Language: ku_TR
     <string name="sign_out_wpcom_confirm_with_no_changes">Tu yê ji WordPressê derkevî?</string>
     <string name="themes_empty_list">Li gorî lêgerîna te ti rûkar nehat dîtin</string>
     <string name="site_settings_tags_empty_title_search">Li gorî lêgerîna te ti etîket nehat dîtin</string>
+    <string name="site_settings_tags_empty_title">Hêj ti etîketên te tune ne!</string>
     <string name="sign_out_wpcom_confirm_with_changes">Guhertinên di şandiyan de hatine kirin li malpera te nehatine hilxistin. Heke tu aniha derkevî dê ev guhertin ji cîhazê bên jêbirin. Dîsa jî tu yê derkevî?</string>
     <string name="people_empty_list_filtered_viewers">Hîn ti kesî temaşe nekiriye</string>
     <string name="reader_empty_posts_liked_description">Şandiyên ku te ecibandine ew ê li vir xuya bibin</string>
@@ -825,6 +829,7 @@ Language: ku_TR
     <string name="pages_empty_list_button">Rûpelekê biafirîne</string>
     <string name="posts_empty_list_button">Şandiyekê biafirîne</string>
     <string name="media_empty_upload_media">Medyayê lê hilxîne</string>
+    <string name="media_empty_list">Hêj ti medyaya te tune ye!</string>
     <string name="reader_gallery_images_desc">galeriya wêneyan</string>
     <string name="blavatar_desc">îkona malperê</string>
     <string name="theme_image_desc">wêneyê rûkarê</string>
@@ -840,6 +845,7 @@ Language: ku_TR
     <string name="support_identity_input_dialog_enter_email_and_name">Ji bo domandinê ji kerema xwe, email û navê xwe bikevê</string>
     <string name="support_push_notification_message">Peyameke nû ji \'Alîkarî û Piştgirî\'yê heye</string>
     <string name="activity_log_currently_restoring_message_no_dates">Pêvajoya vegerandinê</string>
+    <string name="activity_log_currently_restoring_message">Tê vegerandin bo %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Malpera te bi serkeftî hat vegerandin</string>
     <string name="activity_log_currently_restoring_title">Malpera te niha tê vegerandin</string>
     <string name="activity_log_button">Bişkoka Tomargeha Çalakiyan</string>
@@ -1618,6 +1624,7 @@ Language: ku_TR
     <string name="reader_err_get_post_generic">Ev şandî nayê anîn</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Şandiyên nû tune ye</string>
     <string name="media_edit_copy_url_toast">URL li rûnûsgehê hat kopîkirin</string>
+    <string name="media_settings_copy_url">URLyê jê bigire</string>
     <string name="selected_theme">Rûkara Hilbijartî</string>
     <string name="could_not_load_theme">Rûkar nayê barkirin</string>
     <string name="theme_activation_error">Hinek çewtî derketin. Rûkar nayê çalakkirin</string>
@@ -1697,6 +1704,7 @@ Language: ku_TR
     <string name="reader_label_new_posts_subtitle">Ji bo wan nîşan bide, bitikîne</string>
     <string name="select_all">Hemûyan hilbijêre</string>
     <string name="language">Ziman</string>
+    <string name="media_settings_dimensions">Pîvan</string>
     <string name="stats_view_authors">Nivîskar</string>
     <string name="error_notification_open">Danezan nehat vekirin</string>
     <string name="reader_empty_posts_request_failed">Şandî nayên vegerandin</string>
@@ -1730,6 +1738,7 @@ Language: ku_TR
     <string name="themes_fetching">Rûkar tên stendin…</string>
     <string name="ssl_certificate_details">Hûrgilî</string>
     <string name="cab_selected">%d hilbijartî</string>
+    <string name="confirm_delete_multi_media">%1$d hêmanên medyayê werin jêbirin?</string>
     <string name="comment">Şîrove bike</string>
     <string name="reader_label_comments_closed">Şîrove hatin girtin</string>
     <string name="reader_label_like">Biecibîne</string>
