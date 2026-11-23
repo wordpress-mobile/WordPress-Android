@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-12 08:01:54+0000
+Translation-Revision-Date: 2026-11-22 14:13:44+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">%1$s Destek yapay zekâsı ile sohbet ediyorsunuz.</string>
+    <string name="login_session_expired">Oturum süreniz doldu. Lütfen yeniden deneyin.</string>
+    <string name="reader_save_posts_synced_dialog_message">Kaydedilmiş yazılar WordPress.com hesabınızla eşitlenir, böylece tüm cihazlarınızda yer alır.</string>
+    <string name="reader_saved_post_removed">Kaydedilmiş yazılardan kaldırıldı</string>
+    <string name="reader_saved_posts_limit_reached">Kaydedilmiş yazı sınırına ulaştınız. Daha fazlasını kaydetmek için bazılarını kaldırın.</string>
+    <string name="stats_period_last_3_years">Son 3 yıl</string>
+    <string name="stats_chart_interval_submenu">Aralık seçeneklerini aç</string>
+    <string name="stats_chart_interval">Aralık</string>
+    <string name="post_rs_local_drafts_retry_description">\"%s\" yüklemesini yeniden dene</string>
+    <string name="post_rs_local_drafts_upload_failed">Yüklenemedi</string>
+    <string name="post_rs_local_drafts_subtitle">Bu yazılar yalnızca bu cihazda bulunur.</string>
+    <string name="post_rs_local_drafts_title">Yüklenmedi</string>
+    <string name="confirm_delete_single_media">%1$d ortam ögesi silinsin mi?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, ayarlanmadı</string>
+    <string name="media_settings_alt_text_sheet_helper">Bir veya iki cümle hedefleyin</string>
+    <string name="media_settings_description_sheet_explanation">Ek sayfasında gösterilir.</string>
+    <string name="media_settings_caption_sheet_explanation">Yazılarda görselin altında gösterilir.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Ekran okuyucu kullanan kişiler için görselde ne olduğunu açıklayın. Görsel dekoratif amaçlıysa boş bırakın.</string>
+    <string name="media_settings_uploaded">Yüklendi</string>
+    <string name="media_settings_file_size">Dosya boyutu</string>
+    <string name="media_settings_file_type">Dosya türü</string>
+    <string name="media_settings_file_name">Dosya adı</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenleyiciyi yeniden yükle</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenlemeye devam etmek için düzenleyiciyi yeniden yükleyin.</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenleyici çalışmayı durdurdu</string>
@@ -3603,6 +3626,7 @@ Language: tr
     <string name="reader_err_get_post_generic">Bu yazı alınamadı</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Yeni yazı yok</string>
     <string name="media_edit_copy_url_toast">Adres panoya kopyalandı</string>
+    <string name="media_settings_copy_url">URL\'yi Kopyala</string>
     <string name="selected_theme">Seçilmiş tema</string>
     <string name="could_not_load_theme">Tema yüklenemedi</string>
     <string name="theme_activation_error">Bir sorun çıktı. Tema etkinleştirilemedi</string>
@@ -3687,6 +3711,7 @@ Language: tr
     <string name="my_site_btn_blog_posts">Yazılar</string>
     <string name="reader_label_new_posts_subtitle">Görüntülemek için dokunun</string>
     <string name="select_all">Tümünü seç</string>
+    <string name="media_settings_dimensions">Boyutlar</string>
     <string name="language">Dil</string>
     <string name="reader_empty_posts_request_failed">Yazılar alınamadı</string>
     <string name="error_notification_open">Bildirim açılamadı</string>
@@ -3721,6 +3746,7 @@ Language: tr
     <string name="stats_timeframe_years">Yıl</string>
     <string name="themes_fetching">Temalar alınıyor…</string>
     <string name="ssl_certificate_details">Ayrıntılar</string>
+    <string name="confirm_delete_multi_media">%1$d ortam ögesi silinsin mi?</string>
     <string name="cab_selected">%d seçilmiş</string>
     <string name="browse_our_faq_button">SSS sayfamıza bakın</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-14 16:08:59+0000
+Translation-Revision-Date: 2026-11-22 04:32:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: sr_RS
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Дописујете се са вештачком интелигенцијом подршке %1$s.</string>
+    <string name="login_session_expired">Ваша сесија пријаве је истекла. Покушајте поново.</string>
+    <string name="reader_save_posts_synced_dialog_message">Сачувани чланци се усклађују са вашим WordPress.com налогом, тако да су доступни на свим вашим уређајима.</string>
+    <string name="reader_saved_post_removed">Уклоњено из сачуваних чланака</string>
+    <string name="reader_saved_posts_limit_reached">Достигли сте ограничење сачуваних чланака. Уклоните неке да бисте сачували нове.</string>
+    <string name="stats_period_last_3_years">Последње 3 године</string>
+    <string name="stats_chart_interval_submenu">Отвори могућности интервала</string>
+    <string name="stats_chart_interval">Интервал</string>
+    <string name="post_rs_local_drafts_retry_description">Покушај поново да отпремиш „%s“</string>
+    <string name="post_rs_local_drafts_upload_failed">Отпремање није успело</string>
+    <string name="post_rs_local_drafts_subtitle">Ови чланци се налазе само на овом уређају.</string>
+    <string name="post_rs_local_drafts_title">Није отпремљено</string>
+    <string name="confirm_delete_single_media">Избрисати %1$d медијску ставку?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, није подешено</string>
+    <string name="media_settings_alt_text_sheet_helper">Циљајте на једну или две реченице</string>
+    <string name="media_settings_description_sheet_explanation">Приказује се на страници прилога.</string>
+    <string name="media_settings_caption_sheet_explanation">Приказује се испод слике у чланцима.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Опишите шта се налази на слици за људе који користе читаче екрана. Оставите празно ако је слика декоративна.</string>
+    <string name="media_settings_uploaded">Отпремљено</string>
+    <string name="media_settings_file_size">Величина датотеке</string>
+    <string name="media_settings_file_type">Врста датотеке</string>
+    <string name="media_settings_file_name">Назив датотеке</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Поново учитај уређивач</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Поново учитајте уређивач да бисте наставили уређивање.</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Уређивач је престао са радом</string>
@@ -1014,8 +1037,8 @@ Language: sr_RS
     <string name="privacy_banner_analytics">Аналитика</string>
     <string name="privacy_banner_analytics_description">Дозволите нам да побољшамо учинак прикупљањем информација о томе како корисници користе наше мобилне апликације.</string>
     <string name="privacy_banner_title">Управљај приватношћу</string>
-    <string name="tabbar_accessibility_label_me">Ја. Управљајте појединостима свог профила.</string>
     <string name="privacy_banner_description">Ваша приватност нам је изузетно важна и увек је била. Ваше личне податке користимо, чувамо и обрађујемо да бисмо на разне начине побољшали нашу апликацију (и ваше искуство). Неке употребе ваших података су нам неопходне да би ствари радиле, а друге можете прилагодити у подешавањима.</string>
+    <string name="tabbar_accessibility_label_me">Ја. Управљајте појединостима свог профила.</string>
     <string name="social_item_message_title">Порука</string>
     <string name="virtual_homepage_title">Почетна страница</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок је разгруписан</string>
@@ -3603,6 +3626,7 @@ Language: sr_RS
     <string name="reader_err_get_post_generic">Није могуће довући овај чланак</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Нема недавних чланака</string>
     <string name="media_edit_copy_url_toast">URL је умножен у оставу</string>
+    <string name="media_settings_copy_url">Копирај URL</string>
     <string name="selected_theme">Изабрана тема</string>
     <string name="could_not_load_theme">Није могуће учитати тему</string>
     <string name="theme_activation_error">Нешто није у реду. Није могуће укључити тему</string>
@@ -3688,6 +3712,7 @@ Language: sr_RS
     <string name="reader_label_new_posts_subtitle">Додирните да бисте их приказали</string>
     <string name="select_all">Изабери све</string>
     <string name="language">Језик</string>
+    <string name="media_settings_dimensions">Димензије</string>
     <string name="error_notification_open">Није могуће отворити обавештење</string>
     <string name="stats_view_authors">Аутори</string>
     <string name="stats_search_terms_unknown_search_terms">Непознати изрази за претрагу</string>
@@ -3722,6 +3747,7 @@ Language: sr_RS
     <string name="stats_views">Прегледи</string>
     <string name="ssl_certificate_details">Појединости</string>
     <string name="cab_selected">Изабрано: %d</string>
+    <string name="confirm_delete_multi_media">Избрисати %1$d медијских ставки?</string>
     <string name="reader_label_like">Свиђа ми се</string>
     <string name="reader_label_comments_closed">Коментарисање је затворено</string>
     <string name="reader_title_photo_viewer">%1$d од %2$d</string>
