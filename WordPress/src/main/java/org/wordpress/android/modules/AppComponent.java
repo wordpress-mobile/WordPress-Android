@@ -49,8 +49,6 @@ import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
-import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
@@ -218,10 +216,6 @@ public interface AppComponent {
     void inject(MediaBrowserActivity object);
 
     void inject(MediaGridFragment object);
-
-    void inject(MediaPreviewActivity object);
-
-    void inject(MediaPreviewFragment object);
 
     void inject(MediaSettingsActivity object);
 

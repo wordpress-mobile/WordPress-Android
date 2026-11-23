@@ -454,7 +454,6 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     implementation(libs.android.installreferrer)
-    implementation(libs.photoview)
     implementation(libs.greenrobot.eventbus.main)
     implementation(libs.greenrobot.eventbus.java)
     implementation(libs.squareup.retrofit)
@@ -570,6 +569,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     // - Jetpack Compose - Other
     implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
     implementation(libs.coil.video)
     implementation(libs.airbnb.lottie.compose)
     // - Jetpack Compose - UI Tests

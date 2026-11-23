@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.views.compose.photoviewer
+package org.wordpress.android.ui.compose.components
 
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -12,10 +12,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,10 +31,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
-import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -41,19 +46,42 @@ private const val MAX_SCALE = 4f
 private const val DOUBLE_TAP_SCALE = 2.5f
 
 /**
- * A full-screen photo that pinches, pans and double-taps to zoom. The low-res version shows while the high-res
- * one loads.
+ * A full-screen photo that pinches, pans and double-taps to zoom. [model] is a URL, a file path or a content:// URI;
+ * the optional [loResModel] shows while it loads. A photo that failed to load is retried when its page becomes
+ * current again or the screen resumes, as the user may have come back online.
  */
 @Composable
-fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit) {
+fun ZoomablePhoto(
+    model: String?,
+    contentDescription: String,
+    errorText: String,
+    isCurrentPage: Boolean,
+    onTap: () -> Unit,
+    loResModel: String? = null
+) {
     val zoomState = remember { ZoomState() }
     var isLoResLoaded by remember { mutableStateOf(false) }
     var isHiResLoaded by remember { mutableStateOf(false) }
     var hasHiResFailed by remember { mutableStateOf(false) }
+    var loadAttempt by remember { mutableIntStateOf(0) }
 
-    // the pager keeps its neighbours composed, so a photo swiped away would otherwise stay zoomed
-    LaunchedEffect(isCurrentPage) {
-        if (!isCurrentPage) zoomState.reset()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(isCurrentPage, lifecycleOwner) {
+        if (!isCurrentPage) {
+            // the pager keeps its neighbours composed, so a photo swiped away would otherwise stay zoomed
+            zoomState.reset()
+            return@DisposableEffect onDispose {}
+        }
+        // adding the observer replays ON_RESUME when the screen is already resumed, so this also covers the page
+        // coming to the front after a pre-load that failed while it was offscreen
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME && hasHiResFailed) {
+                hasHiResFailed = false
+                loadAttempt++
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -74,9 +102,9 @@ fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit)
                     translationY = zoomState.offset.y
                 }
         ) {
-            if (!isHiResLoaded) {
+            if (loResModel != null && !isHiResLoaded) {
                 AsyncImage(
-                    model = photo.loResUrl,
+                    model = loResModel,
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     onSuccess = {
@@ -86,22 +114,27 @@ fun ZoomablePhoto(photo: ReaderPhoto, isCurrentPage: Boolean, onTap: () -> Unit)
                     modifier = Modifier.fillMaxSize()
                 )
             }
-            AsyncImage(
-                model = photo.hiResUrl,
-                contentDescription = stringResource(R.string.reader_photo_view_desc),
-                contentScale = ContentScale.Fit,
-                onSuccess = {
-                    isHiResLoaded = true
-                    zoomState.imageSize = it.painter.intrinsicSize
-                },
-                onError = { hasHiResFailed = true },
-                modifier = Modifier.fillMaxSize()
-            )
+            key(loadAttempt) {
+                AsyncImage(
+                    model = model,
+                    contentDescription = contentDescription,
+                    contentScale = ContentScale.Fit,
+                    onSuccess = {
+                        isHiResLoaded = true
+                        zoomState.imageSize = it.painter.intrinsicSize
+                    },
+                    onError = {
+                        AppLog.e(T.MEDIA, "Failed to load photo", it.result.throwable)
+                        hasHiResFailed = true
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
         when {
             isHiResLoaded || isLoResLoaded -> Unit
             hasHiResFailed -> Text(
-                text = stringResource(R.string.reader_toast_err_view_image),
+                text = errorText,
                 color = Color.White,
                 style = MaterialTheme.typography.titleMedium
             )
