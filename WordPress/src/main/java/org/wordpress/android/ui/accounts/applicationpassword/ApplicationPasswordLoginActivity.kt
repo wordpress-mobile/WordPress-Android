@@ -78,6 +78,9 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
     private fun openMainActivity(navigationActionData: ApplicationPasswordLoginViewModel.NavigationActionData) {
         if (navigationActionData.errorMessage == ApplicationPasswordLoginHelper.AUTHORIZATION_HEADER_BLOCKED) {
             // A toast disappears before the user can note the remedy, so this error gets a dialog.
+            // The flag is cleared now because the user may leave without tapping OK, and a stale
+            // flag makes the next successful login skip the main screen.
+            LoginActivity.consumeShareFlowPending()
             showAuthorizationHeaderBlocked = true
             return
         }
