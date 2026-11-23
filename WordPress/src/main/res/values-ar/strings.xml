@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-09 09:58:17+0000
+Translation-Revision-Date: 2026-11-18 15:57:59+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.1.0
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">الكاميرا غير متاحة على هذا الجهاز</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">فشل تحميل المحرر</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">خطأ غير معروف</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">توقف المحرر عن العمل</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">أعِد تحميل المحرر لمتابعة التحرير.</string>
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">إعادة تحميل المحرر</string>
+    <string name="comment_author_info_show">عرض تفاصيل المؤلف</string>
+    <string name="comment_author_info_posted_at">نشرت في</string>
+    <string name="comment_author_info_website">الموقع الإلكتروني</string>
+    <string name="comment_author_info_email">البريد الإلكتروني</string>
+    <string name="comment_author_info_send_email">إرسال بريد إلكتروني</string>
+    <string name="comment_author_info_posted_from">تم النشر من</string>
+    <string name="comment_author_info_bio">السيرة الذاتية</string>
+    <string name="comment_author_info_registered">مستخدم مسجّل</string>
+    <string name="comment_author_info_guest">ضيف</string>
+    <string name="comment_detail_in_reply_to">ردًا على ⁦%1$s⁩:</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">الأكثر استخدامًا</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">مُقترح</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">تعذّر عرض أداة إدراج المكوّنات.</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">البحث في المكوّنات</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">إضافة مكوّن</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">إغلاق</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">الحديثة</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">مسح البحث</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">لا توجد نتائج</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">لا تتطابق أي مكوّنات مع \"⁦%1$s⁩\"</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">الصور</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">الكاميرا</string>
+    <string name="comment_detail_on_post">في ⁦%1$s⁩</string>
+    <string name="comment_trash_has_replies">يحتوي هذا التعليق على ردود. لن يتم نقلها إلى سلة المهملات معه.</string>
+    <string name="comment_reply_unsent">لديك رد غير مرسل.</string>
+    <string name="comment_reply_keep_editing">متابعة التحرير</string>
+    <string name="comment_reply_delete_draft">حذف المسودة</string>
+    <string name="comment_reply_save_draft">حفظ المسودة</string>
+    <string name="comment_reply_continue">متابعة الرد</string>
+    <string name="editor_saving_locked_leave_message">إذا غادرت الآن، فسيتوقف أي إجراء لا يزال قيد التنفيذ، مثل رفع ملف وسائط، وقد لا يظهر هذا الملف في تدويناتك أو قد يتعذر عرضه بشكل صحيح.</string>
+    <string name="editor_saving_locked_keep_editing">متابعة التحرير</string>
+    <string name="editor_saving_locked_continue">متابعة</string>
+    <string name="editor_saving_locked_leave">مغادرة</string>
+    <string name="photo_picker_choose_photo_or_video">الصور ومقاطع الفيديو</string>
+    <string name="photo_picker_choose_other_files">ملفات أخرى</string>
+    <string name="prepublishing_tags_add_hint">إضافة وسم</string>
+    <string name="prepublishing_tags_remove_tag_desc">إزالة الوسم ⁦%1$s⁩</string>
+    <string name="application_password_private_site_error">هذا الموقع خاص، لذا لا يمكننا الاطلاع على إعداداته لتسجيل دخولك.</string>
+    <string name="application_password_private_site_card">هذا الموقع خاص، لذا لا يمكننا إعادة الربط به.</string>
+    <string name="he_support_add_more_info_button">إضافة المزيد من المعلومات</string>
+    <string name="he_support_reply_sent_confirmation">تم إرسال ردك. تحقق من بريدك الإلكتروني للاطلاع على آخر التحديثات.</string>
+    <string name="he_support_status_ongoing">مستمر</string>
+    <string name="unified_support_status_ai_assistant">مساعد الذكاء الاصطناعي</string>
+    <string name="unified_support_attachment_link_content_description">فتح الرابط: ⁦%1$s⁩</string>
+    <string name="unified_support_related_label">ذات الصلة:</string>
+    <string name="content_list_group_today">اليوم</string>
+    <string name="content_list_group_yesterday">أمس</string>
+    <string name="content_list_group_this_week">هذا الأسبوع</string>
+    <string name="content_list_group_earlier_in">سابقًا في ⁦%1$s⁩</string>
+    <string name="content_list_fab_write">الكتابة</string>
+    <string name="content_list_view_count_singular">⁦%1$s⁩ من المشاهدات</string>
+    <string name="content_list_view_count_plural">⁦%1$s⁩ من المشاهدات</string>
+    <string name="content_list_comment_count_singular">⁦%1$s⁩ من التعليقات</string>
+    <string name="content_list_comment_count_plural">⁦%1$s⁩ من التعليقات</string>
+    <string name="content_list_density_show_condensed">عرض القائمة المختصرة</string>
+    <string name="content_list_density_show_comfortable">عرض القائمة الموسعة</string>
+    <string name="stats_archives_section_search">مصطلحات البحث</string>
+    <string name="stats_archives_section_categories">التصنيفات</string>
+    <string name="stats_archives_section_tags">الوسوم</string>
+    <string name="stats_archives_section_authors">المؤلفون</string>
+    <string name="stats_archives_section_dates">التواريخ</string>
+    <string name="stats_archives_section_error">خطأ</string>
+    <string name="stats_archives_section_aggregated">مجمع</string>
+    <string name="stats_archives_section_other">أخرى</string>
+    <string name="stats_archives_section_taxonomies">الفئات</string>
+    <string name="get_likes_empty_state_no_likes">لا توجد إعجابات حتى الآن</string>
+    <string name="site_picker_add_a_site_collapse">إغلاق قائمة إضافة موقع</string>
+    <string name="site_picker_add_a_site_expand">عرض طرق إضافة موقع</string>
+    <string name="site_picker_add_site_menu_collapsed">قائمة إضافة موقع مطوية</string>
+    <string name="site_picker_add_site_menu_expanded">قائمة إضافة موقع موسعة</string>
+    <string name="support_screen_login_description">سجل الدخول إلى WordPress.com للوصول إلى محادثة الدعم.</string>
+    <string name="domain_registration_purchase_incomplete">تم استخدام رصيد النطاق الخاص بك، ولكن تعذر تسجيل %s. يُرجى التواصل مع الدعم.</string>
+    <string name="domain_registration_purchase_unconfirmed">تم استخدام رصيد النطاق الخاص بك، ولكن تعذر علينا تأكيد النتيجة. تحقق من نطاقاتك قبل إعادة المحاولة، وتواصل مع الدعم إذا كان %s مفقودًا.</string>
+    <string name="editor_saving_locked_title">تدوينتك غير جاهزة حتى الآن</string>
+    <string name="editor_saving_locked_save_message">لا يزال هناك إجراء قيد التنفيذ في المحرر، مثل رفع ملف وسائط. إذا قمت بالمتابعة، فقد لا يظهر هذا الملف في تدوينتك أو قد يتعذر عرضه بشكل صحيح.</string>
+    <string name="deleting_tag_failed">فشل حذف الوسم</string>
+    <string name="stats_new_stats_feedback_dialog_message">هل تود مشاركة ملاحظاتك حول تجربة ميزة الإحصاءات الجديدة؟</string>
+    <string name="rs_date_now">الآن</string>
+    <string name="rs_date_modified">تاريخ التعديل: %s</string>
+    <string name="rs_date_trashed">نُقل إلى سلة المهملات: %s</string>
+    <string name="stats_hourly_data_not_available">البيانات بالساعة غير متاحة</string>
+    <string name="stats_show_views">عرض المشاهدات</string>
+    <string name="stats_traffic_date_range_content_description">من ⁦%1$s⁩ إلى ⁦%2$s⁩</string>
+    <string name="stats_open_link">فتح الرابط</string>
+    <string name="stats_post_detail_title">إحصاءات التدوينات</string>
+    <string name="stats_post_detail_published">تم نشر ⁦%1$s⁩</string>
+    <string name="stats_post_detail_more_likers">ما يزيد عن ⁦%1$s⁩</string>
+    <string name="stats_post_detail_activity_less">أقل</string>
+    <string name="stats_post_detail_activity_more">المزيد</string>
+    <string name="stats_post_detail_total">الإجمالي</string>
+    <string name="stats_post_detail_average">المتوسط</string>
+    <string name="stats_previous_day">اليوم السابق</string>
+    <string name="stats_next_day">اليوم التالي</string>
+    <string name="stats_error_not_available">هذه الإحصاءات غير متاحة لهذا الموقع</string>
+    <string name="stats_feature_gate_message">ترقية خطتك للحصول على حق الوصول إلى التحليلات المتقدمة</string>
+    <string name="stats_feature_gate_explore_plans">استكشاف الخطط</string>
+    <string name="stats_feature_gate_plans_unavailable">تعذر فتح صفحة الخطط لهذا الموقع</string>
+    <string name="stats_period_this_month">هذا الشهر</string>
+    <string name="stats_period_this_year">هذا العام</string>
+    <string name="stats_period_previous_content_description">الفترة السابقة</string>
+    <string name="stats_period_next_content_description">الفترة التالية</string>
+    <string name="stats_view_selected_period_content_description">عرض الإحصاءات للفترة المحددة</string>
+    <string name="stats_archives_title">الأرشيفات</string>
+    <string name="stats_archives_title_label">صفحات الأرشيف</string>
+    <string name="web_view_log_in_to_site">تسجيل الدخول إلى هذا الموقع</string>
+    <string name="comments_rs_search_prompt">البحث في التعليقات</string>
+    <string name="comments_rs_search_nothing_found">لا توجد تعليقات تطابق بحثك</string>
+    <string name="comments_rs_moderation_failed_single">تعذر تحديث التعليق</string>
+    <string name="comments_rs_moderation_failed_multiple">تعذر تحديث ⁦%1$d⁩ من أصل ⁦%2$d⁩ من التعليقات</string>
     <string name="unified_support_message_input_placeholder">جارٍ كتابة رسالة…</string>
     <string name="unified_support_bot_typing_content_description">روبوت الدعم يكتب</string>
     <string name="unified_support_attachment_match_score">%1$d%% تطابق</string>
@@ -96,6 +211,7 @@ Language: ar
     <string name="stats_new_stats_suggestion_message">طوّرنا تجربة جديدة كليًا للإحصاءات. هل ترغب في تجربتها؟ يمكنك دائمًا العودة إلى التجربة السابقة من قائمة الإحصاءات.</string>
     <string name="stats_new_stats_suggestion_positive">جرّبها الآن</string>
     <string name="stats_new_stats_suggestion_negative">ربما لاحقًا</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">بحلول نهاية عام 2026، سيصبح المحرر الافتراضي متاح للجميع. %1$s</string>
     <string name="site_settings_use_theme_styles_unsupported">ثبّت إضافة Gutenberg على موقعك لتفعيل دعم أنماط القالب.</string>
     <string name="site_settings_use_theme_styles_not_block_theme">موقعك لا يستخدم قالبًا قائمًا على المكوّنات. قد لا يتطابق المحرر مع محتوى موقعك. عطّل هذا الإعداد إذا لم تظهر الأشياء بالشكل الصحيح.</string>
     <string name="site_settings_use_third_party_blocks">استخدام المكوّنات التابعة لأطراف ثالثة (إصدار تجريبي)</string>

@@ -1,11 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-04 18:07:29+0000
+Translation-Revision-Date: 2026-11-18 15:55:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ricarica l\'editor</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Ricarica l\'editor per continuare a modificare.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">L\'editor ha smesso di funzionare</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Errore sconosciuto</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Impossibile caricare l\'editor</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Fotocamera non disponibile su questo dispositivo</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Fotocamera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Foto</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Nessun blocco corrisponde a “%1$s”</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Nessun risultato</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Cancella ricerca</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recenti</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Chiudi</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Aggiungi blocco</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Cerca blocchi</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Impossibile visualizzare l\'inseritore di blocchi.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Suggerito</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">I più usati</string>
+    <string name="comment_detail_in_reply_to">In risposta a: %1$s</string>
+    <string name="comment_author_info_guest">Ospite</string>
+    <string name="comment_author_info_registered">Utente registrato</string>
+    <string name="comment_author_info_bio">Biografia</string>
+    <string name="comment_author_info_posted_from">Pubblicato da</string>
+    <string name="comment_author_info_send_email">Invia e-mail</string>
+    <string name="comment_author_info_email">E-mail</string>
+    <string name="comment_author_info_website">Sito web</string>
+    <string name="comment_author_info_posted_at">Pubblicato su</string>
+    <string name="comment_author_info_show">Mostra dettagli dell\'autore</string>
+    <string name="comment_detail_on_post">il %1$s</string>
+    <string name="comment_reply_continue">Continua a rispondere</string>
+    <string name="comment_reply_save_draft">Salva bozza</string>
+    <string name="comment_reply_delete_draft">Elimina bozza</string>
+    <string name="comment_reply_keep_editing">Continua a modificare</string>
+    <string name="comment_reply_unsent">Hai una risposta non inviata.</string>
+    <string name="comment_trash_has_replies">Questo commento include delle risposte. Non verranno spostate nel cestino insieme a esso.</string>
+    <string name="content_list_density_show_comfortable">Mostra elenco espanso</string>
+    <string name="content_list_density_show_condensed">Mostra elenco compatto</string>
+    <string name="content_list_comment_count_plural">%1$s commenti</string>
+    <string name="content_list_comment_count_singular">%1$s commento</string>
+    <string name="content_list_view_count_plural">%1$s visualizzazioni</string>
+    <string name="content_list_view_count_singular">%1$s visualizzazione</string>
+    <string name="content_list_fab_write">Scrivi</string>
+    <string name="content_list_group_earlier_in">Precedenti in %1$s</string>
+    <string name="content_list_group_this_week">Questa settimana</string>
+    <string name="content_list_group_yesterday">Ieri</string>
+    <string name="content_list_group_today">Oggi</string>
+    <string name="unified_support_related_label">Correlati:</string>
+    <string name="unified_support_attachment_link_content_description">Apri link: %1$s</string>
+    <string name="unified_support_status_ai_assistant">Assistente IA</string>
+    <string name="he_support_status_ongoing">In corso</string>
+    <string name="he_support_reply_sent_confirmation">La risposta è stata inviata. Controlla la tua e-mail per aggiornamenti.</string>
+    <string name="he_support_add_more_info_button">Aggiungi altre info</string>
+    <string name="application_password_private_site_card">Questo sito è privato, pertanto non possiamo riconnetterci.</string>
+    <string name="application_password_private_site_error">Questo sito è privato, pertanto non possiamo leggerne le impostazioni per consentirti di accedere.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Rimuovi il tag %1$s</string>
+    <string name="prepublishing_tags_add_hint">Aggiungi un tag</string>
+    <string name="photo_picker_choose_other_files">Altri file</string>
+    <string name="photo_picker_choose_photo_or_video">Foto e video</string>
+    <string name="editor_saving_locked_leave">Abbandona</string>
+    <string name="editor_saving_locked_continue">Continua</string>
+    <string name="editor_saving_locked_keep_editing">Continua a modificare</string>
+    <string name="editor_saving_locked_leave_message">Se esci adesso, qualsiasi operazione ancora in corso, come il caricamento di file multimediali, si interromperà e i contenuti potrebbero risultare mancanti o danneggiati nel tuo articolo.</string>
+    <string name="editor_saving_locked_save_message">Qualcosa nell\'editor, come il caricamento di elementi multimediali, è ancora in corso. Se continui, potrebbe risultare assente o danneggiato nell\'articolo.</string>
+    <string name="editor_saving_locked_title">Il tuo articolo non è ancora pronto</string>
+    <string name="domain_registration_purchase_unconfirmed">Il credito del dominio è stato utilizzato, ma non abbiamo potuto confermare il risultato. Verifica i tuoi domini prima di riprovare e contatta il supporto se %s risulta mancante.</string>
+    <string name="domain_registration_purchase_incomplete">Il credito del dominio è stato utilizzato, ma non è stato possibile registrare %s. Contatta il supporto.</string>
+    <string name="support_screen_login_description">Accedi a WordPress.com per accedere alla chat di supporto.</string>
+    <string name="site_picker_add_site_menu_expanded">Menu Aggiungi sito espanso</string>
+    <string name="site_picker_add_site_menu_collapsed">Menu Aggiungi sito compresso</string>
+    <string name="site_picker_add_a_site_expand">Mostra modi per aggiungere un sito</string>
+    <string name="get_likes_empty_state_no_likes">Ancora nessun Mi piace</string>
+    <string name="stats_archives_section_taxonomies">Tassonomie</string>
+    <string name="stats_archives_section_other">Altro</string>
+    <string name="stats_archives_section_aggregated">Aggregato</string>
+    <string name="stats_archives_section_error">Errore</string>
+    <string name="stats_archives_section_dates">Date</string>
+    <string name="stats_archives_section_authors">Autori</string>
+    <string name="stats_archives_section_tags">Tag</string>
+    <string name="stats_archives_section_categories">Categorie</string>
+    <string name="stats_archives_section_search">Termini di ricerca</string>
+    <string name="stats_archives_title_label">Pagine archivio</string>
+    <string name="stats_archives_title">Archivi</string>
+    <string name="stats_view_selected_period_content_description">Visualizza le statistiche per il periodo selezionato</string>
+    <string name="stats_period_next_content_description">Periodo successivo</string>
+    <string name="stats_period_previous_content_description">Periodo precedente</string>
+    <string name="stats_period_this_year">Quest\'anno</string>
+    <string name="stats_period_this_month">Questo mese</string>
+    <string name="stats_feature_gate_plans_unavailable">Impossibile aprire la pagina dei piani per questo sito</string>
+    <string name="stats_feature_gate_explore_plans">Scopri i plani</string>
+    <string name="stats_feature_gate_message">Aggiorna il piano per ottenere l\'accesso a statistiche avanzate</string>
+    <string name="stats_error_not_available">Queste statistiche non sono disponibili per questo sito</string>
+    <string name="stats_next_day">Giorno successivo</string>
+    <string name="stats_previous_day">Giorno precedente</string>
+    <string name="stats_post_detail_average">Media</string>
+    <string name="stats_post_detail_total">Totale</string>
+    <string name="stats_post_detail_activity_more">Altro</string>
+    <string name="stats_post_detail_activity_less">Meno</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Pubblicato %1$s</string>
+    <string name="stats_post_detail_title">Statistiche dell\'articolo</string>
+    <string name="stats_open_link">Apri link</string>
+    <string name="stats_traffic_date_range_content_description">%1$s a %2$s</string>
+    <string name="stats_show_views">Mostra visualizzazioni</string>
+    <string name="stats_hourly_data_not_available">Dato orario non disponibile</string>
+    <string name="rs_date_trashed">Spostato nel cestino: %s</string>
+    <string name="rs_date_modified">Data di modifica: %s</string>
+    <string name="rs_date_now">Ora</string>
+    <string name="stats_new_stats_feedback_dialog_message">Vuoi condividere il tuo feedback sulla nuova esperienza delle Statistiche?</string>
+    <string name="deleting_tag_failed">Eliminazione del tag non riuscita</string>
+    <string name="comments_rs_moderation_failed_multiple">Impossibile aggiornare %1$d di %2$d commenti</string>
+    <string name="comments_rs_moderation_failed_single">Il commento non può essere aggiornato</string>
+    <string name="comments_rs_search_nothing_found">Nessun commento corrispondente alla ricerca</string>
+    <string name="comments_rs_search_prompt">Cerca commenti</string>
+    <string name="web_view_log_in_to_site">Accedi a questo sito</string>
     <string name="support_screen_unified_support_description">Ottieni risposte dal nostro team di supporto, in qualsiasi momento</string>
     <string name="support_screen_unified_support_title">Richiedi supporto</string>
     <string name="unified_support_attachment_match_score">corrispondenza al %1$d%%</string>
@@ -93,6 +207,7 @@ Language: it
     <string name="gutenberg_kit_announcement_learn_more">Scopri di più</string>
     <string name="gutenberg_kit_announcement_maybe_later">Forse dopo</string>
     <string name="gutenberg_kit_announcement_activate">Attiva</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Entro la fine del 2026, diventerà l\'editor predefinito per tutti. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">L\'editor a blocchi di nuova generazione è pronto e offre nuove funzionalità.</string>
     <string name="gutenberg_kit_announcement_title">Sta arrivando un editor a blocchi migliore</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Per provare il nuovo editor, passa prima all\'editor a blocchi.</string>

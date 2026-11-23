@@ -30,6 +30,7 @@ import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.suggestion.Suggestion
+import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -102,6 +103,13 @@ class ReaderCommentListViewModel @Inject constructor(
         get() = savedStateHandle[KEY_REPLY_TO_COMMENT_ID] ?: 0L
         set(value) {
             savedStateHandle[KEY_REPLY_TO_COMMENT_ID] = value
+        }
+
+    // the comments opened in the detail, most recent last
+    private var detailStack: LongArray
+        get() = savedStateHandle[KEY_DETAIL_STACK] ?: LongArray(0)
+        set(value) {
+            savedStateHandle[KEY_DETAIL_STACK] = value
         }
 
     private val isLoggedIn get() = accountStore.hasAccessToken()
@@ -189,6 +197,17 @@ class ReaderCommentListViewModel @Inject constructor(
         }
     }
 
+    fun onCommentClicked(commentId: Long) {
+        if (findComment(commentId) == null) return
+        detailStack += commentId
+        rebuildItems()
+    }
+
+    fun onDetailBack() {
+        detailStack = detailStack.dropLast(1).toLongArray()
+        rebuildItems()
+    }
+
     fun onAuthorClicked(commentId: Long) {
         val comment = findComment(commentId) ?: return
         if (comment.hasAuthorBlogId()) {
@@ -198,13 +217,20 @@ class ReaderCommentListViewModel @Inject constructor(
         }
     }
 
-    // the composer bar opens the sheet for whatever's being replied to
+    // the composer bar opens the sheet for whatever's being replied to - the open comment, if nothing else is
     fun onComposerClicked() {
-        if (!_uiState.value.isSubmitting) _uiState.update { it.copy(isReplySheetShown = true) }
+        val openCommentId = _uiState.value.detail?.comment?.commentId
+        when {
+            openCommentId != null && replyToCommentId == 0L -> onReplyClicked(openCommentId)
+            !_uiState.value.isSubmitting -> _uiState.update { it.copy(isReplySheetShown = true) }
+        }
     }
 
     fun onReplyClicked(commentId: Long) {
         if (!canReply()) return
+        // a reply's own replies aren't shown in the detail, so it's opened first to show the new one under it
+        val openCommentId = _uiState.value.detail?.comment?.commentId
+        if (openCommentId != null && openCommentId != commentId) detailStack += commentId
         setReplyTarget(commentId)
         _uiState.update { it.copy(isReplySheetShown = true, scrollToCommentId = commentId) }
     }
@@ -486,35 +512,58 @@ class ReaderCommentListViewModel @Inject constructor(
         val showLike = post.canLikePost()
         val isLoggedIn = isLoggedIn
         val canReply = canReply()
+        fun ReaderComment.toItem(level: Int) = ReaderCommentItem(
+            commentId = commentId,
+            indentLevel = level,
+            authorName = authorName.orEmpty(),
+            avatarUrl = authorAvatar.orEmpty(),
+            published = published.orEmpty(),
+            html = text.orEmpty(),
+            isPostAuthor = authorId == post.authorId,
+            showLike = showLike,
+            isLikeEnabled = isLoggedIn,
+            isLiked = isLikedByCurrentUser,
+            numLikes = numLikes,
+            canReply = canReply,
+            isReplyTarget = commentId == replyToCommentId,
+            isHighlighted = commentId == highlightedCommentId ||
+                commentId == replyToCommentId || commentId == pendingCommentId,
+            isPending = commentId == pendingCommentId,
+            canModerate = canModerate
+        )
+
         // leveled after filtering, so replies to a comment hidden by a pending moderation are hidden with it
-        val items = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
-            .map { comment ->
-                ReaderCommentItem(
-                    commentId = comment.commentId,
-                    indentLevel = comment.level.coerceAtMost(MAX_INDENT_LEVEL),
-                    authorName = comment.authorName.orEmpty(),
-                    avatarUrl = comment.authorAvatar.orEmpty(),
-                    published = comment.published.orEmpty(),
-                    html = comment.text.orEmpty(),
-                    isPostAuthor = comment.authorId == post.authorId,
-                    showLike = showLike,
-                    isLikeEnabled = isLoggedIn,
-                    isLiked = comment.isLikedByCurrentUser,
-                    numLikes = comment.numLikes,
-                    canReply = canReply,
-                    isReplyTarget = comment.commentId == replyToCommentId,
-                    isHighlighted = comment.commentId == highlightedCommentId ||
-                        comment.commentId == replyToCommentId || comment.commentId == pendingCommentId,
-                    isPending = comment.commentId == pendingCommentId,
-                    canModerate = canModerate
-                )
-            }
-        val replyHint = if (replyToCommentId == 0L) {
+        val visible = levelComments(comments.filterNot { pendingModerations.containsKey(it.commentId) })
+        val items = visible.map { it.toItem(it.level.coerceAtMost(MAX_INDENT_LEVEL)) }
+
+        // a comment that's been moderated away drops out of the detail, along with any repeat that leaves behind -
+        // [A, B, A] without B would otherwise need two backs to leave A
+        val visibleById = visible.associateBy { it.commentId }
+        val stack = detailStack.filter { visibleById.containsKey(it) }
+            .fold(mutableListOf<Long>()) { ids, id -> ids.apply { if (lastOrNull() != id) add(id) } }
+            .toLongArray()
+        if (!stack.contentEquals(detailStack)) detailStack = stack
+        val detail = stack.lastOrNull()?.let { visibleById[it] }?.let { comment ->
+            ReaderCommentDetailUiState(
+                depth = stack.size,
+                comment = comment.toItem(0),
+                parent = visibleById[comment.parentId]?.let { parent ->
+                    ReaderCommentParent(
+                        commentId = parent.commentId,
+                        authorName = parent.authorName.orEmpty(),
+                        snippet = HtmlUtils.fastStripHtml(parent.text.orEmpty()).trim()
+                    )
+                },
+                replies = visible.filter { it.parentId == comment.commentId }.map { it.toItem(0) }
+            )
+        }
+
+        val replyHint = if (replyToCommentId == 0L && detail == null) {
             R.string.reader_hint_comment_on_post
         } else {
             R.string.reader_hint_comment_on_comment
         }
-        _uiState.update { it.copy(comments = items, replyHint = replyHint) }
+        _uiState.update { it.copy(comments = items, detail = detail, replyHint = replyHint) }
         updateEmptyMessage()
     }
 
@@ -541,6 +590,7 @@ class ReaderCommentListViewModel @Inject constructor(
         private const val KEY_HAS_UPDATED_COMMENTS = "has_updated_comments"
         private const val KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id"
         private const val KEY_EDITED_COMMENT_ID = "edited_comment_id"
+        private const val KEY_DETAIL_STACK = "detail_stack"
     }
 }
 
@@ -560,8 +610,22 @@ data class ReaderCommentListUiState(
     val isReplySheetShown: Boolean = false,
     val isSubmitting: Boolean = false,
     val scrollToCommentId: Long? = null,
-    val suggestions: List<Suggestion> = emptyList()
+    val suggestions: List<Suggestion> = emptyList(),
+    val detail: ReaderCommentDetailUiState? = null
 )
+
+/**
+ * A single comment opened from the list, with the comment it replies to and its direct replies
+ */
+data class ReaderCommentDetailUiState(
+    // how many comments deep this is, so opening and backing out can animate in opposite directions
+    val depth: Int,
+    val comment: ReaderCommentItem,
+    val parent: ReaderCommentParent?,
+    val replies: List<ReaderCommentItem>
+)
+
+data class ReaderCommentParent(val commentId: Long, val authorName: String, val snippet: String)
 
 data class ReaderCommentItem(
     val commentId: Long,
