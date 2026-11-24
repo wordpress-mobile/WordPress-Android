@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -13,7 +15,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -29,8 +33,9 @@ import javax.inject.Named
 
 /**
  * Turns files picked, captured or shared into the media library into local media and queues them for upload.
- * Copying, resizing and reading metadata run on [bgDispatcher]; toasts and store writes stay on the caller's
- * (main) thread. Each queued item is written to the store first, so the library picks it up through
+ * The work runs in the app scope, so leaving the library while files are still being copied doesn't drop them.
+ * Copying, resizing and reading metadata run on [bgDispatcher]; toasts, store writes and starting the upload run
+ * on [mainDispatcher]. Each queued item is written to the store first, so the library picks it up through
  * `OnMediaChanged`.
  */
 class MediaLibraryUploader @Inject constructor(
@@ -40,9 +45,11 @@ class MediaLibraryUploader @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val uploadServiceFacade: UploadServiceFacade,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @param:Named(APPLICATION_SCOPE) private val appScope: CoroutineScope
 ) {
-    suspend fun uploadPickedFiles(site: SiteModel, uris: List<Uri>) {
+    fun uploadPickedFiles(site: SiteModel, uris: List<Uri>) = launchOnMain {
         uris.forEach { uri ->
             val prepared = withContext(bgDispatcher) {
                 val mimeType = appContext.contentResolver.getType(uri)
@@ -57,7 +64,7 @@ class MediaLibraryUploader @Inject constructor(
         }
     }
 
-    suspend fun uploadCapturedPhoto(site: SiteModel, capturePath: String) {
+    fun uploadCapturedPhoto(site: SiteModel, capturePath: String) = launchOnMain {
         val prepared = withContext(bgDispatcher) {
             WPMediaUtils.scanMediaFile(appContext, capturePath)
             val uri = getOptimizedPictureIfNecessary(site, capturePath.toUri())
@@ -67,7 +74,7 @@ class MediaLibraryUploader @Inject constructor(
         queue(prepared)
     }
 
-    suspend fun uploadCapturedVideo(site: SiteModel, uri: Uri) {
+    fun uploadCapturedVideo(site: SiteModel, uri: Uri) = launchOnMain {
         val prepared = withContext(bgDispatcher) {
             trackAddedMedia(isNewMedia = true, isVideo = true, uri = uri)
             if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, uri)) {
@@ -79,7 +86,7 @@ class MediaLibraryUploader @Inject constructor(
         queue(prepared)
     }
 
-    suspend fun uploadSharedMedia(site: SiteModel, uris: List<Uri>) {
+    fun uploadSharedMedia(site: SiteModel, uris: List<Uri>) = launchOnMain {
         uris.forEach { uri ->
             queue(withContext(bgDispatcher) { downloadAndPrepare(site, uri, mimeType = null) })
         }
@@ -92,8 +99,19 @@ class MediaLibraryUploader @Inject constructor(
             ToastUtils.showToast(appContext, R.string.no_network_message, ToastUtils.Duration.SHORT)
             return
         }
-        uploadServiceFacade.uploadMedia(ArrayList(mediaList), UPLOAD_SOURCE_FOR_LOGGING)
+        try {
+            uploadServiceFacade.uploadMedia(ArrayList(mediaList), UPLOAD_SOURCE_FOR_LOGGING)
+        } catch (e: IllegalStateException) {
+            // the copy can finish after the app went to the background, where starting a service isn't allowed
+            // see: https://github.com/wordpress-mobile/WordPress-Android/issues/18638
+            AppLog.e(AppLog.T.MEDIA, "Unable to start UploadService: ${e.message}")
+            return
+        }
         AppReviewManager.incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA)
+    }
+
+    private fun launchOnMain(block: suspend CoroutineScope.() -> Unit) {
+        appScope.launch(mainDispatcher, block = block)
     }
 
     /** Copies [uri] to a local file; a null [mimeType] is read from the copy */

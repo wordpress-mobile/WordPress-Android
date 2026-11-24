@@ -46,7 +46,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalConfiguration
@@ -126,13 +125,12 @@ fun MediaLibraryScreen(
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
             if (!state.isSearchActive) {
-                // greyed out rather than hidden during a selection, so the grid doesn't jump
-                val tabsEnabled = !state.isSelectionActive
+                // disabled rather than hidden during a selection, so the grid doesn't jump
                 FilterChipTabRow(
                     labels = state.filters.map { stringResource(it.labelResId) },
                     selectedIndex = state.filters.indexOf(state.filter),
-                    onSelect = { index -> if (tabsEnabled) actions.onFilterSelected(state.filters[index]) },
-                    modifier = Modifier.alpha(if (tabsEnabled) 1f else DISABLED_ALPHA)
+                    onSelect = { index -> actions.onFilterSelected(state.filters[index]) },
+                    enabled = !state.isSelectionActive
                 )
             }
             ContentListPullToRefreshBox(
@@ -179,7 +177,9 @@ private fun MediaGrid(state: MediaLibraryUiState, actions: MediaLibraryActions) 
     LoadMoreOnScrollToEnd(
         gridState = gridState,
         itemCount = state.items.size,
-        canLoadMore = state.canLoadMore && !state.isLoadingMore,
+        // not keyed on isLoadingMore: each landed page would restart the trigger before the new items arrive and
+        // ask for another page; the view model already ignores a load-more while one is running
+        canLoadMore = state.canLoadMore,
         onLoadMore = actions::onLoadMore
     )
 
@@ -384,7 +384,6 @@ private fun SearchTopBar(
     }
 }
 
-private const val DISABLED_ALPHA = 0.38f
 private val GRID_PADDING = 2.dp
 private val TEXT_GAP = 8.dp
 private val BUTTON_GAP = 16.dp

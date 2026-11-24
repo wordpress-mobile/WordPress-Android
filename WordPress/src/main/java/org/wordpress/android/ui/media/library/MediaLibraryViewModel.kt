@@ -135,7 +135,7 @@ class MediaLibraryViewModel @Inject constructor(
                 savedStateHandle[KEY_SEARCH_QUERY] = it.searchQuery
             }
         }
-        onFilterSelected(_uiState.value.filter)
+        selectFilter(_uiState.value.filter)
     }
 
     override fun onCleared() {
@@ -144,6 +144,13 @@ class MediaLibraryViewModel @Inject constructor(
     }
 
     override fun onFilterSelected(filter: MediaFilter) {
+        // the chip row reports taps on the selected chip too, which mustn't reset its state
+        if (filter != _uiState.value.filter) {
+            selectFilter(filter)
+        }
+    }
+
+    private fun selectFilter(filter: MediaFilter) {
         _uiState.update {
             it.copy(
                 filter = filter,
@@ -159,15 +166,7 @@ class MediaLibraryViewModel @Inject constructor(
                 }
             )
         }
-        val job = reload()
-        viewModelScope.launch {
-            // wait for the store's items, so the spinner only shows when there's nothing cached to look at
-            job.join()
-            val isFirstVisit = filter !in fetchedFilters && networkUtilsWrapper.isNetworkAvailable()
-            if (_uiState.value.filter == filter && isFirstVisit) {
-                fetch(loadMore = false, showRefreshIndicator = _uiState.value.items.isEmpty())
-            }
-        }
+        reloadThenFetchIfNeverFetched()
     }
 
     override fun onRefresh() {
@@ -196,7 +195,22 @@ class MediaLibraryViewModel @Inject constructor(
 
     override fun onSearchClose() {
         _uiState.update { it.copy(isSearchActive = false, searchQuery = "", emptyState = MediaEmptyState.NO_CONTENT) }
-        reload()
+        // a search restored after process death skipped the first fetch, so it may still be owed
+        reloadThenFetchIfNeverFetched()
+    }
+
+    /** Reloads from the store, then fetches the current filter's first page if it has never been fetched */
+    private fun reloadThenFetchIfNeverFetched() {
+        val filter = _uiState.value.filter
+        val job = reload()
+        viewModelScope.launch {
+            // wait for the store's items, so the spinner only shows when there's nothing cached to look at
+            job.join()
+            val isFirstVisit = filter !in fetchedFilters && networkUtilsWrapper.isNetworkAvailable()
+            if (_uiState.value.filter == filter && isFirstVisit) {
+                fetch(loadMore = false, showRefreshIndicator = _uiState.value.items.isEmpty())
+            }
+        }
     }
 
     override fun onItemClick(localId: Int) {
@@ -257,21 +271,21 @@ class MediaLibraryViewModel @Inject constructor(
     }
 
     fun onFilesPicked(uris: List<Uri>) {
-        viewModelScope.launch { uploader.uploadPickedFiles(site, uris) }
+        uploader.uploadPickedFiles(site, uris)
     }
 
     fun onSharedMedia(uris: List<Uri>) {
-        viewModelScope.launch { uploader.uploadSharedMedia(site, uris) }
+        uploader.uploadSharedMedia(site, uris)
     }
 
     fun onPhotoCaptured() {
         val path = mediaCapturePath ?: return
         mediaCapturePath = null
-        viewModelScope.launch { uploader.uploadCapturedPhoto(site, path) }
+        uploader.uploadCapturedPhoto(site, path)
     }
 
     fun onVideoCaptured(uri: Uri) {
-        viewModelScope.launch { uploader.uploadCapturedVideo(site, uri) }
+        uploader.uploadCapturedVideo(site, uri)
     }
 
     /** Media was deleted from the details screen, or added by the stock media picker */
@@ -376,21 +390,29 @@ class MediaLibraryViewModel @Inject constructor(
                 fullyFetchedFilters -= it
             }
         }
-        fetchedFilters += eventFilter
-        if (event.canLoadMore) {
-            fullyFetchedFilters -= eventFilter
-        } else if (eventFilter == MediaFilter.ALL) {
-            // every item of every type has been fetched, so the other filters have nothing more to fetch
-            fetchedFilters += MediaFilter.entries
-            fullyFetchedFilters += MediaFilter.entries
-        } else {
-            fullyFetchedFilters += eventFilter
+        // a load-more that lands after an overlapping first page reset this filter extends a list that's now
+        // partial, so the filter is left to start over from its first page
+        if (isFirstPage || eventFilter in fetchedFilters) {
+            updateFetchedFilters(eventFilter, canLoadMore = event.canLoadMore)
         }
         if (eventFilter == _uiState.value.filter) {
             _uiState.update { it.copy(emptyState = MediaEmptyState.NO_CONTENT) }
         }
         isAudioCheckPending = true
         reload()
+    }
+
+    private fun updateFetchedFilters(filter: MediaFilter, canLoadMore: Boolean) {
+        fetchedFilters += filter
+        if (canLoadMore) {
+            fullyFetchedFilters -= filter
+        } else if (filter == MediaFilter.ALL) {
+            // every item of every type has been fetched, so the other filters have nothing more to fetch
+            fetchedFilters += MediaFilter.entries
+            fullyFetchedFilters += MediaFilter.entries
+        } else {
+            fullyFetchedFilters += filter
+        }
     }
 
     private fun onFetchError(event: OnMediaListFetched, eventFilter: MediaFilter) {

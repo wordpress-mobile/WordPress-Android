@@ -103,12 +103,21 @@ class MediaBrowserActivity : BaseAppCompatActivity(), WPMediaUtils.LaunchCameraC
             }
         }
 
+        pendingAddMediaOption = savedInstanceState?.getString(KEY_PENDING_ADD_MEDIA_OPTION)
+            ?.let { AddMediaOption.valueOf(it) }
+
         if (savedInstanceState == null) {
             handleSharedMedia()
             if (intent.getBooleanExtra(ARG_LAUNCH_PHOTO_PICKER, false)) {
                 onAddMediaOptionClick(AddMediaOption.CHOOSE_FILE)
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // survives a recreation while the permission dialog is up, so the grant still runs the chosen option
+        pendingAddMediaOption?.let { outState.putString(KEY_PENDING_ADD_MEDIA_OPTION, it.name) }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -277,5 +286,6 @@ class MediaBrowserActivity : BaseAppCompatActivity(), WPMediaUtils.LaunchCameraC
 
     companion object {
         const val ARG_LAUNCH_PHOTO_PICKER = "launch_photo_picker"
+        private const val KEY_PENDING_ADD_MEDIA_OPTION = "pending_add_media_option"
     }
 }

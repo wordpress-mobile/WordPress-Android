@@ -251,6 +251,47 @@ class MediaLibraryViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `tapping the selected filter keeps its error state`() = test {
+        val viewModel = createViewModel()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+        viewModel.onRefresh()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, MediaError(MediaErrorType.GENERIC_ERROR), null))
+
+        viewModel.onFilterSelected(MediaFilter.ALL)
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(MediaEmptyState.GENERIC_ERROR)
+    }
+
+    @Test
+    fun `closing a restored search fetches the first page it skipped`() = test {
+        val viewModel = MediaLibraryViewModel(
+            savedStateHandle = SavedStateHandle(
+                mapOf(
+                    WordPress.SITE to site,
+                    "media_library_search_active" to true,
+                    "media_library_search_query" to "cat"
+                )
+            ),
+            dispatcher = dispatcher,
+            mediaStore = mediaStore,
+            siteStore = siteStore,
+            resourceProvider = resourceProvider,
+            networkUtilsWrapper = networkUtilsWrapper,
+            buildConfigWrapper = buildConfigWrapper,
+            uploadServiceFacade = uploadServiceFacade,
+            deleteController = deleteController,
+            uploader = uploader,
+            videoLoader = videoLoader,
+            bgDispatcher = testDispatcher()
+        ).also { activeViewModel = it }
+        whenever(mediaStore.searchSiteMedia(any(), any())).thenReturn(emptyList())
+
+        viewModel.onSearchClose()
+
+        assertThat(fetchListActions()).hasSize(1)
+    }
+
+    @Test
     fun `an authorization error shows the permission empty state`() = test {
         val viewModel = createViewModel()
 

@@ -38,6 +38,7 @@ import org.wordpress.android.ui.compose.unit.Margin
  * @param onSelect called with the index of the tapped tab
  * @param modifier applied to the row itself
  * @param contentPadding padding around the row, so callers can line the chips up with their content
+ * @param enabled whether the chips respond to taps; disabled chips are drawn and announced as disabled
  */
 @Composable
 fun FilterChipTabRow(
@@ -45,7 +46,8 @@ fun FilterChipTabRow(
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = FilterChipTabRowDefaults.ContentPadding
+    contentPadding: PaddingValues = FilterChipTabRowDefaults.ContentPadding,
+    enabled: Boolean = true
 ) {
     val listState = rememberLazyListState()
 
@@ -76,6 +78,7 @@ fun FilterChipTabRow(
                 selected = selected,
                 onClick = { onSelect(index) },
                 label = { Text(label) },
+                enabled = enabled,
                 // FilterChip announces as a checkbox; this is a tab strip
                 modifier = Modifier.semantics {
                     role = Role.Tab
@@ -92,7 +95,7 @@ fun FilterChipTabRow(
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 border = FilterChipDefaults.filterChipBorder(
-                    enabled = true,
+                    enabled = enabled,
                     selected = selected,
                     borderColor = MaterialTheme.colorScheme.outlineVariant
                 )
