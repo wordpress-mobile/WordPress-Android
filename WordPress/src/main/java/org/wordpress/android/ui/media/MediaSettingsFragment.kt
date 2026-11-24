@@ -89,7 +89,7 @@ import kotlin.math.roundToInt
 
 /**
  * Details of one media item, either from the media library or an image in the editor. [MediaSettingsActivity]
- * pages through these. Edits are saved when the page pauses, so swiping to another item keeps them.
+ * pages through these. A field edit is saved as soon as Save is tapped in its edit sheet.
  */
 @AndroidEntryPoint
 @Suppress("LargeClass", "TooManyFunctions")
@@ -704,10 +704,13 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
 
         AppLog.d(T.MEDIA, "MediaSettingsFragment > Saving changes")
-        storedMedia.title = getFieldValue(Field.TITLE)
-        storedMedia.caption = getFieldValue(Field.CAPTION)
-        storedMedia.alt = getFieldValue(Field.ALT_TEXT)
-        storedMedia.description = getFieldValue(Field.DESCRIPTION)
+        // update this page's copy too, since the push's own response doesn't reload the page
+        listOf(storedMedia, media).forEach {
+            it.title = getFieldValue(Field.TITLE)
+            it.caption = getFieldValue(Field.CAPTION)
+            it.alt = getFieldValue(Field.ALT_TEXT)
+            it.description = getFieldValue(Field.DESCRIPTION)
+        }
         dispatcher.dispatch(MediaActionBuilder.newPushMediaAction(MediaPayload(site, storedMedia)))
     }
 
@@ -894,14 +897,21 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
             return
         }
         // every page hears every change, so only react to the ones for this page's item, or to the result of a
-        // delete this page started
-        val isThisMedia = event.mediaList.any { it?.id == media.id }
-        if (event.cause == MediaAction.DELETE_MEDIA) {
-            if (isThisMedia || progressDialog != null) {
+        // delete this page started. Matched on the remote ID, since WP.com responses don't carry the local one.
+        val isThisMedia = event.mediaList.any {
+            it != null && it.localSiteId == media.localSiteId && it.mediaId == media.mediaId
+        }
+        when {
+            event.cause == MediaAction.DELETE_MEDIA -> if (isThisMedia || progressDialog != null) {
                 onMediaDeleted(event)
             }
-        } else if (isThisMedia && !event.isError) {
-            reloadMedia()
+            !isThisMedia -> Unit
+            // a successful push already shows on the page, and reloading would undo an edit saved since
+            event.cause == MediaAction.PUSH_MEDIA -> if (event.isError) {
+                ToastUtils.showToast(requireContext(), R.string.media_edit_failure)
+                reloadMedia()
+            }
+            !event.isError -> reloadMedia()
         }
     }
 
