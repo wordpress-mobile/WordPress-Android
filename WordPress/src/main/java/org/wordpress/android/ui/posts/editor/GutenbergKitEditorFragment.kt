@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,8 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.BundleCompat
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
@@ -34,6 +31,7 @@ import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
+import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener
@@ -341,13 +339,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
      */
     private fun applyOverlayBackground() {
         val container = rootView?.findViewById<View>(R.id.gutenberg_view_container) ?: return
-        val typedValue = TypedValue()
-        if (!requireContext().theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)) return
-        container.background = if (typedValue.type in TypedValue.TYPE_FIRST_COLOR_INT..TypedValue.TYPE_LAST_COLOR_INT) {
-            typedValue.data.toDrawable()
-        } else {
-            ContextCompat.getDrawable(requireContext(), typedValue.resourceId)
-        }
+        container.background = requireContext().getDrawableFromAttribute(android.R.attr.windowBackground)
     }
 
     @Deprecated("Deprecated in Java")
