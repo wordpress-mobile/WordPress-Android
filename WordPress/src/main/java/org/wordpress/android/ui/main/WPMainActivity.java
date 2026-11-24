@@ -109,6 +109,7 @@ import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAvailability;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
@@ -247,6 +248,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject ReaderAvailability mReaderAvailability;
 
     @Inject IInAppUpdateManager mInAppUpdateManager;
 
@@ -471,14 +473,20 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
 
+    /**
+     * The bottom nav is shown only when the Reader is available, so it can appear or disappear when the user
+     * signs in to or out of WordPress.com in the WordPress app.
+     */
     private void setUpMainView() {
-        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
-            if (mBottomNav != null) {
-                mBottomNav.setVisibility(View.VISIBLE);
-            }
+        if (mBottomNav == null) {
+            return;
+        }
+        if (mReaderAvailability.isReaderAvailable()) {
+            mBottomNav.setVisibility(View.VISIBLE);
         } else {
-            if (mBottomNav != null) {
-                mBottomNav.setVisibility(View.GONE);
+            mBottomNav.setVisibility(View.GONE);
+            if (mBottomNav.getCurrentSelectedPage() != PageType.MY_SITE) {
+                mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
             }
         }
     }
@@ -748,7 +756,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
-                    if (!mBuildConfigWrapper.isJetpackApp()) {
+                    // Without the bottom nav there's no Notifications tab, not even the "use Jetpack" one
+                    if (!mReaderAvailability.isReaderAvailable()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -758,7 +767,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_READER:
                     setUpMainView();
-                    if (!mBuildConfigWrapper.isJetpackApp()) {
+                    if (!mReaderAvailability.isReaderAvailable()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -1256,6 +1265,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
+                    // A WordPress.com sign-in may show the Reader, so pick up any flag value fetched since launch
+                    mReaderAvailability.refreshFlagAfterSignIn();
                     // Register for Cloud messaging
                     startWithNewAccount();
                     setSite(data);
@@ -1381,6 +1392,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
+        // Signing in to or out of WordPress.com can change whether the Reader, and so the bottom nav, is available
+        setUpMainView();
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             if (mBottomNav != null) {

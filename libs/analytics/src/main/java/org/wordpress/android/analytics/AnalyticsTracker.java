@@ -931,6 +931,7 @@ public final class AnalyticsTracker {
         REMOVE_FEATURE_CARD_HIDE_TAPPED,
         REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED,
         JETPACK_FEATURE_INCORRECTLY_ACCESSED,
+        NOTIFICATIONS_IN_JETPACK_BUTTON_TAPPED,
         JETPACK_INSTALL_FULL_PLUGIN_CARD_VIEWED("jp_install_full_plugin_card_viewed"),
         JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED("jp_install_full_plugin_card_tapped"),
         JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED("jp_install_full_plugin_card_dismissed"),

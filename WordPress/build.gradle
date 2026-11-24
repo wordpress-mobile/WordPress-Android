@@ -171,6 +171,7 @@ android {
         buildConfigField "boolean", "NEW_STATS", "false"
         buildConfigField "boolean", "WP_COM_WP_RS", "false"
         buildConfigField "boolean", "NEW_MOBILE_SUPPORT_FLOW", "false"
+        buildConfigField "boolean", "READER_IN_WORDPRESS_APP", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
         buildConfigField "boolean", "READER_TAGS_FEED", "false"

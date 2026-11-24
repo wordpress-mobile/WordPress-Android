@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Reader in the WordPress app**
+  People signed in to WordPress.com see a bottom navigation bar with My Site, Reader, Notifications and Me tabs, and can use the Reader as they would in Jetpack. The Notifications tab doesn't show notifications; it says they're in the Jetpack app and has a button that opens Jetpack, or its Play Store page if it isn't installed. The posts list also gains the "Read" action that opens a post in the Reader.
+  - **Apps:** WordPress
+  - **Type:** New
+  - **Availability:** Flag: wordpress_android_reader
+  - **Where:** Bottom navigation → Reader; Bottom navigation → Notifications; Posts → ⋮ → Read
+  - **Notes:** Users signed in only to self-hosted sites see no change: there's no bottom navigation bar, Me stays as a row on My Site, and Reader links still offer the Jetpack app. With the bar showing, the My Site "Me" row goes away because Me is a tab. The flag value is applied at app launch, or when the user signs in to WordPress.com, so a change takes effect on the next launch. Push notifications are still Jetpack-only.
+
 - **Self-hosted sign-in explains when the server blocks application passwords**
   When a self-hosted site's server does not pass the Authorization header to WordPress, signing in with an application password now stops with a dialog that says "Your server is blocking sign-in with application passwords. Contact your hosting provider for help." Nothing is saved for the site. Before, the sign-in seemed to finish, but features that use the site's REST API failed and the app kept asking the user to authorize the app again.
   - **Apps:** Both

@@ -12,8 +12,4 @@ class ReaderReadingPreferencesFeatureConfig
     appConfig,
     BuildConfig.READER_READING_PREFERENCES,
     READING_PREFERENCES_REMOTE_FIELD,
-) {
-    override fun isEnabled(): Boolean {
-        return super.isEnabled() && BuildConfig.IS_JETPACK_APP
-    }
-}
+)

@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SITE_SETTIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SUBSCRIBERS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.THEMES
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -42,7 +43,8 @@ class SiteListItemBuilder @Inject constructor(
     private val themeBrowserUtils: ThemeBrowserUtils,
     private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig,
     private val selfHostedUsersFeatureConfig: SelfHostedUsersFeatureConfig,
-    private val siteCapabilityChecker: SiteCapabilityChecker
+    private val siteCapabilityChecker: SiteCapabilityChecker,
+    private val readerAvailability: ReaderAvailability
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -198,10 +200,11 @@ class SiteListItemBuilder @Inject constructor(
      * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
      * capabilities deliberately play no part here.
      *
-     * The Jetpack app keeps its Me tab, so the item never builds there.
+     * The nav is shown only when the Reader is available: always in the Jetpack app, and in the
+     * WordPress app for WordPress.com users when the Reader flag is on.
      */
     fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (!buildConfigWrapper.isJetpackApp) {
+        return if (!readerAvailability.isReaderAvailable()) {
             ListItem(
                 R.drawable.ic_user_primary_white_24,
                 UiStringRes(R.string.me),

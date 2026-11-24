@@ -39,9 +39,11 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
+import org.wordpress.android.ui.notifications.NotificationsInJetpackFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -88,8 +90,14 @@ class WPMainNavigationView @JvmOverloads constructor(
     @Inject
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
-    /** The WordPress app has no Reader or Notifications tabs, so My Site is its only page. */
-    private val hasSingleTabNav get() = !buildConfigWrapper.isJetpackApp
+    @Inject
+    lateinit var readerAvailability: ReaderAvailability
+
+    /**
+     * Without the Reader (the WordPress app, unless the user is signed in to WordPress.com and the flag is on)
+     * the bottom nav is hidden and My Site is the only page.
+     */
+    private val hasSingleTabNav get() = !readerAvailability.isReaderAvailable()
 
     private var currentPosition: Int
         get() = getPositionForItemId(navigationBarView.selectedItemId)
@@ -451,6 +459,8 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     fun showNoteBadge(showBadge: Boolean) {
+        // The WordPress app's Notifications tab only points to Jetpack, so there's nothing to badge
+        if (!buildConfigWrapper.isJetpackApp) return
         showBadge(getPosition(NOTIFS), showBadge)
     }
 
@@ -489,7 +499,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
-                NOTIFS -> NotificationsListFragment.newInstance()
+                NOTIFS -> if (buildConfigWrapper.isJetpackApp) {
+                    NotificationsListFragment.newInstance()
+                } else {
+                    NotificationsInJetpackFragment.newInstance()
+                }
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()

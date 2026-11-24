@@ -78,7 +78,6 @@ import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -200,7 +199,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var buildConfigWrapper: BuildConfigWrapper
+    lateinit var readerAvailability: ReaderAvailability
 
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
@@ -405,7 +404,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || !buildConfigWrapper.isJetpackApp) {
+        if (uri == null || !readerAvailability.isReaderAvailable()) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
             val intent = Intent(this, WPLaunchActivity::class.java)
