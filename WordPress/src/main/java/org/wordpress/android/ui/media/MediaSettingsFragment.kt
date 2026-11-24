@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.DownloadManager
-import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.ClipData
@@ -137,9 +136,7 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     private var downloadId = 0L
     private var rowToRefocus: View? = null
     private var deleteConfirmationDialog: AlertDialog? = null
-
-    @Suppress("DEPRECATION")
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: AlertDialog? = null
 
     private val downloadReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -894,18 +891,16 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
             .show()
     }
 
-    @Suppress("DEPRECATION")
     private fun deleteMedia() {
         if (!NetworkUtils.checkConnection(requireContext())) {
             return
         }
 
-        progressDialog = ProgressDialog(requireContext()).apply {
-            setCancelable(false)
-            isIndeterminate = true
-            setMessage(getString(R.string.deleting_media_dlg))
-            show()
-        }
+        progressDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.deleting_media_dlg)
+            .setView(R.layout.media_picker_progress_dialog)
+            .setCancelable(false)
+            .show()
 
         AppLog.v(T.MEDIA, "Deleting ${media.title} (id=${media.mediaId})")
         dispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(MediaPayload(site, media)))
