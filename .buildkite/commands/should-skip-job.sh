@@ -31,11 +31,6 @@ case "$job" in
     ;;
 esac
 
-# Until the upload toolkit includes #243, include both paths of renames.
-config_index=${GIT_CONFIG_COUNT:-0}
-export GIT_CONFIG_COUNT=$((config_index + 1))
-export "GIT_CONFIG_KEY_${config_index}=diff.renames" "GIT_CONFIG_VALUE_${config_index}=false"
-
 # Empty diffs, unknown paths and errors keep the job.
 if pr_changed_files --all-match "${PATTERNS[@]}"; then
   echo "No relevant files changed"
