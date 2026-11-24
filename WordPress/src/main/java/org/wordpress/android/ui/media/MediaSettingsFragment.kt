@@ -12,7 +12,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -27,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -392,7 +392,7 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         media = model
 
         // try to get a file without parameters so we can more reliably determine media type
-        val uriFilePath = model.url.takeIf { it.isNotEmpty() }?.let { Uri.parse(it).path }.orEmpty()
+        val uriFilePath = model.url.takeIf { it.isNotEmpty() }?.toUri()?.path.orEmpty()
 
         // default to DOCUMENT if we can't detect it's an image, video, or audio file
         mediaType = when {
@@ -833,7 +833,7 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
 
         val activity = requireActivity()
-        val request = DownloadManager.Request(Uri.parse(media.url))
+        val request = DownloadManager.Request(media.url.toUri())
         try {
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.fileName)
         } catch (error: IllegalStateException) {
