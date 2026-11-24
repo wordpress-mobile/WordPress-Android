@@ -20,8 +20,8 @@ import org.wordpress.android.databinding.MediaFieldEditBottomSheetBinding
 import org.wordpress.android.util.ActivityUtils
 
 /**
- * Edits one text field of [MediaSettingsActivity]. The new value is returned through the fragment result API
- * under [REQUEST_KEY]; the activity still decides when to save it.
+ * Edits one text field of [MediaSettingsFragment]. The new value is returned through the fragment result API
+ * under [REQUEST_KEY]; the fragment still decides when to save it.
  */
 class MediaFieldEditBottomSheet : BottomSheetDialogFragment() {
     enum class Field(
