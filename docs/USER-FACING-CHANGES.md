@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Experimental block editor loading and error screens stay readable after switching dark mode**
+  Switching between light and dark mode while the experimental block editor is open no longer leaves its loading or error screen unreadable. Those screens now use the new mode's colors, including their background. The rest of the editor screen keeps the mode it opened in until the editor is reopened.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Flag: experimental_block_editor
+  - **Where:** Experimental block editor → the loading screen shown while the editor starts, and the "The editor stopped working" screen with Reload Editor
+  - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. After a switch, these screens appear in the new mode under a toolbar still in the old one. The toolbar, status bar and Post settings pages not following a mid-session switch is existing behavior. Opening the editor in either mode was never affected.
+
 - **Self-hosted sign-in explains when the server blocks application passwords**
   When a self-hosted site's server does not pass the Authorization header to WordPress, signing in with an application password now stops with a dialog that says "Your server is blocking sign-in with application passwords. Contact your hosting provider for help." Nothing is saved for the site. Before, the sign-in seemed to finish, but features that use the site's REST API failed and the app kept asking the user to authorize the app again.
   - **Apps:** Both
