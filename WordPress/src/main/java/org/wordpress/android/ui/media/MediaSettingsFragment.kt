@@ -828,18 +828,11 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
      */
     @Suppress("DEPRECATION") // allowScanningByMediaScanner is a no-op from Q but still needed below it
     private fun saveMediaToDevice() {
-        val activity = requireActivity()
-        // must request the permission even though it's already defined in the manifest
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R &&
-            ContextCompat.checkSelfPermission(activity, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-            storagePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
-            return
-        }
-        if (!NetworkUtils.checkConnection(activity)) {
+        if (!canSaveToDevice()) {
             return
         }
 
+        val activity = requireActivity()
         val request = DownloadManager.Request(Uri.parse(media.url))
         try {
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.fileName)
@@ -855,6 +848,21 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         downloadId = activity.getSystemService(DownloadManager::class.java).enqueue(request)
         updateMenu()
         ToastUtils.showToast(activity, R.string.media_downloading)
+    }
+
+    /**
+     * Requests the storage permission if it's missing, which calls [saveMediaToDevice] again once it's granted
+     */
+    private fun canSaveToDevice(): Boolean {
+        val activity = requireActivity()
+        // must request the permission even though it's already defined in the manifest
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R &&
+            ContextCompat.checkSelfPermission(activity, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        ) {
+            storagePermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
+            return false
+        }
+        return NetworkUtils.checkConnection(activity)
     }
 
     private fun shareMedia() {
