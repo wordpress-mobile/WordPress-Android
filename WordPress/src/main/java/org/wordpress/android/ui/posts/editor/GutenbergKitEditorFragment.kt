@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
@@ -75,6 +78,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var modalDialogStateListener: GutenbergView.ModalDialogStateListener? = null
     private var networkRequestListener: GutenbergView.NetworkRequestListener? = null
     private var rootView: View? = null
+    private var nightMode = Configuration.UI_MODE_NIGHT_UNDEFINED
     private var isXPostsEnabled: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -177,6 +181,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         rootView = inflater.inflate(
             R.layout.fragment_gutenberg_kit_editor, container, false
         )
+        nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val gutenbergViewContainer =
             rootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
@@ -322,6 +327,27 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         gutenbergView?.invalidate()
+        val newNightMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (newNightMode != nightMode) {
+            nightMode = newNightMode
+            applyOverlayBackground()
+        }
+    }
+
+    /**
+     * GutenbergKit's loading and error overlays have no background and re-theme their text when dark mode changes.
+     * The activity handles that change without recreating, so the window behind them keeps the old mode's color;
+     * give them a background that follows the current mode instead.
+     */
+    private fun applyOverlayBackground() {
+        val container = rootView?.findViewById<View>(R.id.gutenberg_view_container) ?: return
+        val typedValue = TypedValue()
+        if (!requireContext().theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)) return
+        container.background = if (typedValue.type in TypedValue.TYPE_FIRST_COLOR_INT..TypedValue.TYPE_LAST_COLOR_INT) {
+            ColorDrawable(typedValue.data)
+        } else {
+            ContextCompat.getDrawable(requireContext(), typedValue.resourceId)
+        }
     }
 
     @Deprecated("Deprecated in Java")
