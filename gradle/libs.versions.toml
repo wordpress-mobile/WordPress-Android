@@ -104,7 +104,7 @@ wordpress-utils = '3.14.0'
 automattic-ucrop = '2.2.11'
 zendesk = '5.5.3'
 turbine = '1.2.1'
-commonmark = '0.32.0'
+commonmark = '0.33.0'
 vico = '3.2.3'
 
 [libraries]
