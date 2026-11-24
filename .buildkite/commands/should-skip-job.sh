@@ -1,14 +1,13 @@
 #!/bin/bash -eu
 
-# Usage: should-skip-job.sh --job-type [validation|lint|build|library-lint]
+# Usage: should-skip-job.sh [validation|lint|build|library-lint]
 # Prints a skip reason, or false to run. Both exit 0; invalid arguments exit 15.
 # shared-pipeline-vars uses this output for pipeline skip values before jobs get an agent.
 # Only webhook PRs can skip. WORDPRESS_CI_FULL_BUILD=1 forces a full run.
 
 run_job() { echo false; exit 0; }
 
-[[ $# -eq 2 && "$1" == --job-type ]] || exit 15
-job="$2"
+job="${1:-}"
 case "$job" in
   validation|lint|build|library-lint) ;;
   *) echo "Unknown job type: $job" >&2; exit 15 ;;
