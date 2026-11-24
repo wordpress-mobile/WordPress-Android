@@ -10,7 +10,7 @@ androidx-annotation = '1.11.0'
 androidx-appcompat = '1.8.0'
 androidx-arch-core = '2.2.0'
 androidx-browser = '1.10.0'
-androidx-camera = '1.6.1'
+androidx-camera = '1.7.0'
 androidx-cardview = '1.0.0'
 androidx-compose-bom = '2026.06.01'
 androidx-compose-material3 = '1.4.0'
@@ -89,7 +89,6 @@ ksp = '2.3.14'
 mockito-android = '5.24.0'
 mockito-kotlin = '6.4.0'
 mpandroidchart = 'v3.1.0'
-photoview = '2.3.0'
 robolectric = '4.18.1'
 sentry = '6.27.0'
 squareup-java-poet = '1.13.0'
@@ -198,6 +197,7 @@ bumptech-glide-volley-integration = { group = "com.github.bumptech.glide", name 
 cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", version.ref = "cascade" }
 chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 commons-fileupload = { group = "commons-fileupload", name = "commons-fileupload", version.ref = "commons-fileupload" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
@@ -246,7 +246,6 @@ mockito-android = { group = "org.mockito", name = "mockito-android", version.ref
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-android" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
-photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 squareup-java-poet = { module = "com.squareup:javapoet", version.ref = "squareup-java-poet" }
 squareup-kotlin-poet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "squareup-kotlin-poet" }

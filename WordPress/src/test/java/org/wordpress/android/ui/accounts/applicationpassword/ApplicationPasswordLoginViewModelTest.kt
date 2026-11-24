@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
@@ -178,6 +179,32 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given the server blocks the Authorization header, when setup site, then emit its error without fetching or crash report`() =
+        runTest {
+            // Given
+            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
+                showSiteSelector = false,
+                siteUrl = urlLogin.siteUrl,
+                oldSitesIDs = null,
+                isError = true,
+                errorMessage = ApplicationPasswordLoginHelper.AUTHORIZATION_HEADER_BLOCKED
+            )
+            whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
+                .thenReturn(StoreCredentialsResult.AuthorizationHeaderBlocked)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then
+                assertEquals(expectedResult, awaitItem())
+                verify(dispatcher, never()).dispatch(any())
+                verify(crashLogging, never()).sendReport(any(), any(), anyOrNull())
                 cancelAndIgnoreRemainingEvents()
             }
         }

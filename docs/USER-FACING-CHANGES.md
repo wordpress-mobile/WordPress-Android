@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Self-hosted sign-in explains when the server blocks application passwords**
+  When a self-hosted site's server does not pass the Authorization header to WordPress, signing in with an application password now stops with a dialog that says "Your server is blocking sign-in with application passwords. Contact your hosting provider for help." Nothing is saved for the site. Before, the sign-in seemed to finish, but features that use the site's REST API failed and the app kept asking the user to authorize the app again.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** Login → Enter your existing site address → authorize the app in the browser; also the dialogs that ask a signed-in self-hosted site to create an application password
+  - **Notes:** The app checks the new password with one request before saving it. The dialog appears only when WordPress answers that request as if no credentials were sent and the request went to the same address the site returned with the password. The fix is on the host's side: the site's Site Health screen reports the problem as "The authorization header is missing".
+
 - **The Web Address in Account Settings can be cleared**
   Deleting your Web Address and tapping OK now removes it from your profile. Before, the OK button was disabled whenever the field was empty, so an address could be changed but never removed.
   - **Apps:** Both

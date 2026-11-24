@@ -6,6 +6,8 @@ import android.database.SQLException
 import android.os.Build
 import android.util.Log
 import androidx.work.Configuration
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
@@ -62,6 +64,12 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration
             .crossfade(true)
             .components {
                 add(VideoFrameDecoder.Factory())
+                // Glide animates GIFs by default, so screens moved to Coil need a decoder to keep doing so
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
             }
             .build()
     }

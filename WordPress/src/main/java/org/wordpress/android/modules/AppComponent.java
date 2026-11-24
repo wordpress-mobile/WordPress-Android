@@ -46,8 +46,6 @@ import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView;
-import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
@@ -211,10 +209,6 @@ public interface AppComponent {
     void inject(RoleSelectDialogFragment object);
 
     void inject(PeopleInviteDialogFragment object);
-
-    void inject(MediaPreviewActivity object);
-
-    void inject(MediaPreviewFragment object);
 
     void inject(MediaSettingsActivity object);
 

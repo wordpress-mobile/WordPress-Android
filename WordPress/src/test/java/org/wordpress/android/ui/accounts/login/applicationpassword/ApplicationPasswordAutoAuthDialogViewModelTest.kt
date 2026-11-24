@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -63,6 +64,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             buildConfigWrapper,
             appLogWrapper,
+            SavedStateHandle(),
         )
     }
 
