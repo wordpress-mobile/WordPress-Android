@@ -9,7 +9,7 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 <!-- Add new entries directly below this line. -->
 
 - **Swipe between items in media details**
-  The details screen for an item in the media library now swipes left and right to the neighbouring items, in the order the library shows them. Edits to the title, caption, description or alt text are saved when you swipe away. Swiping in the full-screen preview still moves the details screen to the same item.
+  The details screen for an item in the media library now swipes left and right to the neighbouring items, in the order the library shows them. Edits to the title, caption, description or alt text are saved as soon as you tap Save in the field's editor. Swiping in the full-screen preview still moves the details screen to the same item.
   - **Apps:** Both
   - **Type:** New
   - **Availability:** Everyone

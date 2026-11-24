@@ -119,12 +119,11 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     private var binding: MediaSettingsFragmentBinding? = null
     private val detailRows = EnumMap<Field, MediaSettingsRowBinding>(Field::class.java)
 
-    // in-memory values of the editable fields, read by saveChanges()
+    // in-memory values of the editable fields
     private val fieldValues = EnumMap<Field, String>(Field::class.java)
 
     private lateinit var site: SiteModel
 
-    // the last values loaded or pushed, which saveMediaChanges() compares the fields against
     private lateinit var media: MediaModel
     private val hasMedia get() = ::media.isInitialized
     private var editorImageMetaData: EditorImageMetaData? = null
@@ -185,21 +184,15 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
         setupMenu(binding)
 
-        savedInstanceState?.let { state ->
-            Field.entries.forEach { field ->
-                state.getString(STATE_FIELD_PREFIX + field.name)?.let { fieldValues[field] = it }
-            }
-            bindDetailRows()
-            if (state.getBoolean(STATE_DELETE_DIALOG_VISIBLE)) {
-                deleteMediaWithConfirmation()
-            }
+        if (savedInstanceState?.getBoolean(STATE_DELETE_DIALOG_VISIBLE) == true) {
+            deleteMediaWithConfirmation()
         }
 
         setupHeader(binding)
         setupInsets(binding)
 
         // the activity keeps the saved state of every page swiped past, so leave out the views' state, which would
-        // grow it with each page; library edits are pushed when a page pauses, so only the scroll position is lost
+        // grow it with each page; library edits are pushed as they're made, so only the scroll position is lost
         if (!isMediaFromEditor) {
             binding.appBarLayout.isSaveFromParentEnabled = false
             binding.scrollView.isSaveFromParentEnabled = false
@@ -224,11 +217,6 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        saveChanges()
-    }
-
     override fun onStop() {
         requireContext().unregisterReceiver(downloadReceiver)
         dispatcher.unregister(this)
@@ -238,10 +226,6 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, editorImageMetaData)
-        // only the edits that aren't saved yet: the activity keeps the state of every page swiped past
-        if (hasMedia) {
-            unsavedEdits().forEach { outState.putString(STATE_FIELD_PREFIX + it.name, getFieldValue(it)) }
-        }
         outState.putBoolean(STATE_DELETE_DIALOG_VISIBLE, deleteConfirmationDialog?.isShowing == true)
     }
 
@@ -308,10 +292,24 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         ) { _, result -> onFieldEdited(result) }
     }
 
+    /**
+     * Saves the edit as soon as the sheet's Save is tapped: library media is pushed, and an editor image's
+     * metadata is updated and returned as the activity's result
+     */
     private fun onFieldEdited(result: Bundle) {
-        val fieldName = result.getString(MediaFieldEditBottomSheet.KEY_FIELD) ?: return
-        fieldValues[Field.valueOf(fieldName)] = result.getString(MediaFieldEditBottomSheet.KEY_VALUE).orEmpty()
+        val field = result.getString(MediaFieldEditBottomSheet.KEY_FIELD)?.let { Field.valueOf(it) } ?: return
+        val value = result.getString(MediaFieldEditBottomSheet.KEY_VALUE).orEmpty()
+        if (value == getFieldValue(field)) {
+            return
+        }
+        fieldValues[field] = value
         bindDetailRows()
+        val metaData = editorImageMetaData
+        if (metaData != null) {
+            saveEditorChanges(metaData)
+        } else {
+            pushMediaChanges()
+        }
     }
 
     private fun setupHeader(binding: MediaSettingsFragmentBinding) {
@@ -369,24 +367,8 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
 
     private fun reloadMedia() {
         val binding = binding ?: return
-        // keep the edits made since the last push, which the stored values would otherwise replace
-        val edits = unsavedEdits().associateWith { getFieldValue(it) }
         mediaStore.getMediaWithLocalId(media.id)?.let { showMedia(binding, it) }
-        if (edits.isNotEmpty()) {
-            fieldValues.putAll(edits)
-            bindDetailRows()
-        }
     }
-
-    /** The fields whose values differ from [media], which holds the values last loaded or pushed */
-    private fun unsavedEdits() = Field.entries.filter { getFieldValue(it) != media.valueOf(it) }
-
-    private fun MediaModel.valueOf(field: Field): String = when (field) {
-        Field.TITLE -> title
-        Field.CAPTION -> caption
-        Field.ALT_TEXT -> alt
-        Field.DESCRIPTION -> description
-    }.orEmpty()
 
     private fun showMedia(binding: MediaSettingsFragmentBinding, model: MediaModel) {
         media = model
@@ -677,7 +659,6 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     }
 
     private fun showFullScreen() {
-        // no need to save first: opening the preview pauses this page, which saves it
         val metaData = editorImageMetaData
         if (metaData != null) {
             MediaPreviewActivity.showPreview(requireContext(), site, metaData.src)
@@ -707,33 +688,14 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     }
 
     /**
-     * Saves the edits to the media library, or returns them to the editor as the activity's result. Called when
-     * the page pauses and when the user leaves the screen.
+     * Called by the activity when the user leaves. An editor image's size, alignment and link controls aren't
+     * saved as they change, so return them now as the activity's result. Library edits are already pushed.
      */
     fun saveChanges() {
-        if (!hasMedia || requireActivity().isFinishing) {
-            return
-        }
-        val metaData = editorImageMetaData
-        if (metaData == null) {
-            saveMediaChanges()
-        } else {
-            saveEditorChanges(metaData)
-        }
+        editorImageMetaData?.let { saveEditorChanges(it) }
     }
 
-    private fun saveMediaChanges() {
-        val title = getFieldValue(Field.TITLE)
-        val caption = getFieldValue(Field.CAPTION)
-        val altText = getFieldValue(Field.ALT_TEXT)
-        val description = getFieldValue(Field.DESCRIPTION)
-
-        // compare against the values last pushed rather than the store, which only changes once a push finishes,
-        // so pausing again before then doesn't push the same edit twice
-        if (unsavedEdits().isEmpty()) {
-            return
-        }
-
+    private fun pushMediaChanges() {
         val storedMedia = mediaStore.getMediaWithLocalId(media.id)
         if (storedMedia == null) {
             AppLog.w(T.MEDIA, "MediaSettingsFragment > Cannot save null media")
@@ -742,12 +704,10 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
 
         AppLog.d(T.MEDIA, "MediaSettingsFragment > Saving changes")
-        listOf(storedMedia, media).forEach {
-            it.title = title
-            it.caption = caption
-            it.alt = altText
-            it.description = description
-        }
+        storedMedia.title = getFieldValue(Field.TITLE)
+        storedMedia.caption = getFieldValue(Field.CAPTION)
+        storedMedia.alt = getFieldValue(Field.ALT_TEXT)
+        storedMedia.description = getFieldValue(Field.DESCRIPTION)
         dispatcher.dispatch(MediaActionBuilder.newPushMediaAction(MediaPayload(site, storedMedia)))
     }
 
@@ -976,7 +936,6 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         private const val IMAGE_HEIGHT_RATIO = 0.4f
         private const val FINISH_DELAY_MS = 1500L
         private const val ARG_MEDIA_LOCAL_ID = "media_local_id"
-        private const val STATE_FIELD_PREFIX = "state_field_"
         private const val STATE_DELETE_DIALOG_VISIBLE = "delete_media_dialog_visible"
 
         fun newInstance(mediaId: Int) = MediaSettingsFragment().apply {

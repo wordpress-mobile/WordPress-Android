@@ -68,8 +68,7 @@ class MediaSettingsActivity : BaseAppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // the page also saves when it pauses, but by then the activity is finishing and it's too late to
-                // set the editor's result
+                // returns an editor image's settings, which have to be set as the result before finishing
                 currentPage()?.saveChanges()
                 onBackPressedDispatcher.onBackPressedCompat(this)
             }
