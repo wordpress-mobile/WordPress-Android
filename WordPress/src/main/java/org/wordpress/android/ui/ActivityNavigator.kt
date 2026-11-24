@@ -30,7 +30,6 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_PRODUCT_ID
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.newstats.NewStatsActivity
@@ -194,7 +193,6 @@ class ActivityNavigator @Inject constructor(
     fun viewCurrentBlogMedia(context: Context, site: SiteModel?) {
         val intent = Intent(context, MediaBrowserActivity::class.java)
         intent.putExtra(WordPress.SITE, site)
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.BROWSER)
         context.startActivity(intent)
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site)
     }

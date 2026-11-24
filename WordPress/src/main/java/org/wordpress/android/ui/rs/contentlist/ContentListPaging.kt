@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.rs.contentlist
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,13 +23,35 @@ fun LoadMoreOnScrollToEnd(
     itemCount: Int,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
+) = LoadMoreOnScrollToEnd(listState, itemCount, canLoadMore, onLoadMore) {
+    listState.layoutInfo.let { (it.visibleItemsInfo.lastOrNull()?.index ?: 0) to it.totalItemsCount }
+}
+
+/** [LoadMoreOnScrollToEnd] for a lazy grid. */
+@Composable
+fun LoadMoreOnScrollToEnd(
+    gridState: LazyGridState,
+    itemCount: Int,
+    canLoadMore: Boolean,
+    onLoadMore: () -> Unit,
+) = LoadMoreOnScrollToEnd(gridState, itemCount, canLoadMore, onLoadMore) {
+    gridState.layoutInfo.let { (it.visibleItemsInfo.lastOrNull()?.index ?: 0) to it.totalItemsCount }
+}
+
+/** [lastVisibleAndTotal] reads the index of the last visible item and the total item count from [scrollState]. */
+@Composable
+private fun LoadMoreOnScrollToEnd(
+    scrollState: Any,
+    itemCount: Int,
+    canLoadMore: Boolean,
+    onLoadMore: () -> Unit,
+    lastVisibleAndTotal: () -> Pair<Int, Int>,
 ) {
-    LaunchedEffect(listState, canLoadMore, itemCount) {
+    LaunchedEffect(scrollState, canLoadMore, itemCount) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {
+            val (lastVisible, total) = lastVisibleAndTotal()
             // total > 0 skips the pre-layout pass, which would otherwise ask for page 2 at once.
-            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val total = listState.layoutInfo.totalItemsCount
             total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD
         }.distinctUntilChanged().collect { shouldLoad ->
             if (shouldLoad) onLoadMore()

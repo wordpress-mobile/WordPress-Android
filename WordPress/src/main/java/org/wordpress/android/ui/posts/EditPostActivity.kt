@@ -134,7 +134,6 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
@@ -2893,7 +2892,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     }
 
     private fun handleStockMediaPickerMultiSelect(data: Intent?) {
-        val key = MediaBrowserActivity.RESULT_IDS
+        val key = MediaPickerConstants.RESULT_IDS
         if (data?.hasExtra(key) == true) {
             val mediaIds: LongArray? = data.getLongArrayExtra(key)
             mediaIds?.let {
@@ -3022,7 +3021,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     private fun handleMediaPickerResult(data: Intent?) {
         // TODO move this to EditorMedia
-        var ids = data?.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS)?.toList()?.map { it }?.toMutableList()
+        var ids = data?.getLongArrayExtra(MediaPickerConstants.RESULT_IDS)?.toList()?.map { it }?.toMutableList()
         if (ids.isNullOrEmpty()) {
             val mediaId = data?.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)
             if (mediaId != null && mediaId != 0L) {

@@ -39,26 +39,30 @@ class VideoLoader
         fallbackAction: () -> Unit
     ) {
         scope.launch {
-            var length = MIN_SIZE
-            withContext(bgDispatcher) {
-                try {
-                    val uri = filePath.toUri()
-                    length = if (mediaUtilsWrapper.isInMediaStore(uri)) {
-                        getSizeFromContentUri(uri)
-                    } else {
-                        getSizeFromURL(URL(filePath))
-                    }
-                } catch (ioe: IOException) {
-                    appLogWrapper.e(T.MEDIA, "Failed to load video thumbnail: ${ioe.stackTrace}")
-                }
-            }
+            val isNotTooBig = checkMediaNotTooBig(filePath) ?: false
             withContext(mainDispatcher) {
-                if (length in (MIN_SIZE + 1) until SIZE_LIMIT_10_MB) {
+                if (isNotTooBig) {
                     loadAction()
                 } else {
                     fallbackAction()
                 }
             }
+        }
+    }
+
+    /**
+     * Whether the media at [filePath] has a known size under the limit for extracting a video frame, or null when
+     * the size couldn't be read, e.g. because the request failed
+     */
+    suspend fun checkMediaNotTooBig(filePath: String): Boolean? = withContext(bgDispatcher) {
+        try {
+            val uri = filePath.toUri()
+            val length =
+                if (mediaUtilsWrapper.isInMediaStore(uri)) getSizeFromContentUri(uri) else getSizeFromURL(URL(filePath))
+            length?.let { it in (MIN_SIZE + 1) until SIZE_LIMIT_10_MB }
+        } catch (ioe: IOException) {
+            appLogWrapper.e(T.MEDIA, "Failed to load video thumbnail: ${ioe.stackTrace}")
+            null
         }
     }
 
@@ -71,7 +75,8 @@ class VideoLoader
             } ?: 0
         }
 
-    private fun getSizeFromURL(url: URL): Int {
+    /** The size the server reports, or null for a failed request or one without a Content-Length */
+    private fun getSizeFromURL(url: URL): Int? {
         val requestBuilder = Request.Builder()
             .url(url)
             .head()
@@ -81,7 +86,7 @@ class VideoLoader
         }
 
         return okHttpClient.newCall(requestBuilder.build()).execute().use { response ->
-            response.header("Content-Length")?.toIntOrNull() ?: MIN_SIZE
+            response.takeIf { it.isSuccessful }?.header("Content-Length")?.toIntOrNull()
         }
     }
 

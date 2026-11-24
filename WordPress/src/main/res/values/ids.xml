@@ -15,7 +15,6 @@
     <item type="id" name="bottom_nav_reader_button" />
     <item type="id" name="bottom_nav_new_post_button" />
     <item type="id" name="bottom_nav_notifications_button" />
-    <item type="id" name="media_grid_remote_thumb_extract_id" />
     <item type="id" name="post_menu_item_view_layout_type" />
     <item type="id" name="original_view_pager_fragment_id_tag_key" />
     <item type="id" name="pages_search_recycler_view_id" />
@@ -25,4 +24,5 @@
     <item type="id" name="appbar_layout_original_animator_tag_key" />
     <item type="id" name="comment_detail_compose_view" />
     <item type="id" name="comment_edit_compose_view" />
+    <item type="id" name="media_browser_container" />
 </resources>

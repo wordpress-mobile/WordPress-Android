@@ -47,7 +47,6 @@
     <dimen name="tabs_elevation">4dp</dimen>
     <dimen name="snackbar_radius">4dp</dimen>
 
-    <dimen name="media_grid_progress_height">24dp</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
     <dimen name="media_picker_selection_dot">20dp</dimen>
     <dimen name="media_picker_action_mode_dot">16dp</dimen>
@@ -403,7 +402,6 @@
     <dimen name="page_list_tab_layout_fading_edge_width">16dp</dimen>
     <dimen name="page_list_prefix_icon_size">16dp</dimen>
 
-    <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 
     <!--post skeleton-->
     <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
