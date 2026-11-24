@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.util.TypedValue
@@ -17,6 +16,7 @@ import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.BundleCompat
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
@@ -344,7 +344,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         val typedValue = TypedValue()
         if (!requireContext().theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)) return
         container.background = if (typedValue.type in TypedValue.TYPE_FIRST_COLOR_INT..TypedValue.TYPE_LAST_COLOR_INT) {
-            ColorDrawable(typedValue.data)
+            typedValue.data.toDrawable()
         } else {
             ContextCompat.getDrawable(requireContext(), typedValue.resourceId)
         }
