@@ -49,7 +49,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.io.File
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -164,8 +163,9 @@ class MediaLibraryViewModel @Inject constructor(
         viewModelScope.launch {
             // wait for the store's items, so the spinner only shows when there's nothing cached to look at
             job.join()
-            if (_uiState.value.filter == filter) {
-                fetchIfNeverFetched()
+            val isFirstVisit = filter !in fetchedFilters && networkUtilsWrapper.isNetworkAvailable()
+            if (_uiState.value.filter == filter && isFirstVisit) {
+                fetch(loadMore = false, showRefreshIndicator = _uiState.value.items.isEmpty())
             }
         }
     }
@@ -281,13 +281,8 @@ class MediaLibraryViewModel @Inject constructor(
         dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
     }
 
-    /** The upload service finished with these items, successfully or not */
-    fun onUploadFinished() = reload()
-
     /** Picks up deletes left pending in the store, e.g. ones interrupted by losing the connection */
-    fun resumePendingDeletes() = deleteController.start(site, null)
-
-    fun onConnectionAvailable() {
+    fun resumePendingDeletes() {
         if (mediaStore.hasSiteMediaToDelete(site)) {
             deleteController.start(site, null)
         }
@@ -419,12 +414,6 @@ class MediaLibraryViewModel @Inject constructor(
         }
         _uiState.update { it.copy(emptyState = emptyState) }
         updateCanLoadMore()
-    }
-
-    private fun fetchIfNeverFetched() {
-        if (_uiState.value.filter !in fetchedFilters && networkUtilsWrapper.isNetworkAvailable()) {
-            fetch(loadMore = false, showRefreshIndicator = _uiState.value.items.isEmpty())
-        }
     }
 
     private fun fetch(loadMore: Boolean, showRefreshIndicator: Boolean) {
@@ -581,8 +570,7 @@ class MediaLibraryViewModel @Inject constructor(
         }
     }
 
-    private fun isLocalMedia(media: MediaModel) =
-        media.uploadState?.let { MediaUtils.isLocalFile(it.lowercase(Locale.ROOT)) } == true
+    private fun isLocalMedia(media: MediaModel) = MediaUtils.isLocalFile(media.uploadState)
 
     private fun toggleSelection(localId: Int) {
         val selected = _uiState.value.selectedIds

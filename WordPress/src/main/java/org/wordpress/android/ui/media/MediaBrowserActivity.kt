@@ -99,7 +99,7 @@ class MediaBrowserActivity : BaseAppCompatActivity(), WPMediaUtils.LaunchCameraC
         connectionStatus.observe(this) { status ->
             // continue any pending deletes once the connection comes back
             if (status == ConnectionStatus.AVAILABLE) {
-                viewModel.onConnectionAvailable()
+                viewModel.resumePendingDeletes()
             }
         }
 
@@ -273,13 +273,9 @@ class MediaBrowserActivity : BaseAppCompatActivity(), WPMediaUtils.LaunchCameraC
             viewModel.site,
             message
         )
-        viewModel.onUploadFinished()
     }
 
     companion object {
         const val ARG_LAUNCH_PHOTO_PICKER = "launch_photo_picker"
-
-        /** Result key for picked remote media ids; still used by the media picker and the editors */
-        const val RESULT_IDS = "result_ids"
     }
 }

@@ -98,35 +98,24 @@ fun ContentListErrorRow(@StringRes messageResId: Int, modifier: Modifier = Modif
 
 /** The spinner a list appends while it pages in more rows. */
 fun LazyListScope.contentListLoadingMoreItem() {
-    item(key = "loading_more") {
-        Box(
-            modifier = Modifier
-                .fillParentMaxWidth()
-                .padding(MESSAGE_PADDING),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(SPINNER_SIZE),
-                strokeWidth = SPINNER_STROKE
-            )
-        }
-    }
+    item(key = "loading_more") { LoadingMoreIndicator(Modifier.fillParentMaxWidth()) }
 }
 
 /** [contentListLoadingMoreItem] for a lazy grid, spanning the full row. */
 fun LazyGridScope.contentListLoadingMoreItem() {
-    item(key = "loading_more", span = { GridItemSpan(maxLineSpan) }) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MESSAGE_PADDING),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(SPINNER_SIZE),
-                strokeWidth = SPINNER_STROKE
-            )
-        }
+    item(key = "loading_more", span = { GridItemSpan(maxLineSpan) }) { LoadingMoreIndicator(Modifier.fillMaxWidth()) }
+}
+
+@Composable
+private fun LoadingMoreIndicator(modifier: Modifier) {
+    Box(
+        modifier = modifier.padding(MESSAGE_PADDING),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(SPINNER_SIZE),
+            strokeWidth = SPINNER_STROKE
+        )
     }
 }
 

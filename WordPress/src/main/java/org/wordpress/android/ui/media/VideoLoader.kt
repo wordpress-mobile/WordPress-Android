@@ -39,7 +39,7 @@ class VideoLoader
         fallbackAction: () -> Unit
     ) {
         scope.launch {
-            val isNotTooBig = isMediaNotTooBig(filePath)
+            val isNotTooBig = checkMediaNotTooBig(filePath) ?: false
             withContext(mainDispatcher) {
                 if (isNotTooBig) {
                     loadAction()
@@ -50,10 +50,10 @@ class VideoLoader
         }
     }
 
-    /** Whether the media at [filePath] has a known size under the limit for extracting a video frame */
-    private suspend fun isMediaNotTooBig(filePath: String): Boolean = checkMediaNotTooBig(filePath) ?: false
-
-    /** [isMediaNotTooBig], or null when the size couldn't be read, e.g. because the request failed */
+    /**
+     * Whether the media at [filePath] has a known size under the limit for extracting a video frame, or null when
+     * the size couldn't be read, e.g. because the request failed
+     */
     suspend fun checkMediaNotTooBig(filePath: String): Boolean? = withContext(bgDispatcher) {
         try {
             val uri = filePath.toUri()

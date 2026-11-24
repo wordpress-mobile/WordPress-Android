@@ -22,7 +22,6 @@ import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.PHOTO_PICKER
 import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
@@ -288,7 +287,7 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
     private fun Intent.putMediaIds(
         mediaIds: List<Long>
     ) {
-        this.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds.toLongArray())
+        this.putExtra(MediaPickerConstants.RESULT_IDS, mediaIds.toLongArray())
         this.putExtra(EXTRA_MEDIA_ID, mediaIds[0])
     }
 

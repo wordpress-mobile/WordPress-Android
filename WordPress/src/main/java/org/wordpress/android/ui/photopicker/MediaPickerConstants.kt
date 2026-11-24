@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.photopicker
 
 object MediaPickerConstants {
+    /** Result key for the remote ids of media picked from the site's library */
+    const val RESULT_IDS = "result_ids"
     const val EXTRA_MEDIA_URIS = "media_uris"
     const val EXTRA_MEDIA_QUEUED_URIS = "queued_media_uris"
     const val EXTRA_MEDIA_ID = "media_id"

@@ -100,10 +100,13 @@ fun MediaGridTile(
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
         ) {
             when (item.type) {
-                MediaGridItemType.IMAGE -> MediaImage(
-                    model = item.localFilePath?.let { File(it) }
-                        ?: item.bestImageUrl(thumbnailSource, thumbnailWidthPx, thumbnailHeightPx(thumbnailWidthPx))
-                )
+                MediaGridItemType.IMAGE -> {
+                    val heightPx = (thumbnailWidthPx / TILE_ASPECT_RATIO).toInt()
+                    MediaImage(
+                        model = item.localFilePath?.let { File(it) }
+                            ?: item.bestImageUrl(thumbnailSource, thumbnailWidthPx, heightPx)
+                    )
+                }
                 MediaGridItemType.VIDEO -> VideoThumbnail(item, canLoadVideoFrame)
                 MediaGridItemType.OTHER -> FileTile(item)
             }
@@ -292,9 +295,6 @@ private fun MediaUploadState.labelResId(): Int = when (this) {
     MediaUploadState.FAILED -> R.string.media_upload_state_failed
     MediaUploadState.UPLOADED -> R.string.media_upload_state_uploaded
 }
-
-/** Height of a tile for the given width */
-private fun thumbnailHeightPx(widthPx: Int): Int = (widthPx / TILE_ASPECT_RATIO).toInt()
 
 private const val TILE_ASPECT_RATIO = 4f / 3f
 private const val SCALE_SELECTED = 0.8f
