@@ -51,15 +51,19 @@ class VideoLoader
     }
 
     /** Whether the media at [filePath] has a known size under the limit for extracting a video frame */
-    suspend fun isMediaNotTooBig(filePath: String): Boolean = withContext(bgDispatcher) {
-        val length = try {
+    private suspend fun isMediaNotTooBig(filePath: String): Boolean = checkMediaNotTooBig(filePath) ?: false
+
+    /** [isMediaNotTooBig], or null when the size couldn't be read, e.g. because the request failed */
+    suspend fun checkMediaNotTooBig(filePath: String): Boolean? = withContext(bgDispatcher) {
+        try {
             val uri = filePath.toUri()
-            if (mediaUtilsWrapper.isInMediaStore(uri)) getSizeFromContentUri(uri) else getSizeFromURL(URL(filePath))
+            val length =
+                if (mediaUtilsWrapper.isInMediaStore(uri)) getSizeFromContentUri(uri) else getSizeFromURL(URL(filePath))
+            length in (MIN_SIZE + 1) until SIZE_LIMIT_10_MB
         } catch (ioe: IOException) {
             appLogWrapper.e(T.MEDIA, "Failed to load video thumbnail: ${ioe.stackTrace}")
-            MIN_SIZE
+            null
         }
-        length in (MIN_SIZE + 1) until SIZE_LIMIT_10_MB
     }
 
     @SuppressLint("Recycle") // False positive: cursor is closed via .use {}

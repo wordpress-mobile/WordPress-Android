@@ -2,7 +2,10 @@ package org.wordpress.android.ui.media.library
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.core.net.toUri
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -10,6 +13,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -21,10 +25,13 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.widgets.AppReviewManager
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Turns files picked, captured or shared into the media library into local media and queues them for upload.
- * Each queued item is written to the store first, so the library picks it up through `OnMediaChanged`.
+ * Copying, resizing and reading metadata run on [bgDispatcher]; toasts and store writes stay on the caller's
+ * (main) thread. Each queued item is written to the store first, so the library picks it up through
+ * `OnMediaChanged`.
  */
 class MediaLibraryUploader @Inject constructor(
     private val appContext: Context,
@@ -32,47 +39,49 @@ class MediaLibraryUploader @Inject constructor(
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val uploadServiceFacade: UploadServiceFacade
+    private val uploadServiceFacade: UploadServiceFacade,
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    fun uploadPickedFiles(site: SiteModel, uris: List<Uri>) {
+    suspend fun uploadPickedFiles(site: SiteModel, uris: List<Uri>) {
         uris.forEach { uri ->
-            val mimeType = appContext.contentResolver.getType(uri)
-            if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, uri)) {
-                showVideoDurationError()
-            } else {
-                WPMediaUtils.fetchMediaAndDoNext(appContext, uri) { downloadedUri ->
-                    queueFileForUpload(site, getOptimizedPictureIfNecessary(site, downloadedUri), mimeType)
+            val prepared = withContext(bgDispatcher) {
+                val mimeType = appContext.contentResolver.getType(uri)
+                if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, uri)) {
+                    Prepared.Failed(R.string.error_media_video_duration_exceeds_limit)
+                } else {
+                    trackAddedMedia(isNewMedia = false, isVideo = mediaUtilsWrapper.isVideoMimeType(mimeType), uri)
+                    downloadAndPrepare(site, uri, mimeType)
                 }
-                trackAddedMedia(isNewMedia = false, isVideo = mediaUtilsWrapper.isVideoMimeType(mimeType), uri = uri)
+            }
+            queue(prepared)
+        }
+    }
+
+    suspend fun uploadCapturedPhoto(site: SiteModel, capturePath: String) {
+        val prepared = withContext(bgDispatcher) {
+            WPMediaUtils.scanMediaFile(appContext, capturePath)
+            val uri = getOptimizedPictureIfNecessary(site, capturePath.toUri())
+            trackAddedMedia(isNewMedia = true, isVideo = false, uri = uri)
+            prepare(site, uri, appContext.contentResolver.getType(uri))
+        }
+        queue(prepared)
+    }
+
+    suspend fun uploadCapturedVideo(site: SiteModel, uri: Uri) {
+        val prepared = withContext(bgDispatcher) {
+            trackAddedMedia(isNewMedia = true, isVideo = true, uri = uri)
+            if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, uri)) {
+                Prepared.Failed(R.string.error_media_video_duration_exceeds_limit)
+            } else {
+                prepare(site, uri, appContext.contentResolver.getType(uri))
             }
         }
+        queue(prepared)
     }
 
-    fun uploadCapturedPhoto(site: SiteModel, capturePath: String) {
-        WPMediaUtils.scanMediaFile(appContext, capturePath)
-        val uri = getOptimizedPictureIfNecessary(site, capturePath.toUri())
-        queueFileForUpload(site, uri, appContext.contentResolver.getType(uri))
-        trackAddedMedia(isNewMedia = true, isVideo = false, uri = uri)
-    }
-
-    fun uploadCapturedVideo(site: SiteModel, uri: Uri) {
-        if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, uri)) {
-            showVideoDurationError()
-        } else {
-            queueFileForUpload(site, uri, appContext.contentResolver.getType(uri))
-        }
-        trackAddedMedia(isNewMedia = true, isVideo = true, uri = uri)
-    }
-
-    fun uploadSharedMedia(site: SiteModel, uris: List<Uri>) {
+    suspend fun uploadSharedMedia(site: SiteModel, uris: List<Uri>) {
         uris.forEach { uri ->
-            WPMediaUtils.fetchMediaAndDoNext(appContext, uri) { downloadedUri ->
-                queueFileForUpload(
-                    site,
-                    getOptimizedPictureIfNecessary(site, downloadedUri),
-                    appContext.contentResolver.getType(downloadedUri)
-                )
-            }
+            queue(withContext(bgDispatcher) { downloadAndPrepare(site, uri, mimeType = null) })
         }
     }
 
@@ -87,14 +96,26 @@ class MediaLibraryUploader @Inject constructor(
         AppReviewManager.incrementInteractions(Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA)
     }
 
-    private fun queueFileForUpload(site: SiteModel, uri: Uri, mimeType: String?) {
-        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
-        if (media == null) {
-            ToastUtils.showToast(appContext, R.string.file_not_found, ToastUtils.Duration.SHORT)
-            return
+    /** Copies [uri] to a local file; a null [mimeType] is read from the copy */
+    private fun downloadAndPrepare(site: SiteModel, uri: Uri, mimeType: String?): Prepared {
+        val downloadedUri = WPMediaUtils.fetchMedia(appContext, uri)
+            ?: return Prepared.Failed(R.string.error_downloading_image)
+        val optimizedUri = getOptimizedPictureIfNecessary(site, downloadedUri)
+        return prepare(site, optimizedUri, mimeType ?: appContext.contentResolver.getType(downloadedUri))
+    }
+
+    private fun prepare(site: SiteModel, uri: Uri, mimeType: String?): Prepared =
+        fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)?.let { Prepared.Ready(it) }
+            ?: Prepared.Failed(R.string.file_not_found)
+
+    private fun queue(prepared: Prepared) {
+        when (prepared) {
+            is Prepared.Failed -> ToastUtils.showToast(appContext, prepared.messageResId, ToastUtils.Duration.LONG)
+            is Prepared.Ready -> {
+                dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(prepared.media))
+                addToUploadService(listOf(prepared.media))
+            }
         }
-        dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
-        addToUploadService(listOf(media))
     }
 
     private fun getOptimizedPictureIfNecessary(site: SiteModel, originalUri: Uri): Uri {
@@ -107,15 +128,16 @@ class MediaLibraryUploader @Inject constructor(
             ?: originalUri
     }
 
-    private fun showVideoDurationError() {
-        ToastUtils.showToast(appContext, R.string.error_media_video_duration_exceeds_limit, ToastUtils.Duration.LONG)
-    }
-
     private fun trackAddedMedia(isNewMedia: Boolean, isVideo: Boolean, uri: Uri) {
         val properties = AnalyticsUtils.getMediaProperties(appContext, isVideo, uri, null)
         properties["via"] = if (isNewMedia) "device_camera" else "device_library"
         val stat = if (isVideo) Stat.MEDIA_LIBRARY_ADDED_VIDEO else Stat.MEDIA_LIBRARY_ADDED_PHOTO
         AnalyticsTracker.track(stat, properties)
+    }
+
+    private sealed interface Prepared {
+        data class Ready(val media: MediaModel) : Prepared
+        data class Failed(@param:StringRes val messageResId: Int) : Prepared
     }
 
     private companion object {

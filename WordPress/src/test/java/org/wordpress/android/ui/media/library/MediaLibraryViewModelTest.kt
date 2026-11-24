@@ -122,9 +122,53 @@ class MediaLibraryViewModelTest : BaseUnitTest() {
         val viewModel = createViewModel()
 
         verify(dispatcher, never()).dispatch(any())
-        assertThat(viewModel.uiState.value.emptyState).isEqualTo(MediaEmptyState.NO_CONTENT)
-        viewModel.onRefresh()
         assertThat(viewModel.uiState.value.emptyState).isEqualTo(MediaEmptyState.NETWORK_ERROR)
+    }
+
+    @Test
+    fun `an error on one filter doesn't show on a filter that already fetched`() = test {
+        val viewModel = createViewModel()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, false, null))
+        viewModel.onFilterSelected(MediaFilter.DOCUMENTS)
+        viewModel.onMediaListFetched(
+            OnMediaListFetched(site, MediaError(MediaErrorType.GENERIC_ERROR), MimeType.Type.APPLICATION)
+        )
+
+        viewModel.onFilterSelected(MediaFilter.VIDEOS)
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(MediaEmptyState.NO_CONTENT)
+    }
+
+    @Test
+    fun `a refresh during a load-more fetches the first page once the load-more lands`() = test {
+        val viewModel = createViewModel()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+        viewModel.onLoadMore()
+
+        viewModel.onRefresh()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+
+        val firstPages = fetchListActions().filter { !(it.payload as FetchMediaListPayload).loadMore }
+        assertThat(firstPages).hasSize(2)
+    }
+
+    @Test
+    fun `refreshing all media makes a fully fetched filter fetch again`() = test {
+        val viewModel = createViewModel()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+        viewModel.onFilterSelected(MediaFilter.IMAGES)
+        viewModel.onMediaListFetched(OnMediaListFetched(site, false, MimeType.Type.IMAGE))
+        viewModel.onFilterSelected(MediaFilter.ALL)
+
+        viewModel.onRefresh()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+        viewModel.onFilterSelected(MediaFilter.IMAGES)
+
+        val imageFetches = fetchListActions().filter {
+            (it.payload as FetchMediaListPayload).mimeType == MimeType.Type.IMAGE
+        }
+        assertThat(imageFetches).hasSize(2)
+        assertThat(viewModel.uiState.value.canLoadMore).isTrue()
     }
 
     @Test

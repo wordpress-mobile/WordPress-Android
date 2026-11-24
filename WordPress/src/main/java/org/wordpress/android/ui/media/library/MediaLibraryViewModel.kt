@@ -105,7 +105,11 @@ class MediaLibraryViewModel @Inject constructor(
     private val fullyFetchedFilters = mutableSetOf<MediaFilter>()
 
     // filters with a fetch in flight; each fetch's result carries its mime type, so filters fetch independently
-    private val fetchingFilters = mutableSetOf<MediaFilter>()
+    // the value is whether that fetch is a load-more
+    private val fetchingFilters = mutableMapOf<MediaFilter, Boolean>()
+
+    // filters whose pull-to-refresh arrived during a load-more, so their first page is fetched once it lands
+    private val pendingRefreshFilters = mutableSetOf<MediaFilter>()
 
     private var reloadJob: Job? = null
     private var isReloadPending = false
@@ -147,11 +151,12 @@ class MediaLibraryViewModel @Inject constructor(
                 // spinners belong to the previous filter's fetch
                 isRefreshing = false,
                 isLoadingMore = false,
+                // the previous filter's error or offline state doesn't apply to this one
                 emptyState = when {
+                    filter in fetchedFilters -> MediaEmptyState.NO_CONTENT
                     // its first fetch starts once the store reload below finishes
-                    filter !in fetchedFilters && networkUtilsWrapper.isNetworkAvailable() -> MediaEmptyState.LOADING
-                    it.emptyState == MediaEmptyState.LOADING -> MediaEmptyState.NO_CONTENT
-                    else -> it.emptyState
+                    networkUtilsWrapper.isNetworkAvailable() -> MediaEmptyState.LOADING
+                    else -> MediaEmptyState.NETWORK_ERROR
                 }
             )
         }
@@ -251,17 +256,23 @@ class MediaLibraryViewModel @Inject constructor(
         }
     }
 
-    fun onFilesPicked(uris: List<Uri>) = uploader.uploadPickedFiles(site, uris)
+    fun onFilesPicked(uris: List<Uri>) {
+        viewModelScope.launch { uploader.uploadPickedFiles(site, uris) }
+    }
 
-    fun onSharedMedia(uris: List<Uri>) = uploader.uploadSharedMedia(site, uris)
+    fun onSharedMedia(uris: List<Uri>) {
+        viewModelScope.launch { uploader.uploadSharedMedia(site, uris) }
+    }
 
     fun onPhotoCaptured() {
         val path = mediaCapturePath ?: return
         mediaCapturePath = null
-        uploader.uploadCapturedPhoto(site, path)
+        viewModelScope.launch { uploader.uploadCapturedPhoto(site, path) }
     }
 
-    fun onVideoCaptured(uri: Uri) = uploader.uploadCapturedVideo(site, uri)
+    fun onVideoCaptured(uri: Uri) {
+        viewModelScope.launch { uploader.uploadCapturedVideo(site, uri) }
+    }
 
     /** Media was deleted from the details screen, or added by the stock media picker */
     fun onMediaChangedElsewhere() {
@@ -284,10 +295,13 @@ class MediaLibraryViewModel @Inject constructor(
 
     /**
      * Whether a remote video is small enough to pull a frame from for its tile. Coil has to download the video to do
-     * that, so big ones keep the placeholder. Cached, since tiles ask again every time they scroll back in.
+     * that, so big ones keep the placeholder. Answers are cached, since tiles ask again every time they scroll back
+     * in; a failed check isn't, so the tile tries again once the connection is back.
      */
     override suspend fun canLoadVideoFrame(url: String): Boolean =
-        videoFrameAllowed[url] ?: videoLoader.isMediaNotTooBig(url).also { videoFrameAllowed[url] = it }
+        videoFrameAllowed[url]
+            ?: videoLoader.checkMediaNotTooBig(url)?.also { videoFrameAllowed[url] = it }
+            ?: false
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -295,7 +309,7 @@ class MediaLibraryViewModel @Inject constructor(
         if (event.site.id != site.id) return
 
         val eventFilter = MediaFilter.fromMimeType(event.mimeType)
-        fetchingFilters -= eventFilter
+        val wasLoadMore = fetchingFilters.remove(eventFilter) == true
         if (eventFilter == _uiState.value.filter) {
             _uiState.update { it.copy(isRefreshing = false, isLoadingMore = false) }
         }
@@ -303,13 +317,18 @@ class MediaLibraryViewModel @Inject constructor(
         if (event.isError) {
             onFetchError(event, eventFilter)
         } else {
-            onFetchSuccess(event, eventFilter)
+            onFetchSuccess(event, eventFilter, isFirstPage = !wasLoadMore)
+        }
+
+        if (pendingRefreshFilters.remove(eventFilter) && eventFilter == _uiState.value.filter) {
+            fetch(loadMore = false, showRefreshIndicator = true)
         }
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMediaChanged(event: OnMediaChanged) {
+        if (event.mediaList.isNotEmpty() && event.mediaList.none { it.localSiteId == site.id }) return
         if (event.isError) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: ${event.error.type} - ${event.error.message}")
             val message = resourceProvider.getString(R.string.media_generic_error)
@@ -351,7 +370,17 @@ class MediaLibraryViewModel @Inject constructor(
         _uiState.update { it.copy(quota = buildQuota(), thumbnailSource = buildThumbnailSource()) }
     }
 
-    private fun onFetchSuccess(event: OnMediaListFetched, eventFilter: MediaFilter) {
+    private fun onFetchSuccess(event: OnMediaListFetched, eventFilter: MediaFilter, isFirstPage: Boolean) {
+        if (isFirstPage) {
+            // FluxC drops the cached uploaded media of this filter's type that isn't on the first page, which
+            // leaves the overlapping filters (every other one for ALL, ALL for a type) with a partial list, so
+            // they start over from their first page
+            val overlapping = if (eventFilter == MediaFilter.ALL) MediaFilter.entries else listOf(MediaFilter.ALL)
+            (overlapping - eventFilter).forEach {
+                fetchedFilters -= it
+                fullyFetchedFilters -= it
+            }
+        }
         fetchedFilters += eventFilter
         if (event.canLoadMore) {
             fullyFetchedFilters -= eventFilter
@@ -406,15 +435,20 @@ class MediaLibraryViewModel @Inject constructor(
             // search runs against the local store only
             state.searchQuery.isNotEmpty() -> _uiState.update { it.copy(isRefreshing = false) }
             // already fetching this filter, so just keep the spinner up if one was asked for
-            state.filter in fetchingFilters -> if (showRefreshIndicator) {
-                _uiState.update { it.copy(isRefreshing = true) }
+            state.filter in fetchingFilters -> {
+                if (!loadMore && fetchingFilters[state.filter] == true) {
+                    pendingRefreshFilters += state.filter
+                }
+                if (showRefreshIndicator) {
+                    _uiState.update { it.copy(isRefreshing = true) }
+                }
             }
             else -> startFetch(state.filter, loadMore, showRefreshIndicator)
         }
     }
 
     private fun startFetch(filter: MediaFilter, loadMore: Boolean, showRefreshIndicator: Boolean) {
-        fetchingFilters += filter
+        fetchingFilters[filter] = loadMore
         _uiState.update {
             it.copy(
                 isRefreshing = showRefreshIndicator,
