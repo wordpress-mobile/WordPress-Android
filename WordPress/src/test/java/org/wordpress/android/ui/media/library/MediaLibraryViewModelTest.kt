@@ -184,6 +184,29 @@ class MediaLibraryViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a failed fetch for another filter doesn't stop paging the current one`() = test {
+        val viewModel = createViewModel()
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+
+        viewModel.onMediaListFetched(
+            OnMediaListFetched(site, MediaError(MediaErrorType.GENERIC_ERROR), MimeType.Type.IMAGE)
+        )
+
+        assertThat(viewModel.uiState.value.canLoadMore).isTrue()
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(MediaEmptyState.NO_CONTENT)
+    }
+
+    @Test
+    fun `another filter's result doesn't end the current filter's loading state`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.onFilterSelected(MediaFilter.DOCUMENTS)
+        viewModel.onMediaListFetched(OnMediaListFetched(site, true, null))
+
+        assertThat(viewModel.uiState.value.emptyState).isEqualTo(MediaEmptyState.LOADING)
+    }
+
+    @Test
     fun `an authorization error shows the permission empty state`() = test {
         val viewModel = createViewModel()
 

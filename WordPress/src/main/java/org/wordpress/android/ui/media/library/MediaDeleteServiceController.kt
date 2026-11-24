@@ -70,9 +70,11 @@ class MediaDeleteServiceController @Inject constructor(
         }
     }
 
-    fun isAnyMediaBeingDeleted(): Boolean = binder?.service?.isAnyMediaBeingDeleted == true
-
-    fun isMediaBeingDeleted(media: MediaModel): Boolean = binder?.service?.isMediaBeingDeleted(media) == true
+    /**
+     * Local ids of the media still queued for deletion. Call on the main thread: the service changes its queue
+     * there, and the queue isn't thread-safe.
+     */
+    fun idsBeingDeleted(): Set<Int> = binder?.service?.deleteQueue?.mapTo(HashSet()) { it.id }.orEmpty()
 
     fun release() {
         if (isBound) {

@@ -7,11 +7,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -88,8 +89,9 @@ class MediaLibraryViewModel @Inject constructor(
     )
     val uiState: StateFlow<MediaLibraryUiState> = _uiState.asStateFlow()
 
-    private val _events = Channel<MediaLibraryEvent>(Channel.BUFFERED)
-    val events = _events.receiveAsFlow()
+    // no replay: toasts raised while the screen is stopped (e.g. behind media details) are dropped, not shown later
+    private val _events = MutableSharedFlow<MediaLibraryEvent>(extraBufferCapacity = EVENT_BUFFER)
+    val events: SharedFlow<MediaLibraryEvent> = _events.asSharedFlow()
 
     /** Path the camera writes a captured photo to, kept across process death while the camera app is open */
     var mediaCapturePath: String?
@@ -145,7 +147,12 @@ class MediaLibraryViewModel @Inject constructor(
                 // spinners belong to the previous filter's fetch
                 isRefreshing = false,
                 isLoadingMore = false,
-                emptyState = if (it.emptyState == MediaEmptyState.LOADING) MediaEmptyState.NO_CONTENT else it.emptyState
+                emptyState = when {
+                    // its first fetch starts once the store reload below finishes
+                    filter !in fetchedFilters && networkUtilsWrapper.isNetworkAvailable() -> MediaEmptyState.LOADING
+                    it.emptyState == MediaEmptyState.LOADING -> MediaEmptyState.NO_CONTENT
+                    else -> it.emptyState
+                }
             )
         }
         val job = reload()
@@ -202,7 +209,7 @@ class MediaLibraryViewModel @Inject constructor(
             MediaUploadState.fromString(media.uploadState) == MediaUploadState.FAILED -> Unit
             else -> {
                 val ids = _uiState.value.items.map { it.localId.toString() }
-                _events.trySend(MediaLibraryEvent.OpenMediaSettings(media, ArrayList(ids)))
+                _events.tryEmit(MediaLibraryEvent.OpenMediaSettings(media, ArrayList(ids)))
             }
         }
     }
@@ -355,15 +362,22 @@ class MediaLibraryViewModel @Inject constructor(
         } else {
             fullyFetchedFilters += eventFilter
         }
-        _uiState.update { it.copy(emptyState = MediaEmptyState.NO_CONTENT) }
+        if (eventFilter == _uiState.value.filter) {
+            _uiState.update { it.copy(emptyState = MediaEmptyState.NO_CONTENT) }
+        }
         isAudioCheckPending = true
         reload()
     }
 
     private fun onFetchError(event: OnMediaListFetched, eventFilter: MediaFilter) {
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: ${event.error.type}")
-        // stop paging until the next refresh, so a failing request isn't retried on every scroll
-        fullyFetchedFilters += MediaFilter.entries
+        // stop paging that filter until the next refresh, so a failing request isn't retried on every scroll; ALL
+        // covers every type, so its failure stops them all
+        if (eventFilter == MediaFilter.ALL) {
+            fullyFetchedFilters += MediaFilter.entries
+        } else {
+            fullyFetchedFilters += eventFilter
+        }
         if (eventFilter != _uiState.value.filter) {
             updateCanLoadMore()
             return
@@ -432,14 +446,17 @@ class MediaLibraryViewModel @Inject constructor(
                 val query = _uiState.value.searchQuery
                 val checkAudio = isAudioCheckPending
                 isAudioCheckPending = false
+                val idsBeingDeleted = deleteController.idsBeingDeleted()
                 val (items, audioFound) = withContext(bgDispatcher) {
-                    ensureCorrectState(queryMedia(filter, query)).map { it.toGridItem() } to
+                    ensureCorrectState(queryMedia(filter, query), idsBeingDeleted).map { it.toGridItem() } to
                             if (checkAudio) mediaStore.getSiteAudio(site).isNotEmpty() else null
                 }
                 audioFound?.let { hasAudio = it }
                 _uiState.update {
                     it.copy(
                         items = items,
+                        itemsFilter = filter,
+                        itemsQuery = query,
                         // keep the audio tab while it's selected, so the selection doesn't vanish from the user
                         filters = if (hasAudio || it.filter == MediaFilter.AUDIO) {
                             MediaFilter.entries
@@ -482,10 +499,9 @@ class MediaLibraryViewModel @Inject constructor(
      * (1) Re-applies DELETING to media still being deleted, since a refresh may have overwritten it, and (2) drops
      * local media whose file no longer exists, e.g. because the user deleted it from the device.
      */
-    private fun ensureCorrectState(media: List<MediaModel>): List<MediaModel> {
-        val checkDeleteState = deleteController.isAnyMediaBeingDeleted()
-        return media.filter { item ->
-            if (checkDeleteState && deleteController.isMediaBeingDeleted(item)) {
+    private fun ensureCorrectState(media: List<MediaModel>, idsBeingDeleted: Set<Int>): List<MediaModel> =
+        media.filter { item ->
+            if (item.id in idsBeingDeleted) {
                 item.setUploadState(MediaUploadState.DELETING)
             }
             val filePath = item.filePath
@@ -497,7 +513,6 @@ class MediaLibraryViewModel @Inject constructor(
             }
             !isMissingLocalFile
         }
-    }
 
     private fun deleteMedia(localIds: List<Int>) {
         val mediaList = localIds.mapNotNull { mediaStore.getMediaWithLocalId(it) }
@@ -551,7 +566,7 @@ class MediaLibraryViewModel @Inject constructor(
     private fun showToast(messageResId: Int) = showToast(resourceProvider.getString(messageResId))
 
     private fun showToast(message: String) {
-        _events.trySend(MediaLibraryEvent.ShowToast(message))
+        _events.tryEmit(MediaLibraryEvent.ShowToast(message))
     }
 
     private fun buildAddMediaOptions(): List<AddMediaOption> = buildList {
@@ -619,6 +634,7 @@ class MediaLibraryViewModel @Inject constructor(
     companion object {
         // a multiple of both column counts (3 in portrait, 4 in landscape), so a page fills whole rows
         private const val NUM_MEDIA_PER_FETCH = 48
+        private const val EVENT_BUFFER = 8
         private const val PERCENT = 100.0
         private const val QUOTA_WARNING_PERCENT = 90
 

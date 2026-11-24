@@ -9,6 +9,9 @@ data class MediaLibraryUiState(
     val filters: List<MediaFilter> = DEFAULT_FILTERS,
     val filter: MediaFilter = MediaFilter.ALL,
     val items: List<MediaGridItemUiState> = emptyList(),
+    /** The filter and search query [items] were loaded for, which trail [filter] and [searchQuery] briefly */
+    val itemsFilter: MediaFilter = filter,
+    val itemsQuery: String = "",
     /** Local ids of the selected items, in the order they were selected */
     val selectedIds: List<Int> = emptyList(),
     val isSearchActive: Boolean = false,

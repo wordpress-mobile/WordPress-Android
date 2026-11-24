@@ -40,6 +40,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -143,7 +144,12 @@ fun MediaLibraryScreen(
                 if (state.items.isEmpty()) {
                     MediaEmptyContent(state, onAddMediaOptionClick = onAddMediaOptionClick)
                 } else {
-                    MediaGrid(state, actions)
+                    // a fresh grid (and scroll position) for each filter or search, keyed on what the items were
+                    // loaded for: keyed on the requested filter, the old list would still be showing and the grid
+                    // would keep its top item anchored once the new list arrived
+                    key(state.itemsFilter, state.itemsQuery) {
+                        MediaGrid(state, actions)
+                    }
                 }
             }
         }
@@ -170,12 +176,6 @@ private fun MediaGrid(state: MediaLibraryUiState, actions: MediaLibraryActions) 
     val thumbnailWidthPx = LocalWindowInfo.current.containerSize.width / columns
     val gridState = rememberLazyGridState()
 
-    // a new filter or search replaces the grid's content, so start it from the top
-    LaunchedEffect(state.filter, state.searchQuery) {
-        if (gridState.firstVisibleItemIndex > 0 || gridState.firstVisibleItemScrollOffset > 0) {
-            gridState.scrollToItem(0)
-        }
-    }
     LoadMoreOnScrollToEnd(
         gridState = gridState,
         itemCount = state.items.size,
