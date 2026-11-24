@@ -251,8 +251,12 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         progressDialog?.dismiss()
         progressDialog = null
         detailRows.clear()
-        // stop the image load, which would otherwise run on, and hold this view, until the activity is destroyed
-        binding?.let { imageManager.cancelRequestAndClearImageView(it.imagePreview) }
+        // stop the image load, which would otherwise run on, and hold this view, until the activity is destroyed.
+        // Skipped when it is being destroyed, which clears the load anyway: the view's context is Hilt's wrapper,
+        // so ImageManager can't tell the activity is gone and Glide throws.
+        if (!requireActivity().isDestroyed) {
+            binding?.let { imageManager.cancelRequestAndClearImageView(it.imagePreview) }
+        }
         binding = null
         super.onDestroyView()
     }
