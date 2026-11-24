@@ -26,9 +26,9 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
  * "In reply to {author}: {snippet}" for a comment that answers another one, matching iOS's
  * `CommentParentStrip`.
  *
- * Unlike iOS this does not navigate to the parent - the Android detail is a pager over the list's
- * own comments, so pushing an arbitrary parent onto it has nowhere to come back to. It is context
- * only, which is what the strip is mostly read as anyway.
+ * Unlike iOS the site comment detail doesn't navigate to the parent from here - it's a pager over the
+ * list's own comments, so pushing an arbitrary parent onto it has nowhere to come back to. The Reader
+ * comment detail makes it tappable through [modifier].
  */
 @Composable
 fun CommentParentStrip(

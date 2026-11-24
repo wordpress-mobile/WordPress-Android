@@ -4,6 +4,7 @@ import org.wordpress.android.ui.newstats.InsightsCardType
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsTab
+import org.wordpress.android.ui.newstats.ChartInterval
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.devices.DeviceType
 import org.wordpress.android.ui.newstats.locations.LocationType
@@ -55,6 +56,13 @@ internal val ChartType.analyticsName: String
         ChartType.LINE -> "line"
         ChartType.BAR -> "columns"
     }
+
+/**
+ * Matches iOS `DateRangeGranularity.analyticsName` for the five units, and reports the default as
+ * "automatic" the way iOS does. Also this enum's persisted storage key, so the two can't drift.
+ */
+internal val ChartInterval.analyticsName: String
+    get() = storageKey
 
 /** Matches iOS `DateRangeGranularity.analyticsName` - singular, unlike this enum's own names. */
 internal val StatsUnit.analyticsName: String

@@ -7,6 +7,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -37,7 +38,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.CompactBlogSectionData
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -88,9 +88,11 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(actionsHandler.refreshPosts).thenReturn(MutableLiveData())
         whenever(actionsHandler.followStatusUpdated).thenReturn(followStatusUpdated)
         whenever(actionsHandler.scrollToSiteId).thenReturn(scrollToSiteId)
-        whenever(repository.events).thenReturn(repositoryEvents)
+        whenever(repository.updateEvents).thenReturn(repositoryEvents)
+        whenever(repository.followEvents).thenReturn(emptyFlow())
         whenever(repository.getPosts(any())).thenReturn(ReaderPostList())
-        whenever(repository.getPostCount(any())).thenReturn(0)
+        // the tag has saved posts, so starting doesn't request any unless it's time to update the tag
+        whenever(repository.getPostCount(any())).thenReturn(1)
         whenever(repository.shouldAutoUpdateTag(any())).thenReturn(false)
         whenever(repository.isFollowedTag(any())).thenReturn(false)
         whenever(repository.isTimeToUpdateBlogInfo(any())).thenReturn(false)
@@ -99,7 +101,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(readerTracker.getSource(any(), anyOrNull())).thenReturn("source")
         whenever(
             postUiStateBuilder.mapPostToUiStateBlocking(
-                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull()
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull()
             )
         ).thenAnswer { createUiState(it) }
 
@@ -405,7 +407,7 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.onLoadMore()
         advanceUntilIdle()
 
-        verify(repository, never()).getPostCount(any())
+        verify(repository, never()).requestPosts(tagTarget, UpdateAction.REQUEST_OLDER)
     }
 
     @Test
@@ -680,6 +682,25 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `starting requests newer posts for a tag with no saved posts, even if it was updated recently`() = test {
+        whenever(repository.getPostCount(tagTarget)).thenReturn(0)
+
+        startAndLoad()
+
+        verify(repository).requestPosts(tagTarget, UpdateAction.REQUEST_NEWER)
+    }
+
+    @Test
+    fun `starting doesn't request posts for a tag with no saved posts once the list has been updated`() = test {
+        // lenient since an updated list doesn't need to check for saved posts
+        lenient().`when`(repository.getPostCount(tagTarget)).thenReturn(0)
+
+        startAndLoad(args().copy(hasUpdatedPosts = true))
+
+        verify(repository, never()).requestPosts(tagTarget, UpdateAction.REQUEST_NEWER)
+    }
+
+    @Test
     fun `starting requests newer posts when it's time to update the tag`() = test {
         whenever(repository.shouldAutoUpdateTag(tag)).thenReturn(true)
 
@@ -867,24 +888,21 @@ class ReaderPostListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             blogSection = CompactBlogSectionData(
                 post.postId, post.blogId, "", UiStringText(""), null, null, false, ImageType.BLAVATAR, null
             ),
-            interactionSection = InteractionSectionData(0, 0),
             title = null,
             excerpt = null,
             featuredImageUrl = null,
-            fullVideoUrl = null,
             thumbnailStripSection = null,
-            videoOverlayVisibility = false,
             featuredImageVisibility = false,
             moreMenuVisibility = true,
+            bookmarkAction = PrimaryAction(true, type = ReaderPostCardActionType.BOOKMARK),
             likeAction = PrimaryAction(true, type = ReaderPostCardActionType.LIKE),
             reblogAction = PrimaryAction(true, type = ReaderPostCardActionType.REBLOG),
             commentsAction = PrimaryAction(true, type = ReaderPostCardActionType.COMMENTS),
-            moreMenuItems = invocation.getArgument(12),
+            moreMenuItems = invocation.getArgument(11),
             onItemClicked = invocation.getArgument(6),
             onItemRendered = invocation.getArgument(7),
             onMoreButtonClicked = invocation.getArgument(8),
-            onMoreDismissed = invocation.getArgument(9),
-            onVideoOverlayClicked = invocation.getArgument(10)
+            onMoreDismissed = invocation.getArgument(9)
         )
     }
 

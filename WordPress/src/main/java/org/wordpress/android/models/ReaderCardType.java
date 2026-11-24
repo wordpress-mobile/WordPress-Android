@@ -13,8 +13,7 @@ import org.wordpress.android.util.HtmlUtils;
 public enum ReaderCardType {
     DEFAULT,
     PHOTO,
-    GALLERY,
-    VIDEO;
+    GALLERY;
 
     private static final int MIN_CONTENT_CHARS = 100;
 
@@ -26,11 +25,6 @@ public enum ReaderCardType {
         // posts with a featured image and little or no text get the photo card treatment
         if (post.hasFeaturedImage() && hasMinContent(post)) {
             return PHOTO;
-        }
-
-        // posts that have a featured video show an embedded video card
-        if (post.hasFeaturedVideo()) {
-            return VIDEO;
         }
 
         // if this post doesn't have a featured image but has enough usable images to fill the
@@ -68,8 +62,6 @@ public enum ReaderCardType {
                 return "PHOTO";
             case GALLERY:
                 return "GALLERY";
-            case VIDEO:
-                return "VIDEO";
             default:
                 return "DEFAULT";
         }
@@ -81,9 +73,6 @@ public enum ReaderCardType {
         }
         if ("GALLERY".equals(s)) {
             return GALLERY;
-        }
-        if ("VIDEO".equals(s)) {
-            return VIDEO;
         }
         return DEFAULT;
     }

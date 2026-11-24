@@ -534,6 +534,37 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given successful response, when fetchStatsForPeriod with Last3Years, then it asks for three YEAR buckets`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            repositoryAt(MID_WEEK).fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last3Years)
+
+            // Three whole year buckets ending with the current year: 2024, 2025 and 2026 charted side
+            // by side, which is what CMM-2790 asked for. A YEAR window sends its own start so the
+            // buckets are whole years and not three years measured back from today.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2026-09-16"),
+                startDate = eq("2024-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // Both endpoints step back three years, so the comparison covers the same span and its
+            // last bucket is cut on 16 September too.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-09-16"),
+                startDate = eq("2021-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
     fun `given successful response, when fetchStatsForPeriod with Today, then data source called with HOUR unit`() =
         test {
             whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
@@ -1104,6 +1135,28 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given items with a type, when fetchMostViewed, then the type reaches the result`() = test {
+        val currentData = listOf(
+            TopPostDataItem(id = 1, title = "Post 1", views = 150, postType = "post"),
+            TopPostDataItem(id = 2, title = "Page 1", views = 100, postType = "page"),
+            TopPostDataItem(id = 3, title = "Home", views = 50, postType = null)
+        )
+
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(currentData))
+            .thenReturn(TopPostsDataResult.Success(emptyList()))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        val success = result as MostViewedResult.Success
+        assertThat(success.items.map { it.postType }).containsExactly("post", "page", null)
+    }
+
+    @Test
     fun `given current and previous data, when fetchMostViewed, then change is calculated correctly`() = test {
         val currentData = listOf(
             TopPostDataItem(id = 1, title = "Post 1", views = 150),
@@ -1500,6 +1553,31 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given Last3Years, when another card fetches, then it uses the chart's three year buckets`() = test {
+        whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
+            .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
+
+        repositoryAt(MID_WEEK).fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last3Years,
+            MostViewedDataSource.POSTS_AND_PAGES
+        )
+
+        // The same window the chart requests, so the card's total covers the years the bars above it
+        // draw rather than a rolling span of its own.
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2024-01-01", date = "2026-09-16")),
+            any()
+        )
+        verify(statsDataSource).fetchTopPostsAndPages(
+            eq(TEST_SITE_ID),
+            eq(StatsDateRange.Custom(startDate = "2021-01-01", date = "2023-09-16")),
+            any()
+        )
+    }
+
+    @Test
     fun `given Last12Months, when fetchStatsForPeriod, then the previous window is the twelve months before`() =
         test {
             whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
@@ -1598,6 +1676,83 @@ class StatsRepositoryTest : BaseUnitTest() {
         val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last12Months)
 
         assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2024, 10, 1), LocalDate.of(2025, 9, 16)))
+    }
+
+    @Test
+    fun `previousPeriod of Last3Years steps back three calendar years preserving the span`() {
+        // The window is the three whole year buckets 2024..2026, so it starts on 1 January and the
+        // step back lands on 1 January too.
+        val result = repositoryAt(MID_WEEK).previousPeriod(StatsPeriod.Last3Years)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2021, 1, 1), LocalDate.of(2023, 9, 16)))
+    }
+
+    @Test
+    fun `given Last3Years is paged back and forward, then it returns to the preset`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        val back = repository.previousPeriod(StatsPeriod.Last3Years)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last3Years)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last3Years)
+    }
+
+    @Test
+    fun `calendarYearWindow covers a past year whole and the current year only up to today`() {
+        val repository = repositoryAt(MID_WEEK)
+
+        assertThat(repository.calendarYearWindow(2024))
+            .isEqualTo(LocalDate.of(2024, 1, 1) to LocalDate.of(2024, 12, 31))
+        // The year in progress has no data past today, and a window running into the future would ask
+        // the API for days that don't exist yet.
+        assertThat(repository.calendarYearWindow(2026))
+            .isEqualTo(LocalDate.of(2026, 1, 1) to MID_WEEK)
+    }
+
+    @Test
+    fun `given a window Last3Years paged onto on 1 January, when fetched, then it charts whole years`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            // 2021..2023 runs 1 Jan to 1 Jan with no leap year between, so it measures exactly the
+            // two-year day count. Charting it by month would put 25 bars under a selector that still
+            // names three years.
+            val paged = StatsPeriod.Custom(LocalDate.of(2021, 1, 1), LocalDate.of(2023, 1, 1))
+            repositoryAt(NEW_YEARS_DAY).fetchStatsForPeriod(TEST_SITE_ID, paged)
+
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-01-01"),
+                startDate = eq("2021-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `previousPeriod of Last3Years steps whole years on 1 January, when its span is 731 days`() {
+        // 2025..2027 runs 1 Jan to 1 Jan with no leap year between, so the window measures exactly
+        // the two-year day count and the step must come from the preset rather than that count:
+        // stepping the span as 25 months would land on 1 Dec..1 Dec and chart a December as "2022".
+        val result = repositoryAt(NEW_YEARS_DAY_NO_LEAP).previousPeriod(StatsPeriod.Last3Years)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(LocalDate.of(2022, 1, 1), LocalDate.of(2024, 1, 1)))
+    }
+
+    @Test
+    fun `given Last3Years is paged back and forward on 1 January, then it returns to the preset`() {
+        // Here the preset's own window clears the day-count threshold but the window it pages onto does
+        // not, so a span-derived step would move 25 months forward and strand the user on a range that
+        // is neither the preset nor the one they came from.
+        val repository = repositoryAt(NEW_YEARS_DAY)
+
+        val back = repository.previousPeriod(StatsPeriod.Last3Years)
+        val result = repository.nextPeriod(back, origin = StatsPeriod.Last3Years)
+
+        assertThat(back).isEqualTo(StatsPeriod.Custom(LocalDate.of(2021, 1, 1), LocalDate.of(2023, 1, 1)))
+        assertThat(result).isEqualTo(StatsPeriod.Last3Years)
     }
 
     @Test
@@ -1871,6 +2026,10 @@ class StatsRepositoryTest : BaseUnitTest() {
         private val LEAP_DAY: LocalDate = LocalDate.of(2028, 2, 29)
         private val MONTH_END_AFTER_LEAP_MONTH: LocalDate = LocalDate.of(2025, 1, 31)
         private val NEW_YEARS_DAY: LocalDate = LocalDate.of(2026, 1, 1)
+
+        // 1 Jan 2027: 2025 and 2026 are both common years, so the three whole year buckets 2025..2027
+        // measure exactly 731 days — the longest span the repository still buckets by month.
+        private val NEW_YEARS_DAY_NO_LEAP: LocalDate = LocalDate.of(2027, 1, 1)
 
         // Unfinished-calendar-period anchors. With a US week (Sunday first) Wednesday 11 Mar 2026 sits
         // four days into its week (8-14 Mar) and eleven into a 31-day month; 5 Jan 2026 is early enough

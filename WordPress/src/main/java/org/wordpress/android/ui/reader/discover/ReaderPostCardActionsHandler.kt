@@ -32,7 +32,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -49,16 +48,18 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserState
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
-import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Failed
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Started
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.TooManySaves
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
@@ -90,10 +91,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderSiteFollowUseCase,
     private val blockBlogUseCase: BlockBlogUseCase,
-    private val blockUserUseCase: BlockUserUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
-    private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
+    private val readerBlogRepository: ReaderBlogRepository,
     private val fetchSiteUseCase: ReaderFetchSiteUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
@@ -103,6 +103,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val accountStore: AccountStore,
+    private val savedPostsRepository: ReaderSavedPostsRepository,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private lateinit var coroutineScope: CoroutineScope
@@ -198,7 +199,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId, post.feedId)
             SHARE -> handleShareClicked(post, source)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId, source)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId, post.feedId)
             BLOCK_USER -> handleBlockUserClicked(post.authorId, post.feedId)
             LIKE -> handleLikeClicked(post, source)
             BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
@@ -231,12 +232,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 )
             }
             _navigationEvents.postValue(Event(ShowPostDetail(post)))
-        }
-    }
-
-    suspend fun handleVideoOverlayClicked(videoUrl: String) {
-        withContext(bgDispatcher) {
-            _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
         }
     }
 
@@ -410,8 +405,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private suspend fun handleBlockSiteClicked(
         blogId: Long,
-        feedId: Long,
-        source: String
+        feedId: Long
     ) {
         blockBlogUseCase.blockBlog(blogId, feedId).collect {
             when (it) {
@@ -426,7 +420,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                 {
                                     coroutineScope.launch {
                                         val blogId = it.blockedBlogData.blogId
-                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData, source)
+                                        readerBlogRepository.undoBlockBlog(it.blockedBlogData)
                                         _refreshPosts.postValue(Event(Unit))
                                         _scrollToSiteId.emit(blogId)
                                         _snackbarEvents.postValue(
@@ -460,31 +454,26 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleBlockUserClicked(
+    private fun handleBlockUserClicked(
         authorId: Long,
         feedId: Long,
     ) {
-        blockUserUseCase.blockUser(authorId, feedId).collect {
-            when (it) {
-                is BlockUserState.UserBlockedInLocalDb -> {
-                    _refreshPosts.postValue(Event(Unit))
-                    _snackbarEvents.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_user_blocked),
-                                UiStringRes(R.string.undo),
-                                {
-                                    coroutineScope.launch {
-                                        blockUserUseCase.undoBlockUser(it.blockedUserData)
-                                        _refreshPosts.postValue(Event(Unit))
-                                    }
-                                })
-                        )
-                    )
-                }
-                BlockUserState.Failed.AlreadyRunning -> Unit // do nothing
-            }
-        }
+        readerTracker.trackBlog(AnalyticsTracker.Stat.READER_USER_BLOCKED, authorId, feedId)
+        val blockedUserData = readerBlogRepository.blockUserLocal(authorId)
+        _refreshPosts.postValue(Event(Unit))
+        _snackbarEvents.postValue(
+            Event(
+                SnackbarMessageHolder(
+                    UiStringRes(R.string.reader_toast_user_blocked),
+                    UiStringRes(R.string.undo),
+                    {
+                        coroutineScope.launch {
+                            readerBlogRepository.undoBlockUser(blockedUserData)
+                            _refreshPosts.postValue(Event(Unit))
+                        }
+                    })
+            )
+        )
     }
 
     private suspend fun handleLikeClicked(post: ReaderPost, source: String) {
@@ -518,45 +507,71 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PreLoadPostContent -> _preloadPostEvents.postValue(
                     Event(PreLoadPostContent(post.blogId, post.postId))
                 )
+                // the post reads as saved or unsaved already, so show it rather than wait for the server
+                Started -> _refreshPosts.postValue(Event(Unit))
+                // the save was undone, so show the post as it is again
+                Failed, TooManySaves -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    val message = if (it == TooManySaves) {
+                        R.string.reader_saved_posts_limit_reached
+                    } else {
+                        R.string.reader_error_request_failed_title
+                    }
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
+                }
                 is Success -> {
                     // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
                     // ReaderPostDetailFragment
                     _refreshPosts.postValue(Event(Unit))
-
-                    val showSnackbarAction = {
-                        _snackbarEvents.postValue(
-                            Event(
-                                SnackbarMessageHolder(
-                                    UiStringRes(R.string.reader_bookmark_snack_title),
-                                    UiStringRes(R.string.reader_bookmark_snack_btn),
-                                    buttonAction = {
-                                        readerTracker.track(
-                                            AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
-                                            ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
-                                        )
-                                        _navigationEvents.postValue(Event(ShowBookmarkedTab))
-                                    })
-                            )
-                        )
-                    }
-                    if (it.bookmarked && !isBookmarkList) {
-                        if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
-                            _navigationEvents.postValue(
-                                Event(
-                                    ShowBookmarkedSavedOnlyLocallyDialog(
-                                        okButtonAction = {
-                                            appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
-                                            showSnackbarAction.invoke()
-                                        })
-                                )
-                            )
-                        } else {
-                            showSnackbarAction.invoke()
-                        }
-                    }
+                    if (it.bookmarked && !isBookmarkList) showSavedConfirmation()
                 }
             }
         }
+    }
+
+    /** The one-time dialog about where saves are kept, if it's due, then the "Post saved" snackbar. */
+    private fun showSavedConfirmation() {
+        // each message is shown once, so people who saw the local-only one still hear that saves now sync
+        val (shouldShowDialog, setDialogShown, message) = if (savedPostsRepository.isSyncedWithAccount) {
+            Triple(
+                appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog(),
+                appPrefsWrapper::setReaderSavedPostsSyncDialogShown,
+                R.string.reader_save_posts_synced_dialog_message
+            )
+        } else {
+            Triple(
+                appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog(),
+                appPrefsWrapper::setBookmarksSavedLocallyDialogShown,
+                R.string.reader_save_posts_locally_dialog_message
+            )
+        }
+        if (!shouldShowDialog) {
+            showSavedSnackbar()
+            return
+        }
+        val dialog = ShowBookmarkedSavedOnlyLocallyDialog(
+            okButtonAction = {
+                setDialogShown()
+                showSavedSnackbar()
+            },
+            message = message
+        )
+        _navigationEvents.postValue(Event(dialog))
+    }
+
+    private fun showSavedSnackbar() {
+        val snackbar = SnackbarMessageHolder(
+            UiStringRes(R.string.reader_bookmark_snack_title),
+            UiStringRes(R.string.reader_bookmark_snack_btn),
+            buttonAction = {
+                readerTracker.track(
+                    AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
+                    ReaderTracker.SOURCE_POST_LIST_SAVED_POST_NOTICE
+                )
+                _navigationEvents.postValue(Event(ShowBookmarkedTab))
+            }
+        )
+        _snackbarEvents.postValue(Event(snackbar))
     }
 
     private suspend fun handleReblogClicked(post: ReaderPost) {

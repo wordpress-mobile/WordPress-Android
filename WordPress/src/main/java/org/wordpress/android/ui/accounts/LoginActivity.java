@@ -42,13 +42,16 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
+import org.wordpress.android.ui.accounts.login.OAuthCallbackStatus;
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper;
+import org.wordpress.android.ui.accounts.login.WPcomLoginSessionExpiredException;
+import org.wordpress.android.ui.accounts.login.WPcomLoginStateMismatchException;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
+import org.wordpress.android.ui.reader.repository.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -66,8 +69,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class LoginActivity extends BaseAppCompatActivity {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
-    public static final String MAGIC_LOGIN = "magic-login";
-    public static final String TOKEN_PARAMETER = "token";
 
     private static final String KEY_UNIFIED_TRACKER_SOURCE = "KEY_UNIFIED_TRACKER_SOURCE";
     private static final String KEY_UNIFIED_TRACKER_FLOW = "KEY_UNIFIED_TRACKER_FLOW";
@@ -95,6 +96,7 @@ public class LoginActivity extends BaseAppCompatActivity {
 
     @Inject protected LoginAnalyticsTracker mLoginAnalyticsTracker;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
+    @Inject ReaderTagsAndSitesUpdater mReaderTagsAndSitesUpdater;
     @Inject protected SiteStore mSiteStore;
     @Inject protected AccountStore mAccountStore;
     @Inject protected Dispatcher mDispatcher;
@@ -253,12 +255,23 @@ public class LoginActivity extends BaseAppCompatActivity {
     @Override
     protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
+
+        // A callback for a login this app didn't start (a stray or forged link, or a repeat of
+        // one already used) must not disturb this screen: a login in progress here can still
+        // complete. Ignore it before it replaces the intent, the flow, the flags or the UI. An
+        // expired login the app did start goes on, so the user is told to try again.
+        String dataString = intent.getDataString();
+        boolean isOAuthCallback = mLoginHelper.hasOAuthCallback(dataString);
+        if (isOAuthCallback && mLoginHelper.checkCallback(dataString) == OAuthCallbackStatus.UNKNOWN) {
+            AppLog.w(T.MAIN, "Ignoring a WordPress.com login callback this app didn't start");
+            return;
+        }
+
         setIntent(intent);
         mLoginFlow = null;
 
         // Handle OAuth callback when activity is reused (singleTop)
-        String dataString = intent.getDataString();
-        if (mLoginHelper.hasOAuthCallback(dataString)) {
+        if (isOAuthCallback) {
             // The login is under way, so this is no longer an abandoned tab. Clearing the flags
             // here is also what survives a recreation during the post-OAuth account/site fetch
             // (rotation, a theme change, "don't keep activities"): they are persisted, so the
@@ -467,7 +480,13 @@ public class LoginActivity extends BaseAppCompatActivity {
         if (loadingText != null) loadingText.setVisibility(View.GONE);
 
         if (errorText != null) {
-            errorText.setText(getString(R.string.error_generic_network));
+            // A callback for a login the app no longer recognizes - replaced too long ago, already
+            // used, or not started here - is, for a real user, a stale login: ask them to start again.
+            boolean isStaleLogin = error instanceof WPcomLoginSessionExpiredException
+                    || error instanceof WPcomLoginStateMismatchException;
+            errorText.setText(getString(isStaleLogin
+                    ? R.string.login_session_expired
+                    : R.string.error_generic_network));
             errorText.setVisibility(View.VISIBLE);
         }
 
@@ -578,7 +597,7 @@ public class LoginActivity extends BaseAppCompatActivity {
 
         CustomTabsIntent intent = getCustomTabsIntent();
 
-        Uri loginUri = mLoginHelper.getWpcomLoginUri();
+        Uri loginUri = mLoginHelper.startLogin();
         try {
             intent.launchUrl(this, loginUri);
         } catch (ActivityNotFoundException e) {
@@ -631,7 +650,7 @@ public class LoginActivity extends BaseAppCompatActivity {
         // Get reader tags so they're available as soon as the Reader is accessed - done for
         // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
         // uses the application context since the activity is finished immediately below
-        ReaderUpdateServiceStarter.startService(getApplicationContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
+        mReaderTagsAndSitesUpdater.update(EnumSet.of(UpdateTask.TAGS));
 
         // Start Notification service
         NotificationsUpdateServiceStarter.startService(getApplicationContext());

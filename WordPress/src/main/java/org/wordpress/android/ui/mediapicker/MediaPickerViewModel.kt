@@ -255,6 +255,7 @@ class MediaPickerViewModel @Inject constructor(
                 AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
                     fileName = it.name ?: resourceProvider.getString(R.string.unknown),
                     fileExtension = fileExtension,
+                    mimeType = it.mimeType,
                     identifier = it.identifier,
                     isSelected = isSelected,
                     selectedOrder = selectedOrder,
@@ -416,9 +417,10 @@ class MediaPickerViewModel @Inject constructor(
         }
         when (identifier) {
             is Identifier.LocalUri -> {
-                mediaUtilsWrapper.getRealPathFromURI(identifier.value.uri)?.let { path ->
-                    _onNavigate.postValue(Event(PreviewUrl(path)))
-                }
+                // Pass the content:// URI straight through. Converting it to a raw filesystem
+                // path hands the preview a string with no scheme, which Glide parses as a URI and
+                // then can't load, so the preview gets the very same URI the grid already loads.
+                _onNavigate.postValue(Event(PreviewUrl(identifier.value.uri.toString())))
             }
             is Identifier.StockMediaIdentifier -> {
                 if (identifier.url != null) {

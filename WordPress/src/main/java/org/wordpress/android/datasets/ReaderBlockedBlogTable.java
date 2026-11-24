@@ -1,10 +1,15 @@
 package org.wordpress.android.datasets;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.util.SqlUtils;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ReaderBlockedBlogTable {
     protected static final String BLOCKED_BLOGS_TABLE = "tbl_blocked_blogs";
@@ -54,6 +59,35 @@ public class ReaderBlockedBlogTable {
         }
         String[] args = new String[]{Long.toString(blogId)};
         ReaderDatabase.getWritableDb().delete(BLOCKED_BLOGS_TABLE, BLOG_ID + "=?", args);
+    }
+
+    public static Set<Long> getBlockedBlogIds() {
+        Set<Long> blogIds = new HashSet<>();
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT " + BLOG_ID + " FROM " + BLOCKED_BLOGS_TABLE, null);
+        try {
+            while (c.moveToNext()) {
+                blogIds.add(c.getLong(0));
+            }
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+        return blogIds;
+    }
+
+    public static void removeBlockedBlogs(Collection<Long> blogIds) {
+        if (blogIds.isEmpty()) {
+            return;
+        }
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            for (long blogId : blogIds) {
+                removeBlockedBlog(blogId);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public static void blacklistBlogLocally(long blogId) {

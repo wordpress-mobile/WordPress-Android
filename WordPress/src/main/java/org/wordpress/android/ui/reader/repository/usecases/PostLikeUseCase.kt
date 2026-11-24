@@ -2,12 +2,10 @@ package org.wordpress.android.ui.reader.repository.usecases
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.AlreadyRunning
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Failed.RequestFailed
@@ -16,17 +14,14 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 class PostLikeUseCase @Inject constructor(
-    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val readerPostRepository: ReaderPostRepository,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
-    private val continuations:
-            MutableMap<PostLikeRequest, Continuation<PostLikeState>?> = mutableMapOf()
+    private val runningRequests = mutableSetOf<PostLikeRequest>()
 
     suspend fun perform(
         post: ReaderPost,
@@ -42,7 +37,7 @@ class PostLikeUseCase @Inject constructor(
         }
 
         // There is already an action running for this request
-        if (continuations[request] != null) {
+        if (request in runningRequests) {
             emit(AlreadyRunning)
             return@flow
         }
@@ -67,7 +62,7 @@ class PostLikeUseCase @Inject constructor(
             readerTracker.trackPost(likedStat, post, source)
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
-            readerPostActionsWrapper.bumpPageViewForPost(post)
+            readerPostRepository.bumpPageView(post)
         } else {
             val unLikedStat = if (source == ReaderTracker.SOURCE_POST_DETAIL) {
                 AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
@@ -82,43 +77,24 @@ class PostLikeUseCase @Inject constructor(
         post: ReaderPost,
         request: PostLikeRequest
     ) {
-        val response = readerPostActionsWrapper.performLikeActionLocal(
-            post,
-            request.isAskingToLike,
-            request.wpComUserId
-        )
-        if (response) {
-            emit(PostLikeState.PostLikedInLocalDb)
-            val postLikeState = performLikeAndWaitForResult(post, request)
-            emit(postLikeState)
-        } else {
+        if (!readerPostRepository.likePostLocal(post, request.isAskingToLike, request.wpComUserId)) {
             emit(Unchanged)
+            return
         }
-    }
-
-    private suspend fun performLikeAndWaitForResult(
-        post: ReaderPost,
-        request: PostLikeRequest
-    ): PostLikeState {
-        val actionListener = ActionListener { succeeded ->
-            val postLikeState = if (succeeded) {
-                Success
-            } else {
-                RequestFailed
-            }
-            continuations[request]?.resume(postLikeState)
-            continuations[request] = null
-        }
-
-        return suspendCancellableCoroutine { cont ->
-            continuations[request] = cont
-            readerPostActionsWrapper.performLikeActionRemote(
+        emit(PostLikeState.PostLikedInLocalDb)
+        runningRequests += request
+        val succeeded = try {
+            readerPostRepository.likePostRemote(
                 post,
+                post.blogId,
+                post.postId,
                 request.isAskingToLike,
-                request.wpComUserId,
-                actionListener
+                request.wpComUserId
             )
+        } finally {
+            runningRequests -= request
         }
+        emit(if (succeeded) Success else RequestFailed)
     }
 
     sealed class PostLikeState {

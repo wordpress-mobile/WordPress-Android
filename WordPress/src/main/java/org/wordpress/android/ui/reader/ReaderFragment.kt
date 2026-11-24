@@ -30,6 +30,7 @@ import androidx.fragment.compose.AndroidFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -39,10 +40,8 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverTabsFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsFragment
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSearchPage
@@ -64,12 +63,10 @@ import org.wordpress.android.ui.reader.views.compose.RetainedComposeView
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
-import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,6 +79,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
+
+    @Inject
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
 
     private lateinit var viewModel: ReaderViewModel
 
@@ -116,14 +116,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     // duplication, and ensuring they are properly removed when the Fragment is destroyed
     private val currentSubfilterObserver = Observer<SubfilterListItem> { subfilterListItem ->
         viewModel.onSubFilterItemSelected(subfilterListItem)
-    }
-
-    private val updateTagsAndSitesObserver = Observer<Event<EnumSet<UpdateTask>>> { event ->
-        event.applyIfNotHandled {
-            if (NetworkUtils.isNetworkAvailable(activity)) {
-                ReaderUpdateServiceStarter.startService(activity, this)
-            }
-        }
     }
 
     private val subFiltersObserver = Observer<List<SubfilterListItem>> { subFilters ->
@@ -315,6 +307,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             }
         }
         val modifier = Modifier.fillMaxSize()
+        // until this device's saves are imported to the account, the device's own list shows them
+        val isSyncedListReady by savedPostsRepository.syncedListReady.collectAsStateWithLifecycle()
+        val isSyncedSavedList = tag.isBookmarked && isSyncedListReady
         when {
             tag.isDiscover -> AndroidFragment<ReaderDiscoverTabsFragment>(modifier, onUpdate = ::onFeedAdded)
             tag.isTags -> AndroidFragment<ReaderTagsFeedFragment>(
@@ -322,6 +317,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                 arguments = remember { ReaderTagsFeedFragment.argumentsFor(tag) },
                 onUpdate = ::onFeedAdded
             )
+            isSyncedSavedList -> AndroidFragment<ReaderSavedPostsFragment>(modifier, onUpdate = ::onFeedAdded)
             else -> AndroidFragment<ReaderPostListFragment>(
                 modifier,
                 arguments = remember {
@@ -345,10 +341,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
     private fun feedListState() = (currentFeed as? ReaderScrollingFeed)?.feedListState
 
     private fun startReaderViewModel(savedInstanceState: Bundle?) {
-        viewModel.updateTags.observeEvent(viewLifecycleOwner) {
-            ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
-        }
-
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
             context?.let {
                 val intent = ReaderActivityLauncher.createReaderSearchIntent(it)
@@ -401,7 +393,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
      */
     private fun getCurrentFeedFragment(): Fragment? {
         return childFragmentManager.fragments.lastOrNull {
-            it is ReaderPostListFragment || it is ReaderTagsFeedFragment || it is ReaderDiscoverTabsFragment
+            it is OnScrollToTopListener
         }
     }
 
@@ -482,11 +474,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             currentSubfilterObserver
         )
 
-
-        updateTagsAndSites.observe(
-            viewLifecycleOwner,
-            updateTagsAndSitesObserver
-        )
+        // started before the update so it's listening for the update's result
+        start(startedTag, startedTag, savedInstanceState)
 
         if (startedTag.isFilterable) {
             subFilters.observe(
@@ -498,8 +487,6 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         } else {
             viewModel.hideTopBarFilterGroup(startedTag)
         }
-
-        start(startedTag, startedTag, savedInstanceState)
     }
 
     companion object {

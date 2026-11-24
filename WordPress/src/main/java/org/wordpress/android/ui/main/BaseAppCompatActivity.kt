@@ -26,7 +26,9 @@ import org.wordpress.android.ui.postsrs.PostRsListActivity
 import org.wordpress.android.ui.postsrs.PostRsSettingsActivity
 import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
+import org.wordpress.android.ui.prefs.AppSettingsActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
+import org.wordpress.android.ui.reader.ReaderCommentListActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderSearchActivity
 import org.wordpress.android.ui.reader.ReaderSubsActivity
@@ -84,6 +86,7 @@ private fun isExcludedActivity(activity: BaseAppCompatActivity) =
  * approach as we add more Compose-based activities to the project.
  */
 private val excludedActivities = listOf(
+    AppSettingsActivity::class.java.name,
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
     CommentsRsListActivity::class.java.name,
@@ -115,6 +118,7 @@ private val excludedActivities = listOf(
     ApplicationPasswordLoginActivity::class.java.name,
     LoginActivity::class.java.name,
     MediaSettingsActivity::class.java.name,
+    ReaderCommentListActivity::class.java.name,
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded because they implement custom IME inset handling for proper

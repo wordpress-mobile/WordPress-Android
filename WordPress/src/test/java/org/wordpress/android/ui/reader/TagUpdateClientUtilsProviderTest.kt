@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
+import org.wordpress.android.ui.reader.repository.TagUpdateClientUtilsProvider
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)

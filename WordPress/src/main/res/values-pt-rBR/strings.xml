@@ -311,7 +311,6 @@ Language: pt_BR
     <string name="application_password_required">Senha do aplicativo obrigatória</string>
     <string name="menu_html_mode">Editor de código</string>
     <string name="taxonomies_title">Taxonomias</string>
-    <string name="media_edit_file_size_caption">Tamanho do arquivo</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Não foi possível fazer login no WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Conectar site ao WordPress.com</string>
     <string name="dataview_default_empty_message">Não tem nada aqui</string>
@@ -636,7 +635,6 @@ Language: pt_BR
     <string name="reader_dropdown_menu_subscriptions">Assinaturas</string>
     <string name="reader_dropdown_menu_discover">Descobrir</string>
     <string name="reader_search_content_description">Pesquisar</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir tags</string>
     <string name="reader_filter_empty_tags_action_suggested">Tags sugeridas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar um blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Siga uma tag para ver aqui os melhores posts relacionados a ela.</string>
@@ -731,7 +729,6 @@ Language: pt_BR
     <string name="site_creation_domain_free_with_annual_plan">Gratuito no primeiro ano com planos anuais pagos</string>
     <string name="reader_secondary_bookmarked">Salvo</string>
     <string name="reader_secondary_bookmark">Salvar</string>
-    <string name="reader_discover_recommended_header_new">Você pode gostar</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Desagrupar bloco</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toque aqui para mostrar mais detalhes.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Padrões sincronizados</string>
@@ -1816,8 +1813,6 @@ Language: pt_BR
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
     <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
     <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Tente seguir mais tags para melhorar a pesquisa</string>
-    <string name="reader_discover_no_posts_title">Nenhum post recente</string>
     <string name="reader_discover_empty_title">Desejamos boas-vindas!</string>
     <string name="scan">Examinar</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu de blocos aberto. Escolha um bloco.</string>
@@ -1943,7 +1938,6 @@ Language: pt_BR
     <string name="publish_date">Data de publicação</string>
     <string name="ccpa_privacy_notice_read">Leia o aviso de privacidade CCPA</string>
     <string name="ccpa_privacy_notice_caption">O California Consumer Privacy Act (\"CCPA\") requer que informemos os residentes no estado da Califórnia mais detalhes sobre os tipos de informações pessoais coletadas e compartilhadas no aplicativo, onde conseguimos esses dados e como e por que são usados.</string>
-    <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuários na Califórnia</string>
     <string name="status_and_visibility">Status e visibilidade</string>
     <string name="update_now">Atualizar agora</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2657,11 +2651,8 @@ Language: pt_BR
     <string name="activity_log">Resumo de atividade</string>
     <string name="privacy_policy_read">Ler a política de privacidade</string>
     <string name="third_party_policy_learn_more_caption">Nós usamos outras ferramentas de acompanhamento, inclusive algumas de terceiros. Leia mais sobre elas e como controlá-las.</string>
-    <string name="third_party_policy_learn_more_header">Política de terceiros</string>
     <string name="privacy_policy_learn_more_caption">Essa informação nos ajuda a melhorar nossos produtos, tornar anúncios mais relevantes, personalizar sua experiência no WordPress.com e outras opções descritas em nossa política de privacidade.</string>
-    <string name="privacy_policy_learn_more_header">Política de privacidade</string>
     <string name="cookie_policy_learn_more_caption">Compartilhar informações de como nossos serviços são usados com nossas ferramentas de análise enquanto estiver acessando sua conta do WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Política de cookies</string>
     <string name="preference_privacy_settings">Configurações de privacidade</string>
     <string name="preference_collect_information">Coletar informação</string>
     <string name="post_submitted">Post enviado</string>
@@ -2712,7 +2703,6 @@ Language: pt_BR
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">excluir</string>
     <string name="photo_picker_thumbnail_desc">Reproduzir vídeo</string>
-    <string name="reader_cardview_post_play_video_desc">reproduzir vídeo em destaque</string>
     <string name="plugin_detail_logo_desc">logo do plugin</string>
     <string name="plugin_detail_banner_desc">banner do plugin</string>
     <string name="photo_picker_wpmedia_desc">escolher na biblioteca de arquivos do WordPress</string>
@@ -2916,8 +2906,6 @@ Language: pt_BR
     <string name="media_files_not_uploaded">%d arquivos não enviados</string>
     <string name="remove_image_from_post">Remover do post</string>
     <string name="confirm_remove_media_image">Remover esta imagem do post?</string>
-    <string name="media_edit_customize_card_caption">Personalizar</string>
-    <string name="media_edit_file_details_card_caption">Detalhes do arquivo</string>
     <string name="login_error_button">Fechar</string>
     <string name="error_generic_network">Ocorreu um erro na rede. Verifique sua conexão e tente novamente.</string>
     <string name="post_settings_remove_featured_image">Remover imagem destacada</string>
@@ -2951,13 +2939,7 @@ Language: pt_BR
     <string name="media_title_audio_details">Detalhes do áudio</string>
     <string name="media_title_video_details">Detalhes do vídeo</string>
     <string name="media_title_image_details">Detalhes da imagem</string>
-    <string name="fab_content_description_preview">Visualizar</string>
-    <string name="media_edit_upload_date_caption">Data de upload</string>
     <string name="media_edit_duration_caption">Duração</string>
-    <string name="media_edit_video_dimensions_caption">Dimensões do vídeo</string>
-    <string name="media_edit_image_dimensions_caption">Dimensões da imagem</string>
-    <string name="media_edit_filetype_caption">Tipo de arquivo</string>
-    <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
     <string name="connect_site">Conectar um site</string>
@@ -3005,7 +2987,6 @@ Language: pt_BR
     <string name="login_checking_site_address" a8c-src-lib="module:login">Verificando o endereço do site</string>
     <string name="login_site_address" a8c-src-lib="module:login">Endereço do site</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Digite o endereço do site WordPress que você deseja conectar.</string>
-    <string name="login_already_logged_in_wpcom">Já conectado no WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Continuar</string>
     <string name="connect_more">Conectar outro site</string>
     <string name="next">Próximo</string>
@@ -3055,8 +3036,6 @@ Language: pt_BR
     <string name="media_all">Todos</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s teve o acesso negado aos seus arquivos de mídia. Para corrigir isso, edite suas permissões e ative %2$s.</string>
     <string name="reader_view_comments">Ver comentários</string>
-    <string name="site_settings_video_quality_hint">Qualidade dos vídeos. Valores maiores significam vídeos com mais qualidade.</string>
-    <string name="site_settings_video_width_hint">Redimensiona vídeos nos posts para este tamanho</string>
     <string name="site_settings_optimize_video_summary">Habilite para redimensionar e comprimir vídeos</string>
     <string name="site_settings_optimize_videos">Otimizar vídeos</string>
     <string name="draft_uploaded">Upload do rascunho concluído</string>
@@ -3140,7 +3119,6 @@ Language: pt_BR
     <string name="photo_picker_title">Escolha a foto</string>
     <string name="error_publish_no_network">O dispositivo está off-line. O post será salvo localmente.</string>
     <string name="editor_post_saved_online">Post salvo online</string>
-    <string name="site_settings_image_quality_hint">Qualidade das imagens. Valores maiores significam melhor qualidade das imagens.</string>
     <string name="site_settings_optimize_images_summary">Habilite para redimensionar e comprimir imagens</string>
     <string name="media_encoder_quality_maximum">Máxima</string>
     <string name="media_encoder_quality_high">Alta</string>
@@ -3392,7 +3370,6 @@ Language: pt_BR
     <string name="site_settings_discussion_hint">Exibir e alterar as configurações de discussão dos sites</string>
     <string name="site_settings_more_hint">Exibir todas as configurações de Discussão disponíveis</string>
     <string name="site_settings_related_posts_hint">Mostrar ou ocultar posts relacionados no leitor</string>
-    <string name="site_settings_image_width_hint">Redimensiona as imagens nos posts para esta largura</string>
     <string name="site_settings_format_hint">Define o formato do novo post</string>
     <string name="site_settings_category_hint">Define a categoria do novo post</string>
     <string name="site_settings_password_hint">Alterar sua senha</string>

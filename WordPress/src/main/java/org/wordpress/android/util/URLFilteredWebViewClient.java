@@ -51,6 +51,27 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
                                                    .replace("https://", "http://"));
     }
 
+    private static boolean isLoginPath(String url, String loginPage) {
+        if (url == null) {
+            return false;
+        }
+        String path = Uri.parse(url).getPath();
+        return path != null && path.endsWith("/" + loginPage);
+    }
+
+    private boolean isLoginPageOnAllowedHost(String url) {
+        Uri uri = Uri.parse(url);
+        if (uri.getHost() == null || !isLoginPath(url, WP_LOGIN_URL_SUFFIX)) {
+            return false;
+        }
+        for (String allowedURL : mAllowedURLs) {
+            if (uri.getHost().equals(Uri.parse(allowedURL).getHost())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         // Found a bug on some pages where there is an incorrect
@@ -61,13 +82,15 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
 
         if (isAllURLsAllowed() || mAllowedURLs.contains(url)
             || isHttpUrlAllowed(url) // Allow https redirection
+            || isLoginPageOnAllowedHost(url) // Allow every step of logging in, e.g. confirming the admin email
             // If a url is allowed without the trailing `/`, it should be allowed with it as well
             || mAllowedURLs.contains(StringUtils.removeTrailingSlash(url))) {
-            boolean isComingFromLoginUrl =
-                    view.getUrl().endsWith(WP_LOGIN_URL_SUFFIX) || view.getUrl().endsWith(REMOTE_LOGIN_URL_SUFFIX);
+            // Compare paths rather than whole URLs, since login pages often carry a query (e.g. `redirect_to`)
+            boolean isComingFromLoginUrl = isLoginPath(view.getUrl(), WP_LOGIN_URL_SUFFIX)
+                                           || isLoginPath(view.getUrl(), REMOTE_LOGIN_URL_SUFFIX);
 
-            boolean isRemoteLoginUrl = url.endsWith(REMOTE_LOGIN_URL_SUFFIX);
-            boolean isLoginUrl = url.endsWith(WP_LOGIN_URL_SUFFIX);
+            boolean isRemoteLoginUrl = isLoginPath(url, REMOTE_LOGIN_URL_SUFFIX);
+            boolean isLoginUrl = isLoginPath(url, WP_LOGIN_URL_SUFFIX);
             boolean isBlobUrl = url.startsWith(BLOB_URL_PREFIX);
 
             Uri currentUri = Uri.parse((view.getUrl()));

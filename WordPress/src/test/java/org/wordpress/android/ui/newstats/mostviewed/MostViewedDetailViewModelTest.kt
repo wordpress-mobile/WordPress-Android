@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.datasource.StatsPostThumbnailsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsThumbnailRequest
 import org.wordpress.android.ui.newstats.repository.MostViewedChildData
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
@@ -37,6 +39,9 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
+    @Mock
+    private lateinit var postThumbnailsDataSource: StatsPostThumbnailsDataSource
 
     private lateinit var detailFetcher: MostViewedDetailFetcher
     private lateinit var viewModel: MostViewedDetailViewModel
@@ -60,7 +65,8 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             detailFetcher,
-            resourceProvider
+            resourceProvider,
+            postThumbnailsDataSource
         )
     }
 
@@ -290,6 +296,124 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         totalViewsChangePercent = TEST_TOTAL_VIEWS_CHANGE_PERCENT
     )
 
+    @Test
+    fun `when post thumbnails load, then resolved urls are emitted keyed by post id`() = test {
+        whenever(postThumbnailsDataSource.fetchThumbnails(eq(testSite), any()))
+            .thenReturn(mapOf(POST_ID to THUMBNAIL_URL))
+
+        viewModel.loadPostThumbnails(listOf(postItem(POST_ID, "post"), postItem(PAGE_ID, "page")))
+        advanceUntilIdle()
+
+        assertThat(viewModel.postThumbnails.value).isEqualTo(mapOf(POST_ID to THUMBNAIL_URL))
+    }
+
+    @Test
+    fun `when post thumbnails load, then every item is requested with its type`() = test {
+        whenever(postThumbnailsDataSource.fetchThumbnails(eq(testSite), any())).thenReturn(emptyMap())
+
+        viewModel.loadPostThumbnails(listOf(postItem(POST_ID, "post"), postItem(PAGE_ID, "page")))
+        advanceUntilIdle()
+
+        verify(postThumbnailsDataSource).fetchThumbnails(
+            eq(testSite),
+            eq(
+                listOf(
+                    StatsThumbnailRequest(POST_ID, "post"),
+                    StatsThumbnailRequest(PAGE_ID, "page")
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `when the same rows are loaded twice, then they are only fetched once`() = test {
+        whenever(postThumbnailsDataSource.fetchThumbnails(eq(testSite), any()))
+            .thenReturn(mapOf(POST_ID to THUMBNAIL_URL))
+        val items = listOf(postItem(POST_ID, "post"))
+
+        viewModel.loadPostThumbnails(items)
+        advanceUntilIdle()
+        viewModel.loadPostThumbnails(items)
+        advanceUntilIdle()
+
+        verify(postThumbnailsDataSource, times(1)).fetchThumbnails(any(), any())
+        assertThat(viewModel.postThumbnails.value).isEqualTo(mapOf(POST_ID to THUMBNAIL_URL))
+    }
+
+    @Test
+    fun `when scrolling reaches more rows, then only the new ones are fetched`() = test {
+        whenever(postThumbnailsDataSource.fetchThumbnails(eq(testSite), any())).thenReturn(emptyMap())
+        val first = postItem(POST_ID, "post")
+        val second = postItem(PAGE_ID, "page")
+
+        viewModel.loadPostThumbnails(listOf(first))
+        advanceUntilIdle()
+        viewModel.loadPostThumbnails(listOf(first, second))
+        advanceUntilIdle()
+
+        verify(postThumbnailsDataSource).fetchThumbnails(
+            eq(testSite), eq(listOf(StatsThumbnailRequest(POST_ID, "post")))
+        )
+        verify(postThumbnailsDataSource).fetchThumbnails(
+            eq(testSite), eq(listOf(StatsThumbnailRequest(PAGE_ID, "page")))
+        )
+        verify(postThumbnailsDataSource, times(2)).fetchThumbnails(any(), any())
+    }
+
+    @Test
+    fun `when a later batch resolves, then it is merged with what was already there`() = test {
+        whenever(postThumbnailsDataSource.fetchThumbnails(eq(testSite), any()))
+            .thenReturn(mapOf(POST_ID to THUMBNAIL_URL))
+            .thenReturn(mapOf(PAGE_ID to OTHER_THUMBNAIL_URL))
+
+        viewModel.loadPostThumbnails(listOf(postItem(POST_ID, "post")))
+        advanceUntilIdle()
+        viewModel.loadPostThumbnails(listOf(postItem(POST_ID, "post"), postItem(PAGE_ID, "page")))
+        advanceUntilIdle()
+
+        assertThat(viewModel.postThumbnails.value)
+            .isEqualTo(mapOf(POST_ID to THUMBNAIL_URL, PAGE_ID to OTHER_THUMBNAIL_URL))
+    }
+
+    @Test
+    fun `when the thumbnail fetch throws, then the rows keep their glyphs and no error is shown`() = test {
+        whenever(postThumbnailsDataSource.fetchThumbnails(any(), any()))
+            .thenThrow(RuntimeException(EXCEPTION_MESSAGE))
+
+        viewModel.loadPostThumbnails(listOf(postItem(POST_ID, "post")))
+        advanceUntilIdle()
+
+        assertThat(viewModel.postThumbnails.value).isEmpty()
+        assertThat(viewModel.uiState.value).isEqualTo(MostViewedDetailUiState.Loading)
+    }
+
+    @Test
+    fun `when there is no selected site, then thumbnails are not fetched`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        viewModel.loadPostThumbnails(listOf(postItem(POST_ID, "post")))
+        advanceUntilIdle()
+
+        verify(postThumbnailsDataSource, never()).fetchThumbnails(any(), any())
+        assertThat(viewModel.postThumbnails.value).isEmpty()
+    }
+
+    @Test
+    fun `when the item list is empty, then thumbnails are not fetched`() = test {
+        viewModel.loadPostThumbnails(emptyList())
+        advanceUntilIdle()
+
+        verify(postThumbnailsDataSource, never()).fetchThumbnails(any(), any())
+    }
+
+    private fun postItem(id: Long, postType: String) = MostViewedDetailItem(
+        id = id,
+        title = "Post $id",
+        views = TEST_VIEWS,
+        change = MostViewedChange.NoChange,
+        postType = postType
+    )
+
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
@@ -299,6 +423,10 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         private const val UNKNOWN_ERROR = "Something went wrong"
         private const val EXCEPTION_MESSAGE = "boom"
         private const val CHILD_URL = "http://google.com/"
+        private const val POST_ID = 42L
+        private const val PAGE_ID = 43L
+        private const val THUMBNAIL_URL = "https://example.com/image.jpg?w=120&h=120"
+        private const val OTHER_THUMBNAIL_URL = "https://example.com/other.jpg?w=120&h=120"
 
         private const val TEST_VIEWS = 23L
         private const val TEST_PREVIOUS_VIEWS = 10L

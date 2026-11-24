@@ -92,6 +92,42 @@ class StatsRepositoryReferrersTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given referrer icons, when fetchMostViewed with REFERRERS, then they propagate to group and child`() =
+        test {
+            val referrersData = listOf(
+                ReferrerDataItem(
+                    name = "Search Engines",
+                    url = null,
+                    views = 23,
+                    children = listOf(
+                        ReferrerChildDataItem(
+                            name = "Google Search",
+                            url = "http://google.com/",
+                            views = 23,
+                            iconUrl = TEST_CHILD_ICON_URL
+                        )
+                    ),
+                    iconUrl = TEST_ICON_URL
+                ),
+                ReferrerDataItem(name = "Gmail", url = null, views = 2)
+            )
+            whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+                .thenReturn(ReferrersDataResult.Success(referrersData))
+
+            val result = repository.fetchMostViewed(
+                TEST_SITE_ID,
+                StatsPeriod.Last7Days,
+                MostViewedDataSource.REFERRERS
+            )
+
+            val success = result as MostViewedResult.Success
+            assertThat(success.items[0].iconUrl).isEqualTo(TEST_ICON_URL)
+            assertThat(success.items[0].children[0].iconUrl).isEqualTo(TEST_CHILD_ICON_URL)
+            // The API knows no icon for this one, and the row shows none rather than a placeholder.
+            assertThat(success.items[1].iconUrl).isNull()
+        }
+
+    @Test
     fun `given referrer with a url, when fetchMostViewed with REFERRERS, then the url propagates`() = test {
         whenever(statsDataSource.fetchReferrers(any(), any(), any()))
             .thenReturn(ReferrersDataResult.Success(createReferrersData()))
@@ -163,5 +199,7 @@ class StatsRepositoryReferrersTest : BaseUnitTest() {
         private const val TEST_REFERRER_URL_2 = "https://twitter.com/"
         private const val TEST_REFERRER_VIEWS_1 = 200L
         private const val TEST_REFERRER_VIEWS_2 = 150L
+        private const val TEST_ICON_URL = "https://wordpress.com/i/stats/search-engine.png"
+        private const val TEST_CHILD_ICON_URL = "https://google.com/favicon.ico"
     }
 }

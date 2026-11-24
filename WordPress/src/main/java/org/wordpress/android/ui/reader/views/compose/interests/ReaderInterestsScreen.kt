@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +25,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,13 +44,13 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 /**
  * Lets the user pick the tags they follow, both as the Discover overlay and from Settings
  */
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("LongParameterList")
 fun ReaderInterestsScreen(
     uiState: UiState,
     snackbarHostState: SnackbarHostState,
-    showBackButton: Boolean,
+    title: String?,
     onBackClick: () -> Unit,
     onInterestToggled: (index: Int, isChecked: Boolean) -> Unit,
     onDoneClick: () -> Unit,
@@ -62,13 +64,15 @@ fun ReaderInterestsScreen(
         contentWindowInsets = WindowInsets(0),
         // in the top bar rather than over the content, so the chips scroll below it rather than under it
         topBar = {
-            if (showBackButton) {
-                IconButton(onClick = onBackClick, modifier = Modifier.padding(Margin.Small.value)) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.reader_label_toolbar_back)
-                    )
-                }
+            if (title != null) {
+                // from Settings, where this is a screen of its own
+                TopAppBar(
+                    title = { Text(title) },
+                    navigationIcon = { BackButton(onBackClick) }
+                )
+            } else {
+                // the Discover overlay, under the Reader's own top bar
+                BackButton(onBackClick, Modifier.padding(Margin.Small.value))
             }
         },
         bottomBar = {
@@ -148,5 +152,15 @@ fun ReaderInterestsScreen(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
+    }
+}
+
+@Composable
+private fun BackButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.reader_label_toolbar_back)
+        )
     }
 }

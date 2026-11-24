@@ -353,7 +353,6 @@ Language: sq_AL
     <string name="application_password_required">Lypset Fjalëkalim Aplikacioni</string>
     <string name="menu_html_mode">Përpunues Kodi</string>
     <string name="taxonomies_title">Klasifikime</string>
-    <string name="media_edit_file_size_caption">Madhësi Kartele</string>
     <string name="jetpack_rest_connection_error_login_wpcom">S’arrihet të hyhet te WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Lidheni sajtin me WordPress.com-in</string>
     <string name="dataview_default_empty_message">S’ka gjë këtu</string>
@@ -677,7 +676,6 @@ Language: sq_AL
     <string name="reader_dropdown_menu_subscriptions">Pajtime</string>
     <string name="reader_dropdown_menu_discover">Zbuloni</string>
     <string name="reader_search_content_description">Kërko</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Ndiqni etiketa</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
     <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Ndiqni një etiketë dhe do të jeni në gjendje të shihni këtu postimet më të mira.</string>
@@ -772,7 +770,6 @@ Language: sq_AL
     <string name="site_creation_domain_free_with_annual_plan">Falas për vitin e parë, me plane vjetore të paguar</string>
     <string name="reader_secondary_bookmarked">U ruajt</string>
     <string name="reader_secondary_bookmark">Ruaje</string>
-    <string name="reader_discover_recommended_header_new">Mund t’ju pëlqente edhe</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hiqe bllokun nga grupi</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Prekeni këtu, që të shihni më tepër hollësi.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Modele të njëkohësuar</string>
@@ -1850,8 +1847,6 @@ Language: sq_AL
     <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
     <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Provoni të ndiqni më tepër etiketa që të zgjerohet kërkimi</string>
-    <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
     <string name="reader_discover_empty_title">Mirë se vini!</string>
     <string name="scan">Skanoje</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">U hap me blloqesh. Përzgjidhni një bllok.</string>
@@ -1977,7 +1972,6 @@ Language: sq_AL
     <string name="publish_date">Datë Botimi</string>
     <string name="ccpa_privacy_notice_read">Lexoni shënimin CCPA mbi privatësinë</string>
     <string name="ccpa_privacy_notice_caption">Ligji i Privatësisë së Konsumatorit në Kaliforni (\"CCPA\") kërkon prej nesh t’u japim banuesve në Kaliforni disa të dhëna shtesë rreth kategorive të të dhënave personale që grumbullojmë dhe ndajmë me të tjerë, prej nga i marrim këto të dhëna personale, dhe si dhe pse i përdorim.</string>
-    <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2692,11 +2686,8 @@ Language: sq_AL
     <string name="activity_log">Regjistër Veprimtarish</string>
     <string name="privacy_policy_read">Lexoni rregullat e privatësisë</string>
     <string name="third_party_policy_learn_more_caption">Përdorim mjete të tjera gjurmimi, përfshi disa të tillë nga palë të treta. Lexoni rreth tyre dhe se si t’i mbani nën kontroll.</string>
-    <string name="third_party_policy_learn_more_header">Rregulla Palësh të Treta</string>
     <string name="privacy_policy_learn_more_caption">Këto të dhëna na ndihmojnë të përmirësojmë produktet tona, ta bëjmë marketingun më specifik për ju, më personal punimin tuaj në WordPress.com, etj, siç përshkruhet hollësisht te rregullat tona mbi privatësinë.</string>
-    <string name="privacy_policy_learn_more_header">Rregulla Privatësie</string>
     <string name="cookie_policy_learn_more_caption">Ndani me mjetin tuaj të analizave të dhëna rreth përdorimit tuaj të shërbimeve, teksa jeni i futur në llogarinë tuaj WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Rregulla mbi Cookie-t</string>
     <string name="preference_privacy_settings">Rregullime privatësie</string>
     <string name="preference_collect_information">Grumbullo të dhëna</string>
     <string name="post_submitted">Postimi u parashtrua</string>
@@ -2747,7 +2738,6 @@ Language: sq_AL
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">fshije</string>
     <string name="photo_picker_thumbnail_desc">Luaje videon</string>
-    <string name="reader_cardview_post_play_video_desc">luaje videon e zgjedhur</string>
     <string name="plugin_detail_logo_desc">stemë shtojce</string>
     <string name="plugin_detail_banner_desc">banderolë shtojce</string>
     <string name="photo_picker_wpmedia_desc">zgjidhni nga media WordPress</string>
@@ -2951,8 +2941,6 @@ Language: sq_AL
     <string name="media_files_not_uploaded">S’u ngarkuan %d kartela</string>
     <string name="remove_image_from_post">Hiqe prej postimi</string>
     <string name="confirm_remove_media_image">Të hiqet kjo figurë nga postimi?</string>
-    <string name="media_edit_customize_card_caption">Përshtateni</string>
-    <string name="media_edit_file_details_card_caption">Hollësi Kartele</string>
     <string name="login_error_button">Mbylle</string>
     <string name="error_generic_network">Ndodhi një gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="post_settings_remove_featured_image">Hiqe figurën e zgjedhur</string>
@@ -2986,13 +2974,7 @@ Language: sq_AL
     <string name="media_title_audio_details">Hollësi audioje</string>
     <string name="media_title_video_details">Hollësi videoje</string>
     <string name="media_title_image_details">Hollësi figure</string>
-    <string name="fab_content_description_preview">Paraparje</string>
-    <string name="media_edit_upload_date_caption">Datë Ngarkimi</string>
     <string name="media_edit_duration_caption">Kohëzgjatje</string>
-    <string name="media_edit_video_dimensions_caption">Përmasa Videoje</string>
-    <string name="media_edit_image_dimensions_caption">Përmasa Figure</string>
-    <string name="media_edit_filetype_caption">Lloj Kartele</string>
-    <string name="media_edit_filename_caption">Emër Kartele</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Tekst alternativ</string>
     <string name="connect_site">Lidhni një sajt</string>
@@ -3040,7 +3022,6 @@ Language: sq_AL
     <string name="login_checking_site_address" a8c-src-lib="module:login">Po kontrollohet adresa e sajtit</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresë sajti</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Jepni adresën e sajtit WordPress te i cili do të donit të lidheshit.</string>
-    <string name="login_already_logged_in_wpcom">Jeni tashmë i futur te WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Vazhdo</string>
     <string name="connect_more">Lidhni një sajt tjetër</string>
     <string name="next">Pasuesi</string>
@@ -3090,8 +3071,6 @@ Language: sq_AL
     <string name="media_all">Krejt</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s-it iu mohua hyrja te kartelat tuaja media. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s.</string>
     <string name="reader_view_comments">Shihni komentet</string>
-    <string name="site_settings_video_quality_hint">Cilësi videosh. Vlera më të mëdha do të thotë cilësi më e lartë videosh.</string>
-    <string name="site_settings_video_width_hint">Ripërmason video në postime sa kjo madhësi</string>
     <string name="site_settings_optimize_video_summary">Aktivizojeni që të ripërmasohen dhe ngjeshen video</string>
     <string name="site_settings_optimize_videos">Optimizoni Video</string>
     <string name="draft_uploaded">Skica u ngarkua</string>
@@ -3175,7 +3154,6 @@ Language: sq_AL
     <string name="photo_picker_title">Zgjidhni foto</string>
     <string name="error_publish_no_network">Pajisja është e palidhur në internet. Postimi u ruajt lokalisht.</string>
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
-    <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
     <string name="media_encoder_quality_maximum">Maksimum</string>
     <string name="media_encoder_quality_high">E lartë</string>
@@ -3427,7 +3405,6 @@ Language: sq_AL
     <string name="site_settings_discussion_hint">Shihni dhe ndryshoni rregullimet mbi diskutimet në sajtin tuaj</string>
     <string name="site_settings_more_hint">Shihni krejt rregullimet e mundshme për Diskutimet</string>
     <string name="site_settings_related_posts_hint">Shfaqni ose fshihni te lexuesi postime të afërta</string>
-    <string name="site_settings_image_width_hint">Figurat në postime ripërmasoji sa kjo gjerësi</string>
     <string name="site_settings_format_hint">Cakton format të ri postimesh</string>
     <string name="site_settings_category_hint">Cakton kategori të re postimesh</string>
     <string name="site_settings_password_hint">Ndryshoni fjalëkalimin tuaj</string>

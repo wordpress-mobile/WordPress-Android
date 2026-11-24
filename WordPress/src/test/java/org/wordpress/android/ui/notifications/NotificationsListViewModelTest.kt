@@ -29,14 +29,12 @@ import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.repository.FetchPostResult
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.widgets.AppReviewsManagerWrapper
-
-private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
 @ExperimentalCoroutinesApi
 class NotificationsListViewModelTest : BaseUnitTest() {
@@ -53,7 +51,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
     @Mock
-    private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
+    private lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
     private lateinit var notificationsActionsWrapper: NotificationsActionsWrapper
@@ -105,7 +103,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             siteStore,
             commentStore,
             readerPostTableWrapper,
-            readerPostActionsWrapper,
+            readerPostRepository,
             notificationsTableWrapper,
             notificationsActionsWrapper,
             eventBusWrapper,
@@ -310,17 +308,15 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userId).thenReturn(userId)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
-            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(true)
-        }
+        whenever(readerPostRepository.likePostRemote(any(), any(), any(), any(), any())).thenReturn(true)
 
         // When
         viewModel.likePost(note, true)
 
         // Then
         verify(note, times(1)).setLikedPost(true)
-        verify(readerPostActionsWrapper, times(1))
-            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(readerPostRepository, times(1))
+            .likePostRemote(eq(post), eq(siteId), eq(postId), eq(true), eq(userId))
         verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(1)).saveNote(note)
     }
@@ -339,17 +335,15 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userId).thenReturn(userId)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
-            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(true)
-        }
+        whenever(readerPostRepository.likePostRemote(any(), any(), any(), any(), any())).thenReturn(true)
 
         // When
         viewModel.likePost(note, false)
 
         // Then
         verify(note, times(1)).setLikedPost(false)
-        verify(readerPostActionsWrapper, times(1))
-            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(false), eq(userId), any())
+        verify(readerPostRepository, times(1))
+            .likePostRemote(eq(post), eq(siteId), eq(postId), eq(false), eq(userId))
         verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(1)).saveNote(note)
     }
@@ -368,17 +362,15 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(account)
         whenever(account.userId).thenReturn(userId)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
-            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(false)
-        }
+        whenever(readerPostRepository.likePostRemote(any(), any(), any(), any(), any())).thenReturn(false)
 
         // When
         viewModel.likePost(note, true)
 
         // Then
         verify(note, times(1)).setLikedPost(true)
-        verify(readerPostActionsWrapper, times(1))
-            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(readerPostRepository, times(1))
+            .likePostRemote(eq(post), eq(siteId), eq(postId), eq(true), eq(userId))
         verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(0)).saveNote(note)
     }
@@ -456,7 +448,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN the note is a comment that cannot be moderated and the reader post is retrieved THEN open in reader`() {
+    fun `WHEN a comment note cannot be moderated and its reader post is retrieved THEN open in reader`() = test {
         // Given
         val noteId = "1"
         val siteId = 1L
@@ -470,10 +462,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(note.isCommentType).thenReturn(true)
         whenever(note.canModerate()).thenReturn(false)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, false)).thenReturn(null)
-        whenever(readerPostActionsWrapper.requestBlogPost(any(), any(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onSuccess(null)
-        }
+        whenever(readerPostRepository.fetchPost(siteId, postId)).thenReturn(FetchPostResult.Success(mock()))
 
         // When
         viewModel.openNote(noteId, action::openInTheReader, action::openDetailView)
@@ -484,7 +473,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN the comment note cannot be moderated and the reader post retrieval fails THEN open detail view`() {
+    fun `WHEN the comment note cannot be moderated and the reader post retrieval fails THEN open detail view`() = test {
         // Given
         val noteId = "1"
         val siteId = 1L
@@ -496,10 +485,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(note.isCommentType).thenReturn(true)
         whenever(note.canModerate()).thenReturn(false)
         whenever(readerPostTableWrapper.getBlogPost(siteId, postId, false)).thenReturn(null)
-        whenever(readerPostActionsWrapper.requestBlogPost(any(), any(), any())).then {
-            (it.arguments[REQUEST_BLOG_LISTENER_PARAM_POSITION] as ReaderActions.OnRequestListener<*>)
-                .onFailure(500)
-        }
+        whenever(readerPostRepository.fetchPost(siteId, postId)).thenReturn(FetchPostResult.Failure(500))
 
         // When
         viewModel.openNote(noteId, action::openInTheReader, action::openDetailView)

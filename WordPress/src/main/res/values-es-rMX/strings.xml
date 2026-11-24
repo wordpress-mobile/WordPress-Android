@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-19 21:01:56+0000
+Translation-Revision-Date: 2026-11-12 13:21:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: es_MX
@@ -97,6 +97,7 @@ Language: es_MX
     <string name="gutenberg_kit_announcement_title">Se acerca un mejor editor de bloques</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Cambia primero al editor de bloques para probar el nuevo editor.</string>
     <string name="site_settings_gutenberg_kit_enabled_summary">Suscríbete al editor de bloques de nueva generación para este sitio</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Para finales de 2026, se convertirá en el editor por defecto para todo el mundo. %1$s</string>
     <string name="site_settings_gutenberg_kit_enabled">Probar el nuevo editor</string>
     <string name="site_connectivity_banner_text">No se puede conectar con tu sitio. Algunas funciones pueden estar limitadas.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Tu sitio no admite la carga de bloques de terceros en el editor.</string>
@@ -375,7 +376,6 @@ Language: es_MX
     <string name="application_password_required">Se requiere contraseña de aplicación</string>
     <string name="menu_html_mode">Editor de código</string>
     <string name="taxonomies_title">Taxonomías</string>
-    <string name="media_edit_file_size_caption">Tamaño del archivo</string>
     <string name="jetpack_rest_connection_error_login_wpcom">No se pudo iniciar sesión en WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Conectar el sitio a WordPress.com</string>
     <string name="dataview_default_empty_message">No hay nada aquí</string>
@@ -700,7 +700,6 @@ Language: es_MX
     <string name="reader_dropdown_menu_subscriptions">Suscripciones</string>
     <string name="reader_dropdown_menu_discover">Descubrir</string>
     <string name="reader_search_content_description">Buscar</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir etiquetas</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas sugeridas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Sigue una etiqueta y podrás ver aquí las mejores entradas de ella.</string>
@@ -795,7 +794,6 @@ Language: es_MX
     <string name="site_creation_domain_free_with_annual_plan">Gratis el primer año con planes anuales de pago</string>
     <string name="reader_secondary_bookmarked">Guardada</string>
     <string name="reader_secondary_bookmark">Guardar</string>
-    <string name="reader_discover_recommended_header_new">Podrían gustarte</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Desagrupar bloque</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Toca aquí para mostrar más detalles.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Patrones sincronizados</string>
@@ -1882,8 +1880,6 @@ Language: es_MX
     <string name="hpp_choose_error">Se produjo un error al seleccionar el tema.</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
-    <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Intenta seguir más etiquetas para ampliar la búsqueda</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_choose_button">Elegir</string>
@@ -2007,7 +2003,6 @@ Language: es_MX
     <string name="ccpa_privacy_notice_read">Lee el aviso de privacidad de CCPA</string>
     <string name="ccpa_privacy_notice_caption">La Ley de Privacidad del Consumidor de California (\"CCPA\") nos obliga a que proporcionemos información adicional a los residentes de California sobre las categorías de información personal que recopilamos y compartimos, dónde obtenemos esa información personal y cómo y por qué la usamos.</string>
     <string name="reader_choose_interests_tags_content_description">Elige tus etiquetas</string>
-    <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2720,11 +2715,8 @@ Language: es_MX
     <string name="activity_log">Registro de actividad</string>
     <string name="privacy_policy_read">Lee la política de privacidad</string>
     <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de seguimiento, incluidas algunas de terceros. Lee acerca de estas y cómo controlarlas.</string>
-    <string name="third_party_policy_learn_more_header">Política de terceros</string>
     <string name="privacy_policy_learn_more_caption">Esta información nos ayuda a mejorar nuestros productos, hacer que el marketing sea más relevante, personalizar tu experiencia en WordPress.com y más, tal como se detalla en nuestra política de privacidad.</string>
-    <string name="privacy_policy_learn_more_header">Política de privacidad</string>
     <string name="cookie_policy_learn_more_caption">Comparte información con nuestra herramienta de análisis acerca del uso que haces de los servicios mientras estás conectado a tu cuenta de WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Política de cookies</string>
     <string name="preference_privacy_settings">Ajustes de privacidad</string>
     <string name="preference_collect_information">Recopilar información</string>
     <string name="reader_btn_blog_notifications_on">Activar notificaciones del blog</string>
@@ -2776,7 +2768,6 @@ Language: es_MX
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">borrar</string>
     <string name="photo_picker_thumbnail_desc">Reproducir video</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir video destacado</string>
     <string name="plugin_detail_logo_desc">logo del plugin</string>
     <string name="plugin_detail_banner_desc">banner del plugin</string>
     <string name="photo_picker_wpmedia_desc">elige desde medios de WordPress</string>
@@ -2981,8 +2972,6 @@ Language: es_MX
     <string name="media_files_not_uploaded">%d archivos no subidos</string>
     <string name="remove_image_from_post">Quitar de la entrada</string>
     <string name="confirm_remove_media_image">¿Quitamos esta imagen de la entrada?</string>
-    <string name="media_edit_customize_card_caption">Personalizar</string>
-    <string name="media_edit_file_details_card_caption">Detalles del archivo</string>
     <string name="login_error_button">Cerrar</string>
     <string name="error_generic_network">Ocurrió un error en la red. Por favor, revisa tu conexión e inténtalo de nuevo.</string>
     <string name="post_settings_remove_featured_image">Quitar imagen destacada</string>
@@ -3016,14 +3005,8 @@ Language: es_MX
     <string name="media_title_audio_details">Detalles del audio</string>
     <string name="media_title_video_details">Detalles del video:</string>
     <string name="media_title_image_details">Detalles de la imagen</string>
-    <string name="fab_content_description_preview">Vista previa</string>
     <string name="media_edit_duration_caption">Duración</string>
-    <string name="media_edit_upload_date_caption">Fecha de actualización</string>
-    <string name="media_edit_video_dimensions_caption">Dimensiones de video</string>
-    <string name="media_edit_image_dimensions_caption">Sin imagen</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_filetype_caption">Tipo de archivo</string>
-    <string name="media_edit_filename_caption">Nombre del archivo</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="connect_site">Conectar un sitio</string>
@@ -3070,7 +3053,6 @@ Language: es_MX
     <string name="login_checking_site_address" a8c-src-lib="module:login">Comprobando dirección del sitio</string>
     <string name="login_site_address" a8c-src-lib="module:login">Dirección del sitio</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Introduce la dirección del sitio WordPress con el que te gustaría conectar.</string>
-    <string name="login_already_logged_in_wpcom">Ya estás conectado a WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Seguir</string>
     <string name="connect_more">Conectar otro sitio</string>
     <string name="next">Siguiente</string>
@@ -3120,8 +3102,6 @@ Language: es_MX
     <string name="media_videos">Videos</string>
     <string name="media_picker_soft_ask_media_permissions_denied">Se le denegó a %1$s el acceso a tus archivos multimedia. Para solucionarlo, edita tus permisos y activa %2$s.</string>
     <string name="reader_view_comments">Ver comentarios</string>
-    <string name="site_settings_video_quality_hint">Calidad de los videos. Valores más altos implican videos de mejor calidad.</string>
-    <string name="site_settings_video_width_hint">Redimensiona los videos en las entradas a este tamaño</string>
     <string name="site_settings_optimize_video_summary">Activa la redimensión y compresión de videos</string>
     <string name="site_settings_optimize_videos">Optimizar videos</string>
     <string name="draft_uploaded">Borrador subido</string>
@@ -3205,7 +3185,6 @@ Language: es_MX
     <string name="photo_picker_title">Elegir foto</string>
     <string name="error_publish_no_network">El dispositivo está desconectado. La entrada se guardará localmente.</string>
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
-    <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
     <string name="media_upload_state_uploaded">Se ha subido</string>
     <string name="media_encoder_quality_maximum">Máximo</string>
@@ -3457,7 +3436,6 @@ Language: es_MX
     <string name="site_settings_discussion_hint">Ver y cambiar la configuración de discusiones de tu sitio</string>
     <string name="site_settings_more_hint">Ver todos los ajustes disponibles de las discusiones</string>
     <string name="site_settings_related_posts_hint">Mostrar u ocultar entradas relacionadas en el lector</string>
-    <string name="site_settings_image_width_hint">Redimensionar imágenes en las entradas a esta anchura</string>
     <string name="site_settings_format_hint">Establece formato para nuevas entradas</string>
     <string name="site_settings_category_hint">Establece categoría para nuevas entradas</string>
     <string name="site_settings_password_hint">Cambiar tu contraseña</string>

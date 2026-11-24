@@ -48,7 +48,6 @@ public class ReaderPost {
     private String mUrl;
     private String mShortUrl;
     private String mFeaturedImage;
-    private String mFeaturedVideo;
     private String mAuthorBlogUrl;
 
     public int numReplies; // includes comments, trackbacks & pingbacks
@@ -433,14 +432,6 @@ public class ReaderPost {
         this.mFeaturedImage = StringUtils.notNullStr(featuredImage);
     }
 
-    public String getFeaturedVideo() {
-        return StringUtils.notNullStr(mFeaturedVideo);
-    }
-
-    public void setFeaturedVideo(String featuredVideo) {
-        this.mFeaturedVideo = StringUtils.notNullStr(featuredVideo);
-    }
-
     public String getBlogName() {
         return StringUtils.notNullStr(mBlogName);
     }
@@ -603,10 +594,6 @@ public class ReaderPost {
 
     public boolean hasFeaturedImage() {
         return !TextUtils.isEmpty(mFeaturedImage);
-    }
-
-    public boolean hasFeaturedVideo() {
-        return !TextUtils.isEmpty(mFeaturedVideo);
     }
 
     public boolean hasBlogName() {

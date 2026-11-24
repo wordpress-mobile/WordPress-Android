@@ -20,7 +20,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.repository.ReaderSubsEvent
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -200,35 +200,40 @@ class ReaderSubsViewModel @Inject constructor(
     }
 
     private fun addAsUrl(entry: String) {
-        val url = repository.normalizeEntryUrl(entry)
-        when {
-            // not a valid URL, so add the original entry as a tag
-            url == null -> addAsTag(entry)
-            repository.isFollowedUrl(url) -> showMessage(R.string.reader_toast_err_already_follow_this_blog)
-            checkConnection() -> followNewUrl(url)
+        // not a valid URL, so add the original entry as a tag
+        val url = repository.normalizeEntryUrl(entry) ?: return addAsTag(entry)
+        _uiState.update { it.copy(isAdding = true) }
+        launch {
+            when {
+                repository.isFollowedUrl(url) -> showAlreadySubscribed()
+                checkConnection() -> followNewUrl(url)
+            }
+            _uiState.update { it.copy(isAdding = false) }
         }
     }
 
-    private fun followNewUrl(url: String) {
-        _uiState.update { it.copy(isAdding = true) }
-        launch {
-            val failedStatusCode = repository.checkUrlReachable(url)
-            if (failedStatusCode != null) {
-                _uiState.update { it.copy(isAdding = false) }
-                showMessage(getUrlErrorMessage(failedStatusCode))
-                return@launch
-            }
-            val succeeded = repository.followUrl(url)
-            _uiState.update { it.copy(isAdding = false) }
-            if (succeeded) {
-                clearEntry()
-                showMessage(R.string.reader_label_blog_subscribed)
-                loadSites()
-                // the site may belong to a tag we don't have yet, and the filter sheet lists the followed sites
-                requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
-            } else {
-                showMessage(R.string.reader_toast_err_unable_to_follow_blog)
-            }
+    private suspend fun followNewUrl(url: String) {
+        // looked up before the reachability check, which fails for private sites the user already follows
+        val blogInfo = repository.lookupUrl(url)
+        if (blogInfo?.isFollowing == true) {
+            // followed under another URL, which the lookup just saved, so it shows up even if the list was stale
+            showAlreadySubscribed()
+            loadSites()
+            return
+        }
+        val failedStatusCode = repository.checkUrlReachable(url)
+        if (failedStatusCode != null) {
+            showMessage(getUrlErrorMessage(failedStatusCode))
+            return
+        }
+        if (repository.followUrl(url, blogInfo)) {
+            clearEntry()
+            showMessage(R.string.reader_label_blog_subscribed)
+            loadSites()
+            // the site may belong to a tag we don't have yet, and the filter sheet lists the followed sites
+            requestUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS))
+        } else {
+            showMessage(R.string.reader_toast_err_unable_to_follow_blog)
         }
     }
 
@@ -334,9 +339,13 @@ class ReaderSubsViewModel @Inject constructor(
 
     private fun showMessage(@StringRes messageRes: Int) = showMessage(resourceProvider.getString(messageRes))
 
-    private fun showMessage(message: String) {
-        _events.trySend(ReaderSubsUiEvent.ShowMessage(message))
+    private fun showMessage(message: String, isShort: Boolean = false) {
+        _events.trySend(ReaderSubsUiEvent.ShowMessage(message, isShort))
     }
+
+    // a quick heads-up rather than an error, so it doesn't linger like the other messages
+    private fun showAlreadySubscribed() =
+        showMessage(resourceProvider.getString(R.string.reader_toast_err_already_follow_this_blog), isShort = true)
 
     private fun trackTag(stat: Stat, slug: String) = readerTracker.trackTag(stat, slug, ReaderTracker.SOURCE_SETTINGS)
 
@@ -412,7 +421,7 @@ data class ReaderSubsSite(
 }
 
 sealed class ReaderSubsUiEvent {
-    data class ShowMessage(val message: String) : ReaderSubsUiEvent()
+    data class ShowMessage(val message: String, val isShort: Boolean = false) : ReaderSubsUiEvent()
     data class ShowSitePreview(val blogId: Long, val feedId: Long, val isFollowing: Boolean) : ReaderSubsUiEvent()
     data object HideKeyboard : ReaderSubsUiEvent()
 }

@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-25 20:49:05+0000
+Translation-Revision-Date: 2026-11-18 15:56:41+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">重新載入編輯器</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">重新載入編輯器即可繼續編輯。</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">編輯器已停止運作</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">不明的錯誤</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">無法載入編輯器</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">此裝置無法使用相機</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">相機</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">照片</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">沒有符合「%1$s」的區塊</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">沒有結果</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">清除搜尋</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">近期</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">關閉</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">新增區塊</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">搜尋區塊</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">無法顯示區塊插入工具。</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">建議</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">最常使用</string>
+    <string name="comment_detail_in_reply_to">回覆 %1$s：</string>
+    <string name="comment_author_info_guest">訪客</string>
+    <string name="comment_author_info_registered">已註冊的使用者</string>
+    <string name="comment_author_info_bio">自我介紹</string>
+    <string name="comment_author_info_posted_from">文章作者</string>
+    <string name="comment_author_info_send_email">寄送電子郵件</string>
+    <string name="comment_author_info_email">電子郵件</string>
+    <string name="comment_author_info_website">網站</string>
+    <string name="comment_author_info_posted_at">張貼時間：</string>
+    <string name="comment_author_info_show">顯示作者詳細資訊</string>
+    <string name="comment_detail_on_post">「%1$s」上</string>
+    <string name="comment_reply_continue">繼續回覆</string>
+    <string name="comment_reply_save_draft">儲存草稿</string>
+    <string name="comment_reply_delete_draft">刪除草稿</string>
+    <string name="comment_reply_keep_editing">繼續編輯</string>
+    <string name="comment_reply_unsent">有尚未送出的回覆。</string>
+    <string name="comment_trash_has_replies">這則留言有回覆。 這些回覆不會一起丟進垃圾桶。</string>
+    <string name="content_list_density_show_comfortable">顯示展開版清單</string>
+    <string name="content_list_density_show_condensed">顯示精簡版清單</string>
+    <string name="content_list_comment_count_plural">%1$s 則留言</string>
+    <string name="content_list_comment_count_singular">%1$s 則留言</string>
+    <string name="content_list_view_count_plural">%1$s 次瀏覽</string>
+    <string name="content_list_view_count_singular">%1$s 次瀏覽</string>
+    <string name="content_list_fab_write">撰寫</string>
+    <string name="content_list_group_earlier_in">%1$s初</string>
+    <string name="content_list_group_this_week">本週</string>
+    <string name="content_list_group_yesterday">昨天</string>
+    <string name="content_list_group_today">今天</string>
+    <string name="unified_support_related_label">相關：</string>
+    <string name="unified_support_attachment_link_content_description">開啟連結：%1$s</string>
+    <string name="unified_support_status_ai_assistant">AI 助理</string>
+    <string name="he_support_status_ongoing">持續</string>
+    <string name="he_support_reply_sent_confirmation">已送出你的回覆。 檢查電子郵件是否有更新。</string>
+    <string name="he_support_add_more_info_button">新增更多資訊</string>
+    <string name="application_password_private_site_card">這是私人網站，我們無法重新連結。</string>
+    <string name="application_password_private_site_error">這是私人網站，我們無法讀取其設定來為你登入。</string>
+    <string name="prepublishing_tags_remove_tag_desc">移除標籤 %1$s</string>
+    <string name="prepublishing_tags_add_hint">新增標籤</string>
+    <string name="photo_picker_choose_other_files">其他檔案</string>
+    <string name="photo_picker_choose_photo_or_video">照片與影片</string>
+    <string name="editor_saving_locked_leave">離開</string>
+    <string name="editor_saving_locked_continue">繼續</string>
+    <string name="editor_saving_locked_keep_editing">繼續編輯</string>
+    <string name="editor_saving_locked_leave_message">如果現在離開，處理中的任務 (例如上傳媒體檔案) 都會停止，文章可能會缺少內容或損壞。</string>
+    <string name="editor_saving_locked_save_message">編輯器還在處理某些任務 (例如上傳媒體檔案)。 繼續的話，文章可能會缺少內容或損壞。</string>
+    <string name="editor_saving_locked_title">文章尚未就緒</string>
+    <string name="domain_registration_purchase_unconfirmed">已使用網域額度，但無法確認結果。 重試前請先檢查網域，若找不到 %s，請聯絡支援團隊。</string>
+    <string name="domain_registration_purchase_incomplete">已使用網域額度，但 %s 無法註冊。 請聯絡支援團隊。</string>
+    <string name="support_screen_login_description">登入 WordPress.com 使用聊天支援。</string>
+    <string name="site_picker_add_site_menu_expanded">新增網站選單 (展開)</string>
+    <string name="site_picker_add_site_menu_collapsed">新增網站選單 (收合)</string>
+    <string name="site_picker_add_a_site_expand">顯示新增網站的方法</string>
+    <string name="site_picker_add_a_site_collapse">關閉新增網站選單</string>
+    <string name="get_likes_empty_state_no_likes">目前沒人按讚</string>
+    <string name="stats_archives_section_taxonomies">分類法</string>
+    <string name="stats_archives_section_other">其他</string>
+    <string name="stats_archives_section_aggregated">彙總內容</string>
+    <string name="stats_archives_section_error">錯誤</string>
+    <string name="stats_archives_section_dates">日期</string>
+    <string name="stats_archives_section_authors">作者</string>
+    <string name="stats_archives_section_tags">標籤</string>
+    <string name="stats_archives_section_categories">類別</string>
+    <string name="stats_archives_section_search">搜尋字詞</string>
+    <string name="stats_archives_title_label">封存頁面</string>
+    <string name="stats_archives_title">彙整</string>
+    <string name="stats_view_selected_period_content_description">檢視指定時間的統計資料</string>
+    <string name="stats_period_next_content_description">下個期間</string>
+    <string name="stats_period_previous_content_description">上個期間</string>
+    <string name="stats_period_this_year">今年</string>
+    <string name="stats_period_this_month">本月</string>
+    <string name="stats_feature_gate_plans_unavailable">無法開啟此網站的方案頁面</string>
+    <string name="stats_feature_gate_explore_plans">探索方案</string>
+    <string name="stats_feature_gate_message">升級方案即可使用進階分析功能</string>
+    <string name="stats_error_not_available">此網站無法提供這些統計資料</string>
+    <string name="stats_next_day">隔天</string>
+    <string name="stats_previous_day">前一天</string>
+    <string name="stats_post_detail_average">平均</string>
+    <string name="stats_post_detail_total">總計</string>
+    <string name="stats_post_detail_activity_more">較多</string>
+    <string name="stats_post_detail_activity_less">較少</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">已發表 %1$s</string>
+    <string name="stats_post_detail_title">文章統計資料</string>
+    <string name="stats_open_link">開啟連結</string>
+    <string name="stats_traffic_date_range_content_description">%1$s 至 %2$s</string>
+    <string name="stats_show_views">顯示瀏覽次數</string>
+    <string name="stats_hourly_data_not_available">無法使用每小時資料</string>
+    <string name="rs_date_trashed">已移至垃圾桶：%s</string>
+    <string name="rs_date_modified">修改時間：%s</string>
+    <string name="rs_date_now">現在</string>
+    <string name="stats_new_stats_feedback_dialog_message">你是否願意分享對新 Stats 體驗的意見回饋？</string>
+    <string name="deleting_tag_failed">刪除標籤失敗</string>
+    <string name="comments_rs_moderation_failed_multiple">%2$d 則留言中，有 %1$d 則留言無法更新</string>
+    <string name="comments_rs_moderation_failed_single">無法更新留言</string>
+    <string name="comments_rs_search_nothing_found">沒有符合搜尋條件的留言</string>
+    <string name="comments_rs_search_prompt">搜尋留言</string>
+    <string name="web_view_log_in_to_site">登入此網站</string>
     <string name="support_screen_unified_support_description">隨時取得支援團隊的解答</string>
     <string name="support_screen_unified_support_title">取得協助</string>
     <string name="unified_support_attachment_match_score">%1$d%% 相符</string>
@@ -93,6 +208,7 @@ Language: zh_TW
     <string name="gutenberg_kit_announcement_learn_more">深入了解</string>
     <string name="gutenberg_kit_announcement_maybe_later">稍後再說</string>
     <string name="gutenberg_kit_announcement_activate">啟用</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">2026 年底，它會成為大家的預設編輯器。 %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">新一代區塊編輯器已準備就緒，且提供更多新功能。</string>
     <string name="gutenberg_kit_announcement_title">更完善的區塊編輯器即將推出</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">請先切換至區塊編輯器，以嘗試使用新的編輯器。</string>
@@ -374,7 +490,6 @@ Language: zh_TW
     <string name="application_password_required">需要應用程式密碼</string>
     <string name="menu_html_mode">HTML 程式碼編輯器</string>
     <string name="taxonomies_title">分類法</string>
-    <string name="media_edit_file_size_caption">檔案大小</string>
     <string name="jetpack_rest_connection_error_login_wpcom">無法登入 WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">將網站連結至 WordPress.com</string>
     <string name="dataview_default_empty_message">這裡沒有內容</string>
@@ -697,7 +812,6 @@ Language: zh_TW
     <string name="reader_dropdown_menu_subscriptions">訂閱</string>
     <string name="reader_dropdown_menu_discover">探索</string>
     <string name="reader_search_content_description">搜尋</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">追蹤標籤</string>
     <string name="reader_filter_empty_tags_action_suggested">已建議的標籤</string>
     <string name="reader_filter_empty_blogs_action_search">搜尋網誌</string>
     <string name="reader_filter_empty_tags_list_follow_text">只要追蹤標籤，就能從此處看到最佳文章。</string>
@@ -790,7 +904,6 @@ Language: zh_TW
     <string name="site_creation_domain_free_with_annual_plan">選購任何年繳方案，第一年完全免費</string>
     <string name="reader_secondary_bookmarked">已儲存</string>
     <string name="reader_secondary_bookmark">儲存</string>
-    <string name="reader_discover_recommended_header_new">你可能會喜歡</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">取消區塊群組</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">點選此處以顯示更多詳細資訊。</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">同步的版面配置</string>
@@ -1871,8 +1984,6 @@ Language: zh_TW
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
-    <string name="reader_discover_no_posts_follow_subtitle">嘗試追蹤更多標籤，即可擴大搜尋範圍</string>
-    <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
     <string name="scan">掃瞄</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
@@ -1998,7 +2109,6 @@ Language: zh_TW
     <string name="publish_date">發表日期</string>
     <string name="ccpa_privacy_notice_read">閱讀《加州消費者隱私保護法》(CCPA) 隱私權聲明</string>
     <string name="ccpa_privacy_notice_caption">根據《加州消費者隱私保護法》(以下稱「CCPA」) 規定，我們必須提供加州使用者一些額外資訊，說明我們收集和分享的個人資訊種類、從哪裡取得這些資訊，以及這些資訊的使用方式及用途。</string>
-    <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">立即更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2710,11 +2820,8 @@ Language: zh_TW
     <string name="activity_log">活動記錄</string>
     <string name="privacy_policy_read">閱讀隱私權政策</string>
     <string name="third_party_policy_learn_more_caption">我們會使用其他的追蹤工具，包括由第三方所提供的追蹤工具。瞭解相關資訊及其控制方式。</string>
-    <string name="third_party_policy_learn_more_header">第三方政策</string>
     <string name="privacy_policy_learn_more_caption">這類資訊有助我們改進產品、提供與你更加相關的行銷活動、帶來更為個人化的 WordPress.com 使用體驗；若要瞭解更多詳細內容，請參見我們的「隱私權政策」。</string>
-    <string name="privacy_policy_learn_more_header">隱私權政策</string>
     <string name="cookie_policy_learn_more_caption">在登入你的 WordPress.com 帳號時，請將你的服務使用情況相關資訊與我們的分析工具分享。</string>
-    <string name="cookie_policy_learn_more_header">Cookie 政策</string>
     <string name="preference_privacy_settings">隱私權設定</string>
     <string name="preference_collect_information">收集資訊</string>
     <string name="post_submitted">文章已提交。</string>
@@ -2765,7 +2872,6 @@ Language: zh_TW
     <string name="reader_photo_view_desc">圖片</string>
     <string name="reader_list_item_suggestion_remove_desc">刪除</string>
     <string name="photo_picker_thumbnail_desc">播放影片</string>
-    <string name="reader_cardview_post_play_video_desc">播放特色影片</string>
     <string name="plugin_detail_logo_desc">外掛程式標誌</string>
     <string name="plugin_detail_banner_desc">外掛程式橫幅</string>
     <string name="photo_picker_wpmedia_desc">從 WordPress 媒體中挑選</string>
@@ -2969,8 +3075,6 @@ Language: zh_TW
     <string name="media_files_not_uploaded">無法上傳 %d 個檔案</string>
     <string name="remove_image_from_post">從文章中移除</string>
     <string name="confirm_remove_media_image">是否要將這張圖片從文章中移除？</string>
-    <string name="media_edit_customize_card_caption">自訂</string>
-    <string name="media_edit_file_details_card_caption">檔案詳細資料</string>
     <string name="login_error_button">關閉</string>
     <string name="error_generic_network">網路發生錯誤。請檢查你的連線並再試一次。</string>
     <string name="post_settings_remove_featured_image">移除精選圖片</string>
@@ -3004,13 +3108,7 @@ Language: zh_TW
     <string name="media_title_audio_details">音訊資訊</string>
     <string name="media_title_video_details">影片資訊</string>
     <string name="media_title_image_details">圖片資訊</string>
-    <string name="fab_content_description_preview">預覽</string>
-    <string name="media_edit_upload_date_caption">上傳日期</string>
     <string name="media_edit_duration_caption">期間</string>
-    <string name="media_edit_video_dimensions_caption">影片尺寸</string>
-    <string name="media_edit_image_dimensions_caption">圖片尺寸</string>
-    <string name="media_edit_filetype_caption">檔案類型</string>
-    <string name="media_edit_filename_caption">檔案名稱</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文字</string>
     <string name="connect_site">連結網站</string>
@@ -3058,7 +3156,6 @@ Language: zh_TW
     <string name="login_checking_site_address" a8c-src-lib="module:login">檢查網站位址</string>
     <string name="login_site_address" a8c-src-lib="module:login">網站位址</string>
     <string name="enter_site_address" a8c-src-lib="module:login">請輸入要連結的 WordPress 網站位址。</string>
-    <string name="login_already_logged_in_wpcom">已登入 WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">繼續</string>
     <string name="connect_more">連結其他網站</string>
     <string name="next">下一篇</string>
@@ -3108,8 +3205,6 @@ Language: zh_TW
     <string name="media_all">全部</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s 要求存取你的媒體檔案時遭拒絕。 若要解決此問題，請編輯存取權限並開啟「%2$s」。</string>
     <string name="reader_view_comments">檢視留言</string>
-    <string name="site_settings_video_quality_hint">影片的品質。數值愈高，表示影片品質愈好。</string>
-    <string name="site_settings_video_width_hint">將文章中的影片調整到符合以下大小</string>
     <string name="site_settings_optimize_video_summary">啟用即可調整影片大小和壓縮影片</string>
     <string name="site_settings_optimize_videos">最佳化影片</string>
     <string name="draft_uploaded">草稿已上傳</string>
@@ -3193,7 +3288,6 @@ Language: zh_TW
     <string name="photo_picker_title">選擇照片</string>
     <string name="error_publish_no_network">裝置已離線。文章已儲存在本機上。</string>
     <string name="editor_post_saved_online">文章已在線上儲存</string>
-    <string name="site_settings_image_quality_hint">照片品質。越高的值代表越高的照片品質。</string>
     <string name="site_settings_optimize_images_summary">啟用即可調整照片大小和壓縮照片</string>
     <string name="media_encoder_quality_maximum">最高</string>
     <string name="media_encoder_quality_medium">中等</string>
@@ -3442,7 +3536,6 @@ Language: zh_TW
     <string name="site_settings_discussion_hint">檢視及變更你的網站討論設定</string>
     <string name="site_settings_more_hint">檢視所有可變更的討論設定</string>
     <string name="site_settings_related_posts_hint">在讀取器中顯示或隱藏相關文章</string>
-    <string name="site_settings_image_width_hint">將文章中的圖片調整為符合以下寬度</string>
     <string name="site_settings_format_hint">設定新的文章格式</string>
     <string name="site_settings_category_hint">設定新的文章類別</string>
     <string name="site_settings_password_hint">變更你的密碼</string>

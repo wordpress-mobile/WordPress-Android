@@ -32,19 +32,14 @@ import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResp
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload;
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 
 @ActionEnum
 public enum SiteAction implements IAction {
     // Remote actions
     @Action(payloadType = SiteModel.class)
-    FETCH_PROFILE_XML_RPC,
-    @Action(payloadType = SiteModel.class)
     FETCH_SITE,
     @Action(payloadType = FetchSitesPayload.class)
     FETCH_SITES,
-    @Action(payloadType = RefreshSitesXMLRPCPayload.class)
-    FETCH_SITES_XML_RPC,
     @Action(payloadType = RefreshSitesXMLRPCApplicationPasswordCredentialsPayload.class)
     FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD,
     @Action(payloadType = FetchWPAPISitePayload.class)
@@ -89,8 +84,6 @@ public enum SiteAction implements IAction {
     FETCH_BLOCK_LAYOUTS,
 
     // Remote responses
-    @Action(payloadType = SiteModel.class)
-    FETCHED_PROFILE_XML_RPC,
     @Action(payloadType = FetchedEditorsPayload.class)
     FETCHED_SITE_EDITORS,
     @Action(payloadType = DesignateMobileEditorForAllSitesResponsePayload.class)

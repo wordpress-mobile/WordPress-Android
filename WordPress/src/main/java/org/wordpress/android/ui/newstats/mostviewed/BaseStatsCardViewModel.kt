@@ -256,7 +256,8 @@ abstract class BaseStatsCardViewModel(
             views = views,
             change = change,
             children = children,
-            url = url
+            url = url,
+            iconUrl = iconUrl
         )
 }
 

@@ -27,7 +27,10 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -582,6 +585,37 @@ public class MediaStoreTest {
 
         assertEquals(testSiteId, storeDocuments.get(0).getLocalSiteId());
         assertEquals(testSiteId, storeDocuments.get(1).getLocalSiteId());
+    }
+
+    @Test
+    public void testSiteDocumentsIncludePlainTextOnlyForThisSite() {
+        final int testSiteId = 865235;
+        final int otherSiteId = 865236;
+        final long pdfId = 1;
+        final long txtId = 2;
+
+        MediaModel pdf = generateMediaFromPath(testSiteId, pdfId, "/test/notes.pdf");
+        MediaModel txt = generateMediaFromPath(testSiteId, txtId, "/test/notes.txt");
+        MediaModel html = generateMediaFromPath(testSiteId, 3, "/test/notes.html");
+        html.setMimeType("text/html");
+        MediaModel otherSiteTxt = generateMediaFromPath(otherSiteId, 4, "/test/notes.txt");
+        insertMediaIntoDatabase(pdf);
+        insertMediaIntoDatabase(txt);
+        insertMediaIntoDatabase(html);
+        insertMediaIntoDatabase(otherSiteTxt);
+
+        SiteModel site = getTestSiteWithLocalId(testSiteId);
+        Set<Long> expected = new HashSet<>(Arrays.asList(pdfId, txtId));
+        assertEquals(expected, mediaIds(mMediaStore.getSiteDocuments(site)));
+        assertEquals(expected, mediaIds(mMediaStore.searchSiteDocuments(site, "notes")));
+    }
+
+    private static Set<Long> mediaIds(List<MediaModel> mediaList) {
+        Set<Long> ids = new HashSet<>();
+        for (MediaModel media : mediaList) {
+            ids.add(media.getMediaId());
+        }
+        return ids;
     }
 
     @Test

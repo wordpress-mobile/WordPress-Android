@@ -116,6 +116,12 @@ class AnalyticsUtilsWrapper @Inject constructor(
         site: SiteModel
     ) = AnalyticsUtils.trackCommentActionWithSiteDetails(stat, actionSource, site)
 
+    fun trackCommentActionWithReaderPostDetails(
+        stat: Stat,
+        actionSource: AnalyticsCommentActionSource,
+        post: ReaderPost?
+    ) = AnalyticsUtils.trackCommentActionWithReaderPostDetails(stat, actionSource, post)
+
     fun trackCommentReplyWithDetails(
         isQuickReply: Boolean,
         site: SiteModel,

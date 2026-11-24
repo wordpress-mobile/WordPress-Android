@@ -1,11 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-18 10:19:42+0000
+Translation-Revision-Date: 2026-11-20 19:31:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Je chat met AI van %1$s ondersteuning.</string>
+    <string name="login_session_expired">Je login sessie is verlopen. Probeer het nog eens.</string>
+    <string name="reader_save_posts_synced_dialog_message">Opgeslagen berichten worden gesynchroniseerd met je WordPress.com account, zodat ze op al je apparaten staan.</string>
+    <string name="reader_saved_post_removed">Verwijderen uit opgeslagen berichten</string>
+    <string name="reader_saved_posts_limit_reached">Je hebt de beperking voor opgeslagen berichten bereikt. Verwijder er een paar om meer te kunnen opslaan.</string>
+    <string name="stats_period_last_3_years">Laatste 3 jaar</string>
+    <string name="stats_chart_interval_submenu">Intervalopties openen</string>
+    <string name="stats_chart_interval">Interval</string>
+    <string name="post_rs_local_drafts_retry_description">Probeer het uploaden van \"%s\" nog eens</string>
+    <string name="post_rs_local_drafts_upload_failed">Upload mislukt</string>
+    <string name="post_rs_local_drafts_subtitle">Deze berichten staan alleen op dit apparaat.</string>
+    <string name="post_rs_local_drafts_title">Niet geüpload</string>
+    <string name="confirm_delete_single_media">%1$d geselecteerde items verwijderen?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, niet ingesteld</string>
+    <string name="media_settings_alt_text_sheet_helper">Probeer het bij één of twee zinnen te houden</string>
+    <string name="media_settings_description_sheet_explanation">Geplaatst op de bijlagepagina.</string>
+    <string name="media_settings_caption_sheet_explanation">Wordt onder de afbeelding in berichten weergegeven.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Beschrijf wat er op de afbeelding staat voor mensen die een schermlezer gebruiken. Laat het veld leeg als de afbeelding alleen ter versiering is.</string>
+    <string name="media_settings_uploaded">Geüpload</string>
+    <string name="media_settings_file_size">Bestand grootte</string>
+    <string name="media_settings_file_type">Bestandstype</string>
+    <string name="media_settings_file_name">Bestandsnaam</string>
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor opnieuw laden</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor herladen om door te bewerken.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">De editor stopte met werken</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Onbekende fout</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Laden van editor mislukt</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera niet beschikbaar op dit apparaat</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Camera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Foto\'s</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Geen blokken komen overeen “%1$s”</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Geen resultaten</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Zoekopdracht wissen</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recent</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Sluiten</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Blok toevoegen</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Blokken zoeken</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">De blok-inserter kan niet worden getoond.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Voorgesteld</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Meest gebruikt</string>
+    <string name="comment_detail_in_reply_to">Als reactie op %1$s:</string>
+    <string name="comment_author_info_guest">Gast</string>
+    <string name="comment_author_info_registered">Geregistreerde gebruiker</string>
+    <string name="comment_author_info_bio">Bio</string>
+    <string name="comment_author_info_posted_from">Geplaatst vanaf</string>
+    <string name="comment_author_info_send_email">Verzend e-mail</string>
+    <string name="comment_author_info_email">E-mail</string>
+    <string name="comment_author_info_website">Site</string>
+    <string name="comment_author_info_posted_at">Geplaatst op</string>
+    <string name="comment_author_info_show">Toon auteur details</string>
+    <string name="comment_detail_on_post">op %1$s</string>
+    <string name="comment_reply_continue">Antwoord voortzetten</string>
+    <string name="comment_reply_save_draft">Concept opslaan</string>
+    <string name="comment_reply_delete_draft">Concept verwijderen</string>
+    <string name="comment_reply_keep_editing">Doorgaan met bewerken</string>
+    <string name="comment_reply_unsent">Je hebt een onverzonden reactie.</string>
+    <string name="comment_trash_has_replies">Deze reactie heeft antwoorden. Ze worden niet naar de prullenbak verplaatst.</string>
+    <string name="content_list_density_show_comfortable">Uitgebreide lijst weergeven</string>
+    <string name="content_list_density_show_condensed">Samengeperste lijst weergeven</string>
+    <string name="content_list_comment_count_plural">%1$s reacties</string>
+    <string name="content_list_comment_count_singular">%1$s reactie</string>
+    <string name="content_list_view_count_plural">%1$s weergaven</string>
+    <string name="content_list_view_count_singular">%1$s weergave</string>
+    <string name="content_list_fab_write">Schrijven</string>
+    <string name="content_list_group_earlier_in">Vroeger in %1$s</string>
+    <string name="content_list_group_this_week">Deze week</string>
+    <string name="content_list_group_yesterday">Gisteren</string>
+    <string name="content_list_group_today">Vandaag</string>
+    <string name="unified_support_related_label">Gerelateerd:</string>
+    <string name="unified_support_attachment_link_content_description">Link openen: %1$s</string>
+    <string name="unified_support_status_ai_assistant">AI assistent</string>
+    <string name="he_support_status_ongoing">Nu bezig</string>
+    <string name="he_support_reply_sent_confirmation">Je antwoord is verzonden. Controleer je e-mail voor updates.</string>
+    <string name="he_support_add_more_info_button">Meer info toevoegen</string>
+    <string name="application_password_private_site_card">Deze site is privé, dus we kunnen niet opnieuw verbinden.</string>
+    <string name="application_password_private_site_error">Deze site is privé, dus we kunnen de instellingen niet lezen om je aan te melden.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Tag %1$s verwijderen</string>
+    <string name="prepublishing_tags_add_hint">Tag toevoegen</string>
+    <string name="photo_picker_choose_other_files">Andere bestanden</string>
+    <string name="photo_picker_choose_photo_or_video">Foto\'s en video\'s</string>
+    <string name="editor_saving_locked_leave">Verlaten</string>
+    <string name="editor_saving_locked_continue">Doorgaan</string>
+    <string name="editor_saving_locked_keep_editing">Doorgaan met bewerken</string>
+    <string name="editor_saving_locked_leave_message">Als je nu vertrekt, stopt alles wat nog bezig is, zoals een media upload, en kan het ontbreken of beschadigd zijn in je bericht.</string>
+    <string name="editor_saving_locked_save_message">Iets in de editor, zoals een media upload, is nog bezig. Als je doorgaat, kan het ontbreken of beschadigd zijn in je bericht.</string>
+    <string name="editor_saving_locked_title">Je bericht is nog niet klaar</string>
+    <string name="domain_registration_purchase_unconfirmed">Je domein credit is gebruikt, maar we konden het resultaat niet bevestigen. Controleer je domeinen voordat je het opnieuw probeert, en neem contact op met ondersteuning als %s ontbreekt.</string>
+    <string name="domain_registration_purchase_incomplete">Je domein credit is gebruikt, maar %s kon niet worden geregistreerd. Neem contact op met ondersteuning.</string>
+    <string name="support_screen_login_description">Log in op WordPress.com om toegang te krijgen tot ondersteuning chat.</string>
+    <string name="site_picker_add_site_menu_expanded">Site toevoegen menu uitgerekt</string>
+    <string name="site_picker_add_site_menu_collapsed">Site toevoegen menu ingeklapt</string>
+    <string name="site_picker_add_a_site_expand">Manieren om een site toe te voegen weergeven</string>
+    <string name="site_picker_add_a_site_collapse">Site toevoegen menu sluiten</string>
+    <string name="get_likes_empty_state_no_likes">Nog geen vind-ik-leuks</string>
+    <string name="stats_archives_section_taxonomies">Taxonomieën</string>
+    <string name="stats_archives_section_other">Ander</string>
+    <string name="stats_archives_section_aggregated">Geaggregeerd</string>
+    <string name="stats_archives_section_error">Fout</string>
+    <string name="stats_archives_section_dates">Datums</string>
+    <string name="stats_archives_section_authors">Auteurs</string>
+    <string name="stats_archives_section_tags">Tags</string>
+    <string name="stats_archives_section_categories">Categorieën</string>
+    <string name="stats_archives_section_search">Zoektermen</string>
+    <string name="stats_archives_title_label">Archiefpagina\'s</string>
+    <string name="stats_archives_title">Archieven</string>
+    <string name="stats_view_selected_period_content_description">Weergave statistieken voor de geselecteerde periode</string>
+    <string name="stats_period_next_content_description">Volgende periode</string>
+    <string name="stats_period_previous_content_description">Vorige periode</string>
+    <string name="stats_period_this_year">Dit jaar</string>
+    <string name="stats_period_this_month">Deze maand</string>
+    <string name="stats_feature_gate_plans_unavailable">De abonnementen pagina voor deze locatie kan niet worden geopend</string>
+    <string name="stats_feature_gate_explore_plans">Abonnementen verkennen</string>
+    <string name="stats_feature_gate_message">Upgrade je abonnement om toegang te krijgen tot geavanceerde analyses</string>
+    <string name="stats_error_not_available">Deze statistieken zijn niet beschikbaar voor deze site</string>
+    <string name="stats_next_day">Volgende dag</string>
+    <string name="stats_previous_day">Vorige dag</string>
+    <string name="stats_post_detail_average">Gemiddeld</string>
+    <string name="stats_post_detail_total">Totaal</string>
+    <string name="stats_post_detail_activity_more">Meer</string>
+    <string name="stats_post_detail_activity_less">Minder</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Gepubliceerd %1$s</string>
+    <string name="stats_post_detail_title">Berichtstatistieken</string>
+    <string name="stats_open_link">Open link</string>
+    <string name="stats_traffic_date_range_content_description">%1$s to %2$s</string>
+    <string name="stats_show_views">Toon weergaven</string>
+    <string name="stats_hourly_data_not_available">Uurgegevens niet beschikbaar</string>
+    <string name="rs_date_trashed">Verplaatst naar prullenbak: %s</string>
+    <string name="rs_date_modified">Gewijzigd: %s</string>
+    <string name="rs_date_now">Nu</string>
+    <string name="stats_new_stats_feedback_dialog_message">Ben je bereid feedback te delen over de nieuwe statistieken ervaring?</string>
+    <string name="deleting_tag_failed">Tag verwijderen mislukt</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d van %2$d reacties konden niet worden geüpdatet</string>
+    <string name="comments_rs_moderation_failed_single">De reactie kon niet worden geüpdatet</string>
+    <string name="comments_rs_search_nothing_found">Geen reacties die overeenkomen met je zoekopdracht</string>
+    <string name="comments_rs_search_prompt">Reacties zoeken</string>
+    <string name="web_view_log_in_to_site">Log in op deze site</string>
     <string name="support_screen_unified_support_description">Je kunt altijd antwoorden krijgen van ons ondersteuningsteam</string>
     <string name="support_screen_unified_support_title">Krijg hulp</string>
     <string name="unified_support_attachment_match_score">%1$d%% overeenkomst</string>
@@ -93,6 +231,7 @@ Language: nl
     <string name="gutenberg_kit_announcement_learn_more">Lees verder</string>
     <string name="gutenberg_kit_announcement_maybe_later">Misschien later</string>
     <string name="gutenberg_kit_announcement_activate">Activeren</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">Tegen het einde 2026 wordt het de standaard-editor voor iedereen. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">De volgende generatie blok-editor is klaar en brengt meer nieuwe functies.</string>
     <string name="gutenberg_kit_announcement_title">Een betere blok-editor komt eraan</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Schakel eerst over naar de blok-editor om de nieuwe editor te proberen.</string>
@@ -375,7 +514,6 @@ Language: nl
     <string name="application_password_required">Applicatie wachtwoord vereist</string>
     <string name="menu_html_mode">Code editor</string>
     <string name="taxonomies_title">Taxonomieën</string>
-    <string name="media_edit_file_size_caption">Bestandsgrootte</string>
     <string name="jetpack_rest_connection_error_login_wpcom">Kan niet inloggen op WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_site">Site met WordPress.com koppelen</string>
     <string name="dataview_default_empty_message">Hier is niets te vinden</string>
@@ -700,7 +838,6 @@ Language: nl
     <string name="reader_dropdown_menu_subscriptions">Abonnementen</string>
     <string name="reader_dropdown_menu_discover">Ontdek</string>
     <string name="reader_search_content_description">Zoeken</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Tags volgen</string>
     <string name="reader_filter_empty_tags_action_suggested">Voorgestelde tags</string>
     <string name="reader_filter_empty_blogs_action_search">Een blog zoeken</string>
     <string name="reader_filter_empty_tags_list_follow_text">Een tag volgen en je zult de beste berichten ervan hier kunnen zien.</string>
@@ -795,7 +932,6 @@ Language: nl
     <string name="site_creation_domain_free_with_annual_plan">Het eerste jaar gratis bij elk betaald abonnement</string>
     <string name="reader_secondary_bookmarked">Opgeslagen</string>
     <string name="reader_secondary_bookmark">Opslaan</string>
-    <string name="reader_discover_recommended_header_new">Je zult ook leuk vinden</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Groeperen blok ongedaan maken</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hier tikken om meer details weer te geven.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gesynchroniseerde patronen</string>
@@ -1200,6 +1336,7 @@ Language: nl
     <string name="photo_picker_media_thumbnail_content_description">Media thumbnail</string>
     <string name="stats_insights_popular_title">Populairste tijd</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_period_this_week">Deze week</string>
     <string name="scan_vault_press_active_on_site_button_text">Bezoek dashboard</string>
     <string name="scan_vault_press_active_on_site_subtitle">Je site wordt al beschermd door VaultPress. Hieronder staat een link naar je VaultPress-dashboard.</string>
     <string name="scan_vault_press_active_on_site_title">Je site heeft VaultPress</string>
@@ -1880,8 +2017,6 @@ Language: nl
     <string name="hpp_retry_error">Controleer je internetverbinding en probeer het opnieuw.</string>
     <string name="hpp_error_subtitle">Tikken op opnieuw proberen wanneer je weer online bent.</string>
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Probeer meer tags te volgen om de zoekopdracht te verbreden</string>
-    <string name="reader_discover_no_posts_title">Geen recente berichten</string>
     <string name="reader_discover_empty_title">Welkom!</string>
     <string name="scan">Scan</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Scrolbaar blokmenu geopend. Selecteer een blok.</string>
@@ -2007,7 +2142,6 @@ Language: nl
     <string name="publish_date">Publicatiedatum</string>
     <string name="ccpa_privacy_notice_read">Lees CCPA privacy bericht</string>
     <string name="ccpa_privacy_notice_caption">De Californische Consumer Privacy Act (\"CCPA\") vereist dat je ons de Californische inwonenden aanlevert met enige toegevoegde informatie over de categorieën van de persoonlijke informatie die we verzamelen en delen, daar waar we persoonlijke informatie krijgen, en waarom we het gebruiken.</string>
-    <string name="ccpa_privacy_notice_header">Privacy bericht voor gebruikers in Californië</string>
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="update_now">Update nu</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2856,8 @@ Language: nl
     <string name="activity_log">Activiteitenlog</string>
     <string name="privacy_policy_read">Privacybeleid lezen</string>
     <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgingstools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
-    <string name="third_party_policy_learn_more_header">Beleid van derden</string>
     <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons om onze producten te verbeteren, marketing naar je relevanter te maken, je WordPress.com ervaring te personaliseren, en meer zoals gedetailleerd in ons privacybeleid.</string>
-    <string name="privacy_policy_learn_more_header">Privacybeleid</string>
     <string name="cookie_policy_learn_more_caption">Deel informatie met onze analysetool over je gebruik van diensten terwijl je bent ingelogd op je WordPress.com account.</string>
-    <string name="cookie_policy_learn_more_header">Cookiebeleid</string>
     <string name="preference_privacy_settings">Privacyinstellingen</string>
     <string name="preference_collect_information">Gegevens verzamelen</string>
     <string name="post_submitted">Bericht geplaatst</string>
@@ -2777,7 +2908,6 @@ Language: nl
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">verwijderen</string>
     <string name="photo_picker_thumbnail_desc">Video afspelen</string>
-    <string name="reader_cardview_post_play_video_desc">aanbevolen video afspelen</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="photo_picker_wpmedia_desc">kiezen uit media op WordPress</string>
@@ -2981,8 +3111,6 @@ Language: nl
     <string name="media_files_not_uploaded">%d bestanden niet geüpload</string>
     <string name="remove_image_from_post">Uit bericht verwijderen</string>
     <string name="confirm_remove_media_image">Deze afbeelding verwijderen uit het bericht?</string>
-    <string name="media_edit_customize_card_caption">Aanpassen</string>
-    <string name="media_edit_file_details_card_caption">Bestand details</string>
     <string name="login_error_button">Sluiten</string>
     <string name="error_generic_network">Er is een netwerkfout opgetreden. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="post_settings_remove_featured_image">Uitgelichte afbeelding verwijderen</string>
@@ -3016,13 +3144,7 @@ Language: nl
     <string name="media_title_audio_details">Audiodetails</string>
     <string name="media_title_video_details">Video details</string>
     <string name="media_title_image_details">Afbeeldingsdetails</string>
-    <string name="fab_content_description_preview">Voorbeeld bekijken</string>
-    <string name="media_edit_upload_date_caption">Uploaddatum</string>
     <string name="media_edit_duration_caption">Duur</string>
-    <string name="media_edit_video_dimensions_caption">Video afmetingen</string>
-    <string name="media_edit_image_dimensions_caption">Afbeeldingsafmetingen</string>
-    <string name="media_edit_filetype_caption">Bestandstype</string>
-    <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-tekst</string>
     <string name="connect_site">Een site verbinden</string>
@@ -3070,7 +3192,6 @@ Language: nl
     <string name="login_checking_site_address" a8c-src-lib="module:login">Site adres wordt gecontroleerd</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site adres</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Voer het adres van de WordPress site in die je wil verbinden.</string>
-    <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Doorgaan</string>
     <string name="connect_more">Een andere site koppelen</string>
     <string name="next">Volgende</string>
@@ -3120,8 +3241,6 @@ Language: nl
     <string name="media_all">Alles</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s kon geen toegang krijgen tot je mediabestanden. Bewerk je toestemmingen en schakel %2$s in om dit op te lossen.</string>
     <string name="reader_view_comments">Reacties bekijken</string>
-    <string name="site_settings_video_quality_hint">Kwaliteit van video\'s. Hoe hoger de waarde, hoe beter de kwaliteit van je video\'s.</string>
-    <string name="site_settings_video_width_hint">Past het formaat aan van video\'s in berichten naar deze grootte</string>
     <string name="site_settings_optimize_video_summary">Video\'s formaat aanpassen en comprimeren</string>
     <string name="site_settings_optimize_videos">Video\'s optimaliseren</string>
     <string name="draft_uploaded">Concept toegevoegd</string>
@@ -3205,7 +3324,6 @@ Language: nl
     <string name="photo_picker_title">Foto kiezen</string>
     <string name="error_publish_no_network">Apparaat is offline. Bericht lokaal opgeslagen.</string>
     <string name="editor_post_saved_online">Bericht is online opgeslagen</string>
-    <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het formaat aanpassen en comprimeren van afbeeldingen inschakelen</string>
     <string name="media_encoder_quality_maximum">Maximum</string>
     <string name="media_encoder_quality_high">Hoog</string>
@@ -3457,7 +3575,6 @@ Language: nl
     <string name="site_settings_discussion_hint">De discussie instellingen van je sites bekijken en wijzigen</string>
     <string name="site_settings_more_hint">Alle beschikbare discussie instellingen bekijken</string>
     <string name="site_settings_related_posts_hint">Gerelateerde berichten weergeven of verbergen in reader</string>
-    <string name="site_settings_image_width_hint">Past het formaat van afbeeldingen aan in berichten tot deze breedte</string>
     <string name="site_settings_format_hint">Stelt een nieuw bericht format in</string>
     <string name="site_settings_category_hint">Stelt een nieuwe berichtcategorie in</string>
     <string name="site_settings_password_hint">Je wachtwoord wijzigen</string>
@@ -3509,6 +3626,7 @@ Language: nl
     <string name="reader_err_get_post_generic">Niet in staat om dit bericht op te halen</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
     <string name="media_edit_copy_url_toast">URL gekopieerd naar klembord</string>
+    <string name="media_settings_copy_url">URL kopiëren</string>
     <string name="selected_theme">Geselecteerd thema</string>
     <string name="could_not_load_theme">Kon thema niet laden</string>
     <string name="theme_activation_error">Er is iets fout gegaan. Kan thema niet activeren</string>
@@ -3593,6 +3711,7 @@ Language: nl
     <string name="my_site_btn_blog_posts">Berichten</string>
     <string name="reader_label_new_posts_subtitle">Tikken om ze te tonen</string>
     <string name="select_all">Alles selecteren</string>
+    <string name="media_settings_dimensions">Dimensies</string>
     <string name="language">Taal</string>
     <string name="reader_empty_posts_request_failed">Niet in staat om berichten op te halen</string>
     <string name="error_notification_open">Kon melding niet openen</string>
@@ -3627,6 +3746,7 @@ Language: nl
     <string name="stats_timeframe_years">Jaren</string>
     <string name="themes_fetching">Thema\'s an het ophalen…</string>
     <string name="ssl_certificate_details">Details</string>
+    <string name="confirm_delete_multi_media">%1$d geselecteerde items verwijderen?</string>
     <string name="cab_selected">%d geselecteerd</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_empty_comments">Nog geen reacties</string>

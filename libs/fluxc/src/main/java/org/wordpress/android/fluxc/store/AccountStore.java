@@ -22,9 +22,6 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountFetchUsernameSuggestionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
@@ -37,7 +34,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.OauthResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.TwoFactorResponse;
@@ -98,99 +94,6 @@ public class AccountStore extends Store {
         public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType,
                                         @NonNull XmlRpcErrorType xmlRpcErrorType) {
             this.error = new AuthenticationError(errorType, "", xmlRpcErrorType);
-        }
-    }
-
-    public static class AuthEmailPayload extends Payload<BaseNetworkError> {
-        public AuthEmailPayloadScheme scheme;
-        public AuthEmailFlow flow;
-        public AuthEmailSource source;
-        public String emailOrUsername;
-        public String signupFlowName;
-        public boolean isSignup;
-
-        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailFlow flow,
-                                AuthEmailSource source, AuthEmailPayloadScheme scheme) {
-            this.emailOrUsername = emailOrUsername;
-            this.isSignup = isSignup;
-            this.flow = flow;
-            this.source = source;
-            this.scheme = scheme;
-        }
-
-        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source, AuthEmailPayloadScheme scheme) {
-            this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source, scheme);
-        }
-
-        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailFlow flow,
-                                AuthEmailSource source) {
-            this(emailOrUsername, isSignup, flow, source, null);
-        }
-
-        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source) {
-            this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source);
-        }
-    }
-
-    public enum AuthEmailPayloadScheme {
-        WORDPRESS("wordpress"),
-        WOOCOMMERCE("woocommerce"),
-        JETPACK("jetpack");
-
-        private final String mString;
-
-        AuthEmailPayloadScheme(final String s) {
-            mString = s;
-        }
-
-        @Override
-        public String toString() {
-            return mString;
-        }
-    }
-
-    public interface AuthEmailFlow {
-        @NonNull
-        String getName();
-    }
-
-    public enum AuthEmailPayloadFlow implements AuthEmailFlow {
-        JETPACK("jetpack");
-
-        private final String mName;
-
-        AuthEmailPayloadFlow(final String name) {
-            mName = name;
-        }
-
-        @Override
-        @NonNull
-        public String getName() {
-            return mName;
-        }
-    }
-
-    public interface AuthEmailSource {
-        @NonNull
-        String getName();
-    }
-
-    public enum AuthEmailPayloadSource implements AuthEmailSource {
-        NOTIFICATIONS("notifications"),
-        STATS("stats");
-
-        private final String mName;
-
-        AuthEmailPayloadSource(final String name) {
-            mName = name;
-        }
-
-        @Override
-        @NonNull
-        public String getName() {
-            return mName;
         }
     }
 
@@ -502,12 +405,6 @@ public class AccountStore extends Store {
         public boolean isEmailVerified;
     }
 
-    public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
-        public String xmlRpcEndpoint;
-        public String wpRestEndpoint;
-        public String failedEndpoint;
-    }
-
     public static class OnNewUserCreated extends OnChanged<NewUserError> {
         public boolean dryRun;
     }
@@ -521,14 +418,6 @@ public class AccountStore extends Store {
             this.type = type;
             this.value = value;
             this.isAvailable = isAvailable;
-        }
-    }
-
-    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {
-        public final boolean isSignup;
-
-        public OnAuthEmailSent(boolean isSignup) {
-            this.isSignup = isSignup;
         }
     }
 
@@ -801,39 +690,6 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class AuthEmailError implements OnChangedError {
-        public AuthEmailErrorType type;
-        public String message;
-
-        public AuthEmailError(AuthEmailErrorType type, @NonNull String message) {
-            this.type = type;
-            this.message = message;
-        }
-
-        public AuthEmailError(@NonNull String type, @NonNull String message) {
-            this.type = AuthEmailErrorType.fromString(type);
-            this.message = message;
-        }
-    }
-
-    public enum AuthEmailErrorType {
-        INVALID_EMAIL,
-        USER_EXISTS,
-        UNSUCCESSFUL,
-        GENERIC_ERROR;
-
-        public static AuthEmailErrorType fromString(String string) {
-            if (string != null) {
-                for (AuthEmailErrorType v : AuthEmailErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
-                }
-            }
-            return GENERIC_ERROR;
-        }
-    }
-
     public static class NewUserError implements OnChangedError {
         public NewUserErrorType type;
         public String message;
@@ -878,15 +734,12 @@ public class AccountStore extends Store {
     private Authenticator mAuthenticator;
     private AccountModel mAccount;
     private AccessToken mAccessToken;
-    private SelfHostedEndpointFinder mSelfHostedEndpointFinder;
 
     @Inject public AccountStore(Dispatcher dispatcher, AccountRestClient accountRestClient,
-                        SelfHostedEndpointFinder selfHostedEndpointFinder, Authenticator authenticator,
-                        AccessToken accessToken) {
+                        Authenticator authenticator, AccessToken accessToken) {
         super(dispatcher);
         mAuthenticator = authenticator;
         mAccountRestClient = accountRestClient;
-        mSelfHostedEndpointFinder = selfHostedEndpointFinder;
         mAccount = loadAccount();
         mAccessToken = accessToken;
     }
@@ -1032,18 +885,6 @@ public class AccountStore extends Store {
             case AUTHENTICATE_ERROR:
                 handleAuthenticateError((AuthenticateErrorPayload) payload);
                 break;
-            case DISCOVER_ENDPOINT:
-                discoverEndPoint((String) payload);
-                break;
-            case DISCOVERY_RESULT:
-                discoveryResult((DiscoveryResultPayload) payload);
-                break;
-            case SEND_AUTH_EMAIL:
-                mAuthenticator.sendAuthEmail((AuthEmailPayload) payload);
-                break;
-            case SENT_AUTH_EMAIL:
-                handleSentAuthEmail((AuthEmailResponsePayload) payload);
-                break;
             case START_SECURITY_KEY_CHALLENGE:
                 requestWebauthnChallenge((StartWebauthnChallengePayload) payload);
                 break;
@@ -1060,22 +901,6 @@ public class AccountStore extends Store {
         OnAuthenticationChanged event = new OnAuthenticationChanged();
         event.error = payload.error;
         emitChange(event);
-    }
-
-    private void discoverEndPoint(@NonNull String payload) {
-        mSelfHostedEndpointFinder.findEndpoint(payload);
-    }
-
-    private void discoveryResult(DiscoveryResultPayload payload) {
-        OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
-        if (payload.isError()) {
-            discoveryResponse.error = payload.error;
-            discoveryResponse.failedEndpoint = payload.failedEndpoint;
-        } else {
-            discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
-            discoveryResponse.wpRestEndpoint = payload.wpRestEndpoint;
-        }
-        emitChange(discoveryResponse);
     }
 
     private void handleFetchAccountCompleted(AccountRestPayload payload) {
@@ -1391,17 +1216,6 @@ public class AccountStore extends Store {
         } else {
             OnAuthenticationChanged event = new OnAuthenticationChanged();
             event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
-            emitChange(event);
-        }
-    }
-
-    private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
-        if (payload.isError()) {
-            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
-            event.error = payload.error;
-            emitChange(event);
-        } else {
-            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             emitChange(event);
         }
     }

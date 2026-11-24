@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -343,7 +342,8 @@ object ReaderActivityLauncher {
         fragment: Fragment,
         blogId: Long,
         postId: Long,
-        source: String?
+        source: String?,
+        commentId: Long = 0L
     ) {
         if (fragment.context == null) {
             return
@@ -352,8 +352,8 @@ object ReaderActivityLauncher {
             context = fragment.requireContext(),
             blogId = blogId,
             postId = postId,
-            directOperation = null,
-            commentId = 0L,
+            directOperation = if (commentId != 0L) DirectOperation.COMMENT_JUMP else null,
+            commentId = commentId,
             interceptedUri = null,
             source = source
         )
@@ -422,19 +422,6 @@ object ReaderActivityLauncher {
             ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT,
             ReaderInterestsFragment.EntryPoint.SETTINGS
         )
-
-    /*
-     * play an external video
-     */
-    @JvmStatic
-    fun showReaderVideoViewer(context: Context, videoUrl: String) {
-        if (TextUtils.isEmpty(videoUrl)) {
-            return
-        }
-        val intent = Intent(context, ReaderVideoViewerActivity::class.java)
-        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl)
-        context.startActivity(intent)
-    }
 
     @JvmStatic
     @JvmOverloads

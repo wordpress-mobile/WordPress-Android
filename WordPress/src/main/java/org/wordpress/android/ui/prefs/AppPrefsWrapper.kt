@@ -241,6 +241,16 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
 
+    fun shouldShowReaderSavedPostsSyncDialog(): Boolean = AppPrefs.shouldShowReaderSavedPostsSyncDialog()
+    fun setReaderSavedPostsSyncDialogShown() = AppPrefs.setReaderSavedPostsSyncDialogShown()
+
+    fun isReaderSavedPostsImported(userId: Long): Boolean = AppPrefs.isReaderSavedPostsImported(userId)
+
+    /** The WordPress.com user the Reader database belongs to. It's reset when a different one signs in. */
+    fun getLastUsedUserId(): Long = AppPrefs.getLastUsedUserId()
+
+    fun setReaderSavedPostsImported(userId: Long) = AppPrefs.setReaderSavedPostsImported(userId)
+
     fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
     fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
 
@@ -323,6 +333,34 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
         AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
+
+    var isImageOptimize: Boolean
+        get() = AppPrefs.isImageOptimize()
+        set(value) = AppPrefs.setImageOptimize(value)
+
+    var imageOptimizeMaxSize: Int
+        get() = AppPrefs.getImageOptimizeMaxSize()
+        set(value) = AppPrefs.setImageOptimizeMaxSize(value)
+
+    var imageOptimizeQuality: Int
+        get() = AppPrefs.getImageOptimizeQuality()
+        set(value) = AppPrefs.setImageOptimizeQuality(value)
+
+    var isStripImageLocation: Boolean
+        get() = AppPrefs.isStripImageLocation()
+        set(value) = AppPrefs.setStripImageLocation(value)
+
+    var isVideoOptimize: Boolean
+        get() = AppPrefs.isVideoOptimize()
+        set(value) = AppPrefs.setVideoOptimize(value)
+
+    var videoOptimizeWidth: Int
+        get() = AppPrefs.getVideoOptimizeWidth()
+        set(value) = AppPrefs.setVideoOptimizeWidth(value)
+
+    var videoOptimizeQuality: Int
+        get() = AppPrefs.getVideoOptimizeQuality()
+        set(value) = AppPrefs.setVideoOptimizeQuality(value)
 
     fun getShouldHideJetpackFeatureCard(): Boolean =
         AppPrefs.getShouldHideJetpackFeatureCard()
@@ -559,6 +597,14 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setGutenbergKitAnnouncementDeferredUntil(siteUrl: String?, timestampMillis: Long) =
         AppPrefs.setGutenbergKitAnnouncementDeferredUntil(siteUrl, timestampMillis)
+
+    var pendingWpcomOAuthState: String?
+        get() = AppPrefs.getPendingWpcomOAuthState()
+        set(value) = AppPrefs.setPendingWpcomOAuthState(value)
+
+    var supersededWpcomOAuthStates: String?
+        get() = AppPrefs.getSupersededWpcomOAuthStates()
+        set(value) = AppPrefs.setSupersededWpcomOAuthStates(value)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

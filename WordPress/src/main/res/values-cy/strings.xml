@@ -220,7 +220,6 @@ Language: cy_GB
     <string name="site_settings_discussion_hint">Gweld a newid gosodiadau trafodaethau ar eich gwefannau</string>
     <string name="site_settings_more_hint">Gweld pob gosodiad trafodaeth sydd ar gael</string>
     <string name="site_settings_related_posts_hint">Dangos neu guddio cofnodion cysylltiedig yn y darllenydd</string>
-    <string name="site_settings_image_width_hint">Newid maint delweddau mewn cofnodion i\'r lled hwn</string>
     <string name="site_settings_format_hint">Gosod fformat cofnod newydd</string>
     <string name="site_settings_category_hint">Gosod categori cofnod newydd</string>
     <string name="site_settings_password_hint">Newid eich cyfrinair</string>

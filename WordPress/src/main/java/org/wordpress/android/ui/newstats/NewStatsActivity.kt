@@ -96,6 +96,7 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedItem
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
+import org.wordpress.android.ui.newstats.authors.AuthorPostUiItem
 import org.wordpress.android.ui.newstats.authors.AuthorsCard
 import org.wordpress.android.ui.newstats.authors.AuthorsCardUiState
 import org.wordpress.android.ui.newstats.authors.AuthorsDetailActivity
@@ -232,6 +233,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                     onInsightsRowUrlClick = ::openInsightsRowUrl,
                     onExplorePlansClick = ::openPlans,
                     onPostItemClick = ::openPostDetailStats,
+                    onAuthorPostClick = ::openAuthorPostStats,
                     onLatestPostClick = ::openLatestPostStats,
                     onCreatePostClick = ::createNewPost
                 )
@@ -296,6 +298,19 @@ class NewStatsActivity : BaseAppCompatActivity() {
         )
         newStatsTracker.trackTopListItemTapped(StatsCardType.MOST_VIEWED_POSTS_AND_PAGES)
         PostStatsDetailActivity.start(this, item.id, item.title)
+    }
+
+    /**
+     * Opens the detail stats of a post listed under an expanded Authors row, the screen old Stats
+     * opened from the same tap (`AuthorsUseCase.onPostClicked`).
+     */
+    private fun openAuthorPostStats(post: AuthorPostUiItem) {
+        analyticsTracker.track(
+            Stat.STATS_AUTHORS_VIEW_POST_TAPPED,
+            selectedSiteRepository.getSelectedSite()
+        )
+        newStatsTracker.trackTopListItemTapped(StatsCardType.AUTHORS)
+        PostStatsDetailActivity.start(this, post.id, post.title)
     }
 
     private fun openLatestPostStats(postId: Long, title: String) {
@@ -454,6 +469,7 @@ private fun NewStatsScreen(
     onInsightsRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
     onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {},
+    onAuthorPostClick: (AuthorPostUiItem) -> Unit = {},
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
 ) {
@@ -666,6 +682,7 @@ private fun NewStatsScreen(
                     onInsightsRowUrlClick = onInsightsRowUrlClick,
                     onExplorePlansClick = onExplorePlansClick,
                     onPostItemClick = onPostItemClick,
+                    onAuthorPostClick = onAuthorPostClick,
                     onLatestPostClick = onLatestPostClick,
                     onCreatePostClick = onCreatePostClick
                 )
@@ -682,6 +699,7 @@ private fun StatsTabContent(
     onInsightsRowUrlClick: (InsightsCardType, String) -> Unit = { _, _ -> },
     onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
     onPostItemClick: (MostViewedItem) -> Unit = {},
+    onAuthorPostClick: (AuthorPostUiItem) -> Unit = {},
     onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
 ) {
@@ -690,7 +708,8 @@ private fun StatsTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
             onRowUrlClick = onTrafficRowUrlClick,
             onExplorePlansClick = onExplorePlansClick,
-            onPostItemClick = onPostItemClick
+            onPostItemClick = onPostItemClick,
+            onAuthorPostClick = onAuthorPostClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent(
             onRowUrlClick = onInsightsRowUrlClick,
@@ -720,7 +739,8 @@ private fun TrafficTabContent(
     newStatsViewModel: NewStatsViewModel = viewModel(),
     onRowUrlClick: (StatsCardType, String) -> Unit = { _, _ -> },
     onExplorePlansClick: (String, StatsCardType) -> Unit = { _, _ -> },
-    onPostItemClick: (MostViewedItem) -> Unit = {}
+    onPostItemClick: (MostViewedItem) -> Unit = {},
+    onAuthorPostClick: (AuthorPostUiItem) -> Unit = {}
 ) {
     val context = LocalContext.current
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
@@ -971,6 +991,7 @@ private fun TrafficTabContent(
                     StatsCardType.VIEWS_STATS -> ViewsStatsCard(
                         uiState = viewsStatsUiState,
                         onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
+                        onChartIntervalSelected = viewsStatsViewModel::onChartIntervalSelected,
                         onMetricSelected = viewsStatsViewModel::onMetricSelected,
                         onBarTapped = viewsStatsViewModel::onBarTapped,
                         onDrillIntoSelectedBar = viewsStatsViewModel::onDrillIntoSelectedBar,
@@ -1177,7 +1198,8 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl = authorsViewModel::getAdminUrl,
                             context = context
-                        )
+                        ),
+                        onPostClick = onAuthorPostClick
                     )
                     StatsCardType.CLICKS -> MostViewedCard(
                         uiState = clicksUiState,

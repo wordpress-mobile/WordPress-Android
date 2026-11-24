@@ -235,31 +235,6 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void continueJetpackConnect(Context context, JetpackConnectionSource source, SiteModel site) {
-        switch (source) {
-            case NOTIFICATIONS:
-                continueJetpackConnectForNotifications(context, site);
-                break;
-            case STATS:
-                continueJetpackConnectForStats(context, site);
-                break;
-        }
-    }
-
-    private static void continueJetpackConnectForNotifications(Context context, SiteModel site) {
-        Intent intent = new Intent(context, WPMainActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(WPMainActivity.ARG_CONTINUE_JETPACK_CONNECT, true);
-        context.startActivity(intent);
-    }
-
-    private static void continueJetpackConnectForStats(Context context, SiteModel site) {
-        Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(StatsConnectJetpackActivity.ARG_CONTINUE_JETPACK_CONNECT, true);
-        context.startActivity(intent);
-    }
-
     public static void viewNotifications(Context context) {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
@@ -1203,7 +1178,10 @@ public class ActivityLauncher {
     }
 
     /*
-     * Load the post preview as an authenticated URL so stats aren't bumped
+     * Load the post preview with the preview parameter so stats aren't bumped. See
+     * PostUtils.getPreviewUrlForPost(): the parameter makes WordPress treat the request as a preview whether
+     * or not the reader is logged in, so it is the parameter rather than the session that keeps the view out
+     * of the site's stats.
      */
     public static void browsePostOrPage(Context context, SiteModel site, PostImmutableModel post) {
         browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);
@@ -1622,7 +1600,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
-    public static void loginWithoutMagicLink(Activity activity) {
+    public static void loginToWpCom(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
         LoginFlow.WPCOM_LOGIN_DEEPLINK.putInto(intent);

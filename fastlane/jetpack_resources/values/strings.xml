@@ -5,7 +5,6 @@
     <!-- About View -->
 
     <!-- Post-Signup Interstitial -->
-    <string name="post_signup_interstitial_title">Welcome to Jetpack</string>
 
     <!-- Login Prologue -->
     <string name="continue_with_wpcom_no_signup">Continue with WordPress.com</string>
@@ -29,7 +28,6 @@
     <string name="login_prologue_revamped_jetpack_feature_text_16">Manage your domains</string>
 
     <!-- Login Magic Link -->
-    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from Jetpack.com.</string>
 
     <!-- Contact us -->
     <!--Note: Support ticket subject, only visible to the end users of the Zendesk support portal, doesn't need a translation -->

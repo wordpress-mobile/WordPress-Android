@@ -187,6 +187,9 @@ class SiteRestClient @Inject constructor(
         val params = mutableMapOf<String, String>()
         if (filters.isNotEmpty()) params[FILTERS] = TextUtils.join(",", filters)
         params[FIELDS] = SITE_FIELDS
+        // Exclude inactive sites (e.g. a Jetpack site whose domain expired). Without this they keep coming
+        // back on every fetch even after the user removes them. Matches iOS and Calypso.
+        params[SITE_ACTIVITY] = "active"
         return params
     }
 
@@ -1065,5 +1068,6 @@ class SiteRestClient @Inject constructor(
                 "was_ecommerce_trial,single_user_site,is_deleted"
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
+        private const val SITE_ACTIVITY = "site_activity"
     }
 }

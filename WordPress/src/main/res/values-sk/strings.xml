@@ -225,11 +225,8 @@ Language: sk
     <string name="activity_log">Log aktivity</string>
     <string name="privacy_policy_read">Prečítajte si zásady ochrany osobných údajov</string>
     <string name="third_party_policy_learn_more_caption">Používame ďalšie nástroje na sledovanie, vrátane niektorých od tretích strán. Prečítajte si o nich a o možnostiach ako ich ovládať.</string>
-    <string name="third_party_policy_learn_more_header">Pravidlá tretej strany</string>
     <string name="privacy_policy_learn_more_caption">Tieto informácie nám pomáhajú vylepšiť naše produkty, urobiť ich marketing relevantneiším, prispôsobiť vaše skúsenosti s WordPress.com, podrobnejšie informácie nájdete v našich zásadách ochrany osobných údajov.</string>
-    <string name="privacy_policy_learn_more_header">Zásady ochrany osobných údajov</string>
     <string name="cookie_policy_learn_more_caption">Zdieľajte informácie s našim analytickým nástrojom o vašom používaní služieb, kým sa prihlasujete do svojho účtu WordPress.com.</string>
-    <string name="cookie_policy_learn_more_header">Pravidlá pre cookie</string>
     <string name="preference_privacy_settings">Nastavenia súkromia</string>
     <string name="preference_collect_information">Zbierajte informácie</string>
     <string name="reader_btn_blog_notifications_on">Zapnutie upozornení na blog</string>
@@ -284,7 +281,6 @@ Language: sk
     <string name="photo_picker_camera_desc">otvoriť fotoaparát</string>
     <string name="photo_picker_device_desc">vybrať zo zariadenia</string>
     <string name="navigate_up_desc">navigovať hore</string>
-    <string name="reader_cardview_post_play_video_desc">prehrať odporúčané video</string>
     <string name="plugin_detail_banner_desc">banner pluginu</string>
     <string name="photo_picker_wpmedia_desc">vybrať z WordPress súborov</string>
     <string name="people_invite_role_info_desc">informácie o role</string>
@@ -486,8 +482,6 @@ Language: sk
     <string name="media_files_not_uploaded">%d nenahratých súborov</string>
     <string name="remove_image_from_post">Odstrániť z príspevku</string>
     <string name="confirm_remove_media_image">Odstrániť tento obrázok z príspevku?</string>
-    <string name="media_edit_customize_card_caption">Prispôsobiť</string>
-    <string name="media_edit_file_details_card_caption">Podrobnosti súboru</string>
     <string name="login_error_button">Zavrieť</string>
     <string name="error_generic_network">Vyskytla sa chyba siete. Skontrolujte svoje pripojenie a skúste to znova.</string>
     <string name="post_settings_remove_featured_image">Odstráňte vybraný obrázok</string>
@@ -520,14 +514,8 @@ Language: sk
     <string name="media_title_document_details">Detaily dokumentu</string>
     <string name="media_title_audio_details">Detaily zvuku</string>
     <string name="media_title_video_details">Detaily videa</string>
-    <string name="fab_content_description_preview">Ukážka</string>
     <string name="media_title_image_details">Detaily obrázku</string>
-    <string name="media_edit_upload_date_caption">Načítajte dátum</string>
     <string name="media_edit_duration_caption">Trvanie</string>
-    <string name="media_edit_video_dimensions_caption">Rozmery videa</string>
-    <string name="media_edit_image_dimensions_caption">Rozmery obrázku</string>
-    <string name="media_edit_filetype_caption">Typ súboru</string>
-    <string name="media_edit_filename_caption">Názov súboru</string>
     <string name="media_edit_url_caption">URL adresa</string>
     <string name="media_edit_alttext_text">Celý text</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
@@ -574,7 +562,6 @@ Language: sk
     <string name="connection_to_server_lost">Pripojenie k serveru sa stratilo.</string>
     <string name="login_checking_site_address" a8c-src-lib="module:login">Kontrolovanie adresy webovej stránky.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Adresa webovej stránky</string>
-    <string name="login_already_logged_in_wpcom">Už ste prihlásený vo WordPress.com</string>
     <string name="login_continue" a8c-src-lib="module:login">Pokračovať</string>
     <string name="connect_more">Pripojiť ďalšiu webovú stránku</string>
     <string name="next">Ďalej</string>
@@ -620,8 +607,6 @@ Language: sk
     <string name="media_all">Všetko</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s bol zamietnutý prístup k vašim mediálnym súborom. Ak to chcete napraviť, upravte svoje oprávnenia a zapnite %2$s.</string>
     <string name="reader_view_comments">Zobraziť komentáre</string>
-    <string name="site_settings_video_quality_hint">Kvalita videí. Čím vyššie hodnoty, tým kvalitnejšie videá.</string>
-    <string name="site_settings_video_width_hint">Zmeňte veľkosť článkov na požadovanú veľkosť</string>
     <string name="site_settings_optimize_video_summary">Povolené meniť veľkosť a komprimovať videá</string>
     <string name="site_settings_optimize_videos">Optimalizovať videá</string>
     <string name="draft_uploaded">Nahraný koncept</string>
@@ -705,7 +690,6 @@ Language: sk
     <string name="photo_picker_title">Vybrať fotografiu</string>
     <string name="error_publish_no_network">Zariadenie je offline. Článok sa uložili lokálne.</string>
     <string name="editor_post_saved_online">článok uložený online.</string>
-    <string name="site_settings_image_quality_hint">Kvalita obrázkov. Vyššie hodnoty znamenajú lepšiu kvalitu obrázkov.</string>
     <string name="site_settings_optimize_images_summary">Povoliť zmenu veľkosti a komprimovanie obrázkov.</string>
     <string name="media_upload_state_uploaded">Nahraté</string>
     <string name="media_encoder_quality_maximum">Maximálne</string>
@@ -956,7 +940,6 @@ Language: sk
     <string name="site_settings_discussion_hint">Zobraziť a zmeniť nastavenia diskusií na vašej stránke</string>
     <string name="site_settings_more_hint">Zobraziť všetky dostupné nastavenia diskusií</string>
     <string name="site_settings_related_posts_hint">Zobraziť alebo skryť podobné články v čítačke</string>
-    <string name="site_settings_image_width_hint">Zmení šírku obrázkov v článkoch na túto hodnotu</string>
     <string name="site_settings_format_hint">Nastavuje formát nového článku</string>
     <string name="site_settings_category_hint">Nastavuje kategóriu nového článku</string>
     <string name="site_settings_password_hint">Zmeňte si heslo</string>

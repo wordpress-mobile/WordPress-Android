@@ -89,6 +89,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import org.wordpress.android.R
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.support.common.ui.AiDisclosureBanner
 import org.wordpress.android.support.unified.util.formatRelativeTime
 import org.wordpress.android.support.unified.model.AttachmentState
 import org.wordpress.android.support.unified.model.AttachmentType
@@ -163,26 +164,36 @@ fun UnifiedConversationDetailScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    // Bots intentionally have no title (it's always empty); the welcome header in the
-                    // body stands in for it. HE conversations show their title in the body (title card),
-                    // like the old screen, so the top bar is left empty in both cases.
-                    Text(
-                        text = if (isBot) conversation.title else "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(R.string.back)
+            Column {
+                TopAppBar(
+                    title = {
+                        // Bots intentionally have no title (it's always empty); the welcome header in
+                        // the body stands in for it. HE conversations show their title in the body
+                        // (title card), like the old screen, so the top bar is left empty in both
+                        // cases.
+                        Text(
+                            text = if (isBot) conversation.title else "",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                stringResource(R.string.back)
+                            )
+                        }
                     }
+                )
+
+                // Part of the top bar rather than of the message list, so the AI disclosure stays
+                // put while the conversation scrolls. Not shown once the conversation has been
+                // handed over to a Happiness Engineer and is no longer answered by the AI.
+                if (isBot) {
+                    AiDisclosureBanner()
                 }
-            )
+            }
         },
         bottomBar = {
             ConversationBottomBar(

@@ -1,11 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-31 07:13:27+0000
+Translation-Revision-Date: 2026-11-22 14:13:44+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">%1$s Destek yapay zekâsı ile sohbet ediyorsunuz.</string>
+    <string name="login_session_expired">Oturum süreniz doldu. Lütfen yeniden deneyin.</string>
+    <string name="reader_save_posts_synced_dialog_message">Kaydedilmiş yazılar WordPress.com hesabınızla eşitlenir, böylece tüm cihazlarınızda yer alır.</string>
+    <string name="reader_saved_post_removed">Kaydedilmiş yazılardan kaldırıldı</string>
+    <string name="reader_saved_posts_limit_reached">Kaydedilmiş yazı sınırına ulaştınız. Daha fazlasını kaydetmek için bazılarını kaldırın.</string>
+    <string name="stats_period_last_3_years">Son 3 yıl</string>
+    <string name="stats_chart_interval_submenu">Aralık seçeneklerini aç</string>
+    <string name="stats_chart_interval">Aralık</string>
+    <string name="post_rs_local_drafts_retry_description">\"%s\" yüklemesini yeniden dene</string>
+    <string name="post_rs_local_drafts_upload_failed">Yüklenemedi</string>
+    <string name="post_rs_local_drafts_subtitle">Bu yazılar yalnızca bu cihazda bulunur.</string>
+    <string name="post_rs_local_drafts_title">Yüklenmedi</string>
+    <string name="confirm_delete_single_media">%1$d ortam ögesi silinsin mi?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, ayarlanmadı</string>
+    <string name="media_settings_alt_text_sheet_helper">Bir veya iki cümle hedefleyin</string>
+    <string name="media_settings_description_sheet_explanation">Ek sayfasında gösterilir.</string>
+    <string name="media_settings_caption_sheet_explanation">Yazılarda görselin altında gösterilir.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Ekran okuyucu kullanan kişiler için görselde ne olduğunu açıklayın. Görsel dekoratif amaçlıysa boş bırakın.</string>
+    <string name="media_settings_uploaded">Yüklendi</string>
+    <string name="media_settings_file_size">Dosya boyutu</string>
+    <string name="media_settings_file_type">Dosya türü</string>
+    <string name="media_settings_file_name">Dosya adı</string>
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenleyiciyi yeniden yükle</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenlemeye devam etmek için düzenleyiciyi yeniden yükleyin.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenleyici çalışmayı durdurdu</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Bilinmeyen hata</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Düzenleyici yüklenemedi</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Bu cihazda kamera bulunmamaktadır</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kamera</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Fotoğraflar</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">“%1$s” ile eşleşen blok yok</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Sonuç yok</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Aramayı temizle</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Güncel</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Kapat</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Blok ekleyin</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Blokları ara</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Blok yerleştirici görüntülenemiyor.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Önerilen</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">En çok kullanılan</string>
+    <string name="comment_detail_in_reply_to">%1$s adlı kişiye yanıt olarak:</string>
+    <string name="comment_author_info_guest">Misafir</string>
+    <string name="comment_author_info_registered">Kayıtlı kullanıcı</string>
+    <string name="comment_author_info_bio">Biyografi</string>
+    <string name="comment_author_info_posted_from">Gönderildi</string>
+    <string name="comment_author_info_send_email">E-posta gönder</string>
+    <string name="comment_author_info_email">E-posta</string>
+    <string name="comment_author_info_website">Web sitesi</string>
+    <string name="comment_author_info_posted_at">Yayınlanma tarihi</string>
+    <string name="comment_author_info_show">Yazar bilgilerini göster</string>
+    <string name="comment_detail_on_post">%1$s üzerinde</string>
+    <string name="comment_reply_continue">Yanıtı devam ettir</string>
+    <string name="comment_reply_save_draft">Taslak olarak kaydet</string>
+    <string name="comment_reply_delete_draft">Taslağı sil</string>
+    <string name="comment_reply_keep_editing">Düzenlemeye devam et</string>
+    <string name="comment_reply_unsent">Gönderilmemiş bir yanıtınız var.</string>
+    <string name="comment_trash_has_replies">Bu yoruma yanıtlar var. Bu yanıtlar, yorumla birlikte çöp kutusuna taşınmayacak.</string>
+    <string name="content_list_density_show_comfortable">Genişletilmiş listeyi göster</string>
+    <string name="content_list_density_show_condensed">Özet listeyi göster</string>
+    <string name="content_list_comment_count_plural">%1$s yorum</string>
+    <string name="content_list_comment_count_singular">%1$s yorum</string>
+    <string name="content_list_view_count_plural">%1$s görüntüleme</string>
+    <string name="content_list_view_count_singular">%1$s görüntüleme</string>
+    <string name="content_list_fab_write">Yaz</string>
+    <string name="content_list_group_earlier_in">%1$s döneminin başlarında</string>
+    <string name="content_list_group_this_week">Bu hafta</string>
+    <string name="content_list_group_yesterday">Dün</string>
+    <string name="content_list_group_today">Bugün</string>
+    <string name="unified_support_related_label">İlgili:</string>
+    <string name="unified_support_attachment_link_content_description">Bağlantıyı aç: %1$s</string>
+    <string name="unified_support_status_ai_assistant">Yapay zekâ asistanı</string>
+    <string name="he_support_status_ongoing">Devam ediyor</string>
+    <string name="he_support_reply_sent_confirmation">Yanıtınız gönderildi. Güncellemeler için e-postanızı kontrol edin.</string>
+    <string name="he_support_add_more_info_button">Daha fazla bilgi ekle</string>
+    <string name="application_password_private_site_card">Bu site özeldir, bu nedenle yeniden bağlanamıyoruz.</string>
+    <string name="application_password_private_site_error">Bu site özeldir, bu nedenle oturum açmanız için ayarlarını okuyamıyoruz.</string>
+    <string name="prepublishing_tags_remove_tag_desc">%1$s etiketini kaldır</string>
+    <string name="prepublishing_tags_add_hint">Etiket ekle</string>
+    <string name="photo_picker_choose_other_files">Diğer dosyalar</string>
+    <string name="photo_picker_choose_photo_or_video">Fotoğraflar ve videolar</string>
+    <string name="editor_saving_locked_leave">Ayrıl</string>
+    <string name="editor_saving_locked_continue">Devam</string>
+    <string name="editor_saving_locked_keep_editing">Düzenlemeye devam et</string>
+    <string name="editor_saving_locked_leave_message">Şu anda ayrılırsanız, ortam yüklemesi gibi hâlâ devam eden işlemler durur ve yazınızda eksik veya bozuk görünebilir.</string>
+    <string name="editor_saving_locked_save_message">Düzenleyicide, ortam yüklemesi gibi bir işlem hâlâ devam ediyor. Devam ederseniz, bu içerik yazınızda eksik veya bozuk görünebilir.</string>
+    <string name="editor_saving_locked_title">Yazınız henüz hazır değil</string>
+    <string name="domain_registration_purchase_unconfirmed">Etki alanı krediniz kullanıldı, ancak sonucu doğrulayamadık. Yeniden denemeden önce etki alanlarınızı kontrol edin ve %s eksikse destek ekibiyle iletişime geçin.</string>
+    <string name="domain_registration_purchase_incomplete">Etki alanı krediniz kullanıldı, ancak %s kaydedilemedi. Lütfen destek ekibiyle iletişime geçin.</string>
+    <string name="support_screen_login_description">Destek sohbetine erişmek için WordPress.com\'da oturum açın.</string>
+    <string name="site_picker_add_site_menu_expanded">Site ekleme menüsü genişletildi</string>
+    <string name="site_picker_add_site_menu_collapsed">Site ekleme menüsü daraltıldı</string>
+    <string name="site_picker_add_a_site_expand">Bir site eklemenin yollarını göster</string>
+    <string name="site_picker_add_a_site_collapse">Site ekle menüsünü kapat</string>
+    <string name="get_likes_empty_state_no_likes">Henüz beğeni yok</string>
+    <string name="stats_archives_section_taxonomies">Sınıflandırmalar</string>
+    <string name="stats_archives_section_other">Diğer</string>
+    <string name="stats_archives_section_aggregated">Toplam</string>
+    <string name="stats_archives_section_error">Hata</string>
+    <string name="stats_archives_section_dates">Tarihler</string>
+    <string name="stats_archives_section_authors">Yazarlar</string>
+    <string name="stats_archives_section_tags">Etiketler</string>
+    <string name="stats_archives_section_categories">Kategoriler</string>
+    <string name="stats_archives_section_search">Arama terimleri</string>
+    <string name="stats_archives_title_label">Arşiv sayfaları</string>
+    <string name="stats_archives_title">Arşivler</string>
+    <string name="stats_view_selected_period_content_description">Seçilen döneme ait istatistikleri görüntüle</string>
+    <string name="stats_period_next_content_description">Sonraki dönem</string>
+    <string name="stats_period_previous_content_description">Önceki dönem</string>
+    <string name="stats_period_this_year">Bu yıl</string>
+    <string name="stats_period_this_month">Bu Ay</string>
+    <string name="stats_feature_gate_plans_unavailable">Bu sitenin planlar sayfası açılamıyor</string>
+    <string name="stats_feature_gate_explore_plans">Paketleri keşfedin</string>
+    <string name="stats_feature_gate_message">Gelişmiş analiz özelliklerine erişmek için planınızı yükseltin</string>
+    <string name="stats_error_not_available">Bu site için bu istatistikler mevcut değil</string>
+    <string name="stats_next_day">Sonraki Gün</string>
+    <string name="stats_previous_day">Önceki Gün</string>
+    <string name="stats_post_detail_average">Ortalama</string>
+    <string name="stats_post_detail_total">Toplam</string>
+    <string name="stats_post_detail_activity_more">Daha fazla</string>
+    <string name="stats_post_detail_activity_less">Daha az</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">Yayınlanma tarihi %1$s</string>
+    <string name="stats_post_detail_title">Yazı durumu</string>
+    <string name="stats_open_link">Bağlantıyı aç</string>
+    <string name="stats_traffic_date_range_content_description">%1$s - %2$s</string>
+    <string name="stats_show_views">Görüntülemeleri göster</string>
+    <string name="stats_hourly_data_not_available">Saatlik veriler mevcut değil</string>
+    <string name="rs_date_trashed">Silindi: %s</string>
+    <string name="rs_date_modified">Değiştirilme tarihi: %s</string>
+    <string name="rs_date_now">Şimdi</string>
+    <string name="stats_new_stats_feedback_dialog_message">Yeni istatistikler deneyimi hakkında görüşlerinizi paylaşmak ister misiniz?</string>
+    <string name="deleting_tag_failed">Etiketin silinmesi başarısız oldu</string>
+    <string name="comments_rs_moderation_failed_multiple">Toplam %2$d yorum içinden %1$d tanesi güncellenemedi</string>
+    <string name="comments_rs_moderation_failed_single">Yorum güncellenemedi</string>
+    <string name="comments_rs_search_nothing_found">Aramanızla eşleşen yorum yok</string>
+    <string name="comments_rs_search_prompt">Yorumları ara</string>
+    <string name="web_view_log_in_to_site">Bu sitede oturum açın</string>
     <string name="support_screen_unified_support_description">Destek ekibimizden dilediğiniz zaman yanıt alın</string>
     <string name="support_screen_unified_support_title">Yardım al</string>
     <string name="unified_support_attachment_match_score">%1$d%% eşleşme</string>
@@ -93,6 +231,7 @@ Language: tr
     <string name="gutenberg_kit_announcement_learn_more">Daha fazla bilgi edinin</string>
     <string name="gutenberg_kit_announcement_maybe_later">Belki daha sonra</string>
     <string name="gutenberg_kit_announcement_activate">Etkinleştir</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">2026\'nın sonuna kadar herkes için varsayılan düzenleyici olacak. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Yeni nesil blok düzenleyici hazır, daha fazla yeni özellik getiriyor.</string>
     <string name="gutenberg_kit_announcement_title">Daha iyi bir blok düzenleyici geliyor</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Yeni düzenleyiciyi denemek için önce blok düzenleyiciye geçin.</string>
@@ -375,7 +514,6 @@ Language: tr
     <string name="application_password_required">Uygulama Şifreleri Gerekli</string>
     <string name="menu_html_mode">Kod Düzenleyici</string>
     <string name="taxonomies_title">Sınıflandırmalar</string>
-    <string name="media_edit_file_size_caption">Dosya Boyutu</string>
     <string name="jetpack_rest_connection_error_login_wpcom">WordPress.com\'da oturum açılamıyor</string>
     <string name="jetpack_rest_connection_step_connect_site">Siteyi WordPress.com\'a bağlayın</string>
     <string name="dataview_default_empty_message">Burada bir şey yok</string>
@@ -700,7 +838,6 @@ Language: tr
     <string name="reader_dropdown_menu_subscriptions">Abonelikler</string>
     <string name="reader_dropdown_menu_discover">Keşfet</string>
     <string name="reader_search_content_description">Ara</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Etiketleri takip edin</string>
     <string name="reader_filter_empty_tags_action_suggested">Önerilen etiketler</string>
     <string name="reader_filter_empty_blogs_action_search">Blog ara</string>
     <string name="reader_filter_empty_tags_list_follow_text">Bir etiketi takip ettiğinizde en iyi gönderiler burada görünür.</string>
@@ -795,7 +932,6 @@ Language: tr
     <string name="site_creation_domain_free_with_annual_plan">Yıllık ücretli paketlerde ilk yıl ücretsizdir</string>
     <string name="reader_secondary_bookmarked">Kaydedildi</string>
     <string name="reader_secondary_bookmark">Kaydet</string>
-    <string name="reader_discover_recommended_header_new">Şunları beğenebilirsiniz</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok gruplamasını kaldır</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Daha fazla ayrıntı görüntülemek için buraya dokunun.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Eşitlenmiş modeller</string>
@@ -1200,6 +1336,7 @@ Language: tr
     <string name="photo_picker_media_thumbnail_content_description">Ortam küçük görseli</string>
     <string name="stats_insights_popular_title">🔥 En yoğun zaman</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_period_this_week">Bu hafta</string>
     <string name="scan_vault_press_active_on_site_button_text">Panoya git</string>
     <string name="scan_vault_press_active_on_site_subtitle">Siteniz zaten VaultPress tarafından korunuyor. Aşağıda VaultPress panonuzun bağlantısını bulabilirsiniz.</string>
     <string name="scan_vault_press_active_on_site_title">Sitenizde VaultPress var</string>
@@ -1880,8 +2017,6 @@ Language: tr
     <string name="hpp_retry_error">Lütfen İnternet bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="hpp_error_subtitle">Çevrim içi olduğunuzda yeniden dene üzerine dokunun.</string>
     <string name="hpp_error_title">Çevrim dışıyken yerleşimler kullanılamaz</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Arama kapsamını genişletmek için daha fazla etiketi takip etmeyi deneyin</string>
-    <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
     <string name="reader_discover_empty_title">Hoş geldiniz!</string>
     <string name="scan">Tarama</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
@@ -2007,7 +2142,6 @@ Language: tr
     <string name="publish_date">Yayınlanma tarihi</string>
     <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
     <string name="ccpa_privacy_notice_caption">California Tüketici Gizlilik Yasası (\"CCPA\"), California sakinlerine topladığımız ve paylaştığımız kişisel bilgi kategorileri, bu kişisel bilgileri nereden aldığımız ve bunları nasıl ve neden kullandığımız hakkında bazı ek bilgiler sağlamamızı zorunlu kılar.</string>
-    <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="update_now">Şimdi güncelle</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2722,11 +2856,8 @@ Language: tr
     <string name="activity_log">Etkinlik günlüğü</string>
     <string name="privacy_policy_read">Gizlilik ilkesini okuyun</string>
     <string name="third_party_policy_learn_more_caption">Üçüncü tarafların da sahibi olduğu çeşitli izleme araçları kullanıyoruz. Bunlar ve nasıl kontrol edilecekleri hakkında bilgi alın.</string>
-    <string name="third_party_policy_learn_more_header">Üçüncü taraf ilkesi</string>
     <string name="privacy_policy_learn_more_caption">Bu bilgiler, ürünlerimizi geliştirmemize, sizin için daha iyi pazarlama yapmamıza, WordPress.com deneyiminizi kişiselleştirmemize ve ayrıntılı olarak gizlilik ilkemizde belirttiğimiz şekilde başka şeyler yapmamıza yardımcı olur.</string>
-    <string name="privacy_policy_learn_more_header">Gizlilik ilkesi</string>
     <string name="cookie_policy_learn_more_caption">WordPress.com hesabınızda oturum açmışken, hizmetlerimizi kullanma bilgilerinizi istatistikler aracımızla paylaşın.</string>
-    <string name="cookie_policy_learn_more_header">Çerez ilkesi</string>
     <string name="preference_privacy_settings">Gizlilik ayarları</string>
     <string name="preference_collect_information">Bilgiler toplansın</string>
     <string name="post_submitted">Yazı gönderildi</string>
@@ -2777,7 +2908,6 @@ Language: tr
     <string name="reader_photo_view_desc">fotoğraf</string>
     <string name="reader_list_item_suggestion_remove_desc">sil</string>
     <string name="photo_picker_thumbnail_desc">Videoyu oynat</string>
-    <string name="reader_cardview_post_play_video_desc">öne çıkarılmış videoyu oynat</string>
     <string name="plugin_detail_logo_desc">eklenti logosu</string>
     <string name="plugin_detail_banner_desc">eklenti başlığı</string>
     <string name="photo_picker_wpmedia_desc">WordPress ortamlarından seçin</string>
@@ -2981,8 +3111,6 @@ Language: tr
     <string name="media_files_not_uploaded">%d dosya yüklenmedi</string>
     <string name="remove_image_from_post">Yazıdan kaldır</string>
     <string name="confirm_remove_media_image">Bu görsel yazıdan kaldırılsın mı?</string>
-    <string name="media_edit_customize_card_caption">Özelleştir</string>
-    <string name="media_edit_file_details_card_caption">Dosya bilgileri</string>
     <string name="login_error_button">Kapat</string>
     <string name="error_generic_network">Bir ağ sorunu çıktı. Lütfen bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="post_settings_remove_featured_image">Öne çıkarılmış görseli kaldır</string>
@@ -3016,13 +3144,7 @@ Language: tr
     <string name="media_title_audio_details">Ses bilgileri</string>
     <string name="media_title_video_details">Video bilgileri</string>
     <string name="media_title_image_details">Görsel bilgileri</string>
-    <string name="fab_content_description_preview">Ön izleme</string>
-    <string name="media_edit_upload_date_caption">Yüklenme tarihi</string>
     <string name="media_edit_duration_caption">Süre</string>
-    <string name="media_edit_video_dimensions_caption">Video boyutları</string>
-    <string name="media_edit_image_dimensions_caption">Görsel boyutları</string>
-    <string name="media_edit_filetype_caption">Dosya türü</string>
-    <string name="media_edit_filename_caption">Dosya adı</string>
     <string name="media_edit_url_caption">Adres</string>
     <string name="media_edit_alttext_text">Alt metni</string>
     <string name="connect_site">Site bağla</string>
@@ -3070,7 +3192,6 @@ Language: tr
     <string name="login_checking_site_address" a8c-src-lib="module:login">Site adresi denetleniyor</string>
     <string name="login_site_address" a8c-src-lib="module:login">Site adresi</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Bağlanmak istediğiniz WordPress sitesinin adresini yazın.</string>
-    <string name="login_already_logged_in_wpcom">Zaten WordPress.com oturumu açılmış</string>
     <string name="login_continue" a8c-src-lib="module:login">İlerle</string>
     <string name="connect_more">Başka siteye bağlan</string>
     <string name="next">Sonraki</string>
@@ -3120,8 +3241,6 @@ Language: tr
     <string name="media_all">Tümü</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s için ortam dosyalarınıza erişim reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s özelliğini açın.</string>
     <string name="reader_view_comments">Yorumları görüntüle</string>
-    <string name="site_settings_video_quality_hint">Videoların kalitesi. Daha yüksek değerler daha kaliteli videolar demektir.</string>
-    <string name="site_settings_video_width_hint">Yazılardaki videoların boyutunu bu boyuta değiştirir</string>
     <string name="site_settings_optimize_video_summary">Videoları yeniden boyutlandırmak ve sıkıştırmak için etkinleştirin</string>
     <string name="site_settings_optimize_videos">Videoları iyileştir</string>
     <string name="draft_uploaded">Taslak yüklendi</string>
@@ -3205,7 +3324,6 @@ Language: tr
     <string name="photo_picker_title">Fotoğraf seçin</string>
     <string name="error_publish_no_network">Aygıt çevrim dışı. Yazılar yerel olarak kaydedildi.</string>
     <string name="editor_post_saved_online">Yazı çevrim içi kaydedildi</string>
-    <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
     <string name="media_encoder_quality_maximum">En fazla</string>
     <string name="media_encoder_quality_high">Yüksek</string>
@@ -3457,7 +3575,6 @@ Language: tr
     <string name="site_settings_discussion_hint">Sitenizin tartışma ayarlarını görüntüleyin ve değiştirin</string>
     <string name="site_settings_more_hint">Tüm kullanılabilir tartışma ayarlarını görüntüler</string>
     <string name="site_settings_related_posts_hint">İlgili yazıları okuyucuda görüntüle ya da gizler</string>
-    <string name="site_settings_image_width_hint">Yazılardaki görsellerin boyutunu bu genişliğe değiştirir</string>
     <string name="site_settings_format_hint">Yeni yazı biçimini ayarlar</string>
     <string name="site_settings_category_hint">Yeni yazı kategorisini ayarlar</string>
     <string name="site_settings_password_hint">Parolanızı değiştirin</string>
@@ -3509,6 +3626,7 @@ Language: tr
     <string name="reader_err_get_post_generic">Bu yazı alınamadı</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Yeni yazı yok</string>
     <string name="media_edit_copy_url_toast">Adres panoya kopyalandı</string>
+    <string name="media_settings_copy_url">URL\'yi Kopyala</string>
     <string name="selected_theme">Seçilmiş tema</string>
     <string name="could_not_load_theme">Tema yüklenemedi</string>
     <string name="theme_activation_error">Bir sorun çıktı. Tema etkinleştirilemedi</string>
@@ -3593,6 +3711,7 @@ Language: tr
     <string name="my_site_btn_blog_posts">Yazılar</string>
     <string name="reader_label_new_posts_subtitle">Görüntülemek için dokunun</string>
     <string name="select_all">Tümünü seç</string>
+    <string name="media_settings_dimensions">Boyutlar</string>
     <string name="language">Dil</string>
     <string name="reader_empty_posts_request_failed">Yazılar alınamadı</string>
     <string name="error_notification_open">Bildirim açılamadı</string>
@@ -3627,6 +3746,7 @@ Language: tr
     <string name="stats_timeframe_years">Yıl</string>
     <string name="themes_fetching">Temalar alınıyor…</string>
     <string name="ssl_certificate_details">Ayrıntılar</string>
+    <string name="confirm_delete_multi_media">%1$d ortam ögesi silinsin mi?</string>
     <string name="cab_selected">%d seçilmiş</string>
     <string name="browse_our_faq_button">SSS sayfamıza bakın</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>

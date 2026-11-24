@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -29,7 +30,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -54,6 +55,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         whenever(repository.getFollowedBlogs()).thenReturn(emptyList())
         whenever(repository.getHost(any())).thenAnswer { (it.arguments[0] as String).substringAfter("://") }
         whenever(repository.isValidTagName(any())).thenReturn(true)
+        whenever(repository.isFollowedUrl(any())).thenReturn(false)
         whenever(repository.createFollowedTag(any())).thenAnswer { tag(it.arguments[0] as String) }
         whenever(resourceProvider.getString(any())).thenAnswer { string(it.arguments[0] as Int) }
         whenever(resourceProvider.getString(any(), anyVararg())).thenAnswer { string(it.arguments[0] as Int) }
@@ -279,7 +281,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
                 ReaderSubsUiEvent.ShowMessage(string(R.string.reader_toast_err_unable_to_follow_blog) + " (500)")
             )
         }
-        verify(repository, never()).followUrl(any())
+        verify(repository, never()).followUrl(any(), anyOrNull())
         assertThat(viewModel.uiState.value.entry).isEqualTo("example.com")
     }
 
@@ -292,9 +294,28 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         viewModel.events.test {
             add("example.com")
 
-            assertThat(awaitItem()).isEqualTo(message(R.string.reader_toast_err_already_follow_this_blog))
+            assertThat(awaitItem()).isEqualTo(alreadySubscribedMessage())
         }
         verify(repository, never()).checkUrlReachable(any())
+    }
+
+    @Test
+    fun `a url the lookup shows is already followed keeps the entry and reloads the sites`() = test {
+        val url = "http://example.wordpress.com"
+        whenever(repository.normalizeEntryUrl("example.wordpress.com")).thenReturn(url)
+        whenever(repository.lookupUrl(url)).thenReturn(blog(1, "Example", url))
+
+        viewModel.events.test {
+            add("example.wordpress.com")
+
+            assertThat(awaitItem()).isEqualTo(alreadySubscribedMessage())
+        }
+        assertThat(viewModel.uiState.value.entry).isEqualTo("example.wordpress.com")
+        assertThat(viewModel.uiState.value.isAdding).isFalse()
+        verify(repository).getFollowedBlogs()
+        // a private site fails the unauthenticated reachability check, so it mustn't run first
+        verify(repository, never()).checkUrlReachable(any())
+        verify(repository, never()).followUrl(any(), anyOrNull())
     }
 
     @Test
@@ -302,7 +323,7 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         val url = "http://example.com"
         whenever(repository.normalizeEntryUrl("example.com")).thenReturn(url)
         whenever(repository.checkUrlReachable(url)).thenReturn(null)
-        whenever(repository.followUrl(url)).thenReturn(true)
+        whenever(repository.followUrl(url, null)).thenReturn(true)
 
         viewModel.events.test {
             add("example.com")
@@ -332,6 +353,9 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
     private fun string(resId: Int) = "string:$resId"
 
     private fun message(resId: Int) = ReaderSubsUiEvent.ShowMessage(string(resId))
+
+    private fun alreadySubscribedMessage() =
+        ReaderSubsUiEvent.ShowMessage(string(R.string.reader_toast_err_already_follow_this_blog), isShort = true)
 
     private fun tag(slug: String) = ReaderTag(slug, slug, slug, null, ReaderTagType.FOLLOWED)
 

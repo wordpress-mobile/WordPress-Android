@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-10-23 09:58:21+0000
+Translation-Revision-Date: 2026-11-18 15:58:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">편집기 다시 로드</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">계속 편집하려면 편집기를 다시 로드하세요.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">편집기 작동 중지됨</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">알 수 없는 오류</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">편집기 로드 실패</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">이 기기에서 카메라를 사용할 수 없음</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">카메라</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">사진</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">\"%1$s\"과(와) 일치하는 블록 없음</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">결과 없음</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">검색 지우기</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">최근</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">닫기</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">블럭 추가</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">블록 검색</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">블록 삽입기를 표시할 수 없습니다.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">제안됨</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">최다 사용 항목</string>
+    <string name="comment_detail_in_reply_to">%1$s에 대한 답글 내용:</string>
+    <string name="comment_author_info_guest">비회원</string>
+    <string name="comment_author_info_registered">등록된 사용자</string>
+    <string name="comment_author_info_bio">자기소개</string>
+    <string name="comment_author_info_posted_from">게시 출처</string>
+    <string name="comment_author_info_send_email">이메일 보내기</string>
+    <string name="comment_author_info_email">이메일</string>
+    <string name="comment_author_info_website">웹사이트</string>
+    <string name="comment_author_info_posted_at">게시 위치</string>
+    <string name="comment_author_info_show">글쓴이 상세 정보 표시</string>
+    <string name="comment_detail_on_post">%1$s 정시</string>
+    <string name="comment_reply_continue">답글 계속</string>
+    <string name="comment_reply_save_draft">임시글 저장</string>
+    <string name="comment_reply_delete_draft">임시글 삭제</string>
+    <string name="comment_reply_keep_editing">계속 편집하기</string>
+    <string name="comment_reply_unsent">보내지 않은 답글이 있습니다.</string>
+    <string name="comment_trash_has_replies">이 댓글에 답글이 있습니다. 휴지통으로 함께 이동되지 않습니다.</string>
+    <string name="content_list_density_show_comfortable">확장된 목록 표시</string>
+    <string name="content_list_density_show_condensed">요약된 목록 표시</string>
+    <string name="content_list_comment_count_plural">댓글 %1$s개</string>
+    <string name="content_list_comment_count_singular">댓글 %1$s개</string>
+    <string name="content_list_view_count_plural">조회수 %1$s개</string>
+    <string name="content_list_view_count_singular">조회수 %1$s개</string>
+    <string name="content_list_fab_write">쓰기</string>
+    <string name="content_list_group_earlier_in">이전 위치 %1$s</string>
+    <string name="content_list_group_this_week">이번 주</string>
+    <string name="content_list_group_yesterday">어제</string>
+    <string name="content_list_group_today">오늘</string>
+    <string name="unified_support_related_label">관련됨:</string>
+    <string name="unified_support_attachment_link_content_description">링크 열기: %1$s</string>
+    <string name="unified_support_status_ai_assistant">AI 도우미</string>
+    <string name="he_support_status_ongoing">진행 중</string>
+    <string name="he_support_reply_sent_confirmation">회원님의 답글이 발송되었습니다. 이메일에서 업데이트 내용을 확인하세요.</string>
+    <string name="he_support_add_more_info_button">자세한 정보 추가</string>
+    <string name="application_password_private_site_card">비공개 사이트이므로 다시 연결할 수 없습니다.</string>
+    <string name="application_password_private_site_error">비공개 사이트이므로 설정을 읽고 로그인하도록 해드릴 수 없습니다.</string>
+    <string name="prepublishing_tags_remove_tag_desc">태그 %1$s 제거</string>
+    <string name="prepublishing_tags_add_hint">태그 추가</string>
+    <string name="photo_picker_choose_other_files">기타 파일</string>
+    <string name="photo_picker_choose_photo_or_video">사진 및 비디오</string>
+    <string name="editor_saving_locked_leave">나가기</string>
+    <string name="editor_saving_locked_continue">계속</string>
+    <string name="editor_saving_locked_keep_editing">계속 편집하기</string>
+    <string name="editor_saving_locked_leave_message">지금 나가면 미디어 업로드처럼 아직 진행 중인 모든 것이 중지되며 글에서 누락되거나 손상될 수 있습니다.</string>
+    <string name="editor_saving_locked_save_message">미디어 업로드와 같은 것이 편집기에서 아직 진행 중입니다. 계속하면 글에서 누락되거나 제대로 표시되지 않을 수 있습니다.</string>
+    <string name="editor_saving_locked_title">글이 아직 준비되지 않았음</string>
+    <string name="domain_registration_purchase_unconfirmed">도메인 크레딧이 사용되었지만, 결과를 확인할 수 없습니다. 다시 시도하기 전에 도메인을 점검하고 %s이(가) 누락된 경우 지원팀에 문의하세요.</string>
+    <string name="domain_registration_purchase_incomplete">도메인 크레딧이 사용되었지만, %s은(는) 등록할 수 없습니다. 지원팀에 문의하세요.</string>
+    <string name="support_screen_login_description">지원 채팅에 접근하려면 워드프레스닷컴에 로그인하세요.</string>
+    <string name="site_picker_add_site_menu_expanded">사이트 메뉴 추가 확장됨</string>
+    <string name="site_picker_add_site_menu_collapsed">사이트 메뉴 추가 축소됨</string>
+    <string name="site_picker_add_a_site_expand">사이트 추가 방법 표시</string>
+    <string name="site_picker_add_a_site_collapse">사이트 메뉴 추가 닫기</string>
+    <string name="get_likes_empty_state_no_likes">좋아요 아직 없음</string>
+    <string name="stats_archives_section_taxonomies">분류</string>
+    <string name="stats_archives_section_other">기타</string>
+    <string name="stats_archives_section_aggregated">집계됨</string>
+    <string name="stats_archives_section_error">오류</string>
+    <string name="stats_archives_section_dates">날짜</string>
+    <string name="stats_archives_section_authors">글쓴이</string>
+    <string name="stats_archives_section_tags">태그</string>
+    <string name="stats_archives_section_categories">카테고리</string>
+    <string name="stats_archives_section_search">검색어</string>
+    <string name="stats_archives_title_label">페이지 보관</string>
+    <string name="stats_archives_title">보관함</string>
+    <string name="stats_view_selected_period_content_description">선택한 기간의 통계 보기</string>
+    <string name="stats_period_next_content_description">다음 기간</string>
+    <string name="stats_period_previous_content_description">이전 기간</string>
+    <string name="stats_period_this_year">올해</string>
+    <string name="stats_period_this_month">이번 달</string>
+    <string name="stats_feature_gate_plans_unavailable">이 사이트에 대한 요금제 페이지를 열 수 없음</string>
+    <string name="stats_feature_gate_explore_plans">요금제 둘러보기</string>
+    <string name="stats_feature_gate_message">요금제를 업그레이드하여 고급 분석 접근 권한을 이용하세요</string>
+    <string name="stats_error_not_available">이 사이트에서는 이러한 통계를 사용할 수 없음</string>
+    <string name="stats_next_day">다음날</string>
+    <string name="stats_previous_day">전날</string>
+    <string name="stats_post_detail_average">평균</string>
+    <string name="stats_post_detail_total">합계</string>
+    <string name="stats_post_detail_activity_more">더 보기</string>
+    <string name="stats_post_detail_activity_less">간단히</string>
+    <string name="stats_post_detail_more_likers">+%1$s</string>
+    <string name="stats_post_detail_published">공개된 %1$s</string>
+    <string name="stats_post_detail_title">글 통계</string>
+    <string name="stats_open_link">링크 열기</string>
+    <string name="stats_traffic_date_range_content_description">%1$s~%2$s</string>
+    <string name="stats_show_views">조회수 표시</string>
+    <string name="stats_hourly_data_not_available">시간별 데이터를 사용할 수 없음</string>
+    <string name="rs_date_trashed">휴지통으로 이동됨: %s</string>
+    <string name="rs_date_modified">수정됨: %s</string>
+    <string name="rs_date_now">지금</string>
+    <string name="stats_new_stats_feedback_dialog_message">새로운 통계 환경에 대한 피드백을 공유하시겠어요?</string>
+    <string name="deleting_tag_failed">태그 삭제 실패</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d/%2$d개 댓글을 업데이트할 수 없음</string>
+    <string name="comments_rs_moderation_failed_single">댓글을 업데이트할 수 없음</string>
+    <string name="comments_rs_search_nothing_found">검색과 일치하는 댓글 없음</string>
+    <string name="comments_rs_search_prompt">댓글 검색</string>
+    <string name="web_view_log_in_to_site">이 사이트에 로그인</string>
     <string name="support_screen_unified_support_description">언제든지 지원팀의 답변 받기</string>
     <string name="support_screen_unified_support_title">도움말 이용</string>
     <string name="unified_support_attachment_match_score">%1$d%% 일치</string>
@@ -93,6 +208,7 @@ Language: ko_KR
     <string name="gutenberg_kit_announcement_learn_more">더 알아보기</string>
     <string name="gutenberg_kit_announcement_maybe_later">나중에</string>
     <string name="gutenberg_kit_announcement_activate">활성화</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">2026년 말에는 모든 사람의 기본 편집기가 됩니다. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">차세대 블록 편집기가 준비되었으며, 추가 새 기능이 제공됩니다.</string>
     <string name="gutenberg_kit_announcement_title">더 나은 블록 편집기 공개 예정</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">새 편집기를 사용해 보려면 먼저 블록 편집기로 전환하세요.</string>
@@ -336,6 +452,7 @@ Language: ko_KR
     <string name="he_support_empty_conversations_button">대화 시작</string>
     <string name="he_support_empty_conversations_message">지원팀과 대화를 시작하여 질문에 대한 도움을 받으세요.</string>
     <string name="he_support_empty_conversations_title">아직 대화 없음</string>
+    <string name="unified_support_new_conversation_content_description">새로운 대화</string>
     <string name="ai_bot_time_just_now">지금</string>
     <string name="ai_bot_welcome_message">저는 개인 AI 도우미입니다. 사이트 또는 계정에 대한 질문에 도움을 드릴 수 있습니다.</string>
     <string name="ai_bot_welcome_greeting">%1$s 님, 안녕하세요. 👋</string>
@@ -373,7 +490,6 @@ Language: ko_KR
     <string name="application_password_required">애플리케이션 비밀번호 필요</string>
     <string name="menu_html_mode">코드 편집기</string>
     <string name="taxonomies_title">분류</string>
-    <string name="media_edit_file_size_caption">파일 크기</string>
     <string name="jetpack_rest_connection_error_login_wpcom">워드프레스닷컴에 로그인할 수 없음</string>
     <string name="jetpack_rest_connection_step_connect_site">워드프레스닷컴에 사이트 연결</string>
     <string name="dataview_default_empty_message">여기에 아무것도 없음</string>
@@ -696,7 +812,6 @@ Language: ko_KR
     <string name="reader_dropdown_menu_subscriptions">구독</string>
     <string name="reader_dropdown_menu_discover">발견</string>
     <string name="reader_search_content_description">검색</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">태그 팔로우</string>
     <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
     <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
     <string name="reader_filter_empty_tags_list_follow_text">태그를 팔로우하면 여기에서 인기 글을 확인할 수 있습니다.</string>
@@ -791,7 +906,6 @@ Language: ko_KR
     <string name="site_creation_domain_free_with_annual_plan">연간 유료 요금제에서는 첫해 무료</string>
     <string name="reader_secondary_bookmarked">저장됨</string>
     <string name="reader_secondary_bookmark">저장</string>
-    <string name="reader_discover_recommended_header_new">좋아할 수도 있습니다</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">블록 그룹 해제</string>
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">자세히 알아보려면 여기를 누르세요.</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">동기화된 패턴</string>
@@ -1876,8 +1990,6 @@ Language: ko_KR
     <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
     <string name="hpp_error_subtitle">온라인으로 돌아오면 재시도를 누르세요.</string>
     <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
-    <string name="reader_discover_no_posts_follow_subtitle">검색 범위가 넓어지도록 추가 태그를 팔로우해 보세요.</string>
-    <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
     <string name="scan">검색하기</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">스크롤 할 수 있는 블록 메뉴가 열렸습니다. 블록을 선택하세요.</string>
@@ -2003,7 +2115,6 @@ Language: ko_KR
     <string name="publish_date">발행일</string>
     <string name="ccpa_privacy_notice_read">CCPA 개인정보보호 고지 읽기</string>
     <string name="ccpa_privacy_notice_caption">캘리포니아 소비자 개인정보 보호법(“CCPA”)이 수집하고 공유하는 개인 정보의 범주에 대한 개인 정보를 어떤 것을 얻고,  어떻게 왜 쓰는 지에 대한 일부 추가 정보를 캘리포니아 거주자에게 제공할 것을 요구합니다.</string>
-    <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="update_now">지금 업데이트하기</string>
     <string name="pages_item_subtitle">%1$s ·</string>
@@ -2718,11 +2829,8 @@ Language: ko_KR
     <string name="activity_log">활동 로그</string>
     <string name="privacy_policy_read">개인정보 취급방침 읽기</string>
     <string name="third_party_policy_learn_more_caption">워드프레스는 타사 제품을 포함한 다른 추적 도구를 사용합니다. 이 도구에 대해 읽고 제어하는 방법에 대해 알아보세요.</string>
-    <string name="third_party_policy_learn_more_header">타사 정책</string>
     <string name="privacy_policy_learn_more_caption">이 정보는 개인정보 취급방침에 명시된 것처럼 제품을 개선하고, 보다 관련된 마케팅을 제공하며, 워드프레스닷컴 환경을 개인 설정하는 데 도움을 줍니다.</string>
-    <string name="privacy_policy_learn_more_header">개인정보 취급방침</string>
     <string name="cookie_policy_learn_more_caption">워드프레스닷컴 계정에 로그인되어 있는 동안 이용하는 서비스에 대한 정보를 워드프레스의 분석 도구와 공유합니다.</string>
-    <string name="cookie_policy_learn_more_header">쿠키 정책</string>
     <string name="preference_privacy_settings">개인 정보 설정</string>
     <string name="preference_collect_information">정보 수집</string>
     <string name="post_submitted">글이 제출됨</string>
@@ -2773,7 +2881,6 @@ Language: ko_KR
     <string name="reader_photo_view_desc">사진</string>
     <string name="reader_list_item_suggestion_remove_desc">삭제</string>
     <string name="photo_picker_thumbnail_desc">비디오 재생</string>
-    <string name="reader_cardview_post_play_video_desc">특성 비디오 재생</string>
     <string name="plugin_detail_logo_desc">플러그인 로고</string>
     <string name="plugin_detail_banner_desc">플러그인 배너</string>
     <string name="photo_picker_wpmedia_desc">워드프레스 미디어에서 선택</string>
@@ -2977,8 +3084,6 @@ Language: ko_KR
     <string name="media_files_not_uploaded">%d개 파일 업로드되지 않음</string>
     <string name="remove_image_from_post">글에서 제거</string>
     <string name="confirm_remove_media_image">글에서 이 이미지를 제거할까요?</string>
-    <string name="media_edit_customize_card_caption">사용자 정의</string>
-    <string name="media_edit_file_details_card_caption">파일 세부정보</string>
     <string name="login_error_button">닫기</string>
     <string name="error_generic_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="post_settings_remove_featured_image">특성 이미지 제거</string>
@@ -3012,13 +3117,7 @@ Language: ko_KR
     <string name="media_title_audio_details">오디오 세부정보</string>
     <string name="media_title_video_details">비디오 세부정보</string>
     <string name="media_title_image_details">이미지 세부정보</string>
-    <string name="fab_content_description_preview">미리보기</string>
-    <string name="media_edit_upload_date_caption">업로드 날짜</string>
     <string name="media_edit_duration_caption">기간</string>
-    <string name="media_edit_video_dimensions_caption">비디오 크기</string>
-    <string name="media_edit_image_dimensions_caption">이미지 크기</string>
-    <string name="media_edit_filetype_caption">파일 형식</string>
-    <string name="media_edit_filename_caption">파일 이름</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">대체 텍스트</string>
     <string name="connect_site">사이트 연결하기</string>
@@ -3066,7 +3165,6 @@ Language: ko_KR
     <string name="login_checking_site_address" a8c-src-lib="module:login">사이트 주소 확인 중</string>
     <string name="login_site_address" a8c-src-lib="module:login">사이트 주소</string>
     <string name="enter_site_address" a8c-src-lib="module:login">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
-    <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
     <string name="login_continue" a8c-src-lib="module:login">계속</string>
     <string name="connect_more">다른 사이트 연결하기</string>
     <string name="next">다음</string>
@@ -3116,8 +3214,6 @@ Language: ko_KR
     <string name="media_all">모두</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s의 미디어 파일 접근이 거부되었습니다. 이 문제를 해결하려면 권한을 편집하고 %2$s을(를) 켜세요.</string>
     <string name="reader_view_comments">댓글 보기</string>
-    <string name="site_settings_video_quality_hint">비디오 품질. 값이 클수록 비디오가 고품질이라는 것을 의미합니다.</string>
-    <string name="site_settings_video_width_hint">글의 비디오를 이 크기로 조정</string>
     <string name="site_settings_optimize_video_summary">비디오 크기 조정 및 압축</string>
     <string name="site_settings_optimize_videos">비디오 최적화</string>
     <string name="draft_uploaded">임시글이 업로드됨</string>
@@ -3201,7 +3297,6 @@ Language: ko_KR
     <string name="photo_picker_title">사진 선택</string>
     <string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
-    <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
     <string name="media_encoder_quality_maximum">최대</string>
     <string name="media_encoder_quality_high">높음</string>
@@ -3453,7 +3548,6 @@ Language: ko_KR
     <string name="site_settings_discussion_hint">사이트 토론 설정 보기 및 변경</string>
     <string name="site_settings_more_hint">사용 가능한 모든 토론 설정 보기</string>
     <string name="site_settings_related_posts_hint">리더에서 관련 글 표시 또는 숨기기</string>
-    <string name="site_settings_image_width_hint">글의 이미지를 이 폭으로 크기 조정합니다.</string>
     <string name="site_settings_format_hint">새 글 형식을 설정합니다.</string>
     <string name="site_settings_category_hint">새 글 카테고리를 설정합니다.</string>
     <string name="site_settings_password_hint">비밀번호 변경</string>

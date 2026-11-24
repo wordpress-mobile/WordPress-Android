@@ -42,6 +42,9 @@ private val IconButtonGlyphInset = 12.dp
  * @param onMoveToBottom Callback invoked when user clicks "Move to Bottom"
  * @param additionalContent Optional composable content for card-specific menu items,
  *                          called within the DropdownMenu. Should contain DropdownMenuItem(s).
+ *                          It is handed a lambda that closes this menu: a [DropdownMenuItem] does
+ *                          not dismiss on its own, and an item nested in a sub-menu has to close
+ *                          both levels.
  */
 @Composable
 fun StatsCardMenu(
@@ -52,7 +55,7 @@ fun StatsCardMenu(
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null,
-    additionalContent: @Composable (() -> Unit)? = null
+    additionalContent: @Composable ((dismiss: () -> Unit) -> Unit)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
     var moveSubMenuExpanded by remember { mutableStateOf(false) }
@@ -75,8 +78,8 @@ fun StatsCardMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            // Card-specific options (e.g., chart type for ViewsStatsCard)
-            additionalContent?.invoke()
+            // Card-specific options (e.g., chart type and interval for ViewsStatsCard)
+            additionalContent?.invoke { expanded = false }
 
             // Move Card sub-menu (shown only when cardPosition is provided and there are multiple cards)
             val showMoveOption = cardPosition != null && cardPosition.totalCards > 1

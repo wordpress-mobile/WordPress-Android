@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,6 +15,7 @@ import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -54,6 +56,7 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
@@ -78,7 +81,8 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
+import org.wordpress.android.ui.reader.repository.ReaderCommentRepository
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -90,6 +94,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.PostRefreshed
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
@@ -106,14 +111,12 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
@@ -158,7 +161,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var readerFetchPostUseCase: ReaderFetchPostUseCase
 
     @Mock
-    private lateinit var eventBusWrapper: EventBusWrapper
+    private lateinit var readerPostRepository: ReaderPostRepository
 
     @Mock
     private lateinit var readerSimplePost: ReaderSimplePost
@@ -182,9 +185,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
 
     @Mock
-    private lateinit var contextProvider: ContextProvider
-
-    @Mock
     private lateinit var engagementUtils: EngagementUtils
 
     @Mock
@@ -200,7 +200,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
 
     @Mock
-    private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    private lateinit var readerCommentRepository: ReaderCommentRepository
 
     @Mock
     private lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
@@ -239,7 +239,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             siteStore,
             accountStore,
             readerTracker,
-            eventBusWrapper,
             wpUrlUtilsWrapper,
             testDispatcher(),
             testDispatcher(),
@@ -248,11 +247,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             likesEnhancementsFeatureConfig,
             engagementUtils,
             htmlMessageUtils,
-            contextProvider,
             networkUtilsWrapper,
             commentsSnippetFeatureConfig,
             readerCommentTableWrapper,
-            readerCommentServiceStarterWrapper,
+            readerCommentRepository,
+            readerPostRepository,
             readingPreferencesFeatureConfig,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
@@ -334,6 +333,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
 
         whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
+        lenient().whenever(readerCommentRepository.fetchCommentsForSnippet(any(), any()))
+            .thenReturn(UpdateResult.UNCHANGED)
 
         likesCaptor = argumentCaptor()
 
@@ -886,6 +887,27 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given related posts are shown, when the same post is re-rendered, then its related posts are kept`() =
+        test {
+            whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                .thenReturn(
+                    FetchRelatedPostsState.Success(
+                        localRelatedPosts = relatedPosts,
+                        globalRelatedPosts = relatedPosts
+                    )
+                )
+            val uiStates = init().uiStates
+            viewModel.onRelatedPostsRequested(readerPost)
+            val shownState = uiStates.last() as ReaderPostDetailsUiState
+
+            viewModel.onUpdatePost(readerPost)
+
+            val uiState = uiStates.last() as ReaderPostDetailsUiState
+            assertThat(uiState.localRelatedPosts).isEqualTo(shownState.localRelatedPosts).isNotNull
+            assertThat(uiState.globalRelatedPosts).isEqualTo(shownState.globalRelatedPosts).isNotNull
+        }
+
+    @Test
     fun `given global related posts fetch succeeds, when related posts requested, then global related posts shown`() =
         test {
             val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
@@ -1233,7 +1255,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
+    fun `onRefreshCommentsData does not fetch the comment snippet for external posts`() = test {
         val externalPost = createDummyReaderPost(1, isWpComPost = false)
         whenever(
             readerPostTableWrapper.getBlogPost(
@@ -1245,11 +1267,84 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onRefreshCommentsData(1, 1)
 
-        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
-            anyOrNull(),
-            anyOrNull(),
-            anyOrNull()
-        )
+        verify(readerCommentRepository, never()).fetchCommentsForSnippet(any(), any())
+    }
+
+    /* REFRESH POST */
+    @Test
+    fun `given no post, when the post is refreshed, then nothing is fetched`() = test {
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        verify(readerPostRepository, never()).refreshPost(any())
+        assertThat(refreshed).containsExactly(PostRefreshed(post = null, hasNewBody = false))
+    }
+
+    @Test
+    fun `given the server has a new body, when the post is refreshed, then the stored post replaces it`() = test {
+        val post = createDummyReaderPost(1)
+        val storedPost = createDummyReaderPost(1).apply { text = "<p>Edited</p>" }
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).thenReturn(UpdateResult.CHANGED)
+        whenever(readerPostTableWrapper.getBlogPost(post.blogId, post.postId, false)).thenReturn(storedPost)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        assertThat(viewModel.post).isSameAs(storedPost)
+        assertThat(refreshed).containsExactly(PostRefreshed(post = storedPost, hasNewBody = true))
+    }
+
+    @Test
+    fun `given another post is shown by the time a refresh returns, when it returns, then it's dropped`() = test {
+        val post = createDummyReaderPost(1)
+        val relatedPost = createDummyReaderPost(2)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer {
+            viewModel.post = relatedPost
+            UpdateResult.CHANGED
+        }
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        assertThat(viewModel.post).isSameAs(relatedPost)
+        assertThat(refreshed).containsExactly(PostRefreshed(post = null, hasNewBody = false))
+    }
+
+    @Test
+    fun `given the post is unchanged, when the post is refreshed, then the post stays and has no new body`() = test {
+        val post = createDummyReaderPost(1)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).thenReturn(UpdateResult.UNCHANGED)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+
+        assertThat(viewModel.post).isSameAs(post)
+        assertThat(refreshed).containsExactly(PostRefreshed(post = post, hasNewBody = false))
+    }
+
+    @Test
+    fun `given a refresh is running, when another starts, then only the newer one reports back`() = test {
+        val post = createDummyReaderPost(1)
+        val relatedPost = createDummyReaderPost(2)
+        viewModel.post = post
+        whenever(readerPostRepository.refreshPost(post)).doSuspendableAnswer { awaitCancellation() }
+        whenever(readerPostRepository.refreshPost(relatedPost)).thenReturn(UpdateResult.UNCHANGED)
+        val refreshed = mutableListOf<PostRefreshed>()
+        viewModel.postRefreshed.observeForever { refreshed.add(it.peekContent()) }
+
+        viewModel.onRefreshPost()
+        viewModel.post = relatedPost
+        viewModel.onRefreshPost()
+
+        assertThat(refreshed).containsExactly(PostRefreshed(post = relatedPost))
     }
 
     @Test
@@ -1362,7 +1457,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             this.feedId = id * 1000
             this.title = "DummyPost"
             this.text = "<p>Dummy post content</p>"
-            this.featuredVideo = id.toString()
             this.featuredImage = "/featured_image/$id/url"
             this.isExternal = !isWpComPost
             this.numReplies = 1

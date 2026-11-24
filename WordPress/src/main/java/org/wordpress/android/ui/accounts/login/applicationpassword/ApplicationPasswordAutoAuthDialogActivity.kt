@@ -98,22 +98,38 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
             }
         }
 
+        setDialogContent(site)
+    }
+
+    private fun setDialogContent(site: SiteModel) {
         setContent {
             AppThemeM3 {
                 val isLoading = viewModel.isLoading.collectAsState()
-                ApplicationPasswordAutoAuthDialog(
-                    isLoading = isLoading.value,
-                    onDismiss = {
-                        setResult(RESULT_CANCELED)
-                        finish()
-                    },
-                    onConfirm = {
-                        viewModel.createApplicationPassword(
-                            site,
-                            ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION
-                        )
-                    }
-                )
+                val isAuthorizationHeaderBlocked = viewModel.isAuthorizationHeaderBlocked.collectAsState()
+                if (isAuthorizationHeaderBlocked.value) {
+                    AuthorizationHeaderBlockedDialog(
+                        onDismiss = {
+                            // Not reported as an error: the caller would retry in the browser, and the
+                            // server would block that password too.
+                            setResult(RESULT_CANCELED)
+                            finish()
+                        }
+                    )
+                } else {
+                    ApplicationPasswordAutoAuthDialog(
+                        isLoading = isLoading.value,
+                        onDismiss = {
+                            setResult(RESULT_CANCELED)
+                            finish()
+                        },
+                        onConfirm = {
+                            viewModel.createApplicationPassword(
+                                site,
+                                ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION
+                            )
+                        }
+                    )
+                }
             }
         }
     }

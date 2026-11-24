@@ -47,7 +47,7 @@ class ReaderPhotoViewerActivity : BaseAppCompatActivity() {
         }
         // make sure initial image is in the list
         if (!initialImageUrl.isNullOrEmpty() && !imageList.hasImageUrl(initialImageUrl)) {
-            imageList.addImageUrl(0, initialImageUrl)
+            imageList.addImageUrl(initialImageUrl, 0)
         }
 
         // use max of width/height so image is cached the same regardless of orientation

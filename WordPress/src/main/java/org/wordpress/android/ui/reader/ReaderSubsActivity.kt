@@ -86,7 +86,10 @@ class ReaderSubsActivity : BaseAppCompatActivity() {
                         is ReaderSubsUiEvent.ShowMessage -> launch {
                             // a new message replaces the current one rather than queueing behind it
                             snackbarHostState.currentSnackbarData?.dismiss()
-                            snackbarHostState.showSnackbar(event.message, duration = SnackbarDuration.Long)
+                            snackbarHostState.showSnackbar(
+                                event.message,
+                                duration = if (event.isShort) SnackbarDuration.Short else SnackbarDuration.Long
+                            )
                         }
                         is ReaderSubsUiEvent.ShowSitePreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             this@ReaderSubsActivity,

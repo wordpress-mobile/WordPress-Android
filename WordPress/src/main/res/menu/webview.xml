@@ -8,4 +8,10 @@
         android:title="@string/refresh"
         app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_site_login"
+        android:title="@string/web_view_log_in_to_site"
+        android:visible="false"
+        app:showAsAction="never"/>
 </menu>

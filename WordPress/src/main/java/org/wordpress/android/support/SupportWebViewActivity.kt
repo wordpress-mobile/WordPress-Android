@@ -8,9 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.webkit.WebView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
 import androidx.webkit.WebViewAssetLoader.DEFAULT_DOMAIN
@@ -28,6 +31,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setWindowStatusBarColor
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.UUID
 import javax.inject.Inject
@@ -63,8 +67,27 @@ class SupportWebViewActivity : WPWebViewActivity(), SupportWebViewClient.Support
         val toolbarLayoutParams = toolbar.layoutParams as AppBarLayout.LayoutParams
         toolbarLayoutParams.scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
 
+        showAiDisclosure()
         setupWebView()
         setupJsInterfaceForWebView()
+    }
+
+    /**
+     * Shows the fixed AI disclosure above the chat (EU AI Act Art. 50). The banner lives in the
+     * AppBarLayout without scroll flags, so it stays visible for the whole conversation.
+     *
+     * It stays up while the chat is loading, so the disclosure is never late, but is hidden once
+     * the error view takes over: there is no AI conversation on screen to disclose then.
+     */
+    private fun showAiDisclosure() {
+        findViewById<TextView>(R.id.ai_disclosure_text).text = getString(
+            R.string.ai_support_disclosure,
+            getString(R.string.ai_support_disclosure_product_name)
+        )
+        val banner = findViewById<View>(R.id.ai_disclosure_banner)
+        webPreviewViewModel.uiState.observe(this) { uiState ->
+            banner.isVisible = uiState !is WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

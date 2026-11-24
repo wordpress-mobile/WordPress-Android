@@ -31,7 +31,7 @@
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="@null"
                 app:tint="@color/neutral_70"
-                tools:src="@drawable/ic_pages_white_24dp" />
+                tools:src="@drawable/ic_file_generic_white_24dp" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_item_filetype"

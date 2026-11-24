@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
@@ -159,6 +160,9 @@ class ReaderPostListViewModel @Inject constructor(
     private var requestFailed = false
     private var autoUpdateSkipped = false
     private var isSiteAllSubfilter = false
+    private var siteSubfilter: SubfilterListItem.Site? = null
+    // the site filter left because its site was blocked, picked again if the block is undone or fails
+    private var siteSubfilterBeforeBlock: SubfilterListItem.Site? = null
     private var hasFollowedBlogs = false
     private var restorePosition = 0
     private var pendingScrollToBlogId: Long? = null
@@ -170,11 +174,10 @@ class ReaderPostListViewModel @Inject constructor(
     private val cardRendered: (ReaderCardUiState) -> Unit = ::onCardRendered
     private val moreButtonClicked: (ReaderPostUiState) -> Unit = ::onMoreButtonClicked
     private val moreMenuDismissed: (ReaderPostUiState) -> Unit = { closeMoreMenu() }
-    private val videoOverlayClicked: (Long, Long) -> Unit = ::onVideoOverlayClicked
     private val postHeaderClicked: (Long, Long) -> Unit = ::onPostHeaderClicked
 
     private val refreshPostsObserver = Observer<Event<Unit>> { event ->
-        event.getContentIfNotHandled()?.let { reload() }
+        event.getContentIfNotHandled()?.let { onPostsChanged() }
     }
     private val followStatusObserver = Observer<FollowStatusChanged> { onFollowStatusChanged(it) }
 
@@ -256,8 +259,12 @@ class ReaderPostListViewModel @Inject constructor(
             }
         }
 
-        launch {
-            repository.events.collect { onRepositoryEvent(it) }
+        // subscribe now since these events aren't replayed
+        launch(start = CoroutineStart.UNDISPATCHED) {
+            repository.updateEvents.collect { onRepositoryEvent(it) }
+        }
+        launch(start = CoroutineStart.UNDISPATCHED) {
+            repository.followEvents.collect { onRepositoryEvent(it) }
         }
 
         updateUiState()
@@ -310,17 +317,16 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     /*
-     * Called when the fragment resumes after having been paused. [addedTagName] is the name of a tag
-     * the user just followed, and [siteSubfilter] is the site being filtered on, if any.
+     * Called when the fragment resumes after having been paused. [siteSubfilter] is the site being
+     * filtered on, if any.
      */
-    fun onResumeAfterPause(addedTagName: String?, siteSubfilter: SubfilterListItem.Site?) {
+    fun onResumeAfterPause(siteSubfilter: SubfilterListItem.Site?) {
+        // a site may have been blocked or unsubscribed from elsewhere, such as the post detail screen
+        reloadSubfilters()
         when {
             listType == ReaderPostListType.TAG_FOLLOWED -> launch {
                 val tag = currentTag
-                if (isFollowingScreen && addedTagName != null) {
-                    // user just added a tag so switch to it
-                    sendUiEvent(ReaderPostListUiEvent.SetSubfilterFromTag(repository.getFollowedTag(addedTagName)))
-                } else if (isFollowingScreen && (tag == null || !repository.tagExists(tag))) {
+                if (isFollowingScreen && (tag == null || !repository.tagExists(tag))) {
                     // user just removed a tag which was selected in the subfilter
                     sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
                 } else {
@@ -372,8 +378,46 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
+    /*
+     * Called when a card action, such as blocking a site, changed the stored posts
+     */
+    private fun onPostsChanged() {
+        reloadSubfilters()
+        val site = siteSubfilter
+        val siteBeforeBlock = siteSubfilterBeforeBlock
+        launch {
+            when {
+                // blocking the site picked in the Subscriptions filter would leave an empty list, so show all
+                // subscriptions instead
+                site != null && repository.isBlockedSite(site.blog.blogId) -> {
+                    siteSubfilterBeforeBlock = site
+                    sendUiEvent(ReaderPostListUiEvent.SetDefaultSubfilter)
+                }
+                // the block was undone or failed, so go back to the site
+                siteBeforeBlock != null && !repository.isBlockedSite(siteBeforeBlock.blog.blogId) -> {
+                    siteSubfilterBeforeBlock = null
+                    sendUiEvent(ReaderPostListUiEvent.SetSubfilter(siteBeforeBlock))
+                }
+                else -> reload()
+            }
+        }
+    }
+
+    /*
+     * The Subscriptions filter, and the site count shown with it, are only rebuilt when a sync finds a change,
+     * so this rebuilds them from the local DB after an action such as blocking a site unfollowed one
+     */
+    private fun reloadSubfilters() {
+        if (isFilterable) {
+            sendUiEvent(ReaderPostListUiEvent.ReloadSubfilters)
+        }
+    }
+
     fun onSubfilterChanged(subfilter: SubfilterListItem?) {
         isSiteAllSubfilter = subfilter is SubfilterListItem.SiteAll
+        siteSubfilter = subfilter as? SubfilterListItem.Site
+        // picking another site or tag means there's no blocked site to go back to
+        if (!isSiteAllSubfilter) siteSubfilterBeforeBlock = null
         updateUiState()
     }
 
@@ -622,13 +666,11 @@ class ReaderPostListViewModel @Inject constructor(
                 onSearchEnded(event)
             }
 
-            is ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
+            ReaderPostListEvent.FollowedTagsFetched -> if (listType == ReaderPostListType.TAG_FOLLOWED) {
                 onFollowedTagsFetched()
             }
 
-            is ReaderPostListEvent.FollowedBlogsFetched -> if (event.didChange && isFollowedSitesList) {
-                reload()
-            }
+            is ReaderPostListEvent.FollowedBlogsFetched -> if (isFollowedSitesList) onFollowedBlogsFetched(event)
         }
     }
 
@@ -645,10 +687,19 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
+    private fun onFollowedBlogsFetched(event: ReaderPostListEvent.FollowedBlogsFetched) {
+        if (event.didChange) reload()
+        // posts from a site whose block was just cleared were dropped when they were saved, so ask again
+        if (event.didClearBlocks) currentTarget()?.let { requestPosts(it, UpdateAction.REQUEST_NEWER) }
+    }
+
     private fun onFollowedTagsFetched() = launch {
-        // update the current tag if the list is empty - this happens on first run
-        if (posts.isEmpty() && (repository.hasFollowedBlogs() || !hasUpdatedPosts)) {
-            currentTag?.let { requestPosts(ReaderPostListTarget.Tag(it), UpdateAction.REQUEST_NEWER) }
+        val target = currentTarget() ?: return@launch
+        // fetch if nothing's saved and no update is running - checks the saved posts since [posts] is empty until
+        // the first load ends
+        if (updateActions.isNotEmpty() || repository.getPostCount(target) > 0) return@launch
+        if (repository.hasFollowedBlogs() || !hasUpdatedPosts) {
+            requestPosts(target, UpdateAction.REQUEST_NEWER)
         }
     }
 
@@ -713,13 +764,21 @@ class ReaderPostListViewModel @Inject constructor(
      */
     private fun updateCurrentTagIfTime() {
         val tag = currentTag ?: return
+        val target = ReaderPostListTarget.Tag(tag)
         launch {
-            if (repository.shouldAutoUpdateTag(tag)) {
-                requestPosts(ReaderPostListTarget.Tag(tag), UpdateAction.REQUEST_NEWER)
-            } else if (isBookmarksList || tag.isListTopic) {
-                // there won't be an update, so show the empty state for these lists right away
-                autoUpdateSkipped = true
-                updateUiState()
+            when {
+                repository.shouldAutoUpdateTag(tag) -> requestPosts(target, UpdateAction.REQUEST_NEWER)
+
+                isBookmarksList || tag.isListTopic -> {
+                    // there won't be an update, so show the empty state for these lists right away
+                    autoUpdateSkipped = true
+                    updateUiState()
+                }
+
+                // until an update ends the list shows nothing rather than its empty state, so a tag with no saved
+                // posts is updated even if it was updated recently. Once one has ended the usual throttle applies
+                !hasUpdatedPosts && repository.getPostCount(target) == 0 ->
+                    requestPosts(target, UpdateAction.REQUEST_NEWER)
             }
         }
     }
@@ -885,7 +944,7 @@ class ReaderPostListViewModel @Inject constructor(
             description = blog.description.ifEmpty { null },
             imageUrl = blog.imageUrl.ifEmpty { null },
             isP2orA8C = blog.isP2orA8C,
-            subscriberCount = blog.numSubscribers,
+            subscriberCount = blog.numSubscribers.takeIf { it > 0 },
             isFollowed = blog.isFollowing,
             isFollowInProgress = isSiteHeaderFollowInProgress,
             showSettings = blog.isFollowing && !isFeed && accountStore.hasAccessToken()
@@ -986,7 +1045,6 @@ class ReaderPostListViewModel @Inject constructor(
                         onItemRendered = cardRendered,
                         onMoreButtonClicked = moreButtonClicked,
                         onMoreDismissed = moreMenuDismissed,
-                        onVideoOverlayClicked = videoOverlayClicked,
                         onPostHeaderViewClicked = postHeaderClicked
                     )
                 }
@@ -1137,7 +1195,9 @@ class ReaderPostListViewModel @Inject constructor(
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         val post = findPost(state.blogId, state.postId) ?: return
         launch {
-            val items = moreMenuBuilder.buildMoreMenuItems(post, true, cardButtonClicked)
+            // the card's own save button covers saving, except for a post it can't save, such as a feed post
+            val includeBookmark = !state.bookmarkAction.isEnabled
+            val items = moreMenuBuilder.buildMoreMenuItems(post, includeBookmark, cardButtonClicked)
             moreMenu = post to items
             updateUiState()
         }
@@ -1148,10 +1208,6 @@ class ReaderPostListViewModel @Inject constructor(
             moreMenu = null
             updateUiState()
         }
-    }
-
-    private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
-        findPost(blogId, postId)?.let { sendUiEvent(ReaderPostListUiEvent.VideoOverlayClicked(it)) }
     }
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {

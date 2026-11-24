@@ -48,10 +48,6 @@
     <dimen name="snackbar_radius">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
-    <dimen name="media_settings_margin_normal">@dimen/margin_extra_large</dimen>
-    <dimen name="media_settings_margin_tablet">48dp</dimen>
-    <dimen name="media_settings_margin_tablet_large">96dp</dimen>
-    <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
     <dimen name="media_picker_selection_dot">20dp</dimen>
     <dimen name="media_picker_action_mode_dot">16dp</dimen>
@@ -128,19 +124,10 @@
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
 
-    <dimen name="reader_card_elevation_new">0dp</dimen>
-
-    <dimen name="reader_footer_progress_bar_size">48dp</dimen>
-
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
 
     <!-- reader follow unfollow comments dimensions -->
-
-    <!-- reader more menu spacer height -->
-    <dimen name="reader_more_menu_spacer_height">16dp</dimen>
-    <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">130dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_extra_low
@@ -166,7 +153,6 @@
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_extra_medium_with_padding">28dp</dimen>
-    <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
     <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
@@ -175,10 +161,6 @@
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_button_minimum_height">44dp</dimen>
-    <dimen name="reader_count_icon">18dp</dimen>
-    <dimen name="reader_follow_button_min_height">36dp</dimen>
-    <dimen name="reader_follow_button_progress_size">24dp</dimen>
 
     <dimen name="reader_post_card_new_more_icon">24dp</dimen>
 
@@ -186,10 +168,8 @@
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
-    <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
     <dimen name="reader_featured_image_corner_radius">4dp</dimen>
     <dimen name="reader_featured_image_corner_radius_new">5dp</dimen>
-    <dimen name="reader_image_featured_border_width">1dp</dimen>
 
     <dimen name="reader_related_post_image_width">150dp</dimen>
 
@@ -198,11 +178,7 @@
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
-    <dimen name="reader_comments_actions_height">24dp</dimen>
-    <dimen name="reader_comments_content_line_height">24dp</dimen>
     <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
-
-    <dimen name="reader_chip_radius">8dp</dimen>
 
     <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
@@ -211,8 +187,6 @@
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
-
-    <dimen name="nux_main_button_height">48dp</dimen>
 
     <!-- editor -->
     <dimen name="post_settings_featured_image_height_min">150dp</dimen>
@@ -612,7 +586,6 @@
     </dimen>
 
     <!-- likes list and user profile bottom sheet -->
-    <dimen name="reader_like_faces_padding">2dp</dimen>
     <dimen name="liker_faces_section_min_height">80dp</dimen>
     <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
     <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
@@ -674,11 +647,5 @@
     <dimen name="switch_vertical_padding">4dp</dimen>
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
     <dimen name="navbar_me_icon_padding">4dp</dimen>
-
-    <!-- Reader Follow Button -->
-    <dimen name="reader_follow_button_stroke_alpha_light" format="float">0.12</dimen>
-    <dimen name="reader_follow_button_stroke_alpha_dark" format="float">0.25</dimen>
-
-    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_light</dimen>
-    <dimen name="reader_follow_button_text_alpha" format="float">0.6</dimen>
+    <dimen name="media_settings_content_max_width">600dp</dimen>
 </resources>

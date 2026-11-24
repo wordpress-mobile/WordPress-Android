@@ -584,6 +584,9 @@ class PostRsApiRestClient @Inject constructor(
         is RequestExecutionErrorReason.HttpAuthenticationRequiredError,
         is RequestExecutionErrorReason.HttpAuthenticationRejectedError,
         is RequestExecutionErrorReason.MisconfiguredHttpAuthenticationError -> PostErrorType.UNAUTHORIZED
+        // A Cloudflare edge failure still carries the HTTP status the request came back with, so
+        // map on that rather than on the Cloudflare-specific kind.
+        is RequestExecutionErrorReason.CloudflareError -> postErrorTypeFromHttpStatus(reason.statusCode.toInt())
         is RequestExecutionErrorReason.HttpTimeoutError,
         is RequestExecutionErrorReason.DeviceIsOfflineError,
         is RequestExecutionErrorReason.ConnectionError,

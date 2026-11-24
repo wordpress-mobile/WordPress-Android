@@ -12,7 +12,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider
+import org.wordpress.android.ui.reader.repository.TagUpdateClientUtilsProvider
 import org.wordpress.android.util.FormatUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.StringUtils

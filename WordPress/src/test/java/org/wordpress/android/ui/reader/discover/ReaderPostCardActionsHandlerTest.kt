@@ -19,6 +19,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
@@ -38,7 +39,6 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadi
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -55,16 +55,18 @@ import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.BlockedBlogResult
+import org.wordpress.android.ui.reader.repository.BlockedUserResult
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserState.UserBlockedInLocalDb
-import org.wordpress.android.ui.reader.repository.usecases.BlockUserUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.PostLikedInLocalDb
-import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
@@ -79,6 +81,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val SOURCE = "source"
@@ -105,9 +108,6 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var blockBlogUseCase: BlockBlogUseCase
 
     @Mock
-    private lateinit var blockUserUseCase: BlockUserUseCase
-
-    @Mock
     private lateinit var likeUseCase: PostLikeUseCase
 
     @Mock
@@ -117,7 +117,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
 
     @Mock
-    private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
+    private lateinit var readerBlogRepository: ReaderBlogRepository
 
     @Mock
     private lateinit var fetchSiteUseCase: ReaderFetchSiteUseCase
@@ -135,6 +135,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     private lateinit var accountStore: AccountStore
 
     @Mock
+    private lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
+    @Mock
     private lateinit var resourceProvider: ResourceProvider
 
     @Mock
@@ -148,10 +151,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             bookmarkUseCase,
             followUseCase,
             blockBlogUseCase,
-            blockUserUseCase,
             likeUseCase,
             siteNotificationsUseCase,
-            undoBlockBlogUseCase,
+            readerBlogRepository,
             fetchSiteUseCase,
             appPrefsWrapper,
             dispatcher,
@@ -161,6 +163,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
             seenStatusToggleUseCase,
             readerBlogTableWrapper,
             accountStore,
+            savedPostsRepository,
             testDispatcher()
         )
         actionHandler.initScope(testScope())
@@ -210,6 +213,45 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         )
 
         // Assert
+        assertThat(observedValues.navigation).isEmpty()
+    }
+
+    @Test
+    fun `when synced, shows the sync dialog once even if the local-only one was shown`() = test {
+        whenever(bookmarkUseCase.toggleBookmark(any(), any(), any())).thenReturn(flowOf(Success(true)))
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
+        whenever(appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()).thenReturn(true)
+
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false, SOURCE)
+
+        val dialog = observedValues.navigation[0] as ShowBookmarkedSavedOnlyLocallyDialog
+        assertThat(dialog.message).isEqualTo(R.string.reader_save_posts_synced_dialog_message)
+        dialog.okButtonAction()
+        verify(appPrefsWrapper).setReaderSavedPostsSyncDialogShown()
+    }
+
+    @Test
+    fun `a save past the account's limit says so and refreshes the posts`() = test {
+        whenever(bookmarkUseCase.toggleBookmark(any(), any(), any())).thenReturn(flowOf(BookmarkPostState.TooManySaves))
+
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false, SOURCE)
+
+        assertThat(observedValues.snackbarMsgs.map { it.message })
+            .containsExactly(UiStringRes(R.string.reader_saved_posts_limit_reached))
+        assertThat(observedValues.refreshPosts).isNotEmpty()
+    }
+
+    @Test
+    fun `when synced, doesn't show the sync dialog again`() = test {
+        whenever(bookmarkUseCase.toggleBookmark(any(), any(), any())).thenReturn(flowOf(Success(true)))
+        whenever(savedPostsRepository.isSyncedWithAccount).thenReturn(true)
+        whenever(appPrefsWrapper.shouldShowReaderSavedPostsSyncDialog()).thenReturn(false)
+
+        val observedValues = startObserving(backgroundScope)
+        actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false, SOURCE)
+
         assertThat(observedValues.navigation).isEmpty()
     }
 
@@ -726,7 +768,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Posts are refreshed when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -744,7 +786,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Snackbar shown when site blocked in local db`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -816,7 +858,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Undo action is invoked when user clicks on undo action in snackbar`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -827,14 +869,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
         // Assert
-        verify(undoBlockBlogUseCase).undoBlockBlog(anyOrNull(), any())
+        verify(readerBlogRepository).undoBlockBlog(anyOrNull())
     }
 
     @Test
     fun `Post refreshed when user clicks on undo action in snackbar`() = test {
         // Arrange
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult())))
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -852,12 +894,8 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     fun `Scroll to site emitted when user clicks on undo action in snackbar`() = test {
         // Arrange
         val expectedBlogId = 123L
-        val blockedBlogResult =
-            org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult().apply {
-                blogId = expectedBlogId
-            }
         whenever(blockBlogUseCase.blockBlog(any(), any()))
-            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult)))
+            .thenReturn(flowOf(SiteBlockedInLocalDb(blockedBlogResult(expectedBlogId))))
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -877,8 +915,8 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Posts are refreshed when user blocked in local db`() = test {
         // Arrange
-        whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+        whenever(readerBlogRepository.blockUserLocal(any()))
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -895,8 +933,8 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Snackbar shown when user blocked in local db`() = test {
         // Arrange
-        whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+        whenever(readerBlogRepository.blockUserLocal(any()))
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         // Act
         actionHandler.onAction(
@@ -913,8 +951,8 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     @Test
     fun `Undo action is invoked when user clicks on undo block user action in snackbar`() = test {
         // Arrange
-        whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+        whenever(readerBlogRepository.blockUserLocal(any()))
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -925,14 +963,14 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         // Act
         observedValues.snackbarMsgs[0].buttonAction.invoke()
         // Assert
-        verify(blockUserUseCase).undoBlockUser(anyOrNull())
+        verify(readerBlogRepository).undoBlockUser(anyOrNull())
     }
 
     @Test
     fun `Post refreshed when user clicks on undo block user action in snackbar`() = test {
         // Arrange
-        whenever(blockUserUseCase.blockUser(any(), any()))
-            .thenReturn(flowOf(UserBlockedInLocalDb(mock())))
+        whenever(readerBlogRepository.blockUserLocal(any()))
+            .thenReturn(blockedUserResult())
         val observedValues = startObserving(backgroundScope)
         actionHandler.onAction(
             mock(),
@@ -1276,18 +1314,6 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Clicking on a video overlay opens video viewer`() = test {
-        // Arrange
-        val observedValues = startObserving(backgroundScope)
-
-        // Act
-        actionHandler.handleVideoOverlayClicked("mock")
-
-        // Assert
-        assertThat(observedValues.navigation[0]).isInstanceOf(ShowVideoViewer::class.java)
-    }
-
-    @Test
     fun `Clicking on a header opens blog preview`() = test {
         // Arrange
         val observedValues = startObserving(backgroundScope)
@@ -1379,4 +1405,13 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         val refreshPosts: List<Unit>,
         val scrollToSiteId: List<Long>
     )
+
+    private fun blockedBlogResult(blogId: Long = 0L) = BlockedBlogResult(
+        blogId = blogId,
+        feedId = 0L,
+        deletedRows = emptyMap(),
+        wasFollowing = false
+    )
+
+    private fun blockedUserResult() = BlockedUserResult(authorId = 0L, deletedRows = emptyMap())
 }

@@ -233,7 +233,6 @@ Language: lv
     <string name="reader_filter_empty_blogs_action_search">Meklēt emuāru</string>
     <string name="reader_filter_empty_tags_action_suggested">Ieteiktās atzīmes</string>
     <string name="reader_search_content_description">Meklēt</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Sekot birkām</string>
     <string name="reader_dropdown_menu_discover">Atklājiet</string>
     <string name="reader_dropdown_menu_subscriptions">Abonementi</string>
     <string name="reader_dropdown_menu_saved">Saglabāts</string>
@@ -335,7 +334,6 @@ Language: lv
     <string name="site_creation_domain_free_with_annual_plan">Pirmo gadu bez maksas, izmantojot gada maksas plānus</string>
     <string name="site_creation_plans_selection_title">Izvēlieties plānu</string>
     <string name="account_and_settings">Konts un iestatījumi</string>
-    <string name="reader_discover_recommended_header_new">Jums varētu patikt</string>
     <string name="reader_secondary_bookmark">Saglabāt</string>
     <string name="reader_secondary_bookmarked">Saglabāts</string>
     <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dziļi ligzdots bloks</string>
@@ -1419,8 +1417,6 @@ Language: lv
     <string name="hpp_choose_error">Izvēloties tēmu, radās kļūda.</string>
     <string name="scan">Skenēt</string>
     <string name="reader_discover_empty_title">Laipni lūdzam!</string>
-    <string name="reader_discover_no_posts_title">Nav pēdējo ziņu</string>
-    <string name="reader_discover_no_posts_follow_subtitle">Lai paplašinātu meklēšanu, mēģiniet izmantot vairākas birkas</string>
     <string name="hpp_choose_button">Izvēlieties</string>
     <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ritināmā bloķēšanas izvēlne ir aizvērta.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atvērta ritināmā bloķēšanas izvēlne. Atlasiet bloku.</string>
@@ -1546,7 +1542,6 @@ Language: lv
     <string name="reader_choose_interests_tags_content_description">Izvēlieties savas birkas</string>
     <string name="update_now">Atjaunināt tagad</string>
     <string name="status_and_visibility">Statuss un redzamība</string>
-    <string name="ccpa_privacy_notice_header">Konfidencialitātes paziņojums Kalifornijas lietotājiem</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pāriet uz augšu</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atvērt bloka darbību izvēlni</string>
@@ -2248,11 +2243,8 @@ Language: lv
     <string name="reader_followed_blog_notifications">Vai iespējot paziņojumus par %1$s%2$s%3$s?</string>
     <string name="preference_collect_information">Vākt informāciju</string>
     <string name="preference_privacy_settings">Privātuma iestatījumi</string>
-    <string name="cookie_policy_learn_more_header">Sīkdatņu politika</string>
     <string name="cookie_policy_learn_more_caption">Kopīgojiet informāciju ar mūsu analīzes rīku par pakalpojumu izmantošanu, piesakoties savā WordPress.com kontā.</string>
-    <string name="privacy_policy_learn_more_header">Privātuma politika</string>
     <string name="privacy_policy_learn_more_caption">Šī informācija palīdz mums uzlabot mūsu produktus, padarīt mārketingu jums atbilstošāku, personalizēt jūsu WordPress.com pieredzi un vēl vairāk, kā detalizēti aprakstīts mūsu privātuma politikā.</string>
-    <string name="third_party_policy_learn_more_header">Trešo pušu politika</string>
     <string name="third_party_policy_learn_more_caption">Mēs izmantojam citus izsekošanas rīkus, tostarp dažus no trešajām pusēm. Lasiet par šiem un kā tos kontrolēt.</string>
     <string name="privacy_policy_read">Izlasiet konfidencialitātes politiku</string>
     <string name="activity_log">Aktivitāšu vēsture</string>
@@ -2324,7 +2316,6 @@ Language: lv
     <string name="photo_picker_wpmedia_desc">izvēlēties no WordPress multivides</string>
     <string name="plugin_detail_banner_desc">spraudņa reklāmkarogs</string>
     <string name="plugin_detail_logo_desc">spraudņa logotips</string>
-    <string name="reader_cardview_post_play_video_desc">atskaņot piedāvāto video</string>
     <string name="jetpack_already_connected_toast">Jūs jau esat izveidojis savienojumu ar Jetpack</string>
     <string name="jetpack_connection_failed_with_reason">Neizdevās izveidot savienojumu ar Jetpack: %s</string>
     <string name="file_size_in_terabytes">%s TB</string>
@@ -2509,8 +2500,6 @@ Language: lv
     <string name="media_files_not_uploaded">%d faili nav augšupielādēti</string>
     <string name="remove_image_from_post">Noņemt no ziņas</string>
     <string name="confirm_remove_media_image">Vai noņemt šo attēlu no ziņas?</string>
-    <string name="media_edit_file_details_card_caption">Informācija par failu</string>
-    <string name="media_edit_customize_card_caption">Pielāgot</string>
     <string name="login_error_button">Aizvērt</string>
     <string name="error_generic_network">Radās tīkla kļūda. Lūdzu, pārbaudiet savienojumu un mēģiniet vēlreiz.</string>
     <string name="post_settings_remove_featured_image">Noņemt piedāvāto attēlu</string>
@@ -2543,15 +2532,9 @@ Language: lv
     <string name="media_title_audio_details">Audio informācija</string>
     <string name="media_title_document_details">Informācija par dokumentu</string>
     <string name="media_title_video_details">Video informācija</string>
-    <string name="fab_content_description_preview">Priekšskatījums</string>
     <string name="media_title_image_details">Attēla informācija</string>
-    <string name="media_edit_video_dimensions_caption">Video izmēri</string>
     <string name="media_edit_duration_caption">Ilgums</string>
-    <string name="media_edit_upload_date_caption">Augšuplādes datums</string>
-    <string name="media_edit_image_dimensions_caption">Attēla izmēri</string>
     <string name="media_edit_url_caption">URL</string>
-    <string name="media_edit_filename_caption">Faila nosaukums</string>
-    <string name="media_edit_filetype_caption">Faila tips</string>
     <string name="media_edit_alttext_text">Alt teksts</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Mirgo gaisma</string>
     <string name="connect_site">Pievienojiet vietni</string>
@@ -2598,7 +2581,6 @@ Language: lv
     <string name="login_checking_site_address" a8c-src-lib="module:login">Vietnes adreses pārbaude</string>
     <string name="enter_site_address" a8c-src-lib="module:login">Ievadiet tās WordPress vietnes adresi, kuru vēlaties izveidot savienojumu.</string>
     <string name="login_site_address" a8c-src-lib="module:login">Vietnes adrese</string>
-    <string name="login_already_logged_in_wpcom">Jau esat pieteicies vietnē WordPress.com</string>
     <string name="connect_more">Pievienojiet citu vietni</string>
     <string name="login_continue" a8c-src-lib="module:login">Turpināt</string>
     <string name="next">Nākamais</string>
@@ -2644,9 +2626,7 @@ Language: lv
     <string name="media_audio">Audio</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s tika liegta piekļuve jūsu mediju failiem. Lai to novērstu, rediģējiet savas atļaujas un ieslēdziet %2$s.</string>
     <string name="reader_view_comments">Skatīt komentārus</string>
-    <string name="site_settings_video_quality_hint">Video kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes videoklipus.</string>
     <string name="site_settings_optimize_video_summary">Iespējojiet videoklipu lieluma maiņu un saspiešanu</string>
-    <string name="site_settings_video_width_hint">Maina videoklipu izmērus ziņās līdz šim izmēram</string>
     <string name="site_settings_optimize_videos">Optimizēt videoklipus</string>
     <string name="video_quality">Video kvalitāte</string>
     <string name="draft_uploaded">Melnraksts ir augšupielādēts</string>
@@ -2729,7 +2709,6 @@ Language: lv
     <string name="error_publish_no_network">Ierīce ir bezsaistē. Ziņa saglabāta lokāli.</string>
     <string name="photo_picker_title">Izvēlieties fotoattēlu</string>
     <string name="editor_post_saved_online">Ziņa saglabāta tiešsaistē</string>
-    <string name="site_settings_image_quality_hint">Attēlu kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes attēlus.</string>
     <string name="site_settings_optimize_images_summary">Iespējot attēlu lieluma maiņu un saspiešanu</string>
     <string name="media_upload_state_uploaded">Augšupielādēts</string>
     <string name="media_encoder_quality_low">Zema</string>
@@ -2981,7 +2960,6 @@ Language: lv
     <string name="site_settings_discussion_hint">Skatiet un mainiet savu vietņu diskusiju iestatījumus</string>
     <string name="site_settings_more_hint">Skatiet visus pieejamos diskusiju iestatījumus</string>
     <string name="site_settings_related_posts_hint">Rādīt vai paslēpt saistītās ziņas lasītājā</string>
-    <string name="site_settings_image_width_hint">Maina ziņu attēlu izmēru uz šo platumu</string>
     <string name="site_settings_format_hint">Iestata jaunu ziņas formātu</string>
     <string name="site_settings_category_hint">Iestata jaunu ziņu kategoriju</string>
     <string name="site_settings_password_hint">Nomainiet paroli</string>

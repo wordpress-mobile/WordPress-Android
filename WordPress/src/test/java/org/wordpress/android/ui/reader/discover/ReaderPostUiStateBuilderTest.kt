@@ -9,6 +9,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
@@ -21,23 +22,17 @@ import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
-import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.models.ReaderImageList
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -45,8 +40,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import java.util.Date
 
 @Suppress("LargeClass")
@@ -74,6 +69,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
+    @Mock
+    lateinit var savedPostsRepository: ReaderSavedPostsRepository
+
     @Before
     fun setUp() = test {
         builder = ReaderPostUiStateBuilder(
@@ -83,6 +81,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             dateTimeUtilsWrapper,
             readerImageScannerProvider,
             readerUtilsWrapper,
+            savedPostsRepository,
             testDispatcher()
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
@@ -92,6 +91,25 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             .thenReturn(imageScanner)
         whenever(imageScanner.getImageList(anyInt(), anyInt())).thenReturn(ReaderImageList(false))
         whenever(accountStore.hasAccessToken()).thenReturn(true)
+    }
+    // endregion
+
+    // region BOOKMARK
+    @Test
+    fun `the card's save button shows whether the post is saved`() = test {
+        whenever(savedPostsRepository.isSaved(any())).thenReturn(true)
+
+        val uiState = mapPostToUiState(createPost())
+
+        assertThat(uiState.bookmarkAction.isEnabled).isTrue()
+        assertThat(uiState.bookmarkAction.isSelected).isTrue()
+    }
+
+    @Test
+    fun `the card's save button is disabled for a post without IDs`() = test {
+        val uiState = mapPostToUiState(createPost(postId = 0L))
+
+        assertThat(uiState.bookmarkAction.isEnabled).isFalse()
     }
     // endregion
 
@@ -166,100 +184,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse
     }
 
-    // endregion
-
-    // region VIDEO
-    @Test
-    fun `videoUrl gets initialized for video cards`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.fullVideoUrl).isEqualTo("12345")
-    }
-
-    @Test
-    fun `videoUrl gets initialized for video cards for new UI`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.fullVideoUrl).isEqualTo("12345")
-    }
-
-    @Test
-    fun `videoUrl does not get initialized for other than video cards`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it, featuredVideoUrl = "12345")
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.fullVideoUrl).isNull()
-        }
-    }
-
-    @Test
-    fun `videoUrl does not get initialized for other than video cards for new UI`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it, featuredVideoUrl = "12345")
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.fullVideoUrl).isNull()
-        }
-    }
-
-    @Test
-    fun `video overlay is displayed for video cards`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.videoOverlayVisibility).isTrue
-    }
-
-    @Test
-    fun `video overlay is displayed for video cards for new UI`() = test {
-        // Arrange
-        val post = createPost(cardType = VIDEO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.videoOverlayVisibility).isTrue
-    }
-
-    @Test
-    fun `video overlay is not displayed for other than video cards`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.videoOverlayVisibility).isFalse()
-        }
-    }
-
-    @Test
-    fun `video overlay is not displayed for other than video cards for new UI`() = test {
-        // Arrange
-        val types = ReaderCardType.values()
-        types.filter { it != VIDEO }.forEach {
-            val post = createPost(cardType = it)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.videoOverlayVisibility).isFalse()
-        }
-    }
     // endregion
 
     // region THUMBNAIL STRIP
@@ -373,21 +297,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.featuredImageUrl).isNull()
-    }
-
-    @Test
-    fun `video card shows featured media area when only video is available`() = test {
-        // Arrange
-        val post = createPost(
-            cardType = VIDEO,
-            hasFeaturedVideo = true,
-            featuredVideoUrl = "video://example",
-            hasFeaturedImage = false
-        )
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.featuredImageVisibility).isTrue
     }
     // endregion
 
@@ -934,6 +843,14 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a post whose comments can't be opened from the card still shows their count`() = test {
+        val uiState = mapPostToUiState(createPost(isDiscoverPost = true, numOfReplies = 12))
+
+        assertThat(uiState.commentsAction.isEnabled).isFalse
+        assertThat(uiState.commentsAction.count).isEqualTo(12)
+    }
+
+    @Test
     fun `Count on Comments button corresponds to number of comments on the post`() = test {
         // Arrange
         val numReplies = 15
@@ -945,91 +862,17 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
     // endregion
 
-    // region INTERACTION SECTION
+    // region LIKE COUNT
     @Test
-    fun `Count on comments section corresponds to number of comments on the post for new UI`() = test {
-        // Arrange
-        val numReplies = 15
-        val post = createPost(numOfReplies = numReplies)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.interactionSection.commentCount).isEqualTo(numReplies)
-    }
-
-    @Test
-    fun `Count on likes section corresponds to number of likes on the post for new UI`() = test {
+    fun `Count on Like button corresponds to number of likes on the post`() = test {
         // Arrange
         val numLikes = 15
         val post = createPost(numOfLikes = numLikes)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.interactionSection.likeCount).isEqualTo(numLikes)
+        assertThat(uiState.likeAction.count).isEqualTo(numLikes)
     }
-    // endregion
-
-    @Test
-    fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() = test {
-        // arrange
-        val expectedInterestListSize = 5
-        val currentReaderTagListSize = 6
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
-    }
-
-    @Test
-    fun `Ensures that there are three interests within the uiState when the ReaderTagList contains 3`() = test {
-        // arrange
-        val expectedInterestListSize = 3
-        val currentReaderTagListSize = 3
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
-    }
-
-    @Test
-    fun `given a tag list with 4 elements, then the uiState contains each style`() = test {
-        // arrange
-        val currentReaderTagListSize = 4
-        val expectedListStyles = listOf(ChipStyleGreen, ChipStylePurple, ChipStyleYellow, ChipStyleOrange)
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        for ((index, interest) in result.interest.withIndex()) {
-            assertThat(interest.chipStyle).isEqualTo(expectedListStyles[index])
-        }
-    }
-
-    @Test
-    fun `given a tag list with 5 elements, then the 5th interest within the uiState is styled green`() = test {
-        // arrange
-        val currentReaderTagListSize = 5
-
-        val readerTagList = createReaderTagList(currentReaderTagListSize)
-
-        // act
-        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
-
-        // assert
-        assertThat(result.interest.last().chipStyle).isInstanceOf(ChipStyleGreen::class.java)
-    }
-
     // endregion
 
     // region Private methods
@@ -1048,7 +891,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             onItemClicked = mock(),
             onItemRendered = mock(),
             onMoreButtonClicked = mock(),
-            onVideoOverlayClicked = mock(),
             onPostHeaderViewClicked = mock(),
             onMoreDismissed = mock()
         )
@@ -1061,7 +903,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         blogUrl: String = "",
         isDiscoverPost: Boolean = false,
         cardType: ReaderCardType = DEFAULT,
-        featuredVideoUrl: String? = null,
         postId: Long = 1L,
         blogId: Long = 2L,
         isBookmarked: Boolean = false,
@@ -1073,7 +914,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         isCanLikePost: Boolean = true,
         hasFeaturedImage: Boolean = false,
         featuredImageUrlForDisplay: String? = null,
-        hasFeaturedVideo: Boolean = false,
         isp2Post: Boolean = false,
         blogName: String = "",
         authorFirstName: String = "",
@@ -1082,7 +922,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = spy(ReaderPost().apply {
             this.blogUrl = blogUrl
             this.cardType = cardType
-            this.featuredVideo = featuredVideoUrl
             this.blogId = blogId
             this.postId = postId
             this.isBookmarked = isBookmarked
@@ -1100,28 +939,12 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         post.isCommentsOpen = isCommentsOpen
         whenever(post.getFeaturedImageForDisplay(anyInt(), anyInt())).thenReturn(featuredImageUrlForDisplay)
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
-        whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
         post.organization = if (isp2Post) P2 else NO_ORGANIZATION
         post.blogName = blogName
         post.authorFirstName = authorFirstName
         post.authorName = authorName
         return post
     }
-
-    private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
-        (0 until numOfTags).forEach {
-            add(createReaderTag())
-        }
-    }
-
-    private fun createReaderTag() = ReaderTag(
-        "",
-        "",
-        "",
-        null,
-        mock(),
-        false
-    )
 
     // endregion
 }

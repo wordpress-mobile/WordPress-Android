@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.Tracker
+import org.wordpress.android.auth.WordPressCookieAuthenticator
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.fluxc.Dispatcher
@@ -49,10 +50,10 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder
+import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
-import org.wordpress.android.auth.WordPressCookieAuthenticator
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged
@@ -82,9 +83,10 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
-import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.rs.data.WpServiceProvider
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
@@ -114,7 +116,6 @@ import java.io.File
 import java.io.IOException
 import java.net.CookieManager
 import java.util.Date
-import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -234,7 +235,12 @@ class AppInitializer @Inject constructor(
     lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Inject
-    lateinit var siteProvisioningSource: SiteProvisioningSource
+    lateinit var readerSavedPostsRepository: ReaderSavedPostsRepository
+
+    // Lazy because building it loads the wordpress-rs native library (via WpLoginClient), which caused startup
+    // ANRs when done on the main thread. It's built off main in warmUpSiteProvisioningSource() instead.
+    @Inject
+    lateinit var siteProvisioningSource: dagger.Lazy<SiteProvisioningSource>
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -320,6 +326,7 @@ class AppInitializer @Inject constructor(
 
         WordPress.versionName = PackageUtils.getVersionName(application)
         warmUpWpDb()
+        warmUpSiteProvisioningSource()
         context?.let { enableHttpResponseCache(it) }
 
         AppReviewManager.init(application)
@@ -336,10 +343,7 @@ class AppInitializer @Inject constructor(
 
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
-        // Names the app to the Gravatar SDK, which otherwise sends a bare `GravatarAndroid/<version>`
-        // that no edge rule can key on (CMM-1100). The same name the rest of our traffic already
-        // carries, so Gravatar sees us under one identity. Must run before the first SDK request.
-        Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME, buildConfig.getAppVersionName())
+        initGravatarAppIdentifier()
 
         if (!initialized) {
             initZendeskAsync()
@@ -359,6 +363,7 @@ class AppInitializer @Inject constructor(
         // background thread instead of the deprecated CONNECTIVITY_ACTION broadcast, so it can't cause a
         // background ANR. start() is idempotent, so it's safe if init() runs more than once.
         networkConnectionMonitor.start(application)
+        readerSavedPostsRepository.activate(ProcessLifecycleOwner.get())
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
@@ -400,6 +405,32 @@ class AppInitializer @Inject constructor(
         if (buildConfig.isDebugSettingsEnabled()) {
             debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
             debugCookieManager.sync()
+        }
+    }
+
+    // Names the app to the Gravatar SDK, which otherwise sends a bare `GravatarAndroid/<version>`
+    // that no edge rule can key on (CMM-1100). The same name the rest of our traffic already
+    // carries, so Gravatar sees us under one identity. Must run before the first SDK request.
+    //
+    // Guarded because the SDK validates both arguments and throws, and this runs on the startup
+    // path. No automated build can produce a bad value: `versionName` is read from
+    // version.properties, and the prototype override fastlane passes is sanitised ASCII. A
+    // hand-supplied `-PprototypeBuildVersionName` still can be, and a crash on every launch is
+    // not worth an attribution header.
+    //
+    // The version is optional to the SDK, so a rejected version alone still leaves the app named:
+    // that keeps `wp-android` in the User-Agent and the `X-Source` header the edge rule keys on.
+    // Only a rejected name drops us to the SDK's unnamed default.
+    private fun initGravatarAppIdentifier() {
+        try {
+            Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME, buildConfig.getAppVersionName())
+        } catch (versionError: IllegalArgumentException) {
+            AppLog.e(T.MAIN, "Gravatar: app version rejected, naming the app without it", versionError)
+            try {
+                Gravatar.appIdentifier(WordPress.USER_AGENT_APPNAME)
+            } catch (nameError: IllegalArgumentException) {
+                AppLog.e(T.MAIN, "Gravatar: app name rejected, falling back to the SDK default", nameError)
+            }
         }
     }
 
@@ -487,6 +518,15 @@ class AppInitializer @Inject constructor(
      */
     private fun warmUpWpDb() {
         launchIo(T.DB, "Failed to open the app database") { WordPress.wpDB }
+    }
+
+    /**
+     * Builds [SiteProvisioningSource] off the main thread. Constructing it registers the app-wide listener that heals
+     * wordpress-rs 401s, and loads the wordpress-rs native library so that My Site, which also depends on it, usually
+     * finds the library already loaded instead of loading it on the main thread.
+     */
+    private fun warmUpSiteProvisioningSource() {
+        launchIo(T.MAIN, "Failed to build the site provisioning source") { siteProvisioningSource.get() }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -660,6 +700,8 @@ class AppInitializer @Inject constructor(
                     AppLog.i(T.READER, "User changed, resetting reader db")
                     ReaderDatabase.reset(false)
                 }
+                // after any reset above, so the device's saves that get imported are this account's
+                readerSavedPostsRepository.onAccountFetched()
             } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
                 val hasUserOptedOut = !prefs.getBoolean(application.getString(R.string.pref_key_send_usage), true)
@@ -690,6 +732,10 @@ class AppInitializer @Inject constructor(
 
     @Suppress("DEPRECATION")
     private fun removeWpComUserRelatedData(context: Context) {
+        // read before the account and prefs are reset below
+        val userId = accountStore.account.userId
+        val savedPostsImported = readerSavedPostsRepository.isSyncedListReady()
+
         // cancel all Volley requests - do this before unregistering push since that uses a Volley request
         VolleyUtils.cancelAllRequests(requestQueue)
 
@@ -723,6 +769,7 @@ class AppInitializer @Inject constructor(
 
         // reset the reader database, but retain bookmarked posts
         ReaderDatabase.reset(true)
+        readerSavedPostsRepository.clear(userId, savesImported = savedPostsImported)
 
         // Reset Stats Data
         statsStore.deleteAllData()
@@ -749,7 +796,7 @@ class AppInitializer @Inject constructor(
         wpApiClientProvider.clearAllClients()
 
         // Drop per-site provisioning + capability state for the signed-out user
-        siteProvisioningSource.clear()
+        siteProvisioningSource.get().clear()
     }
 
     /*

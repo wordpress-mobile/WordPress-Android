@@ -28,8 +28,7 @@ import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
-import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
+import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -49,7 +48,7 @@ class ReaderSearchViewModel @Inject constructor(
     @Suppress("unused") private val readerStore: ReaderStore,
     private val searchTable: ReaderSearchTableWrapper,
     private val blogTable: ReaderBlogTableWrapper,
-    private val blogActions: ReaderBlogActionsWrapper,
+    private val blogRepository: ReaderBlogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerTracker: ReaderTracker,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
@@ -165,7 +164,9 @@ class ReaderSearchViewModel @Inject constructor(
         }
 
         val isAskingToFollow = !site.isFollowing
-        val listener = ActionListener { succeeded ->
+        updateSite(site.key) { it.copy(isFollowing = isAskingToFollow, isFollowEnabled = false) }
+        launch {
+            val succeeded = blogRepository.followFeed(site.feedId, isAskingToFollow, ReaderTracker.SOURCE_SEARCH)
             updateSite(site.key) {
                 it.copy(isFollowing = if (succeeded) isAskingToFollow else !isAskingToFollow, isFollowEnabled = true)
             }
@@ -180,19 +181,6 @@ class ReaderSearchViewModel @Inject constructor(
                     )
                 )
             }
-        }
-        // disable the button before the request, since the listener can run before followFeedById returns
-        updateSite(site.key) { it.copy(isFollowing = isAskingToFollow, isFollowEnabled = false) }
-        val isStarted = blogActions.followFeedById(
-            site.siteId,
-            site.feedId,
-            isAskingToFollow,
-            listener,
-            ReaderTracker.SOURCE_SEARCH,
-            readerTracker
-        )
-        if (!isStarted) {
-            updateSite(site.key) { it.copy(isFollowing = site.isFollowing, isFollowEnabled = true) }
         }
     }
 

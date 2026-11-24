@@ -43,7 +43,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 app:tint="@color/neutral_70"
-                tools:src="@drawable/ic_pages_white_24dp"
+                tools:src="@drawable/ic_file_generic_white_24dp"
                 android:contentDescription="@null"
                 />
 

@@ -51,6 +51,15 @@ public class AppPrefs {
 
     private static final Gson GSON = new Gson();
 
+    // The WP.com OAuth `state`s live in their own file rather than the default one: they only matter
+    // while a login is in progress, and the backup rules include the default file by name, so this
+    // keeps them out of cloud backups and device transfers.
+    private static final String WPCOM_OAUTH_PREFS_NAME = "wpcom_oauth_state";
+    // OAuth `state` sent with the WP.com login the app started; the callback must return it
+    private static final String PENDING_WPCOM_OAUTH_STATE = "PENDING_WPCOM_OAUTH_STATE";
+    // Earlier OAuth `state`s replaced by a newer login, as JSON, so their callbacks are still recognized
+    private static final String SUPERSEDED_WPCOM_OAUTH_STATES = "SUPERSEDED_WPCOM_OAUTH_STATES";
+
     public interface PrefKey {
         String name();
 
@@ -65,6 +74,9 @@ public class AppPrefs {
         LAST_ACTIVITY_STR,
 
         NEW_STATS_INTRO_SHOWN,
+
+        // WP.com user id whose local Reader saved posts were imported to their account
+        READER_SAVED_POSTS_IMPORTED_USER_ID,
 
         NEW_STATS_USER_OPTED_IN,
 
@@ -240,6 +252,10 @@ public class AppPrefs {
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
+        // Whether the dialog saying saved Reader posts sync with the account has been shown. Separate from
+        // BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, so people who saw the local-only one still hear about syncing
+        READER_SAVED_POSTS_SYNC_DIALOG_SHOWN,
+
         // Set when the user explicitly turns New Stats off. Undeletable so the choice survives
         // sign-out - it is the only thing that can override the android_new_stats rollout flag,
         // so erasing it would silently push the user back into New Stats.
@@ -317,6 +333,10 @@ public class AppPrefs {
 
     static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+    }
+
+    private static SharedPreferences wpcomOAuthPrefs() {
+        return WordPress.getContext().getSharedPreferences(WPCOM_OAUTH_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     static Map<String, ?> getAllPrefs() {
@@ -426,6 +446,7 @@ public class AppPrefs {
             editor.remove(key.name());
         }
         editor.apply();
+        wpcomOAuthPrefs().edit().clear().apply();
     }
 
     public static ReaderTag getReaderTag() {
@@ -590,6 +611,22 @@ public class AppPrefs {
 
     public static void setBookmarksSavedLocallyDialogShown() {
         setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
+    }
+
+    public static boolean shouldShowReaderSavedPostsSyncDialog() {
+        return !getBoolean(UndeletablePrefKey.READER_SAVED_POSTS_SYNC_DIALOG_SHOWN, false);
+    }
+
+    public static void setReaderSavedPostsSyncDialogShown() {
+        setBoolean(UndeletablePrefKey.READER_SAVED_POSTS_SYNC_DIALOG_SHOWN, true);
+    }
+
+    public static boolean isReaderSavedPostsImported(long userId) {
+        return userId > 0 && getLong(DeletablePrefKey.READER_SAVED_POSTS_IMPORTED_USER_ID, 0) == userId;
+    }
+
+    public static void setReaderSavedPostsImported(long userId) {
+        setLong(DeletablePrefKey.READER_SAVED_POSTS_IMPORTED_USER_ID, userId);
     }
 
     /**
@@ -2009,6 +2046,34 @@ public class AppPrefs {
 
     public static void setPendingLoginFlow(@Nullable String flowName) {
         setString(DeletablePrefKey.PENDING_LOGIN_FLOW, flowName);
+    }
+
+    @Nullable
+    public static String getPendingWpcomOAuthState() {
+        return wpcomOAuthPrefs().getString(PENDING_WPCOM_OAUTH_STATE, null);
+    }
+
+    public static void setPendingWpcomOAuthState(@Nullable String state) {
+        setWpcomOAuthPref(PENDING_WPCOM_OAUTH_STATE, state);
+    }
+
+    @Nullable
+    public static String getSupersededWpcomOAuthStates() {
+        return wpcomOAuthPrefs().getString(SUPERSEDED_WPCOM_OAUTH_STATES, null);
+    }
+
+    public static void setSupersededWpcomOAuthStates(@Nullable String json) {
+        setWpcomOAuthPref(SUPERSEDED_WPCOM_OAUTH_STATES, json);
+    }
+
+    private static void setWpcomOAuthPref(@NonNull String key, @Nullable String value) {
+        SharedPreferences.Editor editor = wpcomOAuthPrefs().edit();
+        if (TextUtils.isEmpty(value)) {
+            editor.remove(key);
+        } else {
+            editor.putString(key, value);
+        }
+        editor.apply();
     }
 
     public static boolean consumeShareFlowPending() {
