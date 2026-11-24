@@ -136,7 +136,6 @@ class MediaLibraryViewModel @Inject constructor(
     override fun onCleared() {
         dispatcher.unregister(this)
         deleteController.release()
-        super.onCleared()
     }
 
     override fun onFilterSelected(filter: MediaFilter) {
@@ -194,17 +193,18 @@ class MediaLibraryViewModel @Inject constructor(
             return
         }
         val media = mediaStore.getMediaWithLocalId(localId)
-        if (media == null) {
-            AppLog.w(AppLog.T.MEDIA, "Media library > unable to load localMediaId = $localId")
-            showToast(R.string.error_media_load)
-            return
+        when {
+            media == null -> {
+                AppLog.w(AppLog.T.MEDIA, "Media library > unable to load localMediaId = $localId")
+                showToast(R.string.error_media_load)
+            }
+            // nothing to show for a failed upload, the tile offers retry and delete instead
+            MediaUploadState.fromString(media.uploadState) == MediaUploadState.FAILED -> Unit
+            else -> {
+                val ids = _uiState.value.items.map { it.localId.toString() }
+                _events.trySend(MediaLibraryEvent.OpenMediaSettings(media, ArrayList(ids)))
+            }
         }
-        // nothing to show for a failed upload, the tile offers retry and delete instead
-        if (MediaUploadState.fromString(media.uploadState) == MediaUploadState.FAILED) {
-            return
-        }
-        val ids = _uiState.value.items.map { it.localId.toString() }
-        _events.trySend(MediaLibraryEvent.OpenMediaSettings(media, ArrayList(ids)))
     }
 
     override fun onItemLongClick(localId: Int) {
@@ -386,23 +386,21 @@ class MediaLibraryViewModel @Inject constructor(
 
     private fun fetch(loadMore: Boolean, showRefreshIndicator: Boolean) {
         val state = _uiState.value
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _uiState.update { it.copy(isRefreshing = false, emptyState = MediaEmptyState.NETWORK_ERROR) }
-            return
-        }
-        // search runs against the local store only
-        if (state.searchQuery.isNotEmpty()) {
-            _uiState.update { it.copy(isRefreshing = false) }
-            return
-        }
-        if (state.filter in fetchingFilters) {
-            if (showRefreshIndicator) {
+        when {
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                _uiState.update { it.copy(isRefreshing = false, emptyState = MediaEmptyState.NETWORK_ERROR) }
+            // search runs against the local store only
+            state.searchQuery.isNotEmpty() -> _uiState.update { it.copy(isRefreshing = false) }
+            // already fetching this filter, so just keep the spinner up if one was asked for
+            state.filter in fetchingFilters -> if (showRefreshIndicator) {
                 _uiState.update { it.copy(isRefreshing = true) }
             }
-            return
+            else -> startFetch(state.filter, loadMore, showRefreshIndicator)
         }
+    }
 
-        fetchingFilters += state.filter
+    private fun startFetch(filter: MediaFilter, loadMore: Boolean, showRefreshIndicator: Boolean) {
+        fetchingFilters += filter
         _uiState.update {
             it.copy(
                 isRefreshing = showRefreshIndicator,
@@ -410,7 +408,7 @@ class MediaLibraryViewModel @Inject constructor(
                 emptyState = MediaEmptyState.LOADING
             )
         }
-        val payload = FetchMediaListPayload(site, NUM_MEDIA_PER_FETCH, loadMore, state.filter.mimeType, null)
+        val payload = FetchMediaListPayload(site, NUM_MEDIA_PER_FETCH, loadMore, filter.mimeType, null)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         if (!loadMore) {
             // refreshes the space quota

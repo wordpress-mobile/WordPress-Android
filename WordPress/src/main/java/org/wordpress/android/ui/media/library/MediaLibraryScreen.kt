@@ -49,7 +49,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,26 +63,6 @@ import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
-
-/** What the media library screen asks of its view model */
-@Suppress("TooManyFunctions")
-interface MediaLibraryActions {
-    fun onFilterSelected(filter: MediaFilter)
-    fun onRefresh()
-    fun onLoadMore()
-    fun onSearchOpen()
-    fun onSearchQueryChanged(query: String)
-    fun onSearchClose()
-    fun onItemClick(localId: Int)
-    fun onItemLongClick(localId: Int)
-    fun onItemRetryClick(localId: Int)
-    fun onItemTrashClick(localId: Int)
-    fun onClearSelection()
-    fun onDeleteSelectedClick()
-    fun onConfirmDelete()
-    fun onDismissDelete()
-    suspend fun canLoadVideoFrame(url: String): Boolean
-}
 
 private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
 
@@ -185,9 +165,9 @@ fun MediaLibraryScreen(
 
 @Composable
 private fun MediaGrid(state: MediaLibraryUiState, actions: MediaLibraryActions) {
-    val configuration = LocalConfiguration.current
-    val columns = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
-    val thumbnailWidthPx = with(LocalDensity.current) { configuration.screenWidthDp.dp.roundToPx() } / columns
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val columns = if (isLandscape) 4 else 3
+    val thumbnailWidthPx = LocalWindowInfo.current.containerSize.width / columns
     val gridState = rememberLazyGridState()
 
     // a new filter or search replaces the grid's content, so start it from the top

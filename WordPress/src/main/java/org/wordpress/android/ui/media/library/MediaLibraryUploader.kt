@@ -98,18 +98,13 @@ class MediaLibraryUploader @Inject constructor(
     }
 
     private fun getOptimizedPictureIfNecessary(site: SiteModel, originalUri: Uri): Uri {
-        val filePath = MediaUtils.getRealPathFromURI(appContext, originalUri)
-        if (filePath.isNullOrEmpty()) {
-            return originalUri
-        }
-        WPMediaUtils.getOptimizedMedia(appContext, filePath, false)?.let { return it }
-
-        // Optimization is off, so make sure the picture is in portrait for a self-hosted site
+        val filePath = MediaUtils.getRealPathFromURI(appContext, originalUri)?.takeIf { it.isNotEmpty() }
+            ?: return originalUri
+        // when optimization is off, make sure the picture is in portrait for a self-hosted site
         // https://github.com/wordpress-mobile/WordPress-Android/issues/5737
-        if (!site.isWPCom) {
-            WPMediaUtils.fixOrientationIssue(appContext, filePath, false)?.let { return it }
-        }
-        return originalUri
+        return WPMediaUtils.getOptimizedMedia(appContext, filePath, false)
+            ?: (if (site.isWPCom) null else WPMediaUtils.fixOrientationIssue(appContext, filePath, false))
+            ?: originalUri
     }
 
     private fun showVideoDurationError() {
