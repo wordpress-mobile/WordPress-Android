@@ -36,6 +36,8 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
+private val TRACKING_PROPERTIES = mapOf("source" to "notifications")
+
 /**
  * Shown in the WordPress app's Notifications tab, which exists only because the Reader brought the bottom
  * nav back for WordPress.com users. Notifications themselves remain Jetpack-only.
@@ -61,8 +63,14 @@ class NotificationsInJetpackFragment : Fragment() {
         }
     }
 
+    // Same events and source as the iOS WordPress app's Notifications poster (MovedToJetpackEventsTracker)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        analyticsTrackerWrapper.track(Stat.REMOVE_STATIC_POSTER_DISPLAYED, TRACKING_PROPERTIES)
+    }
+
     private fun openJetpack() {
-        analyticsTrackerWrapper.track(Stat.NOTIFICATIONS_IN_JETPACK_BUTTON_TAPPED)
+        analyticsTrackerWrapper.track(Stat.REMOVE_STATIC_POSTER_GET_JETPACK_TAPPED, TRACKING_PROPERTIES)
         val activity = requireActivity()
         // Launch Jetpack directly when it's installed: openPlayStoreLink would also finish this app's task,
         // which is right for the "switch to Jetpack" flows but not for a tab the user may come back to.
