@@ -50,7 +50,13 @@ class FeatureFlagConfig
     /** Changes each time [flags] is reloaded from the database, after the initial load and every refresh. */
     val updates: StateFlow<Int> = _updates
 
+    @Volatile
+    private var hasCompletedRefresh = false
+
     fun hasLoadedStoredFlags() = storedFlagsLoaded.isCompleted
+
+    /** Whether a fetch has completed this process, successfully or not, so the server has had its say. */
+    fun hasCompletedRefresh() = hasCompletedRefresh
 
     suspend fun awaitStoredFlags() = storedFlagsLoaded.await()
 
@@ -90,6 +96,7 @@ class FeatureFlagConfig
         appScope.launch {
             fetchRemoteFlags()
             flags = featureFlagStore.getFeatureFlags()
+            hasCompletedRefresh = true
             onFlagsLoaded()
         }
 

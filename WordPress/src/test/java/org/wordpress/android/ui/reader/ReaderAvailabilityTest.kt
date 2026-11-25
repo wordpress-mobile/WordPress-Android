@@ -193,6 +193,27 @@ class ReaderAvailabilityTest : BaseUnitTest() {
         assertThat(ran).isTrue
     }
 
+    @Test
+    fun `build config value is final, so a later fetch doesn't change availability`() {
+        setUpWordPressApp(isFlagEnabled = true, hasAccessToken = true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.BuildConfigValue(true))
+        readerAvailability.isReaderAvailable()
+
+        assertThat(readerAvailability.isReaderAvailable()).isTrue
+        verify(featureConfig, times(1)).featureState()
+    }
+
+    @Test
+    fun `stored default is kept once this launch's fetch has completed without replacing it`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
+        whenever(featureConfig.hasFetchedValue()).thenReturn(false)
+        whenever(appConfig.hasRefreshedFeatureFlags()).thenReturn(true)
+        readerAvailability.isReaderAvailable()
+
+        assertThat(readerAvailability.isReaderAvailable()).isFalse
+        verify(featureConfig, times(1)).featureState()
+    }
+
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         // Not reached without a WordPress.com account

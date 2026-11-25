@@ -25,9 +25,11 @@ import javax.inject.Singleton
  * My Site Me row). The Jetpack app always has it; the WordPress app has it only for WordPress.com users
  * when [ReaderInWordPressAppFeatureConfig] is on.
  *
- * Once a value fetched from the server (or set manually) has been read while signed in to WordPress.com,
- * it's kept, so a value fetched mid-session never changes the nav under the user. Until then the stored
- * flags may still be loading at cold start, or may hold only a default, so every flag update is re-checked.
+ * Once a definitive value has been read while signed in to WordPress.com, it's kept, so a value fetched
+ * mid-session never changes the nav under the user. Definitive means fetched from the server, set manually or
+ * by build config, or a stored default that this launch's fetch has already had the chance to replace. Until
+ * then the stored flags may still be loading at cold start, or may hold only a default, so every flag update
+ * is re-checked.
  *
  * Signing out forgets the value. A sign-in reads it again once that account's flags have been fetched
  * ([refreshFlagAfterSignIn]), as iOS does.
@@ -48,6 +50,10 @@ class ReaderAvailability @Inject constructor(
 
     @Volatile
     private var lastAnswer: Boolean? = null
+
+    /** Set once a deep link has waited for this launch's flag fetch, so later ones don't wait again. */
+    @Volatile
+    private var hasWaitedForFetch = false
 
     private val _availabilityChanged = MutableLiveData<Event<Unit>>()
 
@@ -94,8 +100,11 @@ class ReaderAvailability @Inject constructor(
         }
         owner.lifecycleScope.launch {
             appConfig.awaitStoredFeatureFlags()
-            withTimeoutOrNull(FETCH_WAIT_MS) {
-                appConfig.featureFlagUpdates.first { isAvailabilityKnown() }
+            if (!hasWaitedForFetch) {
+                withTimeoutOrNull(FETCH_WAIT_MS) {
+                    appConfig.featureFlagUpdates.first { isAvailabilityKnown() }
+                }
+                hasWaitedForFetch = true
             }
             owner.withStarted { action.run() }
         }
@@ -119,8 +128,16 @@ class ReaderAvailability @Inject constructor(
 
     private fun readFlag(): Boolean {
         val state = readerInWordPressAppFeatureConfig.featureState()
-        val isDefinitive = state is FeatureState.ManuallyOverriden ||
-            (state is FeatureState.RemoteValue && readerInWordPressAppFeatureConfig.hasFetchedValue())
+        val isDefinitive = when (state) {
+            // The key isn't in the stored flags: they haven't loaded yet, or it's the first launch since it was added
+            is FeatureState.DefaultValue -> false
+            // A stored default only counts once this launch's fetch has completed without replacing it, e.g.
+            // because the server doesn't have the key yet
+            is FeatureState.RemoteValue ->
+                readerInWordPressAppFeatureConfig.hasFetchedValue() || appConfig.hasRefreshedFeatureFlags()
+            // Manual overrides and build config values (the release switch) are final
+            else -> true
+        }
         if (isDefinitive) {
             cachedFlag = state.isEnabled
         }

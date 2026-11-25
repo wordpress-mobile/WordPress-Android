@@ -50,6 +50,9 @@ class AppConfig
 
     fun hasLoadedStoredFeatureFlags() = featureFlagConfig.hasLoadedStoredFlags()
 
+    /** Whether a feature flag fetch has completed this process, successfully or not. */
+    fun hasRefreshedFeatureFlags() = featureFlagConfig.hasCompletedRefresh()
+
     /** Suspends until [init] has loaded the stored feature flags, which happens asynchronously at startup. */
     suspend fun awaitStoredFeatureFlags() = featureFlagConfig.awaitStoredFlags()
 

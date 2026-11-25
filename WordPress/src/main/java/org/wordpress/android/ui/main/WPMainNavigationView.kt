@@ -167,8 +167,14 @@ class WPMainNavigationView @JvmOverloads constructor(
             setImageViewSelected(getPosition(ME), false)
         }
 
-        currentPosition = getMainPageIndex()
+        // After a restore, show the tab that was showing (the FragmentManager has re-attached it, and the nav bar
+        // restores its checked item to match); the saved index can differ, e.g. it's never the WordPress app's
+        // Notifications tab
+        currentPosition = getRestoredPosition() ?: getMainPageIndex()
     }
+
+    private fun getRestoredPosition(): Int? =
+        (0 until numPages()).firstOrNull { navAdapter.getFragmentIfExists(it)?.isDetached == false }
 
     private fun loadGravatar(imgIcon: ImageView, avatarUrl: String) {
         if (avatarUrl.isEmpty()) {
@@ -359,10 +365,25 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (previousFragment != null) {
                 fragmentManager?.beginTransaction()?.detach(previousFragment)?.attach(fragment)?.commit()
             } else {
-                fragmentManager?.beginTransaction()?.attach(fragment)?.commit()
+                attachAsOnlyTab(fragment, position)
             }
         }
         prevPosition = position
+    }
+
+    /**
+     * For the first selection. After a restore the FragmentManager may have re-attached a different tab than
+     * this one (the saved index isn't always the tab that was showing), so detach every other tab.
+     */
+    private fun attachAsOnlyTab(fragment: Fragment, position: Int) {
+        val transaction = fragmentManager?.beginTransaction() ?: return
+        for (otherPosition in 0 until numPages()) {
+            val other = navAdapter.getFragmentIfExists(otherPosition)
+            if (otherPosition != position && other != null && !other.isDetached) {
+                transaction.detach(other)
+            }
+        }
+        transaction.attach(fragment).commit()
     }
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
