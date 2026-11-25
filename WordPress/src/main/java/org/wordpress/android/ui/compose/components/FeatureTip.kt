@@ -100,8 +100,8 @@ private fun TooltipScope.FeatureTipBubble(text: String, title: String?, onGotIt:
     RichTooltip(
         caretShape = FeatureTipCaretShape,
         colors = TooltipDefaults.richTooltipColors(
-            containerColor = colors.secondary,
-            contentColor = colors.onSecondary,
+            containerColor = colors.primaryContainer,
+            contentColor = colors.onPrimaryContainer,
         ),
     ) {
         // Everything goes in the text slot because RichTooltip start-aligns its title and action.
@@ -122,7 +122,7 @@ private fun TooltipScope.FeatureTipBubble(text: String, title: String?, onGotIt:
             Text(text = text, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             TextButton(
                 onClick = onGotIt,
-                colors = ButtonDefaults.textButtonColors(contentColor = colors.onSecondary),
+                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimaryContainer),
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(stringResource(R.string.feature_tip_got_it))
