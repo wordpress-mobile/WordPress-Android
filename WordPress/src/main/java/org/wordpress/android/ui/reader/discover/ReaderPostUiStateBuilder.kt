@@ -11,6 +11,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
@@ -43,7 +44,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val savedPostsRepository: ReaderSavedPostsRepository,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val imageAccentSampler: ReaderImageAccentSampler,
 ) {
     @Suppress("LongParameterList")
     suspend fun mapPostToUiState(
@@ -93,6 +95,16 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null,
     ): ReaderPostUiState {
+        val featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight)
+        val featuredImageSourceUrl = post.featuredImage.takeIf { !featuredImageUrl.isNullOrEmpty() }
+        featuredImageSourceUrl?.let { sourceUrl ->
+            imageAccentSampler.enqueue(
+                imageUrl = sourceUrl,
+                sampleUrl = readerUtilsWrapper.getResizedImageUrl(
+                    sourceUrl, ACCENT_SAMPLE_WIDTH_PX, 0, post.isPrivate, post.isPrivateAtomic
+                )
+            )
+        }
         return ReaderPostUiState(
             source = source,
             postId = post.postId,
@@ -102,7 +114,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
             blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
-            featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+            featuredImageUrl = featuredImageUrl,
+            featuredImageSourceUrl = featuredImageSourceUrl,
+            featuredImageUncroppedUrl = featuredImageSourceUrl?.let {
+                // height 0 asks Photon for the width only, so it keeps the image's shape
+                readerUtilsWrapper.getResizedImageUrl(it, photonWidth, 0, post.isPrivate, post.isPrivateAtomic)
+            },
             thumbnailStripSection = buildThumbnailStripUrls(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
@@ -336,3 +353,5 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 }
+
+private const val ACCENT_SAMPLE_WIDTH_PX = 192

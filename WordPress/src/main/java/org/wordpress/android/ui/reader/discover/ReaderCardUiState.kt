@@ -24,6 +24,10 @@ sealed class ReaderCardUiState {
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
+        // the image's own URL, which its sampled accent and aspect ratio are saved under
+        val featuredImageSourceUrl: String? = null,
+        // sized to the card's width but not cropped, for showing the image at its own aspect ratio
+        val featuredImageUncroppedUrl: String? = null,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,

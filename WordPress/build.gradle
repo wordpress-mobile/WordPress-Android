@@ -429,6 +429,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.google.material)
     implementation(libs.google.flexboxlayout)
+    implementation(libs.androidx.palette.ktx)
     implementation(libs.androidx.percentlayout)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.preference)

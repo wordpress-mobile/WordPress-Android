@@ -82,7 +82,8 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             readerImageScannerProvider,
             readerUtilsWrapper,
             savedPostsRepository,
-            testDispatcher()
+            testDispatcher(),
+            mock()
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
