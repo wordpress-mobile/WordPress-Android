@@ -700,14 +700,28 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
                         == intent.action)
             ) {
-                handleDeepLinking()
+                // At cold start the stored flags may still be loading; deciding on a default would bounce
+                // the link to the Jetpack overlay even when this app has the Reader
+                readerAvailability.whenStoredFlagsLoaded(this) {
+                    // STARTED, not RESUMED: during onResume() itself the lifecycle hasn't reached RESUMED yet.
+                    // If stopped by the time the flags load, the next onResume() handles the link instead.
+                    val isStarted = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+                    if (isStarted && (!hasPagerAdapter() || backFromLogin)) {
+                        handleDeepLinking()
+                        openPosts()
+                    }
+                }
+            } else {
+                openPosts()
             }
-
-            loadPostsUnlessResolvingSlug()
-
-            // clear up the back-from-login flag anyway
-            backFromLogin = false
         }
+    }
+
+    private fun openPosts() {
+        loadPostsUnlessResolvingSlug()
+
+        // clear up the back-from-login flag anyway
+        backFromLogin = false
     }
 
     override fun onPause() {

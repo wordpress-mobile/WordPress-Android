@@ -337,7 +337,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         setImageViewSelected(position, true)
 
         when {
-            hasSingleTabNav -> AppPrefs.setMainPageIndex(0)
+            // My Site is the only page while the nav is hidden, which can be just until the Reader flag loads
+            // at cold start, so keep the saved tab for when the nav shows
+            hasSingleTabNav -> Unit
             // Don't reopen the app on the WordPress app's Notifications tab, which only points to Jetpack
             !hasRealNotifications && position == getPosition(NOTIFS) -> Unit
             else -> AppPrefs.setMainPageIndex(position)

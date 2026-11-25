@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.reader
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.wordpress.android.BaseUnitTest
 import org.junit.Before
@@ -12,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ReaderInWordPressAppFeatureConfig
 
@@ -26,12 +31,22 @@ class ReaderAvailabilityTest : BaseUnitTest() {
     @Mock
     lateinit var featureConfig: ReaderInWordPressAppFeatureConfig
 
+    @Mock
+    lateinit var appConfig: AppConfig
+
+    private val featureFlagUpdates = MutableStateFlow(0)
+
     private lateinit var readerAvailability: ReaderAvailability
 
     @Before
     fun setUp() {
-        readerAvailability = ReaderAvailability(buildConfigWrapper, accountStore, featureConfig)
+        lenient().whenever(appConfig.featureFlagUpdates).thenReturn(featureFlagUpdates)
+        // A dispatcher that's never advanced, so the flag-update collector stays idle unless a test opts in
+        readerAvailability = createReaderAvailability(CoroutineScope(StandardTestDispatcher()))
     }
+
+    private fun createReaderAvailability(appScope: CoroutineScope) =
+        ReaderAvailability(buildConfigWrapper, accountStore, featureConfig, appConfig, appScope)
 
     @Test
     fun `available in the Jetpack app regardless of account and flag`() {
@@ -140,10 +155,37 @@ class ReaderAvailabilityTest : BaseUnitTest() {
         assertThat(readerAvailability.availabilityChanged.value).isNull()
     }
 
+    @Test
+    fun `stored default is used but not kept, so the fetched value replaces it`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
+        whenever(featureConfig.hasFetchedValue()).thenReturn(false)
+        readerAvailability.isReaderAvailable()
+
+        whenever(featureConfig.hasFetchedValue()).thenReturn(true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
+
+        assertThat(readerAvailability.isReaderAvailable()).isTrue
+    }
+
+    @Test
+    fun `flag update re-checks while no fetched value is kept and reports the change`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.DefaultValue(false))
+        readerAvailability = createReaderAvailability(CoroutineScope(UnconfinedTestDispatcher()))
+        readerAvailability.isReaderAvailable()
+
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
+        featureFlagUpdates.value++
+
+        assertThat(readerAvailability.availabilityChanged.value?.getContentIfNotHandled()).isNotNull
+        assertThat(readerAvailability.isReaderAvailable()).isTrue
+    }
+
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         // Not reached without a WordPress.com account
         lenient().whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(isFlagEnabled))
+        lenient().whenever(featureConfig.hasFetchedValue()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(hasAccessToken)
     }
 }

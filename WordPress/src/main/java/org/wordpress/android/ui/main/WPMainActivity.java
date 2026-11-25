@@ -752,6 +752,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void handleOpenPageIntent(@NonNull Intent intent) {
+        // At cold start the stored flags may still be loading, so wait for them before deciding whether the
+        // Reader (and its tab) exists, rather than sending a Reader link to the Jetpack overlay on a default
+        mReaderAvailability.whenStoredFlagsLoaded(this, () -> openPageFromIntent(intent));
+    }
+
+    private void openPageFromIntent(@NonNull Intent intent) {
         showOpenPageMessageIfNeeded();
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
         if (!TextUtils.isEmpty(pagePosition)) {
