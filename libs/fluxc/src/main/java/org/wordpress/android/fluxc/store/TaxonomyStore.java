@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -168,26 +167,38 @@ public class TaxonomyStore extends Store {
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
     private final TaxonomyRsApiRestClient mTaxonomyRsApiRestClient;
-    private final TaxonomiesRestApiMigrationConfig mTaxonomiesRestApiMigrationConfig;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                  TaxonomyXMLRPCClient taxonomyXMLRPCClient,
-                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient,
-                                 TaxonomiesRestApiMigrationConfig taxonomiesRestApiMigrationConfig) {
+                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
         mTaxonomyRsApiRestClient = taxonomyRsApiRestClient;
-        mTaxonomiesRestApiMigrationConfig = taxonomiesRestApiMigrationConfig;
     }
 
     /**
-     * The self-hosted taxonomy wp-rs REST path is used only when the site exposes the REST API
-     * (Application Password) AND the taxonomies REST API migration feature flag is enabled.
-     * When the flag is off, self-hosted sites fall back to the legacy XML-RPC client.
+     * The taxonomy wp-rs REST path is used whenever the site holds Application Password
+     * credentials. Sites still authenticated with legacy credentials have no REST API available, so
+     * they fall back to the XML-RPC client.
+     *
+     * IMPORTANT: this predicate is not limited to self-hosted sites. A Jetpack-connected site can
+     * have an Application Password minted for it as well (the app mints one for every site except
+     * WP.com Simple), which makes {@link SiteModel#isUsingSelfHostedRestApi()} return {@code true}.
+     * So this check being evaluated before {@link SiteModel#isUsingWpComRestApi()} below is the
+     * opposite of {@link PostStore#getPostRestClientType(SiteModel)} and
+     * {@link MediaStore#getMediaRestClientType(SiteModel)}, which must check WP.com first
+     * (see CMM-2114).
+     *
+     * That is safe here only because the taxonomy client resolves its transport through
+     * {@code WpApiClientProvider.getWpApiClient}, whose first branch re-routes every site with a
+     * WP.com REST origin to the WP.com bearer-token client - such sites never reach their own host
+     * directly, and their Application Password is never sent. Reordering or widening this check
+     * changes which WP.com endpoint family serves Jetpack-connected sites, so do not do it without
+     * accounting for that.
      */
     private boolean shouldUseTaxonomyRsApiRestClient(@NonNull SiteModel site) {
-        return site.isUsingSelfHostedRestApi() && mTaxonomiesRestApiMigrationConfig.isEnabled();
+        return site.isUsingSelfHostedRestApi();
     }
 
     @Override
