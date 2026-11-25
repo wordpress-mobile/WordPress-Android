@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -206,9 +207,9 @@ private fun ReportFirstItemVisibility(listState: LazyListState, onChanged: (Bool
 }
 
 @Composable
-private fun NewPostsBar(
+internal fun NewPostsBar(
     isVisible: Boolean,
-    listState: LazyListState,
+    listState: ScrollableState,
     onClick: () -> Unit,
     onScrolledAway: () -> Unit,
     modifier: Modifier = Modifier,

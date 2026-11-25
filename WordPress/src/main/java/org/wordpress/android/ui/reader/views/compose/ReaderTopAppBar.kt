@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,6 +59,9 @@ fun ReaderTopAppBar(
     onClearFilterClick: () -> Unit,
     isSearchVisible: Boolean,
     onSearchClick: () -> Unit = {},
+    // null hides the layout toggle, for feeds without a gallery layout
+    isGalleryLayout: Boolean? = null,
+    onLayoutToggleClick: () -> Unit = {},
 ) {
     var selectedItem by remember { mutableStateOf(topBarUiState.selectedItem) }
     var isFilterShown by remember { mutableStateOf(topBarUiState.filterUiState != null) }
@@ -126,6 +132,24 @@ fun ReaderTopAppBar(
             }
         }
         Spacer(Modifier.width(Margin.ExtraSmall.value))
+        if (isGalleryLayout != null) {
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                onClick = onLayoutToggleClick
+            ) {
+                Icon(
+                    imageVector = if (isGalleryLayout) {
+                        Icons.AutoMirrored.Filled.ViewList
+                    } else {
+                        Icons.Filled.GridView
+                    },
+                    contentDescription = stringResource(
+                        if (isGalleryLayout) R.string.reader_show_as_list else R.string.reader_show_as_gallery
+                    ),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+        }
         if (isSearchVisible) {
             IconButton(
                 modifier = Modifier.align(Alignment.CenterVertically),

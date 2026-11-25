@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -64,6 +67,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subscription.ReaderSubscriptionSettingsBottomSheetFragment
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListArgs
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiEvent
@@ -71,6 +75,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderGalleryPostListScreen
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListScreen
 import org.wordpress.android.util.AppLog
@@ -102,6 +107,9 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 
+    @Inject
+    lateinit var layoutPreference: ReaderLayoutPreference
+
     private lateinit var postListViewModel: ReaderPostListViewModel
 
     // created with each view, since it holds that view's layout. The position is kept here in between, so
@@ -109,7 +117,11 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     // state, so the Reader's top bar can follow the list as it's recreated with the view
     private var listState: LazyListState? by mutableStateOf(null)
 
-    override val feedListState get() = listState
+    // the grid the gallery layout shows instead, kept alongside the list so switching layouts keeps both positions
+    private var gridState: LazyStaggeredGridState? by mutableStateOf(null)
+    private var isGalleryShown by mutableStateOf(false)
+
+    override val feedListState: ScrollableState? get() = if (isGalleryShown) gridState else listState
     private var savedFirstVisibleIndex = 0
     private var savedFirstVisibleOffset = 0
 
@@ -494,14 +506,25 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     ): View {
         val actions = buildActions()
         val listState = LazyListState(savedFirstVisibleIndex, savedFirstVisibleOffset).also { listState = it }
+        val gridState = LazyStaggeredGridState().also { gridState = it }
+        // only the Subscriptions feed and site previews have a gallery layout
+        val supportsGallery = postListViewModel.listType == ReaderPostListType.TAG_FOLLOWED ||
+            postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW
         return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
-                ReaderPostListScreen(
-                    uiState = uiState,
-                    listState = listState,
-                    actions = actions
-                )
+                val isGalleryPreferred by layoutPreference.isGallery.collectAsStateWithLifecycle()
+                val isGallery = supportsGallery && isGalleryPreferred
+                SideEffect { isGalleryShown = isGallery }
+                if (isGallery) {
+                    ReaderGalleryPostListScreen(uiState = uiState, gridState = gridState, actions = actions)
+                } else {
+                    ReaderPostListScreen(
+                        uiState = uiState,
+                        listState = listState,
+                        actions = actions
+                    )
+                }
             }
         })
     }
@@ -513,6 +536,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             savedFirstVisibleOffset = it.firstVisibleItemScrollOffset
         }
         listState = null
+        gridState = null
     }
 
     private fun buildActions() = ReaderPostListActions(
@@ -860,6 +884,11 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     }
 
     override fun onScrollToTop() {
+        if (isGalleryShown) {
+            val gridState = gridState ?: return
+            viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { gridState.animateScrollToItem(0) }
+            return
+        }
         val listState = listState ?: return
         if (listState.firstVisibleItemIndex > 0) {
             // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
