@@ -26,13 +26,16 @@ class ReaderAvailability @Inject constructor(
     @Volatile
     private var cachedFlag: Boolean? = null
 
-    fun isReaderAvailable(): Boolean {
-        if (buildConfigWrapper.isJetpackApp) return true
-        if (!accountStore.hasAccessToken()) {
+    fun isReaderAvailable(): Boolean = when {
+        buildConfigWrapper.isJetpackApp -> true
+        !accountStore.hasAccessToken() -> {
             cachedFlag = null
-            return false
+            false
         }
-        cachedFlag?.let { return it }
+        else -> cachedFlag ?: readFlag()
+    }
+
+    private fun readFlag(): Boolean {
         val state = readerInWordPressAppFeatureConfig.featureState()
         if (state is FeatureState.RemoteValue || state is FeatureState.ManuallyOverriden) {
             cachedFlag = state.isEnabled

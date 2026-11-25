@@ -66,8 +66,6 @@ class ReaderAvailabilityTest {
         setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
         readerAvailability.isReaderAvailable()
 
-        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
-
         assertThat(readerAvailability.isReaderAvailable()).isFalse
         verify(featureConfig, times(1)).featureState()
     }
