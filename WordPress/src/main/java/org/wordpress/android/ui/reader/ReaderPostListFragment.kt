@@ -518,7 +518,12 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
                 val isGallery = supportsGallery() && isGalleryPreferred
                 SideEffect { isGalleryShown = isGallery }
                 if (isGallery) {
-                    ReaderGalleryPostListScreen(uiState = uiState, gridState = gridState, actions = actions)
+                    ReaderGalleryPostListScreen(
+                        uiState = uiState,
+                        gridState = gridState,
+                        actions = actions,
+                        isSiteHeaderExpected = postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW
+                    )
                 } else {
                     ReaderPostListScreen(
                         uiState = uiState,

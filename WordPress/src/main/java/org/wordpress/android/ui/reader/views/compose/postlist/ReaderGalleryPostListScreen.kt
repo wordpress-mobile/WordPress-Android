@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -83,6 +84,9 @@ private const val QUOTE_MAX_LINES = 9
 private const val MOSAIC_IMAGE_COUNT = 3
 /** The height of a blog preview's cover below the status bar, as WPFolio's */
 internal val ReaderGalleryCoverHeight = 220.dp
+
+// about the height of a site's header below its cover, held while it loads
+private val HEADER_PLACEHOLDER_HEIGHT = 240.dp
 private val MOSAIC_GAP = 2.dp
 private const val MOSAIC_LEAD_WEIGHT = 1.4f
 
@@ -97,6 +101,8 @@ fun ReaderGalleryPostListScreen(
     gridState: LazyStaggeredGridState,
     actions: ReaderPostListActions,
     canLoadMore: Boolean = true,
+    // a blog preview, whose site header (with its cover) loads after its posts
+    isSiteHeaderExpected: Boolean = false,
 ) {
     ContentListPullToRefreshBox(
         isRefreshing = uiState.isRefreshing,
@@ -106,7 +112,7 @@ fun ReaderGalleryPostListScreen(
             .nestedScroll(rememberNestedScrollInteropConnection())
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        GalleryGrid(uiState, gridState, actions, canLoadMore)
+        GalleryGrid(uiState, gridState, actions, canLoadMore, isSiteHeaderExpected)
         NewPostsBar(
             isVisible = uiState.newPostsBarVisible,
             listState = gridState,
@@ -126,16 +132,22 @@ private fun GalleryGrid(
     gridState: LazyStaggeredGridState,
     actions: ReaderPostListActions,
     canLoadMore: Boolean,
+    isSiteHeaderExpected: Boolean,
 ) {
-    val items = uiState.items
+    val allItems = uiState.items
     val emptyState = uiState.emptyState
+    // a blog preview's posts usually load before its header, which would then land above them and push them
+    // down; until it arrives, its place holds a cover made from the posts, and the posts wait
+    val isWaitingForHeader = isSiteHeaderExpected && emptyState == null &&
+        allItems.none { it is ReaderPostListItem.SiteHeader }
+    val items = if (isWaitingForHeader) emptyList() else allItems
     val hasPosts = items.any { it is ReaderPostListItem.Post || it is ReaderPostListItem.XPost }
     // the first post with an image leads as the hero
     val heroKey = remember(items) {
         items.firstOrNull { it is ReaderPostListItem.Post && it.uiState.featuredImageSourceUrl != null }?.key
     }
-    val mosaicImages = remember(items) {
-        items.filterIsInstance<ReaderPostListItem.Post>()
+    val mosaicImages = remember(allItems) {
+        allItems.filterIsInstance<ReaderPostListItem.Post>()
             .mapNotNull { it.uiState.featuredImageTileUrl }
             .take(MOSAIC_IMAGE_COUNT)
     }
@@ -148,6 +160,22 @@ private fun GalleryGrid(
         verticalItemSpacing = GRID_SPACING,
         modifier = Modifier.fillMaxSize()
     ) {
+        if (isWaitingForHeader) {
+            // keyed as the header, so the real one replaces it in place
+            item(key = ReaderPostListItem.KEY_HEADER, span = StaggeredGridItemSpan.FullLine) {
+                Column {
+                    CoverMosaic(mosaicImages)
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(HEADER_PLACEHOLDER_HEIGHT),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+        }
         items(
             items = items,
             key = { it.key },
@@ -184,7 +212,7 @@ private fun GalleryGrid(
         onLoadMore = actions.onLoadMore
     )
     KeepTopInViewOnPrepend(
-        firstKey = items.firstOrNull()?.key,
+        firstKey = if (isWaitingForHeader) ReaderPostListItem.KEY_HEADER else items.firstOrNull()?.key,
         scrollToPosition = uiState.scrollToPosition,
         isAtTop = { gridState.firstVisibleItemIndex == 0 },
         scrollToTop = { gridState.requestScrollToItem(0) },
