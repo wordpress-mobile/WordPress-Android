@@ -227,7 +227,10 @@ class MediaLibraryViewModel @Inject constructor(
             // nothing to show for a failed upload, the tile offers retry and delete instead
             MediaUploadState.fromString(media.uploadState) == MediaUploadState.FAILED -> Unit
             else -> {
-                val ids = _uiState.value.items.map { it.localId.toString() }
+                // the details screen pages through these, so leave out items that are uploading or being deleted
+                val ids = _uiState.value.items
+                    .filter { it.uploadState == MediaUploadState.UPLOADED }
+                    .map { it.localId.toString() }
                 _events.tryEmit(MediaLibraryEvent.OpenMediaSettings(media, ArrayList(ids)))
             }
         }
