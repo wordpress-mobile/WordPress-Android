@@ -118,7 +118,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.PermissionUtils
-import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
@@ -442,8 +441,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             ReaderPostDetailNextPost(
                 title = post.title,
                 blogName = post.blogName.orEmpty(),
-                imageUrl = post.featuredImage.takeIf { post.hasFeaturedImage() }
-                    ?.let { PhotonUtils.getPhotonImageUrl(it, imageSize, imageSize) },
+                imageUrl = post.getFeaturedImageForDisplay(imageSize, imageSize).takeIf { it.isNotEmpty() },
             )
         }
     }
@@ -494,10 +492,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             relatedPostsCoordinates[isGlobal] = coordinates
             trackRelatedPostsIfShowing()
         },
-        onNextPostClick = {
-            val (pageBlogId, pagePostId) = pageIds
-            (activity as? ReaderPostPagerActivity)?.showNextPost(pageBlogId, pagePostId)
-        },
+        onNextPostClick = { (activity as? ReaderPostPagerActivity)?.showNextPost() },
     )
 
     private fun showCommentImage(imageUrl: String) {

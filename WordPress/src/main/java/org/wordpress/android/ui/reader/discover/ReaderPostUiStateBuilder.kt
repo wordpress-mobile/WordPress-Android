@@ -97,13 +97,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
     ): ReaderPostUiState {
         val featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight)
         val featuredImageSourceUrl = post.featuredImage.takeIf { !featuredImageUrl.isNullOrEmpty() }
+        // height 0 asks Photon for the width only, so the image keeps its shape
+        fun uncroppedUrl(url: String, width: Int) =
+            readerUtilsWrapper.getResizedImageUrl(url, width, 0, post.isPrivate, post.isPrivateAtomic)
         featuredImageSourceUrl?.let { sourceUrl ->
-            imageAccentSampler.enqueue(
-                imageUrl = sourceUrl,
-                sampleUrl = readerUtilsWrapper.getResizedImageUrl(
-                    sourceUrl, ACCENT_SAMPLE_WIDTH_PX, 0, post.isPrivate, post.isPrivateAtomic
-                )
-            )
+            imageAccentSampler.enqueue(sourceUrl) {
+                uncroppedUrl(sourceUrl, ReaderImageAccentSampler.SAMPLE_SIZE_PX)
+            }
         }
         return ReaderPostUiState(
             source = source,
@@ -116,10 +116,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
             excerpt = buildExcerpt(post),
             featuredImageUrl = featuredImageUrl,
             featuredImageSourceUrl = featuredImageSourceUrl,
-            featuredImageUncroppedUrl = featuredImageSourceUrl?.let {
-                // height 0 asks Photon for the width only, so it keeps the image's shape
-                readerUtilsWrapper.getResizedImageUrl(it, photonWidth, 0, post.isPrivate, post.isPrivateAtomic)
-            },
+            featuredImageUncroppedUrl = featuredImageSourceUrl?.let { uncroppedUrl(it, photonWidth) },
+            featuredImageTileUrl = featuredImageSourceUrl?.let { uncroppedUrl(it, photonWidth / 2) },
             thumbnailStripSection = buildThumbnailStripUrls(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
@@ -353,5 +351,3 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 }
-
-private const val ACCENT_SAMPLE_WIDTH_PX = 192

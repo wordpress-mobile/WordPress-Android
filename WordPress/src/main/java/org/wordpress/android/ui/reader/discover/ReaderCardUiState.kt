@@ -28,6 +28,8 @@ sealed class ReaderCardUiState {
         val featuredImageSourceUrl: String? = null,
         // sized to the card's width but not cropped, for showing the image at its own aspect ratio
         val featuredImageUncroppedUrl: String? = null,
+        // as above, but sized for a gallery tile, which is at most half the card's width
+        val featuredImageTileUrl: String? = null,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,

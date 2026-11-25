@@ -44,25 +44,21 @@ class ReaderSubsRepository @Inject constructor(
         ReaderBlogTable.getFollowedBlogs()
     }
 
-    /**
-     * When each followed site last posted, as far as the posts saved on this device know, keyed by
-     * [ReaderSubsSiteKey.forBlog] and [ReaderSubsSiteKey.forFeed]
-     */
-    suspend fun getLatestPostDates(): Map<String, String> = withContext(ioDispatcher) {
-        val dates = mutableMapOf<String, String>()
+    /** When each site last posted, as far as the posts saved on this device know */
+    suspend fun getLatestPostDates(): LatestPostDates = withContext(ioDispatcher) {
+        val byBlog = mutableMapOf<Long, String>()
+        val byFeed = mutableMapOf<Long, String>()
         ReaderDatabase.getReadableDb().rawQuery(
             "SELECT blog_id, feed_id, MAX(date_published) FROM tbl_posts GROUP BY blog_id, feed_id",
             null
         ).use { cursor ->
             while (cursor.moveToNext()) {
                 val date = cursor.getString(2) ?: continue
-                val blogId = cursor.getLong(0)
-                val feedId = cursor.getLong(1)
-                if (blogId != 0L) dates.merge(ReaderSubsSiteKey.forBlog(blogId), date) { a, b -> maxOf(a, b) }
-                if (feedId != 0L) dates.merge(ReaderSubsSiteKey.forFeed(feedId), date) { a, b -> maxOf(a, b) }
+                byBlog.merge(cursor.getLong(0), date) { a, b -> maxOf(a, b) }
+                byFeed.merge(cursor.getLong(1), date) { a, b -> maxOf(a, b) }
             }
         }
-        dates
+        LatestPostDates(byBlog, byFeed)
     }
 
     suspend fun fetchSuggestedSites(): List<ReaderSuggestedSite> = blogRepository.fetchSuggestedSites()
@@ -151,7 +147,8 @@ sealed class ReaderSubsEvent {
     data class FollowedBlogsFetched(val didChange: Boolean) : ReaderSubsEvent()
 }
 
-object ReaderSubsSiteKey {
-    fun forBlog(blogId: Long) = "blog:$blogId"
-    fun forFeed(feedId: Long) = "feed:$feedId"
+/** The ISO 8601 date of each site's latest saved post, by blog ID and by feed ID */
+class LatestPostDates(private val byBlog: Map<Long, String>, private val byFeed: Map<Long, String>) {
+    fun of(blogId: Long, feedId: Long): String? =
+        blogId.takeIf { it != 0L }?.let(byBlog::get) ?: feedId.takeIf { it != 0L }?.let(byFeed::get)
 }

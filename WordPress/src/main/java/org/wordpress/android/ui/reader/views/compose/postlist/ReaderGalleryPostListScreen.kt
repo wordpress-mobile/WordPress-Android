@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,16 +19,12 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,11 +37,11 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
@@ -55,9 +50,12 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
+import org.wordpress.android.ui.reader.views.compose.detail.MEDIUM_EMPHASIS_ALPHA
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostMoreMenuItem
+import org.wordpress.android.ui.reader.views.compose.postcard.readerPostTitleColor
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
+import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
 
 private val TILE_MIN_WIDTH = 240.dp
 private const val MIN_COLUMNS = 2
@@ -73,7 +71,6 @@ private const val TILE_PATTERN_SIZE = 4
 private const val TITLE_MAX_LINES = 3
 private const val HERO_EXCERPT_MAX_LINES = 3
 private const val QUOTE_MAX_LINES = 9
-private const val SEEN_ALPHA = 0.6f
 private const val MOSAIC_IMAGE_COUNT = 3
 private val MOSAIC_HEIGHT = 180.dp
 
@@ -127,53 +124,44 @@ private fun GalleryGrid(
     }
     val mosaicImages = remember(items) {
         items.filterIsInstance<ReaderPostListItem.Post>()
-            .mapNotNull { it.uiState.featuredImageUncroppedUrl }
+            .mapNotNull { it.uiState.featuredImageTileUrl }
             .take(MOSAIC_IMAGE_COUNT)
     }
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val columns = (maxWidth / TILE_MIN_WIDTH).toInt().coerceIn(MIN_COLUMNS, MAX_COLUMNS)
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(columns),
-            state = gridState,
-            contentPadding = PaddingValues(GRID_SPACING),
-            horizontalArrangement = Arrangement.spacedBy(GRID_SPACING),
-            verticalItemSpacing = GRID_SPACING,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(
-                items = items,
-                key = { it.key },
-                contentType = { if (it.key == heroKey) "hero" else it::class },
-                span = { item ->
-                    if (item is ReaderPostListItem.Post && item.key != heroKey) {
-                        StaggeredGridItemSpan.SingleLane
-                    } else {
-                        StaggeredGridItemSpan.FullLine
-                    }
-                }
-            ) { item ->
-                GalleryRow(item, isHero = item.key == heroKey, mosaicImages, actions)
-            }
-            if (emptyState != null) {
-                item(key = "empty", span = StaggeredGridItemSpan.FullLine) {
-                    ReaderPostListEmptyState(
-                        emptyState = emptyState,
-                        onButtonClick = actions.onEmptyStateButtonClicked,
-                        isTopAligned = items.isNotEmpty() ||
-                            emptyState is ReaderPostListEmptyState.SearchUpdating ||
-                            emptyState is ReaderPostListEmptyState.SearchNoResults,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+    LazyVerticalStaggeredGrid(
+        columns = GalleryColumns,
+        state = gridState,
+        contentPadding = PaddingValues(GRID_SPACING),
+        horizontalArrangement = Arrangement.spacedBy(GRID_SPACING),
+        verticalItemSpacing = GRID_SPACING,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(
+            items = items,
+            key = { it.key },
+            contentType = { if (it.key == heroKey) "hero" else it::class },
+            span = { item ->
+                if (item is ReaderPostListItem.Post && item.key != heroKey) {
+                    StaggeredGridItemSpan.SingleLane
+                } else {
+                    StaggeredGridItemSpan.FullLine
                 }
             }
-            if (uiState.isLoadingMore) {
-                item(key = "loading_more", span = StaggeredGridItemSpan.FullLine) {
-                    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                }
+        ) { item ->
+            GalleryRow(item, isHero = item.key == heroKey, mosaicImages, actions)
+        }
+        if (emptyState != null) {
+            item(key = "empty", span = StaggeredGridItemSpan.FullLine) {
+                ReaderPostListEmptyState(
+                    emptyState = emptyState,
+                    onButtonClick = actions.onEmptyStateButtonClicked,
+                    isTopAligned = emptyState.isTopAligned(hasItems = items.isNotEmpty()),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
+        }
+        if (uiState.isLoadingMore) {
+            contentListLoadingMoreItem()
         }
     }
 
@@ -183,8 +171,8 @@ private fun GalleryGrid(
         canLoadMore = hasPosts && canLoadMore,
         onLoadMore = actions.onLoadMore
     )
-    GalleryPendingScroll(gridState, uiState.scrollToPosition, actions.onScrollHandled)
-    GalleryFirstItemVisibility(gridState, actions.onFirstItemVisibilityChanged)
+    PendingScroll(uiState.scrollToPosition, actions.onScrollHandled) { gridState.requestScrollToItem(it) }
+    ReportFirstItemVisibility(gridState, { gridState.firstVisibleItemIndex == 0 }, actions.onFirstItemVisibilityChanged)
 }
 
 @Composable
@@ -238,7 +226,7 @@ private fun HeroTile(uiState: ReaderPostUiState) {
                 .clip(RoundedCornerShape(TILE_CORNER))
                 .background(accent)
         ) {
-            TileImage(uiState.featuredImageUncroppedUrl ?: uiState.featuredImageUrl, Modifier.fillMaxSize())
+            TileImage(uiState.featuredImageUncroppedUrl, Modifier.fillMaxSize())
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -301,7 +289,7 @@ private fun ImageTile(uiState: ReaderPostUiState) {
                     .clip(RoundedCornerShape(TILE_CORNER))
                     .background(accent)
             ) {
-                TileImage(uiState.featuredImageUncroppedUrl ?: uiState.featuredImageUrl, Modifier.fillMaxSize())
+                TileImage(uiState.featuredImageTileUrl, Modifier.fillMaxSize())
             }
             uiState.title?.let {
                 Text(
@@ -309,7 +297,7 @@ private fun ImageTile(uiState: ReaderPostUiState) {
                     modifier = Modifier.padding(top = 8.dp),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = titleColor(uiState),
+                    color = readerPostTitleColor(uiState.isSeen),
                     maxLines = TITLE_MAX_LINES,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -345,7 +333,7 @@ private fun QuoteTile(uiState: ReaderPostUiState) {
                 fontSize = if (excerpt != null) 15.sp else 19.sp,
                 lineHeight = if (excerpt != null) 21.sp else 25.sp,
                 fontWeight = if (excerpt != null) FontWeight.Normal else FontWeight.SemiBold,
-                color = Color.White.copy(alpha = if (uiState.isSeen) SEEN_ALPHA else 1f),
+                color = Color.White.copy(alpha = if (uiState.isSeen) MEDIUM_EMPHASIS_ALPHA else 1f),
                 maxLines = QUOTE_MAX_LINES,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -428,11 +416,14 @@ private fun CoverMosaic(images: List<String>) {
     }
 }
 
-@Composable
-private fun titleColor(uiState: ReaderPostUiState) = if (uiState.isSeen) {
-    MaterialTheme.colorScheme.onSurface.copy(alpha = SEEN_ALPHA)
-} else {
-    MaterialTheme.colorScheme.onSurface
+/** As many columns as fit at [TILE_MIN_WIDTH] each, but never fewer than two or more than five */
+private object GalleryColumns : StaggeredGridCells {
+    override fun Density.calculateCrossAxisCellSizes(availableSize: Int, spacing: Int): IntArray {
+        val count = (availableSize / TILE_MIN_WIDTH.roundToPx()).coerceIn(MIN_COLUMNS, MAX_COLUMNS)
+        val cellSize = (availableSize - spacing * (count - 1)) / count
+        val remainder = (availableSize - spacing * (count - 1)) % count
+        return IntArray(count) { index -> cellSize + if (index < remainder) 1 else 0 }
+    }
 }
 
 private fun accentColor(uiState: ReaderPostUiState, sampled: Int?) =
@@ -442,29 +433,4 @@ private fun accentColor(uiState: ReaderPostUiState, sampled: Int?) =
 private fun placeholderRatio(uiState: ReaderPostUiState): Float {
     val index = Math.floorMod(uiState.postId, TILE_PATTERN_SIZE.toLong()).toInt()
     return if (index == 0 || index == TILE_PATTERN_SIZE - 1) MIN_TILE_RATIO else MAX_TILE_RATIO
-}
-
-@Composable
-private fun GalleryPendingScroll(
-    gridState: LazyStaggeredGridState,
-    scrollToPosition: Int?,
-    onScrollHandled: () -> Unit,
-) {
-    val currentOnScrollHandled by rememberUpdatedState(onScrollHandled)
-    LaunchedEffect(scrollToPosition) {
-        if (scrollToPosition != null) {
-            gridState.requestScrollToItem(scrollToPosition)
-            currentOnScrollHandled()
-        }
-    }
-}
-
-@Composable
-private fun GalleryFirstItemVisibility(gridState: LazyStaggeredGridState, onChanged: (Boolean) -> Unit) {
-    val currentOnChanged by rememberUpdatedState(onChanged)
-    LaunchedEffect(gridState) {
-        snapshotFlow { gridState.firstVisibleItemIndex == 0 }
-            .distinctUntilChanged()
-            .collect { currentOnChanged(it) }
-    }
 }

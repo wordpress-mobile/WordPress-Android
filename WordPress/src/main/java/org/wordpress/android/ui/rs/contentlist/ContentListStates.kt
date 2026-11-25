@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -104,6 +106,11 @@ fun LazyListScope.contentListLoadingMoreItem() {
 /** [contentListLoadingMoreItem] for a lazy grid, spanning the full row. */
 fun LazyGridScope.contentListLoadingMoreItem() {
     item(key = "loading_more", span = { GridItemSpan(maxLineSpan) }) { LoadingMoreIndicator(Modifier.fillMaxWidth()) }
+}
+
+/** [contentListLoadingMoreItem] for a lazy staggered grid, spanning the full row. */
+fun LazyStaggeredGridScope.contentListLoadingMoreItem() {
+    item(key = "loading_more", span = StaggeredGridItemSpan.FullLine) { LoadingMoreIndicator(Modifier.fillMaxWidth()) }
 }
 
 @Composable

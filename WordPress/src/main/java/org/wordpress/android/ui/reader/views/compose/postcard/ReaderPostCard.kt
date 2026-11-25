@@ -98,11 +98,7 @@ fun ReaderPostCard(
                 modifier = Modifier.padding(top = Margin.Medium.value),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
-                color = if (uiState.isSeen) {
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                },
+                color = readerPostTitleColor(uiState.isSeen),
                 maxLines = TEXT_MAX_LINES,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -123,6 +119,14 @@ fun ReaderPostCard(
         }
         ActionRow(uiState)
     }
+}
+
+/** A post's title color, dimmed once the post has been seen */
+@Composable
+internal fun readerPostTitleColor(isSeen: Boolean) = if (isSeen) {
+    MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
+} else {
+    MaterialTheme.colorScheme.onSurface
 }
 
 @Composable

@@ -305,7 +305,7 @@ private fun SitesPage(
     actions: ReaderSubsActions
 ) {
     // suggestions only show while the search is closed or empty
-    val suggestions = suggestedSites.orEmpty().takeIf { searchQuery.isNullOrEmpty() }.orEmpty()
+    val suggestions = if (searchQuery.isNullOrEmpty()) suggestedSites.orEmpty() else emptyList()
     // keyed by the query so each search starts at the top, rather than where the previous list was scrolled to.
     // An open but empty search shows the same list as no search, so the two share a key.
     val listState = rememberSaveable(searchQuery?.takeIf { it.isNotEmpty() }, saver = LazyListState.Saver) {
@@ -337,7 +337,7 @@ private fun SitesPage(
                             iconUrl = site.iconUrl,
                             isFollowing = site.isFollowing,
                             isFollowEnabled = site.isFollowEnabled,
-                            onClick = { actions.onSuggestedSiteClicked(site) },
+                            onClick = { actions.onSiteClicked(site) },
                             onFollowClick = { actions.onSuggestedSiteFollowClicked(site) }
                         )
                         HorizontalDivider()

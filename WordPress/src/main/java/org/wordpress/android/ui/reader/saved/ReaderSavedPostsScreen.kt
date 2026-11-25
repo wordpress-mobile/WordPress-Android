@@ -75,13 +75,13 @@ fun ReaderSavedPostsScreen(
     }
 }
 
-private fun emptyState(uiState: ReaderSavedPostsViewModel.UiState): ReaderPostListEmptyState? = when {
+internal fun emptyState(uiState: ReaderSavedPostsViewModel.UiState): ReaderPostListEmptyState? = when {
     uiState.posts.isNotEmpty() || !uiState.isLoaded -> null
     uiState.isRefreshing -> ReaderPostListEmptyState.Updating
     else -> uiState.error ?: ReaderPostListEmptyState.Bookmarks
 }
 
-private fun ReaderSavedKey.stableKey(): String = when (this) {
+internal fun ReaderSavedKey.stableKey(): String = when (this) {
     is ReaderSavedKey.Post -> "post:$blogId:$postId"
     is ReaderSavedKey.FeedItem -> "feed-item:$feedItemId"
     is ReaderSavedKey.Url -> "url:$url"

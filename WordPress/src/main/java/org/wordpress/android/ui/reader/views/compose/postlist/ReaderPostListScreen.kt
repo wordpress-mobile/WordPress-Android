@@ -101,10 +101,7 @@ private fun PostList(
             }
         }
         if (emptyState != null) {
-            // centred in the list, except below a header (where centring could push it off screen) and for
-            // search, which shows its messages just under the tabs
-            val isTopAligned = items.isNotEmpty() || emptyState is ReaderPostListEmptyState.SearchUpdating ||
-                    emptyState is ReaderPostListEmptyState.SearchNoResults
+            val isTopAligned = emptyState.isTopAligned(hasItems = items.isNotEmpty())
             item(key = "empty") {
                 ReaderPostListEmptyState(
                     emptyState = emptyState,
@@ -129,9 +126,16 @@ private fun PostList(
         onLoadMore = actions.onLoadMore
     )
     KeepTopInViewOnPrepend(listState, items.firstOrNull()?.key, uiState.scrollToPosition)
-    PendingScroll(listState, uiState.scrollToPosition, actions.onScrollHandled)
-    ReportFirstItemVisibility(listState, actions.onFirstItemVisibilityChanged)
+    PendingScroll(uiState.scrollToPosition, actions.onScrollHandled) { listState.requestScrollToItem(it) }
+    ReportFirstItemVisibility(listState, { listState.firstVisibleItemIndex == 0 }, actions.onFirstItemVisibilityChanged)
 }
+
+/**
+ * Centred in the list, except below a header (where centring could push it off screen) and for search, which shows
+ * its messages just under the tabs
+ */
+internal fun ReaderPostListEmptyState.isTopAligned(hasItems: Boolean) = hasItems ||
+    this is ReaderPostListEmptyState.SearchUpdating || this is ReaderPostListEmptyState.SearchNoResults
 
 @Composable
 private fun PostListRow(item: ReaderPostListItem, actions: ReaderPostListActions) {
@@ -185,22 +189,24 @@ private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, 
 // a plain holder rather than state, since changing it mustn't trigger recomposition
 private class PreviousKey(var value: String? = null)
 
+/** Scrolls to [scrollToPosition] once, with [scrollToItem] for the list or grid showing the posts */
 @Composable
-private fun PendingScroll(listState: LazyListState, scrollToPosition: Int?, onScrollHandled: () -> Unit) {
+internal fun PendingScroll(scrollToPosition: Int?, onScrollHandled: () -> Unit, scrollToItem: (Int) -> Unit) {
     val currentOnScrollHandled by rememberUpdatedState(onScrollHandled)
     LaunchedEffect(scrollToPosition) {
         if (scrollToPosition != null) {
-            listState.requestScrollToItem(scrollToPosition)
+            scrollToItem(scrollToPosition)
             currentOnScrollHandled()
         }
     }
 }
 
+/** Reports whether the first row is showing; [isAtTop] reads it from the list or grid in [scrollState] */
 @Composable
-private fun ReportFirstItemVisibility(listState: LazyListState, onChanged: (Boolean) -> Unit) {
+internal fun ReportFirstItemVisibility(scrollState: Any, isAtTop: () -> Boolean, onChanged: (Boolean) -> Unit) {
     val currentOnChanged by rememberUpdatedState(onChanged)
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex == 0 }
+    LaunchedEffect(scrollState) {
+        snapshotFlow { isAtTop() }
             .distinctUntilChanged()
             .collect { currentOnChanged(it) }
     }

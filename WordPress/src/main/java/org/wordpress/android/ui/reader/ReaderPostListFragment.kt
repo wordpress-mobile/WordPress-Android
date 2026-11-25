@@ -132,6 +132,9 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
 
     private var isFilterableScreen = false
 
+    // whether the feed that hosts this list offers the gallery layout, as its host decides
+    private var hasGalleryLayout = false
+
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
 
     // This VM is initialized only on the Following tab
@@ -145,6 +148,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         val arguments = requireArguments()
         isTopLevel = arguments.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
         isFilterableScreen = arguments.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
+        hasGalleryLayout = arguments.getBoolean(ARG_HAS_GALLERY_LAYOUT)
         tagFragmentStartedWith =
             BundleCompat.getSerializable(arguments, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
 
@@ -526,17 +530,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         })
     }
 
-    /*
-     * site previews and the Subscriptions, Discover, Liked and Saved feeds have a gallery layout; P2s, Automattic
-     * and lists don't
-     */
-    private fun supportsGallery(): Boolean = when (postListViewModel.listType) {
-        ReaderPostListType.BLOG_PREVIEW -> true
-        ReaderPostListType.TAG_FOLLOWED -> postListViewModel.currentTag.let { tag ->
-            tag == null || !(tag.isP2 || tag.isA8C || tag.isListTopic)
-        }
-        else -> false
-    }
+    private fun supportsGallery() = hasGalleryLayout || postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -922,6 +916,8 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         get() = tagFragmentStartedWith != null && tagFragmentStartedWith!!.isFollowedSites
 
     companion object {
+        private const val ARG_HAS_GALLERY_LAYOUT = "has_gallery_layout"
+
         private const val READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f
         private const val KEY_TAG_PREVIEW_HISTORY = "tag_preview_history"
         private var hasPurgedReaderDb = false
@@ -934,7 +930,8 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             tag: ReaderTag,
             listType: ReaderPostListType?,
             isTopLevel: Boolean = false,
-            isFilterable: Boolean = false
+            isFilterable: Boolean = false,
+            hasGalleryLayout: Boolean = false
         ) = Bundle().apply {
             // Tag this fragment is started with
             putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag)
@@ -943,6 +940,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType)
             putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
             putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterable)
+            putBoolean(ARG_HAS_GALLERY_LAYOUT, hasGalleryLayout)
         }
 
         /*

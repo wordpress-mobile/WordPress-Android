@@ -739,10 +739,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return if (position >= 0) adapter.getBlogIdPostIdAtPosition(position + 1) else null
     }
 
-    /** Pages to the post after [blogId]/[postId], as a swipe would */
-    fun showNextPost(blogId: Long, postId: Long) {
-        val position = pagerAdapter?.indexOf(blogId, postId) ?: return
-        if (position >= 0) viewPager.setCurrentItem(position + 1, true)
+    /** Pages to the next post, as a swipe would */
+    fun showNextPost() {
+        viewPager.setCurrentItem(viewPager.currentItem + 1, true)
     }
 
     private val pagerAdapter: PostPagerAdapter?

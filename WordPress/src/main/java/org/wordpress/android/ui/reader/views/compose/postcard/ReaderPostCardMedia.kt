@@ -74,7 +74,9 @@ private fun FeaturedImage(uiState: ReaderPostUiState) {
     }
     val accent = meta?.accent?.let { Color(it) }
     val backgroundColor = accent ?: colorResource(R.color.reader_featured_image_background)
-    val transformation = remember(backgroundColor) { PortraitAwareCropTransformation(backgroundColor.toArgb()) }
+    // transparent, so the box's background shows around a portrait image and an accent arriving late doesn't
+    // change the request, which would decode the image again
+    val transformation = remember { PortraitAwareCropTransformation(Color.Transparent.toArgb()) }
 
     Box(
         modifier = Modifier
@@ -90,7 +92,7 @@ private fun FeaturedImage(uiState: ReaderPostUiState) {
                 .apply {
                     if (ratio != null) {
                         // uncropped, so the box's own shape decides the crop
-                        data(uiState.featuredImageUncroppedUrl ?: uiState.featuredImageUrl)
+                        data(uiState.featuredImageUncroppedUrl)
                     } else {
                         data(uiState.featuredImageUrl)
                         transformations(transformation)

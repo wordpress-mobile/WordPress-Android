@@ -152,7 +152,8 @@ class ReaderDiscoverTabsFragment : Fragment(), OnScrollToTopListener, ReaderScro
                 tabs[page].tag,
                 ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                 isTopLevel = true,
-                isFilterable = false
+                isFilterable = false,
+                hasGalleryLayout = true
             )
         }
         AndroidFragment<ReaderPostListFragment>(

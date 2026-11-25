@@ -14,12 +14,12 @@ import javax.inject.Singleton
 
 /**
  * What sampling a featured image found: a dark accent color taken from it, and its aspect ratio (width / height).
- * [accent] is null when sampling failed, and [failedAt] says when, so it can be retried later.
+ * Both are null when sampling failed, which [sampledAt] lets the sampler retry later.
  */
 data class ReaderImageMeta(
     val accent: Int?,
     val ratio: Float?,
-    val failedAt: Long? = null,
+    val sampledAt: Long = System.currentTimeMillis(),
 )
 
 /**
@@ -33,11 +33,8 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
     private val _meta = MutableStateFlow<Map<String, ReaderImageMeta>>(emptyMap())
     private var isLoaded = false
 
-    val meta: StateFlow<Map<String, ReaderImageMeta>>
-        get() {
-            ensureLoaded()
-            return _meta.asStateFlow()
-        }
+    /** Empty until the first [get] or [putAll] loads it, which happens as the first cards are built */
+    val meta: StateFlow<Map<String, ReaderImageMeta>> = _meta.asStateFlow()
 
     fun get(url: String): ReaderImageMeta? {
         ensureLoaded()
@@ -55,8 +52,7 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
                     put(COLUMN_URL, url)
                     put(COLUMN_ACCENT, meta.accent)
                     put(COLUMN_RATIO, meta.ratio)
-                    put(COLUMN_FAILED_AT, meta.failedAt)
-                    put(COLUMN_SAMPLED_AT, System.currentTimeMillis())
+                    put(COLUMN_SAMPLED_AT, meta.sampledAt)
                 }
                 db.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
             }
@@ -81,12 +77,12 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
             val url = cursor.getColumnIndexOrThrow(COLUMN_URL)
             val accent = cursor.getColumnIndexOrThrow(COLUMN_ACCENT)
             val ratio = cursor.getColumnIndexOrThrow(COLUMN_RATIO)
-            val failedAt = cursor.getColumnIndexOrThrow(COLUMN_FAILED_AT)
+            val sampledAt = cursor.getColumnIndexOrThrow(COLUMN_SAMPLED_AT)
             while (cursor.moveToNext()) {
                 loaded[cursor.getString(url)] = ReaderImageMeta(
                     accent = if (cursor.isNull(accent)) null else cursor.getInt(accent),
                     ratio = if (cursor.isNull(ratio)) null else cursor.getFloat(ratio),
-                    failedAt = if (cursor.isNull(failedAt)) null else cursor.getLong(failedAt),
+                    sampledAt = cursor.getLong(sampledAt),
                 )
             }
         }
@@ -100,7 +96,6 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
                     "$COLUMN_URL TEXT PRIMARY KEY, " +
                     "$COLUMN_ACCENT INTEGER, " +
                     "$COLUMN_RATIO REAL, " +
-                    "$COLUMN_FAILED_AT INTEGER, " +
                     "$COLUMN_SAMPLED_AT INTEGER NOT NULL)"
             )
         }
@@ -113,12 +108,11 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
 
     companion object {
         private const val DB_NAME = "reader_image_meta.db"
-        private const val DB_VERSION = 1
+        private const val DB_VERSION = 2
         private const val TABLE = "image_meta"
         private const val COLUMN_URL = "url"
         private const val COLUMN_ACCENT = "accent"
         private const val COLUMN_RATIO = "ratio"
-        private const val COLUMN_FAILED_AT = "failed_at"
         private const val COLUMN_SAMPLED_AT = "sampled_at"
         private const val MAX_AGE_MS = 30L * 24 * 60 * 60 * 1000
     }

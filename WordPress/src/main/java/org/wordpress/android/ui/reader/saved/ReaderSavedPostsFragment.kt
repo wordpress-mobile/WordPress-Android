@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,7 +32,6 @@ import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -73,7 +73,12 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
             onLoadMore = viewModel::loadMore,
             onEmptyStateButtonClicked = ::onEmptyStateButtonClicked
         )
-        val galleryActions = galleryActions(actions)
+        // the gallery shows the saved posts' cards as the Reader's other post lists do
+        val galleryActions = ReaderPostListActions(
+            onRefresh = actions.onRefresh,
+            onLoadMore = actions.onLoadMore,
+            onEmptyStateButtonClicked = actions.onEmptyStateButtonClicked
+        )
         return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -81,7 +86,7 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
                 SideEffect { isGalleryShown = isGallery }
                 if (isGallery) {
                     ReaderGalleryPostListScreen(
-                        uiState = uiState.toPostListUiState(),
+                        uiState = remember(uiState) { uiState.toPostListUiState() },
                         gridState = gridState,
                         actions = galleryActions,
                         canLoadMore = uiState.hasMore
@@ -110,37 +115,12 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
         if (isGalleryShown) gridState.requestScrollToItem(0) else listState.requestScrollToItem(0)
     }
 
-    /*
-     * the gallery shows the saved posts' cards as the Reader's other post lists do, so it takes the same state
-     */
     private fun ReaderSavedPostsViewModel.UiState.toPostListUiState() = ReaderPostListUiState(
-        // the saved key, since a page saved by URL has no post IDs
-        items = posts.map { ReaderPostListItem.Post(it.card, key = "saved:${it.item.key}") },
+        items = posts.map { ReaderPostListItem.Post(it.card, key = it.item.key.stableKey()) },
         isRefreshing = isRefreshing,
         isLoadingMore = isLoadingMore,
         canPullToRefresh = true,
-        emptyState = when {
-            posts.isNotEmpty() || !isLoaded -> null
-            isRefreshing -> ReaderPostListEmptyState.Updating
-            else -> error ?: ReaderPostListEmptyState.Bookmarks
-        }
-    )
-
-    // only refreshing, paging and the empty state's button apply to saved posts
-    private fun galleryActions(actions: ReaderSavedPostsActions) = ReaderPostListActions(
-        onRefresh = actions.onRefresh,
-        onLoadMore = actions.onLoadMore,
-        onScrollHandled = {},
-        onFirstItemVisibilityChanged = {},
-        onNewPostsBarClicked = {},
-        onNewPostsBarScrolledAway = {},
-        onEmptyStateButtonClicked = actions.onEmptyStateButtonClicked,
-        onGapMarkerClicked = {},
-        onTagHeaderFollowClicked = {},
-        onSiteHeaderFollowClicked = {},
-        onSiteHeaderSettingsClicked = {},
-        onXPostClicked = {},
-        onRemovedPostClicked = {}
+        emptyState = emptyState(this)
     )
 
     private fun handleEvent(event: ReaderSavedPostsViewModel.Event) {

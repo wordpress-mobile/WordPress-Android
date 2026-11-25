@@ -6,19 +6,19 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import coil.imageLoader
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
@@ -41,40 +41,47 @@ class ReaderImageAccentSampler @Inject constructor(
     @Named(APPLICATION_SCOPE) private val applicationScope: CoroutineScope,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
-    // sample URL (sized small) by the stored image URL, waiting to be sampled
+    // guarded by itself: the sample URL (small, uncropped) by the image URL, waiting to be sampled
     private val queue = LinkedHashMap<String, String>()
-    private val queueLock = Any()
-    private val draining = Mutex()
+
+    // guarded by queue: the images being sampled now, and the one job draining the queue
+    private val inFlight = HashSet<String>()
+    private var drainJob: Job? = null
 
     /**
-     * Queues [imageUrl] for sampling unless it's been sampled, or failed recently. [sampleUrl] is the URL to load,
-     * small and uncropped.
+     * Queues [imageUrl] for sampling unless it's been sampled, failed recently, or is already queued. [sampleUrl]
+     * is only built when it's needed.
      */
-    fun enqueue(imageUrl: String, sampleUrl: String) {
-        val existing = store.get(imageUrl)
-        if (existing != null && !existing.isRetryDue()) return
-        val isNew = synchronized(queueLock) { queue.put(imageUrl, sampleUrl) == null }
-        if (isNew) applicationScope.launch(bgDispatcher) { drain() }
+    fun enqueue(imageUrl: String, sampleUrl: () -> String) {
+        if (store.get(imageUrl)?.isRetryDue() == false) return
+        synchronized(queue) {
+            if (imageUrl in inFlight || imageUrl in queue) return
+            queue[imageUrl] = sampleUrl()
+            if (drainJob == null) drainJob = applicationScope.launch(bgDispatcher) { drain() }
+        }
     }
 
     private suspend fun drain() {
         // lets a page of cards queue their images, so they're sampled together
         delay(BATCH_DELAY_MS)
-        draining.withLock {
-            while (true) {
-                val batch = synchronized(queueLock) {
-                    queue.entries.take(PARALLEL).map { it.key to it.value }.also { taken ->
-                        taken.forEach { queue.remove(it.first) }
+        while (true) {
+            val batch = synchronized(queue) {
+                queue.entries.take(PARALLEL).map { it.key to it.value }.also { taken ->
+                    taken.forEach { (imageUrl, _) ->
+                        queue.remove(imageUrl)
+                        inFlight.add(imageUrl)
                     }
+                    if (taken.isEmpty()) drainJob = null
                 }
-                if (batch.isEmpty()) return
-                val results = coroutineScope {
-                    batch.map { (imageUrl, sampleUrl) ->
-                        async { imageUrl to (sample(sampleUrl) ?: failed()) }
-                    }.awaitAll()
-                }
-                store.putAll(results.toMap())
             }
+            if (batch.isEmpty()) return
+            val results = coroutineScope {
+                batch.map { (imageUrl, sampleUrl) ->
+                    async { imageUrl to (sample(sampleUrl) ?: ReaderImageMeta(accent = null, ratio = null)) }
+                }.awaitAll()
+            }
+            store.putAll(results.toMap())
+            synchronized(queue) { inFlight.removeAll(results.map { it.first }.toSet()) }
         }
     }
 
@@ -83,35 +90,38 @@ class ReaderImageAccentSampler @Inject constructor(
             .data(url)
             .size(SAMPLE_SIZE_PX)
             .allowHardware(false)
+            // never shown, so kept out of the caches the cards use
+            .memoryCachePolicy(CachePolicy.DISABLED)
+            .diskCachePolicy(CachePolicy.DISABLED)
             .build()
         val bitmap = ((context.imageLoader.execute(request) as? SuccessResult)?.drawable as? BitmapDrawable)?.bitmap
-        bitmap?.let { sample(it) }
+        bitmap?.let(::sample)
+    } catch (e: CancellationException) {
+        throw e
     } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
-        if (e is kotlinx.coroutines.CancellationException) throw e
         AppLog.w(T.READER, "Couldn't sample $url: $e")
         null
     }
 
-    private suspend fun sample(bitmap: Bitmap): ReaderImageMeta? = withContext(bgDispatcher) {
-        if (bitmap.width == 0 || bitmap.height == 0) return@withContext null
+    private fun sample(bitmap: Bitmap): ReaderImageMeta? {
+        if (bitmap.width == 0 || bitmap.height == 0) return null
         val palette = Palette.from(bitmap).maximumColorCount(PALETTE_COLORS).generate()
         val swatch = palette.darkMutedSwatch ?: palette.mutedSwatch ?: palette.darkVibrantSwatch
             ?: palette.dominantSwatch
-        ReaderImageMeta(
+        return ReaderImageMeta(
             accent = swatch?.rgb?.let(::darkenForWhiteText),
             ratio = bitmap.width.toFloat() / bitmap.height,
         )
     }
 
-    private fun failed() = ReaderImageMeta(accent = null, ratio = null, failedAt = System.currentTimeMillis())
-
     private fun ReaderImageMeta.isRetryDue() =
-        failedAt != null && System.currentTimeMillis() - failedAt > RETRY_AFTER_MS
+        ratio == null && System.currentTimeMillis() - sampledAt > RETRY_AFTER_MS
 
     companion object {
+        /** The width to ask Photon for, which is all the sample needs */
+        const val SAMPLE_SIZE_PX = 96
         private const val PARALLEL = 4
         private const val BATCH_DELAY_MS = 300L
-        private const val SAMPLE_SIZE_PX = 96
         private const val PALETTE_COLORS = 16
         private const val MAX_LUMINANCE = 0.12
         private const val DARKEN_STEP = 0.15f
@@ -128,8 +138,8 @@ class ReaderImageAccentSampler @Inject constructor(
         /** A stable accent for [key], such as a post with no image */
         fun fallbackAccent(key: String): Int = FALLBACKS[Math.floorMod(key.hashCode(), FALLBACKS.size)]
 
-        /** Text sits in white on the accent, so it's kept dark enough for contrast */
-        fun darkenForWhiteText(color: Int): Int {
+        /* text sits in white on the accent, so it's kept dark enough for contrast */
+        private fun darkenForWhiteText(color: Int): Int {
             var darkened = color
             var steps = 0
             while (ColorUtils.calculateLuminance(darkened) > MAX_LUMINANCE && steps < MAX_DARKEN_STEPS) {

@@ -299,7 +299,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         }
     }
 
-    // the feeds whose posts can show as a gallery, which ReaderPostListFragment and ReaderSavedPostsFragment follow
+    // the feeds that offer the gallery layout, with its toggle; this decides it for every feed the Reader hosts
     private fun ReaderTag.hasGalleryLayout() = isFollowedSites || isDiscover || isPostsILike || isBookmarked
 
     /**
@@ -336,7 +336,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                         tag,
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                         true,
-                        tag.isFilterable
+                        tag.isFilterable,
+                        hasGalleryLayout = tag.hasGalleryLayout()
                     )
                 },
                 onUpdate = ::onFeedAdded

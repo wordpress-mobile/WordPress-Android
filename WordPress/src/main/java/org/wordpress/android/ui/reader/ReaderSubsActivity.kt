@@ -63,7 +63,6 @@ class ReaderSubsActivity : BaseAppCompatActivity() {
             onSiteClicked = viewModel::onSiteClicked,
             onSiteFollowClicked = viewModel::onSiteFollowClicked,
             onSiteSwipedAway = viewModel::onSiteSwipedAway,
-            onSuggestedSiteClicked = viewModel::onSuggestedSiteClicked,
             onSuggestedSiteFollowClicked = viewModel::onSuggestedSiteFollowClicked,
             onEntryChanged = viewModel::onEntryChanged,
             onAddClicked = viewModel::onAddClicked,

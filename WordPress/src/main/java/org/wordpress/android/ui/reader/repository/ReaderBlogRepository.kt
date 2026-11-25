@@ -11,7 +11,6 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import org.apache.commons.text.StringEscapeUtils
 import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.JSONUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.VolleyUtils
 import java.net.HttpURLConnection
@@ -375,9 +375,7 @@ class ReaderBlogRepository @Inject constructor(
                 ReaderSuggestedSite(
                     blogId = blogId,
                     feedId = feedId,
-                    name = site.optString("name").takeIf { it.isNotEmpty() }?.let {
-                        StringEscapeUtils.unescapeHtml4(it)
-                    },
+                    name = JSONUtils.getStringDecoded(site, "name").takeIf { it.isNotEmpty() },
                     url = url,
                     iconUrl = site.optJSONObject("icon")?.optString("img")?.takeIf { it.isNotEmpty() },
                 )

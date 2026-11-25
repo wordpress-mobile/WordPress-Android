@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.ReaderBlog
@@ -21,9 +21,9 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.LatestPostDates
 import org.wordpress.android.ui.reader.repository.ReaderSubsEvent
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
-import org.wordpress.android.ui.reader.repository.ReaderSubsSiteKey
 import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -73,6 +73,9 @@ class ReaderSubsViewModel @Inject constructor(
 
     // sites swiped away whose unfollow waits for the undo snackbar to go, keyed by site key; hidden meanwhile
     private val pendingUnfollows = mutableMapOf<String, ReaderSubsSite>()
+
+    // read once, since following or unfollowing doesn't change when sites last posted
+    private var latestPostDates: LatestPostDates? = null
 
     // false until the tags and followed sites have been synced, which waits for a connection
     private var hasRequestedUpdate = false
@@ -171,10 +174,6 @@ class ReaderSubsViewModel @Inject constructor(
         }
     }
 
-    fun onSuggestedSiteClicked(site: ReaderSubsSite) {
-        _events.trySend(ReaderSubsUiEvent.ShowSitePreview(site.blogId, site.feedId, isFollowing = false))
-    }
-
     fun onSuggestedSiteFollowClicked(site: ReaderSubsSite) {
         if (!checkConnection()) return
         updateSuggestedSite(site.key) { it.copy(isFollowing = true, isFollowEnabled = false) }
@@ -217,16 +216,18 @@ class ReaderSubsViewModel @Inject constructor(
     }
 
     /*
-     * runs in the app scope, so leaving the screen as the snackbar goes doesn't lose the unfollow
+     * runs in the app scope, so leaving the screen as the snackbar goes doesn't lose the unfollow. It captures only
+     * what it needs, so it doesn't keep a cleared view model alive.
      */
     private fun unfollow(site: ReaderSubsSite) {
-        applicationScope.launch {
-            val succeeded = repository.followSite(site.blogId, site.feedId, false)
-            // a no-op once the screen has gone, since the view model's scope is cancelled then
-            this@ReaderSubsViewModel.launch {
-                if (!succeeded) showMessage(R.string.reader_toast_err_unable_to_unfollow_blog)
-                loadSites()
-            }
+        val repository = repository
+        val blogId = site.blogId
+        val feedId = site.feedId
+        val unfollow = applicationScope.async { repository.followSite(blogId, feedId, false) }
+        // a no-op once the screen has gone, since the view model's scope is cancelled then
+        launch {
+            if (!unfollow.await()) showMessage(R.string.reader_toast_err_unable_to_unfollow_blog)
+            loadSites()
         }
     }
 
@@ -353,24 +354,23 @@ class ReaderSubsViewModel @Inject constructor(
     private fun loadSites() {
         sitesJob?.cancel()
         sitesJob = launch {
-            val latestPostDates = repository.getLatestPostDates()
+            val dates = latestPostDates ?: repository.getLatestPostDates().also { latestPostDates = it }
             followedSites = repository.getFollowedBlogs()
                 .map { blog ->
                     val site = blog.toSubsSite()
-                    pendingSiteFollows[site.key]?.let { site.copy(isFollowing = it, isFollowEnabled = false) } ?: site
+                    val pending = pendingSiteFollows[site.key]
+                    val shown = pending?.let { site.copy(isFollowing = it, isFollowEnabled = false) } ?: site
+                    shown to dates.of(site.blogId, site.feedId).orEmpty()
                 }
                 // the sites that posted most recently first, then the rest by name
                 .sortedWith(
-                    compareByDescending<ReaderSubsSite> { latestPostDates.latestPostDate(it) ?: "" }
-                        .thenBy(String.CASE_INSENSITIVE_ORDER) { it.title }
+                    compareByDescending<Pair<ReaderSubsSite, String>> { it.second }
+                        .thenBy(String.CASE_INSENSITIVE_ORDER) { it.first.title }
                 )
+                .map { it.first }
             applySiteSearch()
         }
     }
-
-    private fun Map<String, String>.latestPostDate(site: ReaderSubsSite): String? =
-        site.blogId.takeIf { it != 0L }?.let { get(ReaderSubsSiteKey.forBlog(it)) }
-            ?: site.feedId.takeIf { it != 0L }?.let { get(ReaderSubsSiteKey.forFeed(it)) }
 
     private fun loadSuggestedSites() {
         if (!networkUtilsWrapper.isNetworkAvailable()) return
