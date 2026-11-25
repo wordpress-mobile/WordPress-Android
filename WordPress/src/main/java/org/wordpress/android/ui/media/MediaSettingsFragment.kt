@@ -135,6 +135,9 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     private var downloadId = 0L
     private var rowToRefocus: View? = null
     private var deleteConfirmationDialog: AlertDialog? = null
+
+    // pushes sent from this page whose response hasn't arrived yet
+    private var pushesInFlight = 0
     private var progressDialog: AlertDialog? = null
 
     private val downloadReceiver = object : BroadcastReceiver() {
@@ -183,10 +186,7 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
             return
         }
         setupMenu(binding)
-
-        if (savedInstanceState?.getBoolean(STATE_DELETE_DIALOG_VISIBLE) == true) {
-            deleteMediaWithConfirmation()
-        }
+        savedInstanceState?.let { restoreState(it) }
 
         setupHeader(binding)
         setupInsets(binding)
@@ -196,6 +196,18 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         if (!isMediaFromEditor) {
             binding.appBarLayout.isSaveFromParentEnabled = false
             binding.scrollView.isSaveFromParentEnabled = false
+        }
+    }
+
+    private fun restoreState(state: Bundle) {
+        if (isMediaFromEditor) {
+            Field.entries.forEach { field ->
+                state.getString(STATE_FIELD_PREFIX + field.name)?.let { fieldValues[field] = it }
+            }
+            bindDetailRows()
+        }
+        if (state.getBoolean(STATE_DELETE_DIALOG_VISIBLE)) {
+            deleteMediaWithConfirmation()
         }
     }
 
@@ -226,6 +238,10 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, editorImageMetaData)
+        // an editor image's field edits are only returned on exit, so keep them until then
+        if (isMediaFromEditor) {
+            Field.entries.forEach { outState.putString(STATE_FIELD_PREFIX + it.name, getFieldValue(it)) }
+        }
         outState.putBoolean(STATE_DELETE_DIALOG_VISIBLE, deleteConfirmationDialog?.isShowing == true)
     }
 
@@ -293,8 +309,8 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     }
 
     /**
-     * Saves the edit as soon as the sheet's Save is tapped: library media is pushed, and an editor image's
-     * metadata is updated and returned as the activity's result
+     * Library media is pushed as soon as the sheet's Save is tapped. An editor image's edits are returned with its
+     * other settings when the user leaves, since the activity's result doesn't survive the activity being recreated.
      */
     private fun onFieldEdited(result: Bundle) {
         val field = result.getString(MediaFieldEditBottomSheet.KEY_FIELD)?.let { Field.valueOf(it) } ?: return
@@ -304,10 +320,7 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
         fieldValues[field] = value
         bindDetailRows()
-        val metaData = editorImageMetaData
-        if (metaData != null) {
-            saveEditorChanges(metaData)
-        } else {
+        if (!isMediaFromEditor) {
             pushMediaChanges()
         }
     }
@@ -353,7 +366,10 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         ToastUtils.showToast(requireContext(), R.string.error_media_not_found)
         viewLifecycleOwner.lifecycleScope.launch {
             delay(FINISH_DELAY_MS)
-            activity?.finish()
+            // not if the user has swiped on to another item meanwhile
+            if (isResumed) {
+                activity?.finish()
+            }
         }
     }
 
@@ -367,7 +383,14 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
 
     private fun reloadMedia() {
         val binding = binding ?: return
-        mediaStore.getMediaWithLocalId(media.id)?.let { showMedia(binding, it) }
+        val storedMedia = mediaStore.getMediaWithLocalId(media.id) ?: return
+        // a change that leaves the file alone only refreshes the text, so the image doesn't reload
+        if (storedMedia.url == media.url) {
+            media = storedMedia
+            showMetaData(binding)
+        } else {
+            showMedia(binding, storedMedia)
+        }
     }
 
     private fun showMedia(binding: MediaSettingsFragmentBinding, model: MediaModel) {
@@ -663,8 +686,8 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         if (metaData != null) {
             MediaPreviewActivity.showPreview(requireContext(), site, metaData.src)
         } else {
-            val mediaIdList = (requireActivity() as MediaSettingsActivity).mediaIdList
-            MediaPreviewActivity.showPreview(requireContext(), site, media, mediaIdList)
+            val pageIds = (requireActivity() as MediaSettingsActivity).previewIdList
+            MediaPreviewActivity.showPreview(requireContext(), site, media, pageIds)
         }
     }
 
@@ -688,8 +711,8 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
     }
 
     /**
-     * Called by the activity when the user leaves. An editor image's size, alignment and link controls aren't
-     * saved as they change, so return them now as the activity's result. Library edits are already pushed.
+     * Called by the activity when the user leaves: returns an editor image's settings as the activity's result.
+     * Library edits are already pushed.
      */
     fun saveChanges() {
         editorImageMetaData?.let { saveEditorChanges(it) }
@@ -704,13 +727,14 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         }
 
         AppLog.d(T.MEDIA, "MediaSettingsFragment > Saving changes")
-        // update this page's copy too, since the push's own response doesn't reload the page
+        // update this page's copy too, which only reloads once every push from this page is answered
         listOf(storedMedia, media).forEach {
             it.title = getFieldValue(Field.TITLE)
             it.caption = getFieldValue(Field.CAPTION)
             it.alt = getFieldValue(Field.ALT_TEXT)
             it.description = getFieldValue(Field.DESCRIPTION)
         }
+        pushesInFlight++
         dispatcher.dispatch(MediaActionBuilder.newPushMediaAction(MediaPayload(site, storedMedia)))
     }
 
@@ -896,22 +920,30 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         if (!hasMedia || isMediaFromEditor) {
             return
         }
-        // every page hears every change, so only react to the ones for this page's item, or to the result of a
-        // delete this page started. Matched on the remote ID, since WP.com responses don't carry the local one.
+        // every page hears every change, so only react to the ones for this page's item. Matched on the remote ID,
+        // since WP.com responses don't carry the local one.
         val isThisMedia = event.mediaList.any {
             it != null && it.localSiteId == media.localSiteId && it.mediaId == media.mediaId
         }
         when {
-            event.cause == MediaAction.DELETE_MEDIA -> if (isThisMedia || progressDialog != null) {
-                onMediaDeleted(event)
-            }
             !isThisMedia -> Unit
-            // a successful push already shows on the page, and reloading would undo an edit saved since
-            event.cause == MediaAction.PUSH_MEDIA -> if (event.isError) {
-                ToastUtils.showToast(requireContext(), R.string.media_edit_failure)
-                reloadMedia()
-            }
+            event.cause == MediaAction.DELETE_MEDIA -> onMediaDeleted(event)
+            event.cause == MediaAction.PUSH_MEDIA -> onMediaPushed(event)
             !event.isError -> reloadMedia()
+        }
+    }
+
+    /**
+     * Reloads once no push from this page is outstanding, so a response can't undo an edit saved after its push
+     * was sent. A page recreated while a push is out starts at zero, so it catches up when that push is answered.
+     */
+    private fun onMediaPushed(event: OnMediaChanged) {
+        if (event.isError) {
+            ToastUtils.showToast(requireContext(), R.string.media_edit_failure)
+        }
+        pushesInFlight = (pushesInFlight - 1).coerceAtLeast(0)
+        if (pushesInFlight == 0) {
+            reloadMedia()
         }
     }
 
@@ -947,6 +979,7 @@ class MediaSettingsFragment : Fragment(R.layout.media_settings_fragment) {
         private const val FINISH_DELAY_MS = 1500L
         private const val ARG_MEDIA_LOCAL_ID = "media_local_id"
         private const val STATE_DELETE_DIALOG_VISIBLE = "delete_media_dialog_visible"
+        private const val STATE_FIELD_PREFIX = "state_field_"
 
         fun newInstance(mediaId: Int) = MediaSettingsFragment().apply {
             arguments = bundleOf(ARG_MEDIA_LOCAL_ID to mediaId)

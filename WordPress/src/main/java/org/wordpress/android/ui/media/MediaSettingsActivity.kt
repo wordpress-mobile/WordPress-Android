@@ -39,8 +39,7 @@ import org.wordpress.android.util.extensions.onBackPressedCompat
 class MediaSettingsActivity : BaseAppCompatActivity() {
     val site: SiteModel by lazy { requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)) }
 
-    /** The media library's IDs, which the full-screen preview pages through too */
-    val mediaIdList: ArrayList<String>? by lazy { intent.getStringArrayListExtra(ARG_ID_LIST) }
+    private val mediaIdList: ArrayList<String>? by lazy { intent.getStringArrayListExtra(ARG_ID_LIST) }
 
     private val editorImageMetaData by lazy {
         intent.getParcelableExtraCompat<EditorImageMetaData>(ARG_EDITOR_IMAGE_METADATA)
@@ -52,6 +51,9 @@ class MediaSettingsActivity : BaseAppCompatActivity() {
     private val pageIds: List<Int> by lazy {
         mediaIdList?.mapNotNull { it.toIntOrNull() }?.takeIf { mediaId in it } ?: listOf(mediaId)
     }
+
+    /** The pages' IDs, for the full-screen preview to page through the same items */
+    val previewIdList: ArrayList<String> by lazy { ArrayList(pageIds.map { it.toString() }) }
 
     private lateinit var binding: MediaSettingsActivityBinding
 
