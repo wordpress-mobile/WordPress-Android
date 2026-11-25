@@ -92,6 +92,14 @@ class ReaderPostDetailFooterActions(
     val onCommentClick: (CommentSnippetItemState.CommentState) -> Unit,
     /** Reports where a related posts section is, so the fragment can tell when it's scrolled into view */
     val onRelatedPostsPositioned: (isGlobal: Boolean, coordinates: LayoutCoordinates) -> Unit,
+    val onNextPostClick: () -> Unit,
+)
+
+/** The post a swipe would show next, offered at the end of this one */
+data class ReaderPostDetailNextPost(
+    val title: String,
+    val blogName: String,
+    val imageUrl: String?,
 )
 
 /**
@@ -107,6 +115,7 @@ fun ReaderPostDetailFooter(
     followConversationState: FollowConversationUiState?,
     readingPreferences: ReaderReadingPreferences,
     actions: ReaderPostDetailFooterActions,
+    nextPost: ReaderPostDetailNextPost? = null,
 ) {
     val margin = dimensionResource(R.dimen.reader_detail_margin)
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -140,6 +149,74 @@ fun ReaderPostDetailFooter(
         Column(modifier = Modifier.padding(horizontal = margin)) {
             RelatedPosts(detailsState?.localRelatedPosts, isGlobal = false, actions.onRelatedPostsPositioned)
             RelatedPosts(detailsState?.globalRelatedPosts, isGlobal = true, actions.onRelatedPostsPositioned)
+        }
+        if (hasWebViewContent && nextPost != null) {
+            NextPost(nextPost, actions.onNextPostClick, Modifier.padding(horizontal = margin))
+        }
+    }
+}
+
+/**
+ * "Next" and the following post, which pages to it as a swipe would
+ */
+@Composable
+private fun NextPost(nextPost: ReaderPostDetailNextPost, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val secondaryColor = LocalReadingTextColor.current.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
+    Column(modifier = modifier.padding(vertical = Margin.ExtraLarge.value)) {
+        HorizontalDivider()
+        Text(
+            text = stringResource(R.string.next).uppercase(),
+            modifier = Modifier.padding(top = Margin.ExtraLarge.value, bottom = Margin.Medium.value),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = secondaryColor,
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(onClick = onClick)
+                .padding(vertical = Margin.Medium.value),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            nextPost.imageUrl?.let { url ->
+                AsyncImage(
+                    model = url,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .padding(end = Margin.ExtraLarge.value)
+                        .size(dimensionResource(R.dimen.reader_next_post_image_size))
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = nextPost.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = LocalReadingTextColor.current,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (nextPost.blogName.isNotEmpty()) {
+                    Text(
+                        text = nextPost.blogName,
+                        modifier = Modifier.padding(top = Margin.Small.value),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = secondaryColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_right_white_24dp),
+                contentDescription = null,
+                tint = secondaryColor,
+                modifier = Modifier.padding(start = Margin.Medium.value),
+            )
         }
     }
 }

@@ -728,6 +728,23 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     private fun hasPagerAdapter() = viewPager.adapter is PostPagerAdapter
 
+    /**
+     * The post after [blogId]/[postId] in the pager, for the detail screen's "Next" card. Null for a single post, a
+     * related post, or the last page.
+     */
+    fun getNextPostIds(blogId: Long, postId: Long): ReaderBlogIdPostId? {
+        if (isSinglePostView || isRelatedPostView) return null
+        val adapter = pagerAdapter ?: return null
+        val position = adapter.indexOf(blogId, postId)
+        return if (position >= 0) adapter.getBlogIdPostIdAtPosition(position + 1) else null
+    }
+
+    /** Pages to the post after [blogId]/[postId], as a swipe would */
+    fun showNextPost(blogId: Long, postId: Long) {
+        val position = pagerAdapter?.indexOf(blogId, postId) ?: return
+        if (position >= 0) viewPager.setCurrentItem(position + 1, true)
+    }
+
     private val pagerAdapter: PostPagerAdapter?
         get() = viewPager.adapter as? PostPagerAdapter
 
@@ -1084,6 +1101,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         fun isValidPosition(position: Int) = position in 0..< itemCount
+
+        fun indexOf(blogId: Long, postId: Long) = idList.indexOf(blogId, postId)
 
         override fun getItemCount() = idList.size
 

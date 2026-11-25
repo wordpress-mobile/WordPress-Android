@@ -27,6 +27,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
@@ -35,6 +36,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -44,15 +46,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.map
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderPostDetailBodyBinding
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
@@ -103,6 +108,7 @@ import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailChro
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailFooter
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailFooterActions
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailHeader
+import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailNextPost
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailScreen
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailScreenActions
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailTheme
@@ -111,6 +117,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.PermissionUtils
+import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
@@ -294,6 +301,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val bodyBinding = ReaderPostDetailBodyBinding.inflate(inflater.cloneInContext(themedContext))
         scrollView = bodyBinding.scrollViewReader
         scrollView.setScrollDirectionListener(this)
+        scrollView.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { view, _, scrollY, _, _ ->
+                val range = (view.getChildAt(0)?.height ?: 0) - view.height
+                chrome.readingProgress = if (range > 0) scrollY.toFloat() / range else 0f
+            }
+        )
         readerWebView = bodyBinding.readerWebview
         readerWebView.customViewListener = this
         readerWebView.urlClickListener = this
@@ -389,6 +402,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         } else {
             null
         }
+        val nextPost by produceState<ReaderPostDetailNextPost?>(null, chrome.hasWebViewContent) {
+            value = if (chrome.hasWebViewContent) loadNextPost() else null
+        }
         ReaderPostDetailFooter(
             detailsState = chrome.currentDetailsState(uiState),
             hasWebViewContent = chrome.hasWebViewContent,
@@ -397,7 +413,37 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             followConversationState = followState,
             readingPreferences = readingPreferences,
             actions = footerActions,
+            nextPost = nextPost,
         )
+    }
+
+    /**
+     * The page's own post, from its arguments: [blogId] and [postId] change when a related post replaces it in place,
+     * while its position in the pager doesn't
+     */
+    private val pageIds: Pair<Long, Long>
+        get() = requireArguments().let {
+            it.getLong(ReaderConstants.ARG_BLOG_ID) to it.getLong(ReaderConstants.ARG_POST_ID)
+        }
+
+    private suspend fun loadNextPost(): ReaderPostDetailNextPost? {
+        val (pageBlogId, pagePostId) = pageIds
+        val ids = (activity as? ReaderPostPagerActivity)?.getNextPostIds(pageBlogId, pagePostId) ?: return null
+        val isFeed = requireArguments().getBoolean(ReaderConstants.ARG_IS_FEED)
+        val imageSize = resources.getDimensionPixelSize(R.dimen.reader_next_post_image_size)
+        return withContext(Dispatchers.IO) {
+            val post = if (isFeed) {
+                ReaderPostTable.getFeedPost(ids.blogId, ids.postId, true)
+            } else {
+                ReaderPostTable.getBlogPost(ids.blogId, ids.postId, true)
+            } ?: return@withContext null
+            ReaderPostDetailNextPost(
+                title = post.title,
+                blogName = post.blogName.orEmpty(),
+                imageUrl = post.featuredImage.takeIf { post.hasFeaturedImage() }
+                    ?.let { PhotonUtils.getPhotonImageUrl(it, imageSize, imageSize) },
+            )
+        }
     }
 
     private val screenActions = ReaderPostDetailScreenActions(
@@ -445,6 +491,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         onRelatedPostsPositioned = { isGlobal, coordinates ->
             relatedPostsCoordinates[isGlobal] = coordinates
             trackRelatedPostsIfShowing()
+        },
+        onNextPostClick = {
+            val (pageBlogId, pagePostId) = pageIds
+            (activity as? ReaderPostPagerActivity)?.showNextPost(pageBlogId, pagePostId)
         },
     )
 
