@@ -137,7 +137,6 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
@@ -269,9 +268,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
 
     @Inject
-    lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
-
-    @Inject
     lateinit var getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -401,7 +397,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         isPostBlocked = isPostBlocked,
                         postHasUrl = viewModel.post?.hasUrl() == true,
                         hasInterceptedUri = viewModel.interceptedUri != null,
-                        isReadingPreferencesEnabled = readingPreferencesFeatureConfig.isEnabled(),
+                        isReadingPreferencesEnabled = viewModel.isReadingPreferencesEnabled(),
                     ),
                     isRelatedPost = isRelatedPost,
                     actions = screenActions,

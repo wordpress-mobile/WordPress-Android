@@ -55,6 +55,7 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_5
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
@@ -205,6 +206,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
 
+    @Mock
+    private lateinit var readerAvailability: ReaderAvailability
+
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
@@ -253,6 +257,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             readerCommentRepository,
             readerPostRepository,
             readingPreferencesFeatureConfig,
+            readerAvailability,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)

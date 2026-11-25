@@ -40,6 +40,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.HeaderData
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.reader.ReaderConstants.READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult
@@ -127,6 +128,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerCommentRepository: ReaderCommentRepository,
     private val readerPostRepository: ReaderPostRepository,
     private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
+    private val readerAvailability: ReaderAvailability,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
     private var commentSnippetJob: Job? = null
@@ -512,6 +514,13 @@ class ReaderPostDetailViewModel @Inject constructor(
         changeMoreMenuVisibility(false)
     }
 
+    /**
+     * Post detail is reachable without the Reader (e.g. from a comment in the WordPress app), where reading
+     * preferences have never been offered.
+     */
+    fun isReadingPreferencesEnabled() =
+        readingPreferencesFeatureConfig.isEnabled() && readerAvailability.isReaderAvailable()
+
     private fun changeMoreMenuVisibility(show: Boolean) {
         val currentUiState = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
@@ -520,7 +529,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
                         post,
                         includeBookmark = false,
-                        includeReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
+                        includeReadingPreferences = isReadingPreferencesEnabled(),
                         onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {

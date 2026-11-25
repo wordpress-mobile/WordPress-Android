@@ -84,6 +84,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.reader.saved.ReaderSavedPostsRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.rs.data.WpServiceProvider
@@ -236,6 +237,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var readerSavedPostsRepository: ReaderSavedPostsRepository
+
+    @Inject
+    lateinit var readerAvailability: ReaderAvailability
 
     // Lazy because building it loads the wordpress-rs native library (via WpLoginClient), which caused startup
     // ANRs when done on the main thread. It's built off main in warmUpSiteProvisioningSource() instead.
@@ -717,11 +721,18 @@ class AppInitializer @Inject constructor(
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged) {
-        appConfig.refresh(appScope)
+        val featureFlagsRefresh = appConfig.refresh(appScope)
 
         if (accountStore.hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
             gcmRegistrationScheduler.scheduleRegistration()
+            if (!event.isError) {
+                // The Reader flag can differ per account, so read it again once this account's flags arrive
+                appScope.launch {
+                    featureFlagsRefresh.join()
+                    readerAvailability.refreshFlagAfterSignIn()
+                }
+            }
         }
     }
 

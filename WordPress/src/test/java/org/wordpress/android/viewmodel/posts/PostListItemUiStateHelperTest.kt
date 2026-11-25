@@ -5,6 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -66,6 +68,9 @@ class PostListItemUiStateHelperTest {
     @Mock
     private lateinit var buildConfigWrapper: BuildConfigWrapper
 
+    @Mock
+    private lateinit var readerAvailability: ReaderAvailability
+
     private lateinit var helper: PostListItemUiStateHelper
 
     @Before
@@ -75,10 +80,13 @@ class PostListItemUiStateHelperTest {
             uploadUiStateUseCase,
             labelColorUseCase,
             blazeFeatureUtils,
-            buildConfigWrapper
+            buildConfigWrapper,
+            readerAvailability
         )
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        // Mirror the real rule for the tests below: the Jetpack app always has the Reader
+        lenient().whenever(readerAvailability.isReaderAvailable()).thenAnswer { buildConfigWrapper.isJetpackApp }
     }
 
     @Test
@@ -114,6 +122,17 @@ class PostListItemUiStateHelperTest {
         assertThat(state.moreActions.actions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(state.moreActions.actions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
         assertThat(state.moreActions.actions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.moreActions.actions).hasSize(6)
+    }
+
+    @Test
+    fun `given wordpress app with the Reader available, verify draft actions include read`() {
+        whenever(readerAvailability.isReaderAvailable()).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_DRAFT)
+        )
+        assertThat(state.moreActions.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.moreActions.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
         assertThat(state.moreActions.actions).hasSize(6)
     }
 
