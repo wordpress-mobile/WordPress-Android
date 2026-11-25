@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -311,6 +312,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.customViewListener = this
         readerWebView.urlClickListener = this
         readerWebView.pageFinishedListener = this
+        readerWebView.shareQuoteListener = ::shareQuote
         readerProgressBar = bodyBinding.readerProgressBar
         customViewContainer = FrameLayout(themedContext).apply {
             setBackgroundColor(CUSTOM_VIEW_BACKGROUND)
@@ -918,6 +920,22 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             SOURCE_POST_DETAIL_TOOLBAR,
         )
         ReaderActivityLauncher.sharePost(requireContext(), post)
+    }
+
+    /*
+     * shares the selected text in quotes, followed by the post's link
+     */
+    private fun shareQuote(text: String) {
+        val post = viewModel.post ?: return
+        val url = if (post.hasShortUrl()) post.shortUrl else post.url
+        val intent = Intent(Intent.ACTION_SEND)
+            .setType("text/plain")
+            .putExtra(Intent.EXTRA_TEXT, getString(R.string.reader_share_quote_text, text, url))
+        try {
+            startActivity(Intent.createChooser(intent, null))
+        } catch (e: ActivityNotFoundException) {
+            AppLog.w(T.READER, "No app to share a quote with: $e")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
