@@ -22,6 +22,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -109,6 +110,7 @@ import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAvailability;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.repository.ReaderTagsAndSitesUpdater;
@@ -247,6 +249,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject ReaderAvailability mReaderAvailability;
 
     @Inject IInAppUpdateManager mInAppUpdateManager;
 
@@ -471,14 +474,22 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
 
+    /** The bottom nav is shown only when the Reader is available; see {@link ReaderAvailability}. */
     private void setUpMainView() {
-        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
-            if (mBottomNav != null) {
-                mBottomNav.setVisibility(View.VISIBLE);
-            }
+        if (mBottomNav == null) {
+            return;
+        }
+        if (mReaderAvailability.isReaderAvailable()) {
+            mBottomNav.setVisibility(View.VISIBLE);
         } else {
-            if (mBottomNav != null) {
-                mBottomNav.setVisibility(View.GONE);
+            mBottomNav.setVisibility(View.GONE);
+            if (mBottomNav.getCurrentSelectedPage() != PageType.MY_SITE) {
+                mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                // A programmatic switch doesn't go through onPageChanged, so the FAB would keep the previous
+                // tab's state (e.g. hidden for Me after signing out of WordPress.com)
+                if (mViewModel != null) {
+                    mViewModel.onPageChanged(getSelectedSite(), mSiteStore.hasSite(), PageType.MY_SITE);
+                }
             }
         }
     }
@@ -569,6 +580,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
         // Setup Observers
+        // A sign-in, a sign-out or a late-loading flag can turn the Reader, and so the bottom nav, on or off
+        mReaderAvailability.getAvailabilityChanged().observe(this, event -> {
+            if (event.getContentIfNotHandled() != null) {
+                setUpMainView();
+                mViewModel.requestMySiteDashboardRefresh();
+            }
+        });
         mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
         mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen());
         mViewModel.getShowPrivacySettingsWithError().observe(this, action -> showPrivacySettingsScreen());
@@ -739,6 +757,23 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void handleOpenPageIntent(@NonNull Intent intent) {
+        String page = intent.getStringExtra(ARG_OPEN_PAGE);
+        if (!ARG_READER.equals(page) && !ARG_NOTIFICATIONS.equals(page)) {
+            openPageFromIntent(intent);
+            return;
+        }
+        // These depend on whether the Reader (and so its tab) exists, which at cold start may not be known yet;
+        // deciding on a default would send the link to the Jetpack overlay
+        mReaderAvailability.whenAvailabilityKnown(this, () -> {
+            openPageFromIntent(intent);
+            // A deferred switch lands after onResume, so the FAB state must follow the page it switched to
+            if (mViewModel != null && mBottomNav != null) {
+                mViewModel.onPageChanged(getSelectedSite(), mSiteStore.hasSite(), mBottomNav.getCurrentSelectedPage());
+            }
+        });
+    }
+
+    private void openPageFromIntent(@NonNull Intent intent) {
         showOpenPageMessageIfNeeded();
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
         if (!TextUtils.isEmpty(pagePosition)) {
@@ -748,7 +783,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
-                    if (!mBuildConfigWrapper.isJetpackApp()) {
+                    // Without the bottom nav there's no Notifications tab, not even the "use Jetpack" one
+                    if (!mReaderAvailability.isReaderAvailable()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -758,7 +794,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_READER:
                     setUpMainView();
-                    if (!mBuildConfigWrapper.isJetpackApp()) {
+                    if (!mReaderAvailability.isReaderAvailable()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -1381,6 +1417,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
+        // Not while stopped: switching pages would commit after onSaveInstanceState; onResume handles it
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            setUpMainView();
+        }
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             if (mBottomNav != null) {

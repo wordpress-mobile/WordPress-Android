@@ -23,6 +23,7 @@ import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
 import org.wordpress.android.ui.mysite.items.SITE_MONITORING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -58,6 +59,9 @@ class SiteListItemBuilderTest {
     @Mock
     lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
+    @Mock
+    lateinit var readerAvailability: ReaderAvailability
+
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -70,7 +74,8 @@ class SiteListItemBuilderTest {
             themeBrowserUtils,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
-            siteCapabilityChecker
+            siteCapabilityChecker,
+            readerAvailability
         )
     }
 
@@ -333,11 +338,11 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
-    // Me stands in for the bottom navigation in the WordPress app, so it is built for every site
-    // regardless of capabilities.
+    // Me stands in for the bottom navigation when it's hidden (no Reader), so it is built for every
+    // site regardless of capabilities.
     @Test
-    fun `me item built in the WordPress app, regardless of site capabilities`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+    fun `me item built when the Reader is unavailable, regardless of site capabilities`() {
+        whenever(readerAvailability.isReaderAvailable()).thenReturn(false)
 
         val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 
@@ -345,8 +350,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `me item not built in the Jetpack app`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+    fun `me item not built when the Reader, and so the Me tab, is available`() {
+        whenever(readerAvailability.isReaderAvailable()).thenReturn(true)
 
         val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 

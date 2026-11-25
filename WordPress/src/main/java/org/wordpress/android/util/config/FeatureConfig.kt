@@ -20,4 +20,7 @@ open class FeatureConfig(
     open fun name() = remoteField ?: this.javaClass.name
 
     fun featureState() = appConfig.featureState(this)
+
+    /** Whether the stored remote value was fetched from the server, rather than being a default. */
+    fun hasFetchedValue() = appConfig.hasFetchedValue(this)
 }

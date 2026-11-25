@@ -1,6 +1,8 @@
 package org.wordpress.android.util.config
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
@@ -35,11 +37,28 @@ class AppConfig
 
     /**
      * This method triggers refresh of remote configuration.
+     * @return the job fetching the feature flags, for callers that need the fetched values
      */
-    fun refresh(appScope: CoroutineScope) {
-        featureFlagConfig.refresh(appScope)
+    fun refresh(appScope: CoroutineScope): Job {
+        val featureFlagsJob = featureFlagConfig.refresh(appScope)
         remoteFieldConfigRepository.refresh()
+        return featureFlagsJob
     }
+
+    /** Changes each time the feature flags are reloaded from the database. */
+    val featureFlagUpdates: StateFlow<Int> get() = featureFlagConfig.updates
+
+    fun hasLoadedStoredFeatureFlags() = featureFlagConfig.hasLoadedStoredFlags()
+
+    /** Whether a feature flag fetch has completed this process, successfully or not. */
+    fun hasRefreshedFeatureFlags() = featureFlagConfig.hasCompletedRefresh()
+
+    /** Suspends until [init] has loaded the stored feature flags, which happens asynchronously at startup. */
+    suspend fun awaitStoredFeatureFlags() = featureFlagConfig.awaitStoredFlags()
+
+    /** Whether [feature]'s stored value was fetched from the server, rather than being a default. */
+    fun hasFetchedValue(feature: FeatureConfig) =
+        feature.remoteField?.let { featureFlagConfig.isFetchedValue(it) } ?: false
 
     /**
      * Get the enabled state of a feature flag. If the flag is enabled in the BuildConfig file, it overrides the remote
