@@ -1,6 +1,7 @@
 package org.wordpress.android.util.config
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
@@ -35,10 +36,12 @@ class AppConfig
 
     /**
      * This method triggers refresh of remote configuration.
+     * @return the job fetching the feature flags, for callers that need the fetched values
      */
-    fun refresh(appScope: CoroutineScope) {
-        featureFlagConfig.refresh(appScope)
+    fun refresh(appScope: CoroutineScope): Job {
+        val featureFlagsJob = featureFlagConfig.refresh(appScope)
         remoteFieldConfigRepository.refresh()
+        return featureFlagsJob
     }
 
     /**

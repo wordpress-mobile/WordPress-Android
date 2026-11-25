@@ -2,6 +2,7 @@ package org.wordpress.android.util.config
 
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -64,12 +65,11 @@ class FeatureFlagConfig
         }
     }
 
-    fun refresh(appScope: CoroutineScope) {
+    fun refresh(appScope: CoroutineScope): Job =
         appScope.launch {
             fetchRemoteFlags()
             flags = featureFlagStore.getFeatureFlags()
         }
-    }
 
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(

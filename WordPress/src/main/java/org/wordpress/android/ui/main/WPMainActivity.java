@@ -575,6 +575,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
         // Setup Observers
+        // The flag fetched after a WordPress.com sign-in can turn the Reader, and so the bottom nav, on or off
+        mReaderAvailability.getAvailabilityChanged().observe(this, event -> {
+            if (event.getContentIfNotHandled() != null) {
+                setUpMainView();
+                mViewModel.requestMySiteDashboardRefresh();
+            }
+        });
         mViewModel.getAskForPrivacyConsent().observe(this, action -> showPrivacyConsentDialog());
         mViewModel.getShowPrivacySettings().observe(this, action -> showPrivacySettingsScreen());
         mViewModel.getShowPrivacySettingsWithError().observe(this, action -> showPrivacySettingsScreen());

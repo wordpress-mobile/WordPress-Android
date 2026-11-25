@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.reader
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.wordpress.android.BaseUnitTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -15,8 +15,8 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ReaderInWordPressAppFeatureConfig
 
-@RunWith(MockitoJUnitRunner::class)
-class ReaderAvailabilityTest {
+@ExperimentalCoroutinesApi
+class ReaderAvailabilityTest : BaseUnitTest() {
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
@@ -92,6 +92,28 @@ class ReaderAvailabilityTest {
         whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
 
         assertThat(readerAvailability.isReaderAvailable()).isTrue
+    }
+
+    @Test
+    fun `refresh after sign-in replaces the kept value and reports the change`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
+        readerAvailability.isReaderAvailable()
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
+
+        readerAvailability.refreshFlagAfterSignIn()
+
+        assertThat(readerAvailability.isReaderAvailable()).isTrue
+        assertThat(readerAvailability.availabilityChanged.value?.getContentIfNotHandled()).isNotNull
+    }
+
+    @Test
+    fun `refresh after sign-in that doesn't change the value reports nothing`() {
+        setUpWordPressApp(isFlagEnabled = true, hasAccessToken = true)
+        readerAvailability.isReaderAvailable()
+
+        readerAvailability.refreshFlagAfterSignIn()
+
+        assertThat(readerAvailability.availabilityChanged.value).isNull()
     }
 
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
