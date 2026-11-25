@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -161,6 +162,8 @@ class ReaderPostDetailScreenActions(
     val onMoreItemClick: (ReaderPostCardActionType) -> Unit,
     val onSignInClick: () -> Unit,
     val onOpenInBrowserClick: () -> Unit,
+    // switches the post detail to WPFolio's native rendering; null hides the menu item
+    val onUseNativeRenderer: (() -> Unit)? = null,
 )
 
 /**
@@ -293,6 +296,15 @@ private fun TopBar(
                     DropdownMenu(expanded = moreMenuItems != null, onDismissRequest = actions.onMoreDismiss) {
                         moreMenuItems?.forEach { item ->
                             ReaderPostMoreMenuItem(item) { actions.onMoreItemClick(it.type) }
+                        }
+                        actions.onUseNativeRenderer?.let { onUseNative ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.reader_article_use_native_renderer)) },
+                                onClick = {
+                                    actions.onMoreDismiss()
+                                    onUseNative()
+                                },
+                            )
                         }
                     }
                 }

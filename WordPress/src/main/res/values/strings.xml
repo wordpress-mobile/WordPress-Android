@@ -2523,6 +2523,9 @@
     <string name="reader_share_quote_text">“%1$s”\n%2$s</string>
     <string name="reader_article_play_video">Play video</string>
     <string name="reader_article_embedded_content">Embedded content</string>
+    <string name="reader_article_open_original">Open original</string>
+    <string name="reader_article_use_web_renderer">Show with the web view</string>
+    <string name="reader_article_use_native_renderer">Show natively</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original</string>
     <string name="reader_label_subscribers_count">%s subscribers</string>

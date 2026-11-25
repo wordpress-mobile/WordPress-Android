@@ -26,10 +26,14 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.platform.ComposeView
@@ -40,6 +44,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.distinctUntilChanged
@@ -84,6 +89,8 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderPostRenderer.ReaderPostMessageListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
+import org.wordpress.android.ui.reader.accent.readerImageMeta
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.DIRECT_OPERATION
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
@@ -94,6 +101,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
+import org.wordpress.android.ui.reader.utils.ReaderArticleRenderingPreference
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -105,6 +113,11 @@ import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticleImages
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticlePost
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticleScreen
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticleScreenActions
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticleTheme
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailChromeState
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailFooter
 import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailFooterActions
@@ -186,6 +199,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var isAwaitingRenderedPageFinish: Boolean = false
 
     private var isRelatedPost: Boolean = false
+
+    // WPFolio's native rendering: the post it shows, and whether a pull to refresh is running
+    private var isNativeRendering = false
+    private var articlePost by mutableStateOf<ReaderArticlePost?>(null)
+    private var isArticleRefreshing by mutableStateOf(false)
+
+    @Inject
+    lateinit var articleRenderingPreference: ReaderArticleRenderingPreference
 
     private var hasTrackedGlobalRelatedPosts: Boolean = false
     private var hasTrackedLocalRelatedPosts: Boolean = false
@@ -343,15 +364,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // hides the toolbar of NotificationsDetailActivity, which this screen's own top bar replaces
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
 
-        return createRootView(themedContext, theme, themeValues, body = bodyBinding.root)
+        isNativeRendering = articleRenderingPreference.isNative
+        return createRootView(themedContext, readingPreferences, themeValues, body = bodyBinding.root)
     }
 
     private fun createRootView(
         themedContext: Context,
-        theme: ReaderReadingPreferences.Theme,
+        readingPreferences: ReaderReadingPreferences,
         themeValues: ReaderReadingPreferences.ThemeValues,
         body: View,
     ) = ComposeView(themedContext).apply {
+        val theme = readingPreferences.theme
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
             chrome.topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
             insets
@@ -361,6 +384,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             ReaderPostDetailTheme(theme, themeValues) {
                 val uiState by viewModel.uiState.observeAsState()
                 val isPostBlocked by viewModel.postBlocked.observeAsState(false)
+                val detailsState = chrome.currentDetailsState(uiState)
+                val article = articlePost
+                // the native screen once the post is ready; until then, and for errors, the usual chrome
+                if (isNativeRendering && detailsState != null && article != null) {
+                    ReaderArticleTheme(readingPreferences, themeValues) {
+                        NativeArticle(article, detailsState, readingPreferences)
+                    }
+                    return@ReaderPostDetailTheme
+                }
                 ReaderPostDetailScreen(
                     chrome = chrome,
                     uiState = uiState,
@@ -378,6 +410,93 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 )
             }
         }
+    }
+
+    /**
+     * The post drawn natively, as WPFolio does, with the detail's usual footer below the body
+     */
+    @Composable
+    private fun NativeArticle(
+        article: ReaderArticlePost,
+        detailsState: ReaderPostDetailsUiState,
+        readingPreferences: ReaderReadingPreferences,
+    ) {
+        val isLikesEnabled = likesEnhancementsFeatureConfig.isEnabled()
+        val isSnippetEnabled = commentsSnippetFeatureConfig.isEnabled()
+        val lifecycleState by viewLifecycleOwner.lifecycle.currentStateFlow.collectAsState()
+        val accent = readerImageMeta(article.heroSourceUrl)?.accent?.let { Color(it) }
+            ?: Color(ReaderImageAccentSampler.fallbackAccent(article.key))
+        val post = viewModel.post
+        val images = remember(article.key) {
+            ReaderArticleImages(
+                url = { url, widthPx ->
+                    ReaderUtils.getResizedImageUrl(
+                        url, widthPx, 0, post?.isPrivate == true, post?.isPrivateAtomic == true
+                    )
+                },
+                onClick = ::showNativePhoto,
+            )
+        }
+        ReaderArticleScreen(
+            post = article,
+            detailsState = detailsState,
+            accent = accent,
+            topInsetPx = chrome.topInset,
+            // the pager resumes only the page on screen, so a video stops when its post is swiped away
+            isActive = lifecycleState.isAtLeast(Lifecycle.State.RESUMED),
+            isRefreshing = isArticleRefreshing,
+            images = images,
+            actions = articleActions,
+            footer = { Footer(readingPreferences, isLikesEnabled, isSnippetEnabled) },
+        )
+    }
+
+    private val articleActions by lazy {
+        ReaderArticleScreenActions(
+            onBack = screenActions.onNavigationClick,
+            onMoreClick = screenActions.onMoreClick,
+            onMoreDismiss = screenActions.onMoreDismiss,
+            onMoreItemClick = screenActions.onMoreItemClick,
+            onUseWebRenderer = { switchRenderer(isNative = false) },
+            onShare = ::onShareClicked,
+            onRefresh = {
+                isArticleRefreshing = true
+                if (commentsSnippetFeatureConfig.isEnabled()) conversationViewModel.onRefresh()
+                viewModel.onRefreshPost()
+            },
+            onLinkClick = { url -> onUrlClick(url) },
+        )
+    }
+
+    private fun switchRenderer(isNative: Boolean) {
+        articleRenderingPreference.isNative = isNative
+        // every page of the pager redraws with the other renderer
+        requireActivity().recreate()
+    }
+
+    private fun showNativePhoto(imageUrl: String) {
+        readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_IMAGE_TAPPED)
+        val post = viewModel.post ?: return
+        val options = EnumSet.noneOf(PhotoViewerOption::class.java)
+        if (post.isPrivate) options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        // the post's content lets the viewer page through its other images
+        ReaderActivityLauncher.showReaderPhotoViewer(requireActivity(), imageUrl, post.text, null, options, 0, 0)
+    }
+
+    private fun ReaderPost.toArticlePost(): ReaderArticlePost {
+        val featuredImage = featuredImage?.takeIf { hasFeaturedImage() }
+        val heroWidth = resources.displayMetrics.widthPixels
+        return ReaderArticlePost(
+            key = "$blogId:$postId",
+            title = title.orEmpty(),
+            url = url.orEmpty(),
+            html = text.orEmpty(),
+            heroSourceUrl = featuredImage,
+            heroUrl = featuredImage?.let {
+                // uncropped, so the hero crops it to its own shape
+                ReaderUtils.getResizedImageUrl(it, heroWidth, 0, isPrivate, isPrivateAtomic)
+            },
+        )
     }
 
     @Composable
@@ -471,6 +590,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         onMoreDismiss = { viewModel.onMoreMenuDismissed() },
         onMoreItemClick = { type -> viewModel.onMoreMenuItemClicked(type) },
         onSignInClick = ::signIn,
+        onUseNativeRenderer = { switchRenderer(isNative = true) },
         onOpenInBrowserClick = {
             viewModel.interceptedUri?.let { uri ->
                 readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, uri)
@@ -1097,6 +1217,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun onPostRefreshed(refreshed: PostRefreshed) {
         swipeToRefreshHelper.isRefreshing = false
+        isArticleRefreshing = false
         val post = refreshed.post ?: return
         if (commentsSnippetFeatureConfig.isEnabled()) {
             conversationViewModel.onUpdatePost(post.blogId, post.postId)
@@ -1320,6 +1441,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun showPostInWebView(post: ReaderPost) {
+        if (isNativeRendering) {
+            // drawn natively instead: the WebView stays out of the screen and never loads the post
+            articlePost = post.toArticlePost()
+            isArticleRefreshing = false
+            chrome.hasWebViewContent = true
+            readerProgressBar.visibility = View.GONE
+            return
+        }
         readerWebView.isPrivatePost = post.isPrivate
         readerWebView.blogSchemeIsHttps = UrlUtils.isHttps(post.blogUrl)
         // Watch for the body painting from here rather than from onPageFinished. The backstop is
