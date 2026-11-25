@@ -12,6 +12,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ReaderInWordPressAppFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
@@ -65,10 +66,21 @@ class ReaderAvailabilityTest {
         setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
         readerAvailability.isReaderAvailable()
 
-        whenever(featureConfig.isEnabled()).thenReturn(true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
 
         assertThat(readerAvailability.isReaderAvailable()).isFalse
-        verify(featureConfig, times(1)).isEnabled()
+        verify(featureConfig, times(1)).featureState()
+    }
+
+    @Test
+    fun `default value returned before the stored flags load is not kept`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.DefaultValue(false))
+        readerAvailability.isReaderAvailable()
+
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
+
+        assertThat(readerAvailability.isReaderAvailable()).isTrue
     }
 
     @Test
@@ -79,7 +91,7 @@ class ReaderAvailabilityTest {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         readerAvailability.isReaderAvailable()
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(featureConfig.isEnabled()).thenReturn(true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
 
         assertThat(readerAvailability.isReaderAvailable()).isTrue
     }
@@ -87,7 +99,7 @@ class ReaderAvailabilityTest {
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         // Not reached without a WordPress.com account
-        lenient().whenever(featureConfig.isEnabled()).thenReturn(isFlagEnabled)
+        lenient().whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(isFlagEnabled))
         whenever(accountStore.hasAccessToken()).thenReturn(hasAccessToken)
     }
 }

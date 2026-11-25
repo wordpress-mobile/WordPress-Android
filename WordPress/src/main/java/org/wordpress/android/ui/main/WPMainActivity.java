@@ -22,6 +22,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -1387,8 +1388,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        // Signing in to or out of WordPress.com can change whether the Reader, and so the bottom nav, is available
-        setUpMainView();
+        // Signing in to or out of WordPress.com can change whether the Reader, and so the bottom nav, is available.
+        // Events also arrive while stopped, when switching pages would commit after onSaveInstanceState; onResume
+        // calls setUpMainView() in that case.
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            setUpMainView();
+        }
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             if (mBottomNav != null) {

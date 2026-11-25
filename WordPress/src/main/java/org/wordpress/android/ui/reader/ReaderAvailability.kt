@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.config.AppConfig.FeatureState
 import org.wordpress.android.util.config.ReaderInWordPressAppFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +14,8 @@ import javax.inject.Singleton
  *
  * The flag is read on the first check made while signed in to WordPress.com and then kept, so a value
  * fetched mid-session never changes the nav under the user. Signing out forgets it, so the next sign-in
- * reads it afresh.
+ * reads it afresh. Only a stored or manually set value is kept: at cold start the stored flags load
+ * asynchronously, and the default returned before then mustn't stick for the session.
  */
 @Singleton
 class ReaderAvailability @Inject constructor(
@@ -30,6 +32,11 @@ class ReaderAvailability @Inject constructor(
             cachedFlag = null
             return false
         }
-        return cachedFlag ?: readerInWordPressAppFeatureConfig.isEnabled().also { cachedFlag = it }
+        cachedFlag?.let { return it }
+        val state = readerInWordPressAppFeatureConfig.featureState()
+        if (state is FeatureState.RemoteValue || state is FeatureState.ManuallyOverriden) {
+            cachedFlag = state.isEnabled
+        }
+        return state.isEnabled
     }
 }

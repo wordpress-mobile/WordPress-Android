@@ -342,9 +342,12 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        if (hasSingleTabNav)
-            AppPrefs.setMainPageIndex(0)
-        else AppPrefs.setMainPageIndex(position)
+        when {
+            hasSingleTabNav -> AppPrefs.setMainPageIndex(0)
+            // Don't reopen the app on the WordPress app's Notifications tab, which only points to Jetpack
+            !hasRealNotifications && position == getPosition(NOTIFS) -> Unit
+            else -> AppPrefs.setMainPageIndex(position)
+        }
 
         // temporarily disable the nav listeners so they don't fire when we change the selected page
         assignNavigationListeners(false)
