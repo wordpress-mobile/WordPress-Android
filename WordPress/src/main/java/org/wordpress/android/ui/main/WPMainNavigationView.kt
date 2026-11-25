@@ -93,11 +93,11 @@ class WPMainNavigationView @JvmOverloads constructor(
     @Inject
     lateinit var readerAvailability: ReaderAvailability
 
-    /**
-     * Without the Reader (the WordPress app, unless the user is signed in to WordPress.com and the flag is on)
-     * the bottom nav is hidden and My Site is the only page.
-     */
+    /** Without the Reader the bottom nav is hidden and My Site is the only page; see [ReaderAvailability]. */
     private val hasSingleTabNav get() = !readerAvailability.isReaderAvailable()
+
+    /** The WordPress app's Notifications tab only points to the Jetpack app. */
+    private val hasRealNotifications get() = buildConfigWrapper.isJetpackApp
 
     private var currentPosition: Int
         get() = getPositionForItemId(navigationBarView.selectedItemId)
@@ -459,8 +459,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     fun showNoteBadge(showBadge: Boolean) {
-        // The WordPress app's Notifications tab only points to Jetpack, so there's nothing to badge
-        if (!buildConfigWrapper.isJetpackApp) return
+        if (!hasRealNotifications) return
         showBadge(getPosition(NOTIFS), showBadge)
     }
 
@@ -499,7 +498,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
-                NOTIFS -> if (buildConfigWrapper.isJetpackApp) {
+                NOTIFS -> if (hasRealNotifications) {
                     NotificationsListFragment.newInstance()
                 } else {
                     NotificationsInJetpackFragment.newInstance()

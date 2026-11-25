@@ -61,7 +61,7 @@ class ReaderAvailabilityTest {
     }
 
     @Test
-    fun `flag is read once, so a value fetched mid-session doesn't change availability`() {
+    fun `flag is read once while signed in, so a value fetched mid-session doesn't change availability`() {
         setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
         readerAvailability.isReaderAvailable()
 
@@ -72,20 +72,22 @@ class ReaderAvailabilityTest {
     }
 
     @Test
-    fun `flag is re-read after a sign-in`() {
+    fun `flag is re-read on the next sign-in after signing out`() {
         setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
         readerAvailability.isReaderAvailable()
 
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        readerAvailability.isReaderAvailable()
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(featureConfig.isEnabled()).thenReturn(true)
-        readerAvailability.refreshFlagAfterSignIn()
 
         assertThat(readerAvailability.isReaderAvailable()).isTrue
     }
 
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(featureConfig.isEnabled()).thenReturn(isFlagEnabled)
-        // Not reached when the flag is off
-        lenient().whenever(accountStore.hasAccessToken()).thenReturn(hasAccessToken)
+        // Not reached without a WordPress.com account
+        lenient().whenever(featureConfig.isEnabled()).thenReturn(isFlagEnabled)
+        whenever(accountStore.hasAccessToken()).thenReturn(hasAccessToken)
     }
 }

@@ -200,8 +200,7 @@ class SiteListItemBuilder @Inject constructor(
      * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
      * capabilities deliberately play no part here.
      *
-     * The nav is shown only when the Reader is available: always in the Jetpack app, and in the
-     * WordPress app for WordPress.com users when the Reader flag is on.
+     * The nav is shown only when the Reader is available; see [ReaderAvailability].
      */
     fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
         return if (!readerAvailability.isReaderAvailable()) {

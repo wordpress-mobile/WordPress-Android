@@ -473,10 +473,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
 
-    /**
-     * The bottom nav is shown only when the Reader is available, so it can appear or disappear when the user
-     * signs in to or out of WordPress.com in the WordPress app.
-     */
+    /** The bottom nav is shown only when the Reader is available; see {@link ReaderAvailability}. */
     private void setUpMainView() {
         if (mBottomNav == null) {
             return;
@@ -1265,8 +1262,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
-                    // A WordPress.com sign-in may show the Reader, so pick up any flag value fetched since launch
-                    mReaderAvailability.refreshFlagAfterSignIn();
                     // Register for Cloud messaging
                     startWithNewAccount();
                     setSite(data);

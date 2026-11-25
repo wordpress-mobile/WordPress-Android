@@ -127,7 +127,6 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given wordpress app with the Reader available, verify draft actions include read`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(readerAvailability.isReaderAvailable()).thenReturn(true)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_DRAFT)
