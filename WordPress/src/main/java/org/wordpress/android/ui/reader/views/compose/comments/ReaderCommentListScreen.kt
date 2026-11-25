@@ -106,6 +106,7 @@ private val COMMENT_AVATAR_SIZE = 32.dp
 // the text sits under the name, past the avatar and its gap
 private val COMMENT_TEXT_INSET = COMMENT_AVATAR_SIZE + 12.dp
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReaderCommentListScreen(

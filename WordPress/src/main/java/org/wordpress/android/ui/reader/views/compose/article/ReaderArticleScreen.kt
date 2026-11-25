@@ -65,6 +65,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -321,7 +322,7 @@ private fun Header(post: ReaderArticlePost?, detailsState: ReaderPostDetailsUiSt
         if (colors.isDark) {
             Text(
                 listOfNotNull(blogName.ifEmpty { null }, readingTime).joinToString(" · ")
-                    .uppercase(Locale.getDefault()),
+                    .uppercase(LocalConfiguration.current.locales[0]),
                 style = ui(12f, 600, tracking = 0.06f),
                 color = colors.bodyMuted,
                 modifier = siteModifier,

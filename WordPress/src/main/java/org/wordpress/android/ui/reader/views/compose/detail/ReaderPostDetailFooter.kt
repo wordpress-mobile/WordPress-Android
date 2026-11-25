@@ -84,6 +84,7 @@ import org.wordpress.android.util.image.ImageType
 private const val RELATED_POST_MAX_LINES = 3
 private const val RELATED_POST_IMAGE_RATIO = 16f / 9f
 
+@Suppress("LongParameterList")
 class ReaderPostDetailFooterActions(
     val onExcerptFooterClick: (String) -> Unit,
     val onLikesClick: () -> Unit,

@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.core.database.sqlite.transaction
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,9 +45,7 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
     fun putAll(entries: Map<String, ReaderImageMeta>) {
         if (entries.isEmpty()) return
         ensureLoaded()
-        val db = helper.writableDatabase
-        db.beginTransaction()
-        try {
+        helper.writableDatabase.transaction {
             entries.forEach { (url, meta) ->
                 val values = ContentValues().apply {
                     put(COLUMN_URL, url)
@@ -54,11 +53,8 @@ class ReaderImageMetaStore @Inject constructor(@ApplicationContext context: Cont
                     put(COLUMN_RATIO, meta.ratio)
                     put(COLUMN_SAMPLED_AT, meta.sampledAt)
                 }
-                db.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
         _meta.update { it + entries }
     }

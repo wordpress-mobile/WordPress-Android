@@ -235,7 +235,6 @@ class ReaderSubsViewModel @Inject constructor(
         // the screen went before the snackbar did
         pendingUnfollows.values.forEach(::unfollow)
         pendingUnfollows.clear()
-        super.onCleared()
     }
 
     fun onEntryChanged(entry: String) = setEntry(entry.take(MAX_ENTRY_LENGTH))

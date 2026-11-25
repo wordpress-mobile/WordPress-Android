@@ -749,10 +749,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * related post, or the last page.
      */
     fun getNextPostIds(blogId: Long, postId: Long): ReaderBlogIdPostId? {
-        if (isSinglePostView || isRelatedPostView) return null
-        val adapter = pagerAdapter ?: return null
-        val position = adapter.indexOf(blogId, postId)
-        return if (position >= 0) adapter.getBlogIdPostIdAtPosition(position + 1) else null
+        val adapter = pagerAdapter.takeUnless { isSinglePostView || isRelatedPostView }
+        val position = adapter?.indexOf(blogId, postId) ?: -1
+        return if (position >= 0) adapter?.getBlogIdPostIdAtPosition(position + 1) else null
     }
 
     /** Pages to the next post, as a swipe would */

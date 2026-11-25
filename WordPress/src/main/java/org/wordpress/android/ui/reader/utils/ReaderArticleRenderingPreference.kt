@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class ReaderArticleRenderingPreference @Inject constructor(@ApplicationContext c
 
     var isNative: Boolean
         get() = prefs.getBoolean(KEY_NATIVE_RENDERING, true)
-        set(value) = prefs.edit().putBoolean(KEY_NATIVE_RENDERING, value).apply()
+        set(value) = prefs.edit { putBoolean(KEY_NATIVE_RENDERING, value) }
 
     companion object {
         private const val KEY_NATIVE_RENDERING = "reader_native_post_rendering"

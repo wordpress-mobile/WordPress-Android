@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.views.compose.article
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.RenderProcessGoneDetail
@@ -49,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
 import androidx.core.text.htmlEncode
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -312,7 +312,7 @@ internal fun ReaderArticleEmbedCard(embed: ReaderArticleBlock.Embed) {
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                Uri.parse(embed.url).host.orEmpty().removePrefix("www."),
+                embed.url.toUri().host.orEmpty().removePrefix("www."),
                 style = ui(12.5f, 500),
                 color = colors.textSecondary,
                 maxLines = 1,

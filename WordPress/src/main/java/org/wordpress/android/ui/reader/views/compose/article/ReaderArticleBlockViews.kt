@@ -34,7 +34,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,17 +56,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.wordpress.android.ui.reader.views.compose.readableWidth
-
-/**
- * How the post's images are loaded and opened: [url] sizes an image's URL for a width in pixels (Photon, and the
- * private-post rules), and [onClick] opens it in the photo viewer
- */
-class ReaderArticleImages(
-    val url: (url: String, widthPx: Int) -> String = { url, _ -> url },
-    val onClick: (url: String) -> Unit = {},
-)
-
-internal val LocalReaderArticleImages = staticCompositionLocalOf { ReaderArticleImages() }
 
 private val TEXT_PADDING = 22.dp
 private val MEDIA_PADDING = 14.dp
@@ -126,7 +114,7 @@ internal fun ReaderArticleBlockView(block: ReaderArticleBlock, accent: Color, is
             block.caption?.let { Caption(it) }
         }
         is ReaderArticleBlock.Gallery -> Gallery(block, accent)
-        is ReaderArticleBlock.Quote -> Quote(block, accent, links, padded)
+        is ReaderArticleBlock.Quote -> Quote(block, accent, links, modifier = padded)
         is ReaderArticleBlock.Table -> Column(
             Modifier
                 .fillMaxWidth()
@@ -200,11 +188,16 @@ private fun ArticleImage(block: ReaderArticleBlock.Image, accent: Color, modifie
 }
 
 @Composable
-private fun Quote(block: ReaderArticleBlock.Quote, accent: Color, links: TextLinkStyles, padded: Modifier) {
+private fun Quote(
+    block: ReaderArticleBlock.Quote,
+    accent: Color,
+    links: TextLinkStyles,
+    modifier: Modifier = Modifier,
+) {
     val colors = articleColors
     if (block.pull) {
         // a pullquote stands apart: centred and larger, under a short accent rule
-        Column(padded.padding(vertical = 14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier.padding(vertical = 14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
                 Modifier
                     .width(40.dp)
@@ -223,7 +216,7 @@ private fun Quote(block: ReaderArticleBlock.Quote, accent: Color, links: TextLin
         }
     } else {
         Row(
-            padded
+            modifier
                 .padding(vertical = 4.dp)
                 .height(IntrinsicSize.Min)
         ) {

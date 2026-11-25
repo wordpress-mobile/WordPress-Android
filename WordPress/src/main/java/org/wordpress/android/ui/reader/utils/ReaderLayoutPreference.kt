@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,7 @@ class ReaderLayoutPreference @Inject constructor(@ApplicationContext context: Co
 
     fun toggle() {
         val isGallery = !_isGallery.value
-        prefs.edit().putBoolean(KEY_GALLERY_LAYOUT, isGallery).apply()
+        prefs.edit { putBoolean(KEY_GALLERY_LAYOUT, isGallery) }
         _isGallery.value = isGallery
     }
 

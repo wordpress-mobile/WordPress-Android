@@ -79,6 +79,7 @@ object ReaderVideoLinks {
     private val VIDEOPRESS = Regex("""(?:video\.wordpress\.com|videopress\.com)/(?:embed|v)/([A-Za-z0-9]+)""")
     private val FILE = Regex("""\.(?:mp4|m4v|webm|mov)(?:[?#]|$)""", RegexOption.IGNORE_CASE)
 
+    @Suppress("ReturnCount")
     fun parse(
         url: String,
         poster: String? = null,
@@ -145,6 +146,7 @@ object ReaderArticleBlocks {
      * Whether [blocks] look like an excerpt rather than the whole post: nothing at all, or text that trails off
      * with an ellipsis or a "read more" link
      */
+    @Suppress("ReturnCount")
     fun looksLikeExcerpt(blocks: List<ReaderArticleBlock>): Boolean {
         if (blocks.isEmpty()) return true
         val last = blocks.last() as? ReaderArticleBlock.Paragraph ?: return false
@@ -222,7 +224,7 @@ object ReaderArticleBlocks {
         flush()
     }
 
-    @Suppress("CyclomaticComplexMethod", "LongMethod", "NestedBlockDepth")
+    @Suppress("CyclomaticComplexMethod", "LongMethod", "NestedBlockDepth", "ReturnCount")
     private fun block(el: Element, out: MutableList<ReaderArticleBlock>, depth: Int) {
         if (el.classNames().any { it in GALLERIES }) return gallery(el, out)
         if (el.hasClass("wp-block-buttons") || el.hasClass("wp-block-button")) return buttons(el, out)
@@ -331,6 +333,7 @@ object ReaderArticleBlocks {
         return ReaderArticleBlock.Table(rows, headerRows, caption)
     }
 
+    @Suppress("ReturnCount")
     private fun media(el: Element): ReaderArticleBlock? {
         // zero- and one-pixel frames are trackers, not content
         if (listOf(el.attr("width"), el.attr("height")).any { it == "0" || it == "1" }) return null
@@ -350,6 +353,7 @@ object ReaderArticleBlocks {
         }
     }
 
+    @Suppress("ReturnCount")
     private fun image(img: Element, caption: String?): ReaderArticleBlock.Image? {
         val (attr, src) = listOf("data-orig-file", "data-src", "data-lazy-src", "src")
             .map { it to img.absUrl(it) }

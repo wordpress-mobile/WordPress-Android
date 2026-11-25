@@ -892,14 +892,12 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     }
 
     override fun onScrollToTop() {
-        if (isGalleryShown) {
-            val gridState = gridState ?: return
+        val gridState = gridState
+        val listState = listState
+        // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
+        if (isGalleryShown && gridState != null) {
             viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { gridState.animateScrollToItem(0) }
-            return
-        }
-        val listState = listState ?: return
-        if (listState.firstVisibleItemIndex > 0) {
-            // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
+        } else if (!isGalleryShown && listState != null && listState.firstVisibleItemIndex > 0) {
             viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { listState.animateScrollToItem(0) }
         }
     }
