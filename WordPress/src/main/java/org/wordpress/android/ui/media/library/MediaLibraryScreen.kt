@@ -54,10 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.FeatureTip
-import org.wordpress.android.ui.compose.components.FeatureTipPosition
 import org.wordpress.android.ui.compose.components.FilterChipTabRow
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.rs.contentlist.ContentListConfirmationDialog
 import org.wordpress.android.ui.rs.contentlist.ContentListDefaults
 import org.wordpress.android.ui.rs.contentlist.ContentListMessageColumn
@@ -290,15 +287,8 @@ private fun MainTopBar(
             }
         },
         actions = {
-            // TODO: Temporary FeatureTip on the search icon
-            FeatureTip(
-                prefKey = AppPrefs.UndeletablePrefKey.FEATURE_TIP_MEDIA_REDESIGN_SHOWN,
-                text = "Search your media library",
-                anchorPosition = FeatureTipPosition.Below,
-            ) {
-                IconButton(onClick = onSearchClick) {
-                    Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search))
-                }
+            IconButton(onClick = onSearchClick) {
+                Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search))
             }
             if (canUpload) {
                 AddMediaMenu(addMediaOptions, onAddMediaOptionClick) { onClick ->

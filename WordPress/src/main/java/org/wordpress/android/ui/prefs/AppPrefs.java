@@ -238,8 +238,6 @@ public class AppPrefs {
      * independent prefs.
      */
     public enum UndeletablePrefKey implements PrefKey {
-        // TODO: Temporary FeatureTip on the media library search icon
-        FEATURE_TIP_MEDIA_REDESIGN_SHOWN,
         // Theme image size retrieval
         THEME_IMAGE_SIZE_WIDTH,
 
