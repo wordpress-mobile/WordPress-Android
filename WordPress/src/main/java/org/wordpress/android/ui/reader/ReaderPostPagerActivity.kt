@@ -201,6 +201,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var readerAvailability: ReaderAvailability
 
+    private var isWaitingForReaderAvailability = false
+
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
 
@@ -700,15 +702,16 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
                         == intent.action)
             ) {
-                // At cold start the stored flags may still be loading; deciding on a default would bounce
-                // the link to the Jetpack overlay even when this app has the Reader
-                readerAvailability.whenStoredFlagsLoaded(this) {
-                    // STARTED, not RESUMED: during onResume() itself the lifecycle hasn't reached RESUMED yet.
-                    // If stopped by the time the flags load, the next onResume() handles the link instead.
-                    val isStarted = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
-                    if (isStarted && (!hasPagerAdapter() || backFromLogin)) {
-                        handleDeepLinking()
-                        openPosts()
+                // At cold start whether this app has the Reader may not be known yet; deciding on a default would
+                // bounce the link to the Jetpack overlay
+                if (!isWaitingForReaderAvailability) {
+                    isWaitingForReaderAvailability = true
+                    readerAvailability.whenAvailabilityKnown(this) {
+                        isWaitingForReaderAvailability = false
+                        if (!hasPagerAdapter() || backFromLogin) {
+                            handleDeepLinking()
+                            openPosts()
+                        }
                     }
                 }
             } else {

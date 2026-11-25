@@ -4,8 +4,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withStarted
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.util.BuildConfigWrapper
@@ -79,17 +82,31 @@ class ReaderAvailability @Inject constructor(
     }
 
     /**
-     * Runs [action] on the main thread once the stored flags have loaded, or right away if they have. For
-     * one-off decisions such as where a deep link goes, which mustn't be made on a default at cold start.
+     * Runs [action] right away if availability is known, otherwise on the main thread once it is and [owner]
+     * is started. For one-off decisions such as where a Reader deep link goes, which mustn't be made on a
+     * default: at cold start the stored flags may still be loading, and if the server only just added the
+     * flag there's no fetched value until this launch's refresh lands, so that's given [FETCH_WAIT_MS].
      */
-    fun whenStoredFlagsLoaded(owner: LifecycleOwner, action: Runnable) {
-        if (buildConfigWrapper.isJetpackApp || appConfig.hasLoadedStoredFeatureFlags()) {
+    fun whenAvailabilityKnown(owner: LifecycleOwner, action: Runnable) {
+        if (isAvailabilityKnown()) {
             action.run()
-        } else {
-            owner.lifecycleScope.launch {
-                appConfig.awaitStoredFeatureFlags()
-                action.run()
+            return
+        }
+        owner.lifecycleScope.launch {
+            appConfig.awaitStoredFeatureFlags()
+            withTimeoutOrNull(FETCH_WAIT_MS) {
+                appConfig.featureFlagUpdates.first { isAvailabilityKnown() }
             }
+            owner.withStarted { action.run() }
+        }
+    }
+
+    private fun isAvailabilityKnown(): Boolean = when {
+        buildConfigWrapper.isJetpackApp || !accountStore.hasAccessToken() -> true
+        !appConfig.hasLoadedStoredFeatureFlags() -> false
+        else -> {
+            isReaderAvailable() // keeps the value if it was fetched or set manually
+            cachedFlag != null
         }
     }
 
@@ -108,5 +125,9 @@ class ReaderAvailability @Inject constructor(
             cachedFlag = state.isEnabled
         }
         return state.isEnabled
+    }
+
+    companion object {
+        private const val FETCH_WAIT_MS = 2000L
     }
 }

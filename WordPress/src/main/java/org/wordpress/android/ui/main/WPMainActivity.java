@@ -752,9 +752,20 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void handleOpenPageIntent(@NonNull Intent intent) {
-        // At cold start the stored flags may still be loading, so wait for them before deciding whether the
-        // Reader (and its tab) exists, rather than sending a Reader link to the Jetpack overlay on a default
-        mReaderAvailability.whenStoredFlagsLoaded(this, () -> openPageFromIntent(intent));
+        String page = intent.getStringExtra(ARG_OPEN_PAGE);
+        if (!ARG_READER.equals(page) && !ARG_NOTIFICATIONS.equals(page)) {
+            openPageFromIntent(intent);
+            return;
+        }
+        // These depend on whether the Reader (and so its tab) exists, which at cold start may not be known yet;
+        // deciding on a default would send the link to the Jetpack overlay
+        mReaderAvailability.whenAvailabilityKnown(this, () -> {
+            openPageFromIntent(intent);
+            // A deferred switch lands after onResume, so the FAB state must follow the page it switched to
+            if (mViewModel != null && mBottomNav != null) {
+                mViewModel.onPageChanged(getSelectedSite(), mSiteStore.hasSite(), mBottomNav.getCurrentSelectedPage());
+            }
+        });
     }
 
     private void openPageFromIntent(@NonNull Intent intent) {

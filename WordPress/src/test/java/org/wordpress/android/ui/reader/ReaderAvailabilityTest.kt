@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -179,6 +180,17 @@ class ReaderAvailabilityTest : BaseUnitTest() {
 
         assertThat(readerAvailability.availabilityChanged.value?.getContentIfNotHandled()).isNotNull
         assertThat(readerAvailability.isReaderAvailable()).isTrue
+    }
+
+    @Test
+    fun `availability-dependent action runs right away once a fetched value is known`() {
+        setUpWordPressApp(isFlagEnabled = true, hasAccessToken = true)
+        whenever(appConfig.hasLoadedStoredFeatureFlags()).thenReturn(true)
+        var ran = false
+
+        readerAvailability.whenAvailabilityKnown(mock()) { ran = true }
+
+        assertThat(ran).isTrue
     }
 
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
