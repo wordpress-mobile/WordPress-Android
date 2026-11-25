@@ -111,6 +111,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),
             moreMenuItems = moreMenuItems,
+            isSeen = post.isSeenSupported && post.isSeen,
             onItemClicked = onItemClicked,
             onItemRendered = onItemRendered,
             onMoreButtonClicked = onMoreButtonClicked,

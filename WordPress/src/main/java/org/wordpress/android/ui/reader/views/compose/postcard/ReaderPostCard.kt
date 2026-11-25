@@ -98,7 +98,11 @@ fun ReaderPostCard(
                 modifier = Modifier.padding(top = Margin.Medium.value),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = if (uiState.isSeen) {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
                 maxLines = TEXT_MAX_LINES,
                 overflow = TextOverflow.Ellipsis,
             )

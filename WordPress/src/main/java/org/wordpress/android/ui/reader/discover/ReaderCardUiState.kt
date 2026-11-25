@@ -32,6 +32,8 @@ sealed class ReaderCardUiState {
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
+        // read already, so the card dims its title
+        val isSeen: Boolean = false,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderPostUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,

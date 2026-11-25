@@ -282,6 +282,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     }
                 }
                 is PostSeenStateChanged -> {
+                    // re-render the card, which dims the title of a seen post
+                    _refreshPosts.postValue(Event(Unit))
                     state.userMessage?.let {
                         _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder(it))
