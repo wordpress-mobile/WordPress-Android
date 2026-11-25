@@ -10,13 +10,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Whether the Subscriptions feed and site previews show posts as a gallery (an image grid) rather than a list.
- * Observable, so an open feed switches as soon as the Reader's top bar toggles it.
+ * Whether the Reader's feeds and site previews show posts as a gallery (an image grid) rather than a list. The
+ * gallery is the default. Observable, so an open feed switches as soon as the Reader's top bar toggles it.
  */
 @Singleton
 class ReaderLayoutPreference @Inject constructor(@ApplicationContext context: Context) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    private val _isGallery = MutableStateFlow(prefs.getBoolean(KEY_GALLERY_LAYOUT, false))
+    private val _isGallery = MutableStateFlow(prefs.getBoolean(KEY_GALLERY_LAYOUT, true))
     val isGallery: StateFlow<Boolean> = _isGallery.asStateFlow()
 
     fun toggle() {
