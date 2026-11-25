@@ -125,7 +125,12 @@ private fun PostList(
         canLoadMore = hasPosts,
         onLoadMore = actions.onLoadMore
     )
-    KeepTopInViewOnPrepend(listState, items.firstOrNull()?.key, uiState.scrollToPosition)
+    KeepTopInViewOnPrepend(
+        firstKey = items.firstOrNull()?.key,
+        scrollToPosition = uiState.scrollToPosition,
+        isAtTop = { listState.firstVisibleItemIndex == 0 },
+        scrollToTop = { listState.requestScrollToItem(0) },
+    )
     PendingScroll(uiState.scrollToPosition, actions.onScrollHandled) { listState.requestScrollToItem(it) }
     ReportFirstItemVisibility(listState, { listState.firstVisibleItemIndex == 0 }, actions.onFirstItemVisibilityChanged)
 }
@@ -168,20 +173,26 @@ private fun PostListRow(item: ReaderPostListItem, actions: ReaderPostListActions
 }
 
 /**
- * A keyed LazyColumn stays anchored on its first row when rows are added above it, so newer posts would
- * land above the screen - keep the top in view instead, as the RecyclerView did
+ * A keyed lazy list or grid stays anchored on its first row when rows are added above it, so newer posts (or a
+ * site's header, which arrives after its posts) would land above the screen - keep the top in view instead, as the
+ * RecyclerView did. [isAtTop] and [scrollToTop] work on the list or grid showing the posts.
  */
 @Composable
-private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, scrollToPosition: Int?) {
+internal fun KeepTopInViewOnPrepend(
+    firstKey: String?,
+    scrollToPosition: Int?,
+    isAtTop: () -> Boolean,
+    scrollToTop: () -> Unit,
+) {
     val previousFirstKey = remember { PreviousKey() }
     // runs before this frame's measure, so the list still reports the position from before the change
     SideEffect {
         val previous = previousFirstKey.value
         previousFirstKey.value = firstKey
         val isFirstKeyChanged = previous != null && firstKey != previous
-        val wasAtTop = scrollToPosition == null && listState.firstVisibleItemIndex == 0
+        val wasAtTop = scrollToPosition == null && isAtTop()
         if (isFirstKeyChanged && wasAtTop) {
-            listState.requestScrollToItem(0)
+            scrollToTop()
         }
     }
 }

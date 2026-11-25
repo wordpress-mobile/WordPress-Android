@@ -171,6 +171,12 @@ private fun GalleryGrid(
         canLoadMore = hasPosts && canLoadMore,
         onLoadMore = actions.onLoadMore
     )
+    KeepTopInViewOnPrepend(
+        firstKey = items.firstOrNull()?.key,
+        scrollToPosition = uiState.scrollToPosition,
+        isAtTop = { gridState.firstVisibleItemIndex == 0 },
+        scrollToTop = { gridState.requestScrollToItem(0) },
+    )
     PendingScroll(uiState.scrollToPosition, actions.onScrollHandled) { gridState.requestScrollToItem(it) }
     ReportFirstItemVisibility(gridState, { gridState.firstVisibleItemIndex == 0 }, actions.onFirstItemVisibilityChanged)
 }

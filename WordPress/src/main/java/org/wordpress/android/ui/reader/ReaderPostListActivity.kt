@@ -174,7 +174,10 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
                             }
                         }
                     },
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
+                    // BaseAppCompatActivity has already padded the window for the status bar, so the bar mustn't
+                    // add it again
+                    windowInsets = WindowInsets(0)
                 )
             }
         ) { contentPadding ->
