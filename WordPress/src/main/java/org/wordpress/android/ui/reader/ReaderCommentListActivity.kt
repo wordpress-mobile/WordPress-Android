@@ -5,13 +5,22 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.Lifecycle
@@ -79,6 +88,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
 
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
 
+    // hides the sheet, then finishes; set once the sheet is composed
+    private var hideSheet: (() -> Unit)? = null
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         // so the bars draw behind the system bars, and the keyboard's insets reach Compose on every API level
         enableEdgeToEdge()
@@ -89,7 +102,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         observeEvents()
 
         val actions = ReaderCommentListActions(
-            onBack = ::finish,
+            onBack = { hideSheet?.invoke() ?: finish() },
             onRefresh = {
                 conversationViewModel.onRefresh()
                 viewModel.onRefresh()
@@ -117,13 +130,28 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
             val uiState by viewModel.uiState.collectAsState()
             val followState by conversationViewModel.updateFollowUiState.observeAsState()
             ReaderArticleMaterialTheme {
-                ReaderCommentListScreen(
-                    uiState = uiState,
-                    followState = followState,
-                    replyText = replyText.value,
-                    actions = actions,
-                    snackbarHostState = snackbarHostState
-                )
+                // a tall sheet over the post, as WPFolio shows comments; closing it closes the screen
+                val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                val scope = rememberCoroutineScope()
+                hideSheet = { scope.launch { sheetState.hide() }.invokeOnCompletion { finish() } }
+                ModalBottomSheet(
+                    onDismissRequest = ::finish,
+                    sheetState = sheetState,
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    // the screen insets its own composer
+                    contentWindowInsets = { WindowInsets(0) },
+                ) {
+                    Box(Modifier.fillMaxHeight(SHEET_HEIGHT_FRACTION)) {
+                        ReaderCommentListScreen(
+                            uiState = uiState,
+                            followState = followState,
+                            replyText = replyText.value,
+                            actions = actions,
+                            snackbarHostState = snackbarHostState,
+                            isSheet = true,
+                        )
+                    }
+                }
             }
         }
     }
@@ -319,3 +347,5 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
     }
 }
+
+private const val SHEET_HEIGHT_FRACTION = 0.92f

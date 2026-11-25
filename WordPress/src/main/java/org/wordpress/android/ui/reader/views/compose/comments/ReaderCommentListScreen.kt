@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,12 +45,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -110,7 +113,9 @@ fun ReaderCommentListScreen(
     followState: FollowConversationUiState?,
     replyText: TextFieldValue,
     actions: ReaderCommentListActions,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    // shown in a bottom sheet, which has no status bar above it and is closed by dragging it away
+    isSheet: Boolean = false,
 ) {
     // hoisted so the list keeps its position while a comment's detail replaces it
     val listState = rememberLazyListState()
@@ -118,8 +123,10 @@ fun ReaderCommentListScreen(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     BackHandler(enabled = detail != null, onBack = actions.onDetailBack)
     Scaffold(
+        contentWindowInsets = if (isSheet) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
         topBar = {
             TopAppBar(
+                windowInsets = if (isSheet) WindowInsets(0) else TopAppBarDefaults.windowInsets,
                 title = {
                     Text(
                         stringResource(if (detail != null) R.string.comment else R.string.reader_title_comments),
@@ -127,8 +134,14 @@ fun ReaderCommentListScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = if (detail != null) actions.onDetailBack else actions.onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                    // a sheet closes by dragging it down, so it only needs back from a single comment
+                    if (!isSheet || detail != null) {
+                        IconButton(onClick = if (detail != null) actions.onDetailBack else actions.onBack) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
                 },
                 actions = { followState?.let { FollowConversationActions(it) } }

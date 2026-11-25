@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
 private const val WEIGHT_REGULAR = 400
@@ -191,7 +191,7 @@ internal const val BODY_SIZE = 17f
  */
 @Composable
 fun ReaderArticleMaterialTheme(content: @Composable () -> Unit) {
-    AppThemeM3 {
+    AppThemeM3WithoutBackground {
         val isDark = isSystemInDarkTheme()
         val colors = if (isDark) DarkColors else LightColors
         val baseScheme = MaterialTheme.colorScheme
