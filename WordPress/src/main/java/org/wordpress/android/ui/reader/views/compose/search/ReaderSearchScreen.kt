@@ -64,6 +64,7 @@ import org.wordpress.android.ui.reader.views.compose.ReaderSiteRow
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchContent
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchTab
 import org.wordpress.android.ui.reader.viewmodels.ReaderSearchUiState
+import org.wordpress.android.ui.reader.views.compose.readableWidth
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
@@ -297,16 +298,19 @@ private fun SitesList(uiState: ReaderSearchUiState, listState: LazyListState, ac
     )
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         items(uiState.sites, key = { it.key }) { site ->
-            ReaderSiteRow(
-                title = site.title?.takeIf { it.isNotEmpty() } ?: stringResource(R.string.untitled_in_parentheses),
-                subtitle = remember(site.url) { UrlUtils.getHost(site.url) },
-                iconUrl = site.iconUrl,
-                isFollowing = site.isFollowing,
-                isFollowEnabled = site.isFollowEnabled,
-                onClick = { actions.onSiteClicked(site) },
-                onFollowClick = { actions.onSiteFollowClicked(site) }
-            )
-            HorizontalDivider()
+            Column(Modifier.readableWidth()) {
+                ReaderSiteRow(
+                    title = site.title?.takeIf { it.isNotEmpty() }
+                        ?: stringResource(R.string.untitled_in_parentheses),
+                    subtitle = remember(site.url) { UrlUtils.getHost(site.url) },
+                    iconUrl = site.iconUrl,
+                    isFollowing = site.isFollowing,
+                    isFollowEnabled = site.isFollowEnabled,
+                    onClick = { actions.onSiteClicked(site) },
+                    onFollowClick = { actions.onSiteFollowClicked(site) }
+                )
+                HorizontalDivider()
+            }
         }
         if (uiState.isLoadingMoreSites) {
             contentListLoadingMoreItem()

@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostCard
+import org.wordpress.android.ui.reader.views.compose.readableWidth
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
@@ -91,7 +92,7 @@ private fun PostList(
 
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         items(items = items, key = { it.key }, contentType = { it::class }) { item ->
-            Column(modifier = Modifier.padding(horizontal = margin)) {
+            Column(modifier = Modifier.readableWidth().padding(horizontal = margin)) {
                 PostListRow(item, actions)
                 if (item !== items.last()) {
                     HorizontalDivider(color = colorResource(R.color.on_surface_divider))

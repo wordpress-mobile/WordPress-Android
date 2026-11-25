@@ -82,6 +82,7 @@ import org.wordpress.android.ui.reader.ReaderCommentItem
 import org.wordpress.android.ui.reader.ReaderCommentListUiState
 import org.wordpress.android.ui.reader.ReaderCommentModeration
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.views.compose.readableWidth
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
@@ -198,9 +199,13 @@ private fun CommentList(
         actions.onScrollHandled()
     }
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
-        item(key = "header") { PostHeader(uiState, actions.onHeaderClick) }
+        item(key = "header") {
+            Column(Modifier.readableWidth()) { PostHeader(uiState, actions.onHeaderClick) }
+        }
         items(uiState.comments, key = { it.commentId }) { comment ->
-            CommentRow(comment, actions, onClick = { actions.onCommentClick(comment.commentId) })
+            Column(Modifier.readableWidth()) {
+                CommentRow(comment, actions, onClick = { actions.onCommentClick(comment.commentId) })
+            }
         }
         if (uiState.isLoadingMore) contentListLoadingMoreItem()
     }

@@ -72,6 +72,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderSubsTag
 import org.wordpress.android.ui.reader.viewmodels.ReaderSubsUiState
 import org.wordpress.android.ui.reader.views.compose.ReaderFollowToggleButton
 import org.wordpress.android.ui.reader.views.compose.ReaderSiteRow
+import org.wordpress.android.ui.reader.views.compose.readableWidth
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchClearButton
 import org.wordpress.android.ui.rs.contentlist.ContentListSearchField
 
@@ -255,8 +256,10 @@ private fun TagsPage(tags: List<ReaderSubsTag>?, actions: ReaderSubsActions) {
             modifier = Modifier.fillMaxSize()
         ) {
             items(tags, key = { it.slug }) { tag ->
-                TagRow(tag, onFollowClick = { actions.onTagFollowClicked(tag) })
-                HorizontalDivider()
+                Column(Modifier.readableWidth()) {
+                    TagRow(tag, onFollowClick = { actions.onTagFollowClicked(tag) })
+                    HorizontalDivider()
+                }
             }
         }
     }
