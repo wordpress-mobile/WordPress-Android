@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.reader.views.compose.article
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -18,6 +21,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
 private const val WEIGHT_REGULAR = 400
@@ -180,3 +184,61 @@ internal fun body(size: Float, lineHeight: Float = 1.5f): TextStyle {
 internal fun bodySize(size: Float = BODY_SIZE) = size * LocalReaderArticleReading.current.scale
 
 internal const val BODY_SIZE = 17f
+
+/**
+ * The app's M3 theme recoloured and retyped as WPFolio's, for whole screens styled like it (Reader comments):
+ * WPFolio's light or dark palette, Instrument Sans for the interface, and the article locals for reading text
+ */
+@Composable
+fun ReaderArticleMaterialTheme(content: @Composable () -> Unit) {
+    AppThemeM3 {
+        val isDark = isSystemInDarkTheme()
+        val colors = if (isDark) DarkColors else LightColors
+        val baseScheme = MaterialTheme.colorScheme
+        val baseTypography = MaterialTheme.typography
+        val scheme = remember(baseScheme, colors) {
+            baseScheme.copy(
+                primary = colors.text,
+                onPrimary = colors.onInverse,
+                background = colors.background,
+                onBackground = colors.text,
+                surface = colors.background,
+                onSurface = colors.body,
+                onSurfaceVariant = colors.textSecondary,
+                surfaceContainerLowest = colors.background,
+                surfaceContainerLow = colors.background,
+                surfaceContainer = colors.background,
+                surfaceContainerHigh = colors.sheet,
+                surfaceContainerHighest = colors.divider,
+                outline = colors.outline,
+                outlineVariant = colors.divider,
+            )
+        }
+        val typography = remember(baseTypography) { baseTypography.withFontFamily(InstrumentSans) }
+        MaterialTheme(colorScheme = scheme, typography = typography) {
+            CompositionLocalProvider(
+                LocalReaderArticleColors provides colors,
+                LocalContentColor provides colors.body,
+                content = content,
+            )
+        }
+    }
+}
+
+private fun Typography.withFontFamily(family: FontFamily) = copy(
+    displayLarge = displayLarge.copy(fontFamily = family),
+    displayMedium = displayMedium.copy(fontFamily = family),
+    displaySmall = displaySmall.copy(fontFamily = family),
+    headlineLarge = headlineLarge.copy(fontFamily = family),
+    headlineMedium = headlineMedium.copy(fontFamily = family),
+    headlineSmall = headlineSmall.copy(fontFamily = family),
+    titleLarge = titleLarge.copy(fontFamily = family),
+    titleMedium = titleMedium.copy(fontFamily = family),
+    titleSmall = titleSmall.copy(fontFamily = family),
+    bodyLarge = bodyLarge.copy(fontFamily = family),
+    bodyMedium = bodyMedium.copy(fontFamily = family),
+    bodySmall = bodySmall.copy(fontFamily = family),
+    labelLarge = labelLarge.copy(fontFamily = family),
+    labelMedium = labelMedium.copy(fontFamily = family),
+    labelSmall = labelSmall.copy(fontFamily = family),
+)

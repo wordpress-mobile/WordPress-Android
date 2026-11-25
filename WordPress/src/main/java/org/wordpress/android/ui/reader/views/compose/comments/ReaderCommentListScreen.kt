@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -82,6 +84,9 @@ import org.wordpress.android.ui.reader.ReaderCommentItem
 import org.wordpress.android.ui.reader.ReaderCommentListUiState
 import org.wordpress.android.ui.reader.ReaderCommentModeration
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.views.compose.article.articleColors
+import org.wordpress.android.ui.reader.views.compose.article.body
+import org.wordpress.android.ui.reader.views.compose.article.ui
 import org.wordpress.android.ui.reader.views.compose.readableWidth
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
@@ -92,6 +97,11 @@ import org.wordpress.android.util.image.ImagePlaceholderManager
 import org.wordpress.android.util.image.ImageType
 
 private val avatarPlaceholders = ImagePlaceholderManager()
+
+private val COMMENT_AVATAR_SIZE = 32.dp
+
+// the text sits under the name, past the avatar and its gap
+private val COMMENT_TEXT_INSET = COMMENT_AVATAR_SIZE + 12.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +121,10 @@ fun ReaderCommentListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(if (detail != null) R.string.comment else R.string.reader_title_comments))
+                    Text(
+                        stringResource(if (detail != null) R.string.comment else R.string.reader_title_comments),
+                        style = ui(20f, 600, tracking = -0.01f),
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = if (detail != null) actions.onDetailBack else actions.onBack) {
@@ -221,12 +234,13 @@ internal fun PostHeader(uiState: ReaderCommentListUiState, onClick: () -> Unit) 
     ) {
         Text(
             text = stringResource(R.string.comment_reply_to_user, uiState.postAuthorName),
-            style = MaterialTheme.typography.labelMedium,
+            style = ui(12.5f, 500),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = uiState.postTitle,
-            style = MaterialTheme.typography.titleMedium,
+            style = ui(17f, 600, tracking = -0.01f),
+            color = articleColors.text,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -241,8 +255,6 @@ internal fun CommentRow(
 ) {
     val indentPerLevel = dimensionResource(R.dimen.reader_comment_indent_per_level)
     Column {
-        // replies sit under their parent without a divider
-        if (comment.indentLevel == 0) HorizontalDivider(modifier = Modifier.padding(start = 24.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -266,16 +278,18 @@ internal fun CommentRow(
                     .background(if (comment.isHighlighted) MaterialTheme.colorScheme.primary else Color.Transparent)
             )
             Spacer(modifier = Modifier.width(indentPerLevel * comment.indentLevel))
-            Column(modifier = Modifier.padding(start = 10.dp, end = 4.dp, top = 8.dp)) {
+            // as WPFolio lays a comment out: avatar beside the name and time, then the text, then Reply and likes
+            Column(modifier = Modifier.padding(start = 16.dp, end = 4.dp, top = 12.dp)) {
                 CommentAuthorRow(comment, actions)
                 CommentHtmlBody(
                     html = comment.html.ifBlank { stringResource(R.string.comment_unable_to_show_error) },
                     onImageClick = actions.onImageClick,
+                    textStyle = body(15f, lineHeight = 1.5f),
                     modifier = Modifier
-                        .padding(end = 12.dp)
-                        .padding(vertical = 4.dp)
+                        .padding(start = COMMENT_TEXT_INSET, end = 12.dp)
+                        .padding(vertical = 2.dp)
                 )
-                CommentActionRow(comment, actions)
+                Box(Modifier.padding(start = COMMENT_TEXT_INSET - 4.dp)) { CommentActionRow(comment, actions) }
             }
         }
     }
@@ -284,7 +298,7 @@ internal fun CommentRow(
 @Composable
 private fun CommentAuthorRow(comment: ReaderCommentItem, actions: ReaderCommentListActions) {
     val context = LocalContext.current
-    val avatarSize = dimensionResource(R.dimen.avatar_sz_medium)
+    val avatarSize = COMMENT_AVATAR_SIZE
     val avatarSizePx = with(LocalDensity.current) { avatarSize.roundToPx() }
     val date = remember(comment.published, comment.isPending) {
         DateTimeUtils.javaDateToTimeSpan(
@@ -314,31 +328,30 @@ private fun CommentAuthorRow(comment: ReaderCommentItem, actions: ReaderCommentL
                     .size(avatarSize)
                     .clip(CircleShape)
             )
-            Column(modifier = Modifier.padding(start = 12.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = comment.authorName,
-                        style = MaterialTheme.typography.titleSmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
+            // "Name · 2h" on one line
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 12.dp)) {
+                Text(
+                    text = comment.authorName,
+                    style = ui(13.5f, 600),
+                    color = articleColors.text,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                if (comment.isPostAuthor) AuthorBadge()
+                Text(
+                    text = " · $date",
+                    style = ui(13.5f, 500),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
+                )
+                if (comment.isPending) {
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .size(12.dp)
                     )
-                    if (comment.isPostAuthor) AuthorBadge()
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = date,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    if (comment.isPending) {
-                        CircularProgressIndicator(
-                            strokeWidth = 2.dp,
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .size(12.dp)
-                        )
-                    }
                 }
             }
         }
@@ -419,14 +432,15 @@ private fun ReaderCommentModeration.iconRes() = when (this) {
 private fun CommentActionRow(comment: ReaderCommentItem, actions: ReaderCommentListActions) {
     val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.heightIn(min = 40.dp)
     ) {
+        // text rather than an icon, as in WPFolio
         if (comment.canReply) {
-            val color = if (comment.isReplyTarget) MaterialTheme.colorScheme.primary else mutedColor
+            val color = if (comment.isReplyTarget) articleColors.text else mutedColor
             ActionButton(
-                iconRes = R.drawable.ic_reply_material_white_24dp,
+                iconRes = null,
                 label = stringResource(R.string.reply),
                 color = color,
                 onClick = { actions.onReplyClick(comment.commentId) }
@@ -441,7 +455,7 @@ private fun CommentActionRow(comment: ReaderCommentItem, actions: ReaderCommentL
                     R.drawable.ic_like_outline_new_24dp
                 },
                 label = if (comment.numLikes > 0) comment.numLikes.toString() else stringResource(R.string.like),
-                color = if (comment.isLiked) MaterialTheme.colorScheme.primary else mutedColor,
+                color = if (comment.isLiked) articleColors.text else mutedColor,
                 isEnabled = comment.isLikeEnabled,
                 isSelected = comment.isLiked,
                 description = ReaderUtils.getLongLikeLabelText(context, comment.numLikes, comment.isLiked),
@@ -454,7 +468,7 @@ private fun CommentActionRow(comment: ReaderCommentItem, actions: ReaderCommentL
 @Composable
 @Suppress("LongParameterList")
 private fun ActionButton(
-    iconRes: Int,
+    iconRes: Int?,
     label: String,
     color: Color,
     onClick: () -> Unit,
@@ -474,18 +488,17 @@ private fun ActionButton(
                 selected = isSelected
             }
     ) {
-        Icon(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(20.dp)
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = tint,
-            modifier = Modifier.padding(start = 4.dp)
-        )
+        iconRes?.let {
+            Icon(
+                painter = painterResource(it),
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .size(16.dp)
+            )
+        }
+        Text(text = label, style = ui(13f, 600), color = tint)
     }
 }
 
@@ -495,8 +508,9 @@ private fun ActionButton(
 @Composable
 private fun Composer(uiState: ReaderCommentListUiState, replyText: TextFieldValue, onClick: () -> Unit) {
     if (!uiState.isLoggedIn) return
-    Surface(tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth()) {
+    Surface(modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.navigationBarsPadding()) {
+            HorizontalDivider(color = articleColors.divider)
             if (!uiState.isCommentsOpen) {
                 Text(
                     text = stringResource(R.string.reader_label_comments_closed),
@@ -509,32 +523,44 @@ private fun Composer(uiState: ReaderCommentListUiState, replyText: TextFieldValu
                 )
                 return@Box
             }
+            // WPFolio's rounded field and send button; tapping opens the reply sheet, which has mentions and drafts
+            val shape = RoundedCornerShape(22.dp)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    .padding(start = 18.dp, end = 10.dp, top = 10.dp, bottom = 12.dp)
+                    .clip(shape)
+                    .border(1.dp, articleColors.outline, shape)
                     .clickable(enabled = !uiState.isSubmitting, onClick = onClick)
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(start = 18.dp, end = 6.dp, top = 6.dp, bottom = 6.dp)
             ) {
                 // a saved draft shows in place of the hint
                 val hasDraft = replyText.text.isNotBlank()
                 Text(
                     text = if (hasDraft) replyText.text else stringResource(uiState.replyHint),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = if (hasDraft) {
-                        MaterialTheme.colorScheme.onSurface
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
+                    style = body(15f),
+                    color = if (hasDraft) articleColors.text else MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
                 if (uiState.isSubmitting) {
-                    CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(20.dp)
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.Send,
+                        contentDescription = null,
+                        tint = if (hasDraft) articleColors.text else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .size(22.dp)
+                    )
                 }
             }
         }

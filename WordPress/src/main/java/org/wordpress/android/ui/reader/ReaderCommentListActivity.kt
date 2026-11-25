@@ -28,13 +28,13 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticleMaterialTheme
 import org.wordpress.android.ui.reader.views.compose.comments.ReaderCommentListActions
 import org.wordpress.android.ui.reader.views.compose.comments.ReaderCommentListScreen
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
@@ -116,7 +116,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsState()
             val followState by conversationViewModel.updateFollowUiState.observeAsState()
-            AppThemeM3 {
+            ReaderArticleMaterialTheme {
                 ReaderCommentListScreen(
                     uiState = uiState,
                     followState = followState,
