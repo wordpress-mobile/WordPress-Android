@@ -1,13 +1,19 @@
 package org.wordpress.android.util.config
 
 import android.content.Context
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlagValueSource
 import org.wordpress.android.fluxc.store.NotificationStore.Companion.WPCOM_PUSH_DEVICE_UUID
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore
 import org.wordpress.android.fluxc.utils.PreferenceUtils
@@ -37,9 +43,31 @@ class FeatureFlagConfig
 
     var flags: List<FeatureFlag> = arrayListOf()
 
+    private val storedFlagsLoaded = CompletableDeferred<Unit>()
+
+    private val _updates = MutableStateFlow(0)
+
+    /** Changes each time [flags] is reloaded from the database, after the initial load and every refresh. */
+    val updates: StateFlow<Int> = _updates
+
+    @Volatile
+    private var hasCompletedRefresh = false
+
+    fun hasLoadedStoredFlags() = storedFlagsLoaded.isCompleted
+
+    /** Whether a fetch has completed this process, successfully or not, so the server has had its say. */
+    fun hasCompletedRefresh() = hasCompletedRefresh
+
+    suspend fun awaitStoredFlags() = storedFlagsLoaded.await()
+
+    /** Whether the stored value of [remoteField] came from the server rather than a default written locally. */
+    fun isFetchedValue(remoteField: String) =
+        flags.find { it.key == remoteField }?.source == FeatureFlagValueSource.REMOTE
+
     fun init(appScope: CoroutineScope) {
         appScope.launch {
             flags = featureFlagStore.getFeatureFlags()
+            onFlagsLoaded()
             // If the flags are empty, then this means that the
             if (flags.isEmpty()) {
                 insertRemoteConfigDefaultsInDatabase()
@@ -64,11 +92,17 @@ class FeatureFlagConfig
         }
     }
 
-    fun refresh(appScope: CoroutineScope) {
+    fun refresh(appScope: CoroutineScope): Job =
         appScope.launch {
             fetchRemoteFlags()
             flags = featureFlagStore.getFeatureFlags()
+            hasCompletedRefresh = true
+            onFlagsLoaded()
         }
+
+    private fun onFlagsLoaded() {
+        storedFlagsLoaded.complete(Unit)
+        _updates.update { it + 1 }
     }
 
     private suspend fun fetchRemoteFlags() {
@@ -111,27 +145,24 @@ class FeatureFlagConfig
         val remoteFeatureFlag = flags.find { it.key == remoteField }
         return if (remoteFeatureFlag == null) {
             val defaultValue = getRemoteConfigDefaultValue(remoteField)
+            storeMissingFlag(remoteField, defaultValue ?: buildConfigValue)
             if (defaultValue != null) {
-                appScope.launch {
-                    featureFlagStore.insertFeatureFlagValue(
-                        remoteField,
-                        defaultValue
-                    )
-                    flags = featureFlagStore.getFeatureFlags()
-                }
                 FeatureState.DefaultValue(defaultValue)
             } else {
-                appScope.launch {
-                    featureFlagStore.insertFeatureFlagValue(
-                        remoteField,
-                        buildConfigValue
-                    )
-                    flags = featureFlagStore.getFeatureFlags()
-                }
                 FeatureState.BuildConfigValue(buildConfigValue)
             }
         } else {
             FeatureState.RemoteValue(remoteFeatureFlag.value)
+        }
+    }
+
+    private fun storeMissingFlag(remoteField: String, value: Boolean) {
+        // Until init() has loaded the stored flags, a flag can look missing only because it isn't loaded yet,
+        // and storing the default would overwrite its stored remote value
+        if (!hasLoadedStoredFlags()) return
+        appScope.launch {
+            featureFlagStore.insertFeatureFlagValue(remoteField, value)
+            flags = featureFlagStore.getFeatureFlags()
         }
     }
 

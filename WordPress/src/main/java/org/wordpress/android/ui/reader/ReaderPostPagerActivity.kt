@@ -78,7 +78,6 @@ import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -200,7 +199,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var buildConfigWrapper: BuildConfigWrapper
+    lateinit var readerAvailability: ReaderAvailability
+
+    private var isWaitingForReaderAvailability = false
 
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
@@ -405,7 +406,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || !buildConfigWrapper.isJetpackApp) {
+        if (uri == null || !readerAvailability.isReaderAvailable()) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
             val intent = Intent(this, WPLaunchActivity::class.java)
@@ -701,14 +702,29 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
                         == intent.action)
             ) {
-                handleDeepLinking()
+                // At cold start whether this app has the Reader may not be known yet; deciding on a default would
+                // bounce the link to the Jetpack overlay
+                if (!isWaitingForReaderAvailability) {
+                    isWaitingForReaderAvailability = true
+                    readerAvailability.whenAvailabilityKnown(this) {
+                        isWaitingForReaderAvailability = false
+                        if (!hasPagerAdapter() || backFromLogin) {
+                            handleDeepLinking()
+                            openPosts()
+                        }
+                    }
+                }
+            } else {
+                openPosts()
             }
-
-            loadPostsUnlessResolvingSlug()
-
-            // clear up the back-from-login flag anyway
-            backFromLogin = false
         }
+    }
+
+    private fun openPosts() {
+        loadPostsUnlessResolvingSlug()
+
+        // clear up the back-from-login flag anyway
+        backFromLogin = false
     }
 
     override fun onPause() {

@@ -14,6 +14,7 @@ import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
+import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.commentsrs.CommentsRsListActivity
@@ -95,6 +96,7 @@ private val excludedActivities = listOf(
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
     FeedbackFormActivity::class.java.name,
+    MediaBrowserActivity::class.java.name,
     MediaPreviewActivity::class.java.name,
     MenuActivity::class.java.name,
     NavMenusActivity::class.java.name,

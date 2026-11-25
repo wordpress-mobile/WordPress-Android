@@ -149,7 +149,6 @@ android {
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
-        buildConfigField "boolean", "TAXONOMIES_REST_API_MIGRATION", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
@@ -171,6 +170,7 @@ android {
         buildConfigField "boolean", "NEW_STATS", "false"
         buildConfigField "boolean", "WP_COM_WP_RS", "false"
         buildConfigField "boolean", "NEW_MOBILE_SUPPORT_FLOW", "false"
+        buildConfigField "boolean", "READER_IN_WORDPRESS_APP", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
         buildConfigField "boolean", "READER_TAGS_FEED", "false"
@@ -182,7 +182,6 @@ android {
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
         buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
-        buildConfigField "boolean", "ENABLE_READER", "true"
         buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
         buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
         buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
@@ -233,7 +232,6 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
             buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
-            buildConfigField "boolean", "ENABLE_READER", "true"
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
             buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"

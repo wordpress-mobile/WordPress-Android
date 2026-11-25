@@ -39,9 +39,11 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
+import org.wordpress.android.ui.notifications.NotificationsInJetpackFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.ReaderAvailability
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -88,8 +90,14 @@ class WPMainNavigationView @JvmOverloads constructor(
     @Inject
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
-    /** The WordPress app has no Reader or Notifications tabs, so My Site is its only page. */
-    private val hasSingleTabNav get() = !buildConfigWrapper.isJetpackApp
+    @Inject
+    lateinit var readerAvailability: ReaderAvailability
+
+    /** Without the Reader the bottom nav is hidden and My Site is the only page; see [ReaderAvailability]. */
+    private val hasSingleTabNav get() = !readerAvailability.isReaderAvailable()
+
+    /** The WordPress app's Notifications tab only points to the Jetpack app. */
+    private val hasRealNotifications get() = buildConfigWrapper.isJetpackApp
 
     private var currentPosition: Int
         get() = getPositionForItemId(navigationBarView.selectedItemId)
@@ -126,8 +134,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         assignNavigationListeners(true)
         disableShiftMode()
 
-        if (!BuildConfig.ENABLE_READER) hideReaderTab()
-
         // Overlay each item with our custom view. We resolve the item view by its menu item id
         // rather than walking getChildAt(), because the NavigationRailView used on tablets nests
         // its item container one level deeper than the phone's BottomNavigationView, which would
@@ -161,8 +167,14 @@ class WPMainNavigationView @JvmOverloads constructor(
             setImageViewSelected(getPosition(ME), false)
         }
 
-        currentPosition = getMainPageIndex()
+        // After a restore, show the tab that was showing (the FragmentManager has re-attached it, and the nav bar
+        // restores its checked item to match); the saved index can differ, e.g. it's never the WordPress app's
+        // Notifications tab
+        currentPosition = getRestoredPosition() ?: getMainPageIndex()
     }
+
+    private fun getRestoredPosition(): Int? =
+        (0 until numPages()).firstOrNull { navAdapter.getFragmentIfExists(it)?.isDetached == false }
 
     private fun loadGravatar(imgIcon: ImageView, avatarUrl: String) {
         if (avatarUrl.isEmpty()) {
@@ -219,10 +231,6 @@ class WPMainNavigationView @JvmOverloads constructor(
     private fun getMainPageIndex(): Int {
         return if (hasSingleTabNav) 0
         else AppPrefs.getMainPageIndex(numPages() - 1)
-    }
-
-    private fun hideReaderTab() {
-        navigationBarView.menu.removeItem(R.id.nav_reader)
     }
 
     private fun disableShiftMode() {
@@ -334,9 +342,14 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        if (hasSingleTabNav)
-            AppPrefs.setMainPageIndex(0)
-        else AppPrefs.setMainPageIndex(position)
+        when {
+            // My Site is the only page while the nav is hidden, which can be just until the Reader flag loads
+            // at cold start, so keep the saved tab for when the nav shows
+            hasSingleTabNav -> Unit
+            // Don't reopen the app on the WordPress app's Notifications tab, which only points to Jetpack
+            !hasRealNotifications && position == getPosition(NOTIFS) -> Unit
+            else -> AppPrefs.setMainPageIndex(position)
+        }
 
         // temporarily disable the nav listeners so they don't fire when we change the selected page
         assignNavigationListeners(false)
@@ -352,10 +365,25 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (previousFragment != null) {
                 fragmentManager?.beginTransaction()?.detach(previousFragment)?.attach(fragment)?.commit()
             } else {
-                fragmentManager?.beginTransaction()?.attach(fragment)?.commit()
+                attachAsOnlyTab(fragment, position)
             }
         }
         prevPosition = position
+    }
+
+    /**
+     * For the first selection. After a restore the FragmentManager may have re-attached a different tab than
+     * this one (the saved index isn't always the tab that was showing), so detach every other tab.
+     */
+    private fun attachAsOnlyTab(fragment: Fragment, position: Int) {
+        val transaction = fragmentManager?.beginTransaction() ?: return
+        for (otherPosition in 0 until numPages()) {
+            val other = navAdapter.getFragmentIfExists(otherPosition)
+            if (otherPosition != position && other != null && !other.isDetached) {
+                transaction.detach(other)
+            }
+        }
+        transaction.attach(fragment).commit()
     }
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
@@ -451,6 +479,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     fun showNoteBadge(showBadge: Boolean) {
+        if (!hasRealNotifications) return
         showBadge(getPosition(NOTIFS), showBadge)
     }
 
@@ -489,7 +518,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
-                NOTIFS -> NotificationsListFragment.newInstance()
+                NOTIFS -> if (hasRealNotifications) {
+                    NotificationsListFragment.newInstance()
+                } else {
+                    NotificationsInJetpackFragment()
+                }
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
@@ -513,11 +546,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = if (BuildConfig.ENABLE_READER) {
-            listOf(MY_SITE, READER, NOTIFS, ME)
-        } else {
-            listOf(MY_SITE, NOTIFS, ME)
-        }
+        private val pages = listOf(MY_SITE, READER, NOTIFS, ME)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"

@@ -16,6 +16,22 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
   - **Where:** Experimental block editor → the loading screen shown while the editor starts, and the "The editor stopped working" screen with Reload Editor
   - **Notes:** Customers turn the flag on in Me → App Settings → Experimental Features → Experimental block editor. After a switch, these screens appear in the new mode under a toolbar still in the old one. The toolbar, status bar and Post settings pages not following a mid-session switch is existing behavior. Opening the editor in either mode was never affected.
 
+- **Reader in the WordPress app**
+  People signed in to WordPress.com see a bottom navigation bar with My Site, Reader, Notifications and Me tabs, and can use the Reader as they would in Jetpack. The Notifications tab doesn't show notifications; it says they're in the Jetpack app and has a button that opens Jetpack, or its Play Store page if it isn't installed. The posts list also gains the "Read" action that opens a post in the Reader.
+  - **Apps:** WordPress
+  - **Type:** New
+  - **Availability:** Flag: wordpress_android_reader
+  - **Where:** Bottom navigation → Reader; Bottom navigation → Notifications; Posts → ⋮ → Read
+  - **Notes:** Users signed in only to self-hosted sites see no change: there's no bottom navigation bar, Me stays as a row on My Site, and Reader links still offer the Jetpack app. With the bar showing, the My Site "Me" row goes away because Me is a tab. The flag value is applied at app launch, or when the user signs in to WordPress.com, so a change takes effect on the next launch. Push notifications are still Jetpack-only.
+
+- **Swipe between items in media details**
+  The details screen for an item in the media library now swipes left and right to the neighbouring items, in the order the library shows them. Edits to the title, caption, description or alt text are saved as soon as you tap Save in the field's editor. Swiping in the full-screen preview still moves the details screen to the same item.
+  - **Apps:** Both
+  - **Type:** New
+  - **Availability:** Everyone
+  - **Where:** My Site → Media → tap an item
+  - **Notes:** Items still uploading are skipped. Image settings opened from the post editor show a single image, as before. A thumbnail that fails to load now shows an error on the page instead of closing the screen.
+
 - **Self-hosted sign-in explains when the server blocks application passwords**
   When a self-hosted site's server does not pass the Authorization header to WordPress, signing in with an application password now stops with a dialog that says "Your server is blocking sign-in with application passwords. Contact your hosting provider for help." Nothing is saved for the site. Before, the sign-in seemed to finish, but features that use the site's REST API failed and the app kept asking the user to authorize the app again.
   - **Apps:** Both
