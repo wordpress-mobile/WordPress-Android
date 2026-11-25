@@ -31,6 +31,7 @@ import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
+import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.gutenberg.GutenbergView
 import org.wordpress.gutenberg.GutenbergView.ContentChangeListener
@@ -75,6 +76,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var modalDialogStateListener: GutenbergView.ModalDialogStateListener? = null
     private var networkRequestListener: GutenbergView.NetworkRequestListener? = null
     private var rootView: View? = null
+    private var nightMode = Configuration.UI_MODE_NIGHT_UNDEFINED
     private var isXPostsEnabled: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -177,6 +179,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         rootView = inflater.inflate(
             R.layout.fragment_gutenberg_kit_editor, container, false
         )
+        nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val gutenbergViewContainer =
             rootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
@@ -322,6 +325,21 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         gutenbergView?.invalidate()
+        val newNightMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (newNightMode != nightMode) {
+            nightMode = newNightMode
+            applyOverlayBackground()
+        }
+    }
+
+    /**
+     * GutenbergKit's loading and error overlays have no background and re-theme their text when dark mode changes.
+     * The activity handles that change without recreating, so the window behind them keeps the old mode's color;
+     * give them a background that follows the current mode instead.
+     */
+    private fun applyOverlayBackground() {
+        val container = rootView?.findViewById<View>(R.id.gutenberg_view_container) ?: return
+        container.background = requireContext().getDrawableFromAttribute(android.R.attr.windowBackground)
     }
 
     @Deprecated("Deprecated in Java")
