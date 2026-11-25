@@ -7,7 +7,6 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,15 +17,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,19 +41,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.os.BundleCompat
@@ -85,6 +77,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
+import org.wordpress.android.ui.reader.views.compose.article.ReaderOverlayButton
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderGalleryCoverHeight
 import org.wordpress.android.ui.uploads.UploadActionUseCase
@@ -304,34 +297,14 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
                     .padding(horizontal = 14.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                OverlayButton(stringResource(R.string.back), onClick = ::finish) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
-                }
-                OverlayButton(stringResource(R.string.share_action), onClick = ::shareSite) {
-                    Icon(
-                        painterResource(R.drawable.ic_share_white_24dp),
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
+                ReaderOverlayButton(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    stringResource(R.string.back),
+                    onClick = ::finish
+                )
+                ReaderOverlayButton(Icons.Rounded.Share, stringResource(R.string.share_action), onClick = ::shareSite)
             }
         }
-    }
-
-    @Composable
-    private fun OverlayButton(label: String, onClick: () -> Unit, icon: @Composable () -> Unit) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color.Black.copy(alpha = OVERLAY_BUTTON_ALPHA))
-                .clickable(onClick = onClick)
-                .semantics {
-                    contentDescription = label
-                    role = Role.Button
-                }
-        ) { icon() }
     }
 
     override fun onResume() {
@@ -476,4 +449,3 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
 
 private val COVER_SCRIM_HEIGHT = 72.dp
 private const val COVER_SCRIM_ALPHA = 0.4f
-private const val OVERLAY_BUTTON_ALPHA = 0.35f

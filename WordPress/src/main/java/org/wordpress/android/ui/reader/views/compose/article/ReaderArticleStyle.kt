@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.utils.toComposeFontFamily
 
 private const val WEIGHT_REGULAR = 400
 private const val WEIGHT_MEDIUM = 500
@@ -63,7 +64,6 @@ data class ReaderArticleColors(
     val bodyMuted: Color,
     val divider: Color,
     val outline: Color,
-    val inverse: Color,
     val onInverse: Color,
     val pill: Color,
     val sheet: Color,
@@ -78,7 +78,6 @@ private val LightColors = ReaderArticleColors(
     bodyMuted = Color(0xFF4A4A48),
     divider = Color(0x14000000),
     outline = Color(0x24000000),
-    inverse = Color(0xFF141414),
     onInverse = Color.White,
     pill = Color(0xF0161616),
     sheet = Color.White,
@@ -93,7 +92,6 @@ private val DarkColors = ReaderArticleColors(
     bodyMuted = Color(0xFFB9B9B5),
     divider = Color(0x12FFFFFF),
     outline = Color(0x29FFFFFF),
-    inverse = Color(0xFFF2F2F0),
     onInverse = Color(0xFF141414),
     pill = Color(0xF0303032),
     sheet = Color(0xFF1F1F21),
@@ -110,7 +108,6 @@ private fun colorsFor(background: Color, text: Color): ReaderArticleColors {
         bodyMuted = text.copy(alpha = MUTED_ALPHA),
         divider = text.copy(alpha = DIVIDER_ALPHA),
         outline = text.copy(alpha = OUTLINE_ALPHA),
-        inverse = text,
         onInverse = background,
         pill = (if (isDark) DarkColors.pill else LightColors.pill).copy(alpha = PILL_ALPHA),
         sheet = background,
@@ -140,10 +137,12 @@ fun ReaderArticleTheme(
         }
     }
     val reading = remember(readingPreferences.fontFamily, readingPreferences.fontSize) {
-        val family = when (readingPreferences.fontFamily) {
-            ReaderReadingPreferences.FontFamily.SERIF -> FontFamily.Serif
-            ReaderReadingPreferences.FontFamily.MONO -> FontFamily.Monospace
-            else -> AtkinsonNext
+        // WPFolio's reading face stands in for the plain sans; the other faces stay as the web view shows them
+        val fontFamily = readingPreferences.fontFamily
+        val family = if (fontFamily == ReaderReadingPreferences.FontFamily.SANS) {
+            AtkinsonNext
+        } else {
+            fontFamily.toComposeFontFamily()
         }
         ReaderArticleReading(family, readingPreferences.fontSize.multiplier)
     }
@@ -181,7 +180,7 @@ internal fun body(size: Float, lineHeight: Float = 1.5f): TextStyle {
 
 /** The body size, scaled by the reader's text size, for sizes derived from it */
 @Composable
-internal fun bodySize(size: Float = BODY_SIZE) = size * LocalReaderArticleReading.current.scale
+internal fun bodySize() = BODY_SIZE * LocalReaderArticleReading.current.scale
 
 internal const val BODY_SIZE = 17f
 

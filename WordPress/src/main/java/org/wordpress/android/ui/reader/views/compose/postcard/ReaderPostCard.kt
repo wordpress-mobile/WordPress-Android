@@ -275,7 +275,7 @@ private fun ActionRow(uiState: ReaderPostUiState) {
 }
 
 /** The count beside an action's icon: zero only while the action can be used, as on iOS. */
-private fun countText(action: PrimaryAction, countFormat: CompactDecimalFormat): String? =
+internal fun countText(action: PrimaryAction, countFormat: CompactDecimalFormat): String? =
     action.count.takeIf { action.isEnabled || it > 0 }?.let { countFormat.format(it) }
 
 @Composable

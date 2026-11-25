@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -53,6 +52,7 @@ import androidx.core.view.WindowInsetsCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.LoadingState
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
 import org.wordpress.android.ui.reader.accent.readerImageMeta
@@ -165,14 +165,7 @@ private fun GalleryGrid(
             item(key = ReaderPostListItem.KEY_HEADER, span = StaggeredGridItemSpan.FullLine) {
                 Column {
                     CoverMosaic(mosaicImages)
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(HEADER_PLACEHOLDER_HEIGHT),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    LoadingState(Modifier.height(HEADER_PLACEHOLDER_HEIGHT))
                 }
             }
         }
@@ -500,7 +493,7 @@ private object GalleryColumns : StaggeredGridCells {
 }
 
 private fun accentColor(uiState: ReaderPostUiState, sampled: Int?) =
-    Color(sampled ?: ReaderImageAccentSampler.fallbackAccent("${uiState.blogId}:${uiState.postId}"))
+    Color(sampled ?: ReaderImageAccentSampler.fallbackAccent(uiState.blogId, uiState.postId))
 
 // alternates square and 4:5 tiles until the image's own shape is known, so the grid still staggers
 private fun placeholderRatio(uiState: ReaderPostUiState): Float {

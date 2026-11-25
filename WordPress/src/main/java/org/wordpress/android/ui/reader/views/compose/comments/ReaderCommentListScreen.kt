@@ -45,14 +45,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -115,8 +113,6 @@ fun ReaderCommentListScreen(
     replyText: TextFieldValue,
     actions: ReaderCommentListActions,
     snackbarHostState: SnackbarHostState,
-    // shown in a bottom sheet, which has no status bar above it and is closed by dragging it away
-    isSheet: Boolean = false,
 ) {
     // hoisted so the list keeps its position while a comment's detail replaces it
     val listState = rememberLazyListState()
@@ -124,10 +120,11 @@ fun ReaderCommentListScreen(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     BackHandler(enabled = detail != null, onBack = actions.onDetailBack)
     Scaffold(
-        contentWindowInsets = if (isSheet) WindowInsets(0) else ScaffoldDefaults.contentWindowInsets,
+        // shown in a bottom sheet, which has no status bar above it and insets its own composer
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             TopAppBar(
-                windowInsets = if (isSheet) WindowInsets(0) else TopAppBarDefaults.windowInsets,
+                windowInsets = WindowInsets(0),
                 title = {
                     Text(
                         stringResource(if (detail != null) R.string.comment else R.string.reader_title_comments),
@@ -135,9 +132,9 @@ fun ReaderCommentListScreen(
                     )
                 },
                 navigationIcon = {
-                    // a sheet closes by dragging it down, so it only needs back from a single comment
-                    if (!isSheet || detail != null) {
-                        IconButton(onClick = if (detail != null) actions.onDetailBack else actions.onBack) {
+                    // the sheet closes by dragging it down, so it only needs back from a single comment
+                    if (detail != null) {
+                        IconButton(onClick = actions.onDetailBack) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.back)
@@ -312,8 +309,7 @@ internal fun CommentRow(
 @Composable
 private fun CommentAuthorRow(comment: ReaderCommentItem, actions: ReaderCommentListActions) {
     val context = LocalContext.current
-    val avatarSize = COMMENT_AVATAR_SIZE
-    val avatarSizePx = with(LocalDensity.current) { avatarSize.roundToPx() }
+    val avatarSizePx = with(LocalDensity.current) { COMMENT_AVATAR_SIZE.roundToPx() }
     val date = remember(comment.published, comment.isPending) {
         DateTimeUtils.javaDateToTimeSpan(
             if (comment.isPending) java.util.Date() else DateTimeUtils.dateFromIso8601(comment.published),
@@ -339,7 +335,7 @@ private fun CommentAuthorRow(comment: ReaderCommentItem, actions: ReaderCommentL
                     .build(),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(avatarSize)
+                    .size(COMMENT_AVATAR_SIZE)
                     .clip(CircleShape)
             )
             // "Name · 2h" on one line
@@ -524,7 +520,7 @@ private fun Composer(uiState: ReaderCommentListUiState, replyText: TextFieldValu
     if (!uiState.isLoggedIn) return
     Surface(modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.navigationBarsPadding()) {
-            HorizontalDivider(color = articleColors.divider)
+            HorizontalDivider()
             if (!uiState.isCommentsOpen) {
                 Text(
                     text = stringResource(R.string.reader_label_comments_closed),

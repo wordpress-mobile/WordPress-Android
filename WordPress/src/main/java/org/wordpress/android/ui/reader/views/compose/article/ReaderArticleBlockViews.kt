@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,13 +52,13 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.wordpress.android.ui.reader.views.compose.readableWidth
 
-private val TEXT_PADDING = 22.dp
+/** The horizontal padding text blocks use, for the screen's own rows to line up with */
+internal val ReaderArticleTextPadding = 22.dp
 private val MEDIA_PADDING = 14.dp
 private val GALLERY_GAP = 6.dp
 private val MAX_COLUMN_WIDTH = 240.dp
@@ -77,13 +78,12 @@ private const val NOTE_SCALE = 0.94f
 @Composable
 internal fun ReaderArticleBlockView(block: ReaderArticleBlock, accent: Color, isActive: Boolean) {
     val colors = articleColors
-    val links = rememberLinkStyles()
     val padded = Modifier
         .fillMaxWidth()
-        .padding(horizontal = TEXT_PADDING, vertical = 7.dp)
+        .padding(horizontal = ReaderArticleTextPadding, vertical = 7.dp)
     when (block) {
         is ReaderArticleBlock.Paragraph -> Text(
-            rememberHtml(block.html, links),
+            rememberHtml(block.html),
             style = body(BODY_SIZE, lineHeight = BODY_LINE_HEIGHT),
             color = colors.body,
             modifier = padded,
@@ -114,24 +114,24 @@ internal fun ReaderArticleBlockView(block: ReaderArticleBlock, accent: Color, is
             block.caption?.let { Caption(it) }
         }
         is ReaderArticleBlock.Gallery -> Gallery(block, accent)
-        is ReaderArticleBlock.Quote -> Quote(block, accent, links, modifier = padded)
+        is ReaderArticleBlock.Quote -> Quote(block, accent, modifier = padded)
         is ReaderArticleBlock.Table -> Column(
             Modifier
                 .fillMaxWidth()
                 .padding(vertical = 10.dp)
         ) {
-            TableGrid(block, links, Modifier.padding(horizontal = MEDIA_PADDING))
+            TableGrid(block, Modifier.padding(horizontal = MEDIA_PADDING))
             block.caption?.let { Caption(it) }
         }
         is ReaderArticleBlock.ListItem -> Row(padded.padding(start = (block.depth * 18).dp)) {
             val style = body(BODY_SIZE, lineHeight = BODY_LINE_HEIGHT)
             Text(block.marker, style = style, color = colors.textSecondary, modifier = Modifier.width(24.dp))
-            Text(rememberHtml(block.html, links), style = style, color = colors.body)
+            Text(rememberHtml(block.html), style = style, color = colors.body)
         }
         // scrolls sideways rather than wrapping, as code does on the web
         is ReaderArticleBlock.Code -> Text(
             block.text,
-            style = ui(14f, lineHeight = null).copy(fontFamily = FontFamily.Monospace, lineHeight = 20.sp),
+            style = ui(14f).copy(fontFamily = FontFamily.Monospace, lineHeight = 20.sp),
             color = colors.body,
             softWrap = false,
             modifier = padded
@@ -149,10 +149,10 @@ internal fun ReaderArticleBlockView(block: ReaderArticleBlock, accent: Color, is
                 Text(
                     block.label,
                     style = ui(15f, 600),
-                    color = colors.onInverse,
+                    color = colors.background,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(colors.inverse)
+                        .background(colors.text)
                         .clickable { uriHandler.openUri(block.url) }
                         .padding(horizontal = 24.dp, vertical = 13.dp),
                 )
@@ -191,7 +191,6 @@ private fun ArticleImage(block: ReaderArticleBlock.Image, accent: Color, modifie
 private fun Quote(
     block: ReaderArticleBlock.Quote,
     accent: Color,
-    links: TextLinkStyles,
     modifier: Modifier = Modifier,
 ) {
     val colors = articleColors
@@ -206,7 +205,7 @@ private fun Quote(
                     .background(accent)
             )
             Text(
-                rememberHtml(block.html, links),
+                rememberHtml(block.html),
                 style = ui(bodySize() * MAJOR_HEADING_SCALE, 600, lineHeight = 1.3f, tracking = -0.01f),
                 color = colors.text,
                 textAlign = TextAlign.Center,
@@ -229,7 +228,7 @@ private fun Quote(
             )
             Column(Modifier.padding(start = 16.dp)) {
                 Text(
-                    rememberHtml(block.html, links),
+                    rememberHtml(block.html),
                     style = body(BODY_SIZE * QUOTE_SCALE, lineHeight = 1.55f).copy(fontStyle = FontStyle.Italic),
                     color = colors.body,
                 )
@@ -296,12 +295,12 @@ private fun DetailsBlock(block: ReaderArticleBlock.Details, accent: Color, isAct
             .fillMaxWidth()
             .padding(vertical = 6.dp)
     ) {
-        HorizontalDivider(Modifier.padding(horizontal = TEXT_PADDING), color = colors.divider)
+        HorizontalDivider(Modifier.padding(horizontal = ReaderArticleTextPadding), color = colors.divider)
         Row(
             Modifier
                 .fillMaxWidth()
                 .clickable { isOpen = !isOpen }
-                .padding(horizontal = TEXT_PADDING, vertical = 14.dp),
+                .padding(horizontal = ReaderArticleTextPadding, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -318,7 +317,7 @@ private fun DetailsBlock(block: ReaderArticleBlock.Details, accent: Color, isAct
             )
         }
         if (isOpen) block.blocks.forEach { ReaderArticleBlockView(it, accent, isActive) }
-        HorizontalDivider(Modifier.padding(horizontal = TEXT_PADDING), color = colors.divider)
+        HorizontalDivider(Modifier.padding(horizontal = ReaderArticleTextPadding), color = colors.divider)
     }
 }
 
@@ -328,7 +327,7 @@ private fun DetailsBlock(block: ReaderArticleBlock.Details, accent: Color, isAct
  */
 @Suppress("LongMethod")
 @Composable
-private fun TableGrid(table: ReaderArticleBlock.Table, links: TextLinkStyles, modifier: Modifier = Modifier) {
+private fun TableGrid(table: ReaderArticleBlock.Table, modifier: Modifier = Modifier) {
     val colors = articleColors
     val shape = RoundedCornerShape(12.dp)
     val rows = table.rows.size
@@ -347,7 +346,7 @@ private fun TableGrid(table: ReaderArticleBlock.Table, links: TextLinkStyles, mo
                 table.rows.forEachIndexed { r, row ->
                     repeat(columns) { c ->
                         Text(
-                            rememberHtml(row.getOrNull(c).orEmpty(), links),
+                            rememberHtml(row.getOrNull(c).orEmpty()),
                             style = ui(14f, if (r < table.headerRows) 600 else 400, lineHeight = 1.4f),
                             color = colors.body,
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 9.dp),
@@ -398,15 +397,14 @@ private fun TableGrid(table: ReaderArticleBlock.Table, links: TextLinkStyles, mo
 @Composable
 internal fun ReaderArticleFootnoteSheet(html: String, onDismiss: () -> Unit) {
     val colors = articleColors
-    val links = rememberLinkStyles()
     ModalBottomSheet(onDismissRequest = onDismiss, containerColor = colors.sheet) {
         Text(
-            rememberHtml(html, links),
+            rememberHtml(html),
             style = body(BODY_SIZE * NOTE_SCALE, lineHeight = 1.55f),
             color = colors.body,
             modifier = Modifier
                 .readableWidth()
-                .padding(start = TEXT_PADDING, end = TEXT_PADDING, bottom = 36.dp),
+                .padding(start = ReaderArticleTextPadding, end = ReaderArticleTextPadding, bottom = 36.dp),
         )
     }
 }
@@ -417,7 +415,7 @@ private fun Caption(text: String) {
         text,
         style = ui(13f, 500),
         color = articleColors.textSecondary,
-        modifier = Modifier.padding(start = TEXT_PADDING, end = TEXT_PADDING, top = 8.dp),
+        modifier = Modifier.padding(start = ReaderArticleTextPadding, end = ReaderArticleTextPadding, top = 8.dp),
     )
 }
 
@@ -426,16 +424,22 @@ private fun Citation(text: String, modifier: Modifier = Modifier) {
     Text(text, style = ui(13.5f, 500), color = articleColors.textSecondary, modifier = modifier)
 }
 
-/** Converted once per block rather than on every recomposition or scroll back into view */
+/**
+ * The screen's converted HTML, kept outside the lazy rows so a block scrolling back into view doesn't parse its HTML
+ * again
+ */
+internal val LocalReaderArticleHtmlCache = staticCompositionLocalOf { HashMap<String, AnnotatedString>() }
+
+/** [html] as styled text, converted once per post */
 @Composable
-internal fun rememberHtml(html: String, links: TextLinkStyles): AnnotatedString =
-    remember(html, links) { AnnotatedString.fromHtml(html, linkStyles = links) }
+internal fun rememberHtml(html: String): AnnotatedString {
+    val links = rememberLinkStyles()
+    val cache = LocalReaderArticleHtmlCache.current
+    return remember(html, links) { cache.getOrPut(html) { AnnotatedString.fromHtml(html, linkStyles = links) } }
+}
 
 @Composable
 internal fun rememberLinkStyles(): TextLinkStyles {
     val color = articleColors.text
     return remember(color) { TextLinkStyles(SpanStyle(color = color, textDecoration = TextDecoration.Underline)) }
 }
-
-/** The horizontal padding text blocks use, for the screen's own rows to line up with */
-internal val ReaderArticleTextPadding: Dp = TEXT_PADDING

@@ -42,14 +42,12 @@ sealed interface ReaderArticleBlock {
     data class Details(val summary: String, val blocks: List<ReaderArticleBlock>) : ReaderArticleBlock
 
     /**
-     * A video played in place on tap. [id] is the host's video ID, or the file URL for [VideoHost.FILE];
-     * [pageUrl] is where the video lives on the web.
+     * A video played in place on tap. [id] is the host's video ID, or the file URL for [VideoHost.FILE].
      */
     data class Video(
         val host: VideoHost,
         val id: String,
         val poster: String?,
-        val pageUrl: String,
         val width: Int? = null,
         val height: Int? = null,
     ) : ReaderArticleBlock {
@@ -86,21 +84,21 @@ object ReaderVideoLinks {
         width: Int? = null,
         height: Int? = null,
     ): ReaderArticleBlock.Video? {
-        fun video(host: VideoHost, id: String, poster: String?, page: String) =
-            ReaderArticleBlock.Video(host, id, poster, page, width, height)
+        fun video(host: VideoHost, id: String, poster: String?) =
+            ReaderArticleBlock.Video(host, id, poster, width, height)
         YOUTUBE.find(url)?.groupValues?.get(1)?.let { id ->
             val thumbnail = poster ?: "https://img.youtube.com/vi/$id/hqdefault.jpg"
-            return video(VideoHost.YOUTUBE, id, thumbnail, "https://www.youtube.com/watch?v=$id")
+            return video(VideoHost.YOUTUBE, id, thumbnail)
         }
         VIMEO.find(url)?.groupValues?.get(1)?.let { id ->
-            return video(VideoHost.VIMEO, id, poster, "https://vimeo.com/$id")
+            return video(VideoHost.VIMEO, id, poster)
         }
         VIDEOPRESS.find(url)?.groupValues?.get(1)?.let { id ->
-            return video(VideoHost.VIDEOPRESS, id, poster, "https://videopress.com/v/$id")
+            return video(VideoHost.VIDEOPRESS, id, poster)
         }
         // only https files: the player can't load cleartext
         if (url.startsWith("https://") && FILE.containsMatchIn(url)) {
-            return video(VideoHost.FILE, url, poster, url)
+            return video(VideoHost.FILE, url, poster)
         }
         return null
     }
@@ -137,21 +135,9 @@ object ReaderArticleBlocks {
     )
     private const val MAX_ALT_CAPTION_LENGTH = 200
 
-    private val TRUNCATED = Regex("""(?:…|\.\.\.|continue reading|read more)\W*$""", RegexOption.IGNORE_CASE)
-
     /** Footnote markers link here, followed by the note's HTML, URL-encoded */
     private const val FOOTNOTE_SCHEME = "footnote:"
 
-    /**
-     * Whether [blocks] look like an excerpt rather than the whole post: nothing at all, or text that trails off
-     * with an ellipsis or a "read more" link
-     */
-    @Suppress("ReturnCount")
-    fun looksLikeExcerpt(blocks: List<ReaderArticleBlock>): Boolean {
-        if (blocks.isEmpty()) return true
-        val last = blocks.last() as? ReaderArticleBlock.Paragraph ?: return false
-        return TRUNCATED.containsMatchIn(Jsoup.parse(last.html).text().trim())
-    }
 
     /** The note's HTML if [url] is a footnote marker's link, else null */
     fun footnote(url: String): String? =
@@ -164,15 +150,6 @@ object ReaderArticleBlocks {
         return mutableListOf<ReaderArticleBlock>().also { walk(body, it, depth = 0) }
     }
 
-    /** Every image in [blocks], including those in galleries and collapsed sections, in reading order */
-    fun images(blocks: List<ReaderArticleBlock>): List<ReaderArticleBlock.Image> = blocks.flatMap {
-        when (it) {
-            is ReaderArticleBlock.Image -> listOf(it)
-            is ReaderArticleBlock.Gallery -> it.images
-            is ReaderArticleBlock.Details -> images(it.blocks)
-            else -> emptyList()
-        }
-    }
 
     /*
      * In-page links have nowhere to go in a native view. Footnote markers (links to a list item elsewhere in the

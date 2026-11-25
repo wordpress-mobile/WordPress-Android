@@ -61,6 +61,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.repository.awaitRestRequest
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Sent as the referrer for embedded players. YouTube refuses to play in an app's WebView unless the request
@@ -152,10 +153,13 @@ private fun VideoPoster(video: ReaderArticleBlock.Video, accent: Color, onPlay: 
     }
 }
 
-private suspend fun fetchVideoPressPoster(guid: String): String? =
-    awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
+// posters already looked up, so a video scrolling back into view doesn't ask again
+private val videoPressPosters = ConcurrentHashMap<String, String>()
+
+private suspend fun fetchVideoPressPoster(guid: String): String? = videoPressPosters[guid]
+    ?: awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
         WordPress.getRestClientUtilsV1_1().getWithLocale("videos/$guid", listener, errorListener)
-    }.response?.optString("poster")?.takeIf { it.startsWith("http") }
+    }.response?.optString("poster")?.takeIf { it.startsWith("http") }?.also { videoPressPosters[guid] = it }
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable

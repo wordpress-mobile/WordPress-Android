@@ -335,12 +335,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             visibility = View.GONE
         }
         swipeToRefreshHelper = buildSwipeToRefreshHelper(bodyBinding.swipeToRefresh) {
-            if (isAdded) {
-                if (commentsSnippetFeatureConfig.isEnabled()) {
-                    conversationViewModel.onRefresh()
-                }
-                viewModel.onRefreshPost()
-            }
+            if (isAdded) refreshPost()
         }
         chrome = ReaderPostDetailChromeState(
             canScroll = { scrollView.canScrollVertically(1) || scrollView.canScrollVertically(-1) }
@@ -420,10 +415,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val isLikesEnabled = likesEnhancementsFeatureConfig.isEnabled()
         val isSnippetEnabled = commentsSnippetFeatureConfig.isEnabled()
         val lifecycleState by viewLifecycleOwner.lifecycle.currentStateFlow.collectAsState()
-        val accent = readerImageMeta(article.heroSourceUrl)?.accent?.let { Color(it) }
-            ?: Color(ReaderImageAccentSampler.fallbackAccent(article.key))
+        val accent = Color(
+            readerImageMeta(article.heroSourceUrl)?.accent
+                ?: ReaderImageAccentSampler.fallbackAccent(article.blogId, article.postId)
+        )
         val post = viewModel.post
-        val images = remember(article.key) {
+        val images = remember(article.blogId, article.postId) {
             ReaderArticleImages(
                 url = { url, widthPx ->
                     ReaderUtils.getResizedImageUrl(
@@ -449,19 +446,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val articleActions by lazy {
         ReaderArticleScreenActions(
-            onBack = screenActions.onNavigationClick,
-            onMoreClick = screenActions.onMoreClick,
-            onMoreDismiss = screenActions.onMoreDismiss,
-            onMoreItemClick = screenActions.onMoreItemClick,
+            screen = screenActions,
             onUseWebRenderer = { switchRenderer(isNative = false) },
-            onShare = ::onShareClicked,
             onRefresh = {
                 isArticleRefreshing = true
-                if (commentsSnippetFeatureConfig.isEnabled()) conversationViewModel.onRefresh()
-                viewModel.onRefreshPost()
+                refreshPost()
             },
             onLinkClick = { url -> onUrlClick(url) },
         )
+    }
+
+    private fun refreshPost() {
+        if (commentsSnippetFeatureConfig.isEnabled()) conversationViewModel.onRefresh()
+        viewModel.onRefreshPost()
     }
 
     private fun switchRenderer(isNative: Boolean) {
@@ -472,18 +469,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showNativePhoto(imageUrl: String) {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_IMAGE_TAPPED)
-        val post = viewModel.post ?: return
-        val options = EnumSet.noneOf(PhotoViewerOption::class.java)
-        if (post.isPrivate) options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
-        // the post's content lets the viewer page through its other images
-        ReaderActivityLauncher.showReaderPhotoViewer(requireActivity(), imageUrl, post.text, null, options, 0, 0)
+        showPhotoViewer(imageUrl, sourceView = null, startX = 0, startY = 0)
     }
 
     private fun ReaderPost.toArticlePost(): ReaderArticlePost {
         val featuredImage = featuredImage?.takeIf { hasFeaturedImage() }
         val heroWidth = resources.displayMetrics.widthPixels
         return ReaderArticlePost(
-            key = "$blogId:$postId",
+            blogId = blogId,
+            postId = postId,
             title = title.orEmpty(),
             url = url.orEmpty(),
             html = text.orEmpty(),
@@ -1287,7 +1281,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Suppress("ReturnCount")
     private fun showPhotoViewer(
         imageUrl: String,
-        sourceView: View,
+        sourceView: View?,
         startX: Int,
         startY: Int
     ): Boolean {

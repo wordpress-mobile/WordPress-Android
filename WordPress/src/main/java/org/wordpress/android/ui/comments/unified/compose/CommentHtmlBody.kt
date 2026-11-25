@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,15 +56,11 @@ fun CommentHtmlBody(
                             commentHtmlToAnnotatedString(segment.html, linkColor)
                         }
                         if (annotated.isNotEmpty()) {
-                            if (textStyle != null) {
-                                Text(text = annotated, color = MaterialTheme.colorScheme.onSurface, style = textStyle)
-                            } else {
-                                Text(
-                                    text = annotated,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontSize = 16.sp
-                                )
-                            }
+                            Text(
+                                text = annotated,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = textStyle ?: LocalTextStyle.current.copy(fontSize = 16.sp)
+                            )
                         }
                     }
                     // Route through the shared RemoteImage wrapper for consistency with the

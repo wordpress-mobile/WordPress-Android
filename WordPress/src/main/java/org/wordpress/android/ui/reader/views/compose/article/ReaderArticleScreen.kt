@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.views.compose.article
 
+import android.icu.text.CompactDecimalFormat
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,11 +14,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -44,10 +43,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -57,6 +54,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -71,6 +70,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -80,12 +80,13 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.views.compose.detail.ReaderPostDetailScreenActions
 import org.wordpress.android.ui.reader.views.compose.postcard.CircleAvatar
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostMoreMenuItem
+import org.wordpress.android.ui.reader.views.compose.postcard.countText
 import org.wordpress.android.ui.reader.views.compose.readableWidth
-import java.util.Locale
+import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 
 private val LIGHT_HERO_HEIGHT = 330.dp
 private val DARK_HERO_HEIGHT = 300.dp
@@ -96,13 +97,11 @@ private const val HERO_TOP_SCRIM_ALPHA = 0.4f
 private const val DARK_HERO_TOP_SCRIM_ALPHA = 0.35f
 private const val OVERLAY_BUTTON_ALPHA = 0.35f
 private const val PROGRESS_TRACK_ALPHA = 0.08f
-private const val COMPACT_THOUSAND = 1_000
-private const val COMPACT_TEN_THOUSAND = 10_000
-private const val COMPACT_MILLION = 1_000_000
 
 /** The post the native detail shows: its body's HTML is parsed into blocks off the main thread */
 data class ReaderArticlePost(
-    val key: String,
+    val blogId: Long,
+    val postId: Long,
     val title: String,
     val url: String,
     val html: String,
@@ -112,14 +111,12 @@ data class ReaderArticlePost(
     val heroUrl: String?,
 )
 
-@Suppress("LongParameterList")
+/**
+ * The native detail's callbacks: the usual detail screen's, plus what only it needs
+ */
 class ReaderArticleScreenActions(
-    val onBack: () -> Unit,
-    val onMoreClick: () -> Unit,
-    val onMoreDismiss: () -> Unit,
-    val onMoreItemClick: (ReaderPostCardActionType) -> Unit,
+    val screen: ReaderPostDetailScreenActions,
     val onUseWebRenderer: () -> Unit,
-    val onShare: () -> Unit,
     val onRefresh: () -> Unit,
     val onLinkClick: (String) -> Unit,
 )
@@ -145,7 +142,7 @@ fun ReaderArticleScreen(
 ) {
     val colors = articleColors
     // a related post replacing this one in place starts at its top
-    val listState = remember(post?.key) { LazyListState() }
+    val listState = remember(post?.blogId, post?.postId) { LazyListState() }
     val density = LocalDensity.current
     val topInset = with(density) { topInsetPx.toDp() }
     val heroHeight = when {
@@ -153,7 +150,7 @@ fun ReaderArticleScreen(
         colors.isDark -> DARK_HERO_HEIGHT
         else -> LIGHT_HERO_HEIGHT
     }
-    val blocks by produceState<List<ReaderArticleBlock>?>(null, post?.key, post?.html) {
+    val blocks by produceState<List<ReaderArticleBlock>?>(null, post?.html) {
         value = post?.let {
             withContext(Dispatchers.Default) {
                 ReaderArticleBlocks.parse(it.html, it.url).withoutHero(it.heroSourceUrl)
@@ -178,11 +175,13 @@ fun ReaderArticleScreen(
             .background(colors.background)
             .nestedScroll(pill.connection)
     ) {
+        val htmlCache = remember(post?.html, colors.text) { HashMap<String, AnnotatedString>() }
         CompositionLocalProvider(
             LocalUriHandler provides uriHandler,
             LocalReaderArticleImages provides images,
+            LocalReaderArticleHtmlCache provides htmlCache,
         ) {
-            PullToRefreshBox(isRefreshing = isRefreshing, onRefresh = actions.onRefresh) {
+            ContentListPullToRefreshBox(isRefreshing = isRefreshing, onRefresh = actions.onRefresh) {
                 // text can be selected to copy a passage; links (including footnotes) still open on tap
                 SelectionContainer {
                     LazyColumn(
@@ -227,7 +226,7 @@ fun ReaderArticleScreen(
             exit = slideOutVertically { it } + fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter),
         ) {
-            detailsState?.let { ActionPill(it, actions.onShare) }
+            detailsState?.let { ActionPill(it, actions.screen.onShareClick) }
         }
         footnote?.let { ReaderArticleFootnoteSheet(it, onDismiss = { footnote = null }) }
     }
@@ -389,23 +388,10 @@ private fun ProgressBar(listState: LazyListState, heroHeight: Dp, topInset: Dp, 
     val heroPx = with(density) { heroHeight.roundToPx() }
     val topPx = with(density) { topInset.roundToPx() }
     val overlapPx = with(density) { if (colors.isDark) 0 else SHEET_OVERLAP.roundToPx() }
-    val progress by remember(listState) {
-        derivedStateOf {
-            val info = listState.layoutInfo
-            val total = info.totalItemsCount
-            when {
-                total == 0 -> 0f
-                !listState.canScrollForward -> 1f
-                else -> {
-                    val first = info.visibleItemsInfo.firstOrNull()
-                    val fraction = if (first != null && first.size > 0) -first.offset.toFloat() / first.size else 0f
-                    ((listState.firstVisibleItemIndex + fraction) / total).coerceIn(0f, 1f)
-                }
-            }
-        }
-    }
+    val track = colors.text.copy(alpha = PROGRESS_TRACK_ALPHA)
     Box(
         Modifier
+            // position and progress are read while placing and drawing, so scrolling doesn't recompose the bar
             .offset {
                 val scrolled = if (listState.firstVisibleItemIndex == 0) {
                     listState.firstVisibleItemScrollOffset
@@ -417,16 +403,30 @@ private fun ProgressBar(listState: LazyListState, heroHeight: Dp, topInset: Dp, 
             .padding(horizontal = 26.dp)
             .fillMaxWidth()
             .height(3.dp)
-            .clip(CircleShape)
-            .background(colors.text.copy(alpha = PROGRESS_TRACK_ALPHA))
-    ) {
-        Box(
-            Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(progress)
-                .clip(CircleShape)
-                .background(accent)
-        )
+            .drawBehind {
+                val radius = CornerRadius(size.height / 2)
+                drawRoundRect(track, cornerRadius = radius)
+                drawRoundRect(
+                    accent,
+                    size = size.copy(width = size.width * readingProgress(listState)),
+                    cornerRadius = radius
+                )
+            }
+    )
+}
+
+/** How far through the post the list is, from 0 to 1 */
+private fun readingProgress(listState: LazyListState): Float {
+    val info = listState.layoutInfo
+    val total = info.totalItemsCount
+    return when {
+        total == 0 -> 0f
+        !listState.canScrollForward -> 1f
+        else -> {
+            val first = info.visibleItemsInfo.firstOrNull()
+            val fraction = if (first != null && first.size > 0) -first.offset.toFloat() / first.size else 0f
+            ((listState.firstVisibleItemIndex + fraction) / total).coerceIn(0f, 1f)
+        }
     }
 }
 
@@ -438,25 +438,25 @@ private fun TopButtons(topInset: Dp, detailsState: ReaderPostDetailsUiState?, ac
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        OverlayButton(
+        ReaderOverlayButton(
             Icons.AutoMirrored.Rounded.ArrowBack,
             stringResource(R.string.navigate_up_desc),
-            onClick = actions.onBack
+            onClick = actions.screen.onNavigationClick
         )
         Box {
-            OverlayButton(
+            ReaderOverlayButton(
                 Icons.Rounded.MoreVert,
                 stringResource(R.string.show_more_desc),
-                onClick = actions.onMoreClick
+                onClick = actions.screen.onMoreClick
             )
             // the view model fills in the items when More is tapped, and clears them to close the menu
             val items = detailsState?.moreMenuItems
-            DropdownMenu(expanded = items != null, onDismissRequest = actions.onMoreDismiss) {
-                items?.forEach { item -> ReaderPostMoreMenuItem(item) { actions.onMoreItemClick(it.type) } }
+            DropdownMenu(expanded = items != null, onDismissRequest = actions.screen.onMoreDismiss) {
+                items?.forEach { item -> ReaderPostMoreMenuItem(item) { actions.screen.onMoreItemClick(it.type) } }
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.reader_article_use_web_renderer)) },
                     onClick = {
-                        actions.onMoreDismiss()
+                        actions.screen.onMoreDismiss()
                         actions.onUseWebRenderer()
                     },
                 )
@@ -465,9 +465,9 @@ private fun TopButtons(topInset: Dp, detailsState: ReaderPostDetailsUiState?, ac
     }
 }
 
-/** A round translucent button drawn over the hero */
+/** A round translucent button drawn over an image: the native detail's hero, a blog preview's cover */
 @Composable
-private fun OverlayButton(icon: ImageVector, label: String, onClick: () -> Unit) {
+internal fun ReaderOverlayButton(icon: ImageVector, label: String, onClick: () -> Unit) {
     Box(
         Modifier
             .size(40.dp)
@@ -485,6 +485,11 @@ private fun OverlayButton(icon: ImageVector, label: String, onClick: () -> Unit)
 private fun ActionPill(state: ReaderPostDetailsUiState, onShare: () -> Unit) {
     val colors = articleColors
     val postActions = state.actions
+    val locale = LocalConfiguration.current.locales[0]
+    // 1.2K rather than 1,234, as the post cards show counts
+    val countFormat = remember(locale) {
+        CompactDecimalFormat.getInstance(locale, CompactDecimalFormat.CompactStyle.SHORT)
+    }
     Row(
         Modifier
             .navigationBarsPadding()
@@ -494,15 +499,10 @@ private fun ActionPill(state: ReaderPostDetailsUiState, onShare: () -> Unit) {
             .padding(6.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        PillAction(state, postActions.bookmarkAction, Icons.Rounded.BookmarkBorder, Icons.Rounded.Bookmark)
-        PillAction(state, postActions.likeAction, Icons.Rounded.FavoriteBorder, Icons.Rounded.Favorite)
-        PillAction(
-            state,
-            postActions.commentsAction,
-            Icons.AutoMirrored.Rounded.Comment,
-            Icons.AutoMirrored.Rounded.Comment
-        )
-        PillButton(Icons.Rounded.Share, stringResource(R.string.share_desc), count = null, onClick = onShare)
+        PillAction(state, postActions.bookmarkAction, countFormat, Icons.Rounded.BookmarkBorder, Icons.Rounded.Bookmark)
+        PillAction(state, postActions.likeAction, countFormat, Icons.Rounded.FavoriteBorder, Icons.Rounded.Favorite)
+        PillAction(state, postActions.commentsAction, countFormat, Icons.AutoMirrored.Rounded.Comment)
+        PillButton(Icons.Rounded.Share, stringResource(R.string.share_desc), countText = null, onClick = onShare)
     }
 }
 
@@ -510,15 +510,18 @@ private fun ActionPill(state: ReaderPostDetailsUiState, onShare: () -> Unit) {
 private fun PillAction(
     state: ReaderPostDetailsUiState,
     action: PrimaryAction,
+    countFormat: CompactDecimalFormat,
     icon: ImageVector,
-    selectedIcon: ImageVector,
+    selectedIcon: ImageVector = icon,
 ) {
-    // a count still shows for an action that can't be used, such as likes for someone signed out
-    if (!action.isEnabled && action.count == 0) return
+    // as on the post cards: a count still shows for an action that can't be used, such as likes signed out
+    val countText = countText(action, countFormat)
+    if (!action.isEnabled && countText == null) return
     PillButton(
         icon = if (action.isSelected) selectedIcon else icon,
         label = action.contentDescription?.let { uiStringText(it) }.orEmpty(),
-        count = action.count,
+        // a zero beside an icon is noise in the pill
+        countText = countText.takeIf { action.count > 0 },
         isEnabled = action.isEnabled,
         onClick = { action.onClicked?.invoke(state.postId, state.blogId, action.type) },
     )
@@ -528,34 +531,25 @@ private fun PillAction(
 private fun PillButton(
     icon: ImageVector,
     label: String,
-    count: Int?,
+    countText: String?,
     isEnabled: Boolean = true,
     onClick: () -> Unit,
 ) {
-    val shown = count?.takeIf { it > 0 }
     Row(
         Modifier
             .height(44.dp)
             .widthIn(min = 44.dp)
-            .heightIn(min = 44.dp)
             .clip(CircleShape)
             .clickable(enabled = isEnabled, role = Role.Button, onClick = onClick)
-            .padding(horizontal = if (shown != null) 12.dp else 0.dp),
+            .padding(horizontal = if (countText != null) 12.dp else 0.dp),
         horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(icon, contentDescription = label, tint = Color.White, modifier = Modifier.size(22.dp))
-        if (shown != null) Text(compactCount(shown), style = ui(13f, 600), color = Color.White)
+        if (countText != null) Text(countText, style = ui(13f, 600), color = Color.White)
     }
 }
 
-/** "7", "1.2k", "18k", "1.2M": short enough to sit beside an icon */
-private fun compactCount(n: Int): String = when {
-    n < COMPACT_THOUSAND -> "$n"
-    n < COMPACT_TEN_THOUSAND -> "%.1fk".format(Locale.US, n / COMPACT_THOUSAND.toDouble()).replace(".0k", "k")
-    n < COMPACT_MILLION -> "${n / COMPACT_THOUSAND}k"
-    else -> "%.1fM".format(Locale.US, n / COMPACT_MILLION.toDouble()).replace(".0M", "M")
-}
 
 /**
  * Hides the pill as the post scrolls down and shows it as it scrolls up. It reacts to the scroll the list consumed,

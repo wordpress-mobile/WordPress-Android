@@ -138,6 +138,9 @@ class ReaderImageAccentSampler @Inject constructor(
         /** A stable accent for [key], such as a post with no image */
         fun fallbackAccent(key: String): Int = FALLBACKS[Math.floorMod(key.hashCode(), FALLBACKS.size)]
 
+        /** A post's stable accent, the same wherever it shows, for when its image has none */
+        fun fallbackAccent(blogId: Long, postId: Long): Int = fallbackAccent("$blogId:$postId")
+
         /* text sits in white on the accent, so it's kept dark enough for contrast */
         private fun darkenForWhiteText(color: Int): Int {
             var darkened = color
