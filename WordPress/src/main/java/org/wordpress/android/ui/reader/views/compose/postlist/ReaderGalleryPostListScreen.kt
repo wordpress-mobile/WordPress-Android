@@ -87,6 +87,7 @@ fun ReaderGalleryPostListScreen(
     uiState: ReaderPostListUiState,
     gridState: LazyStaggeredGridState,
     actions: ReaderPostListActions,
+    canLoadMore: Boolean = true,
 ) {
     ContentListPullToRefreshBox(
         isRefreshing = uiState.isRefreshing,
@@ -96,7 +97,7 @@ fun ReaderGalleryPostListScreen(
             .nestedScroll(rememberNestedScrollInteropConnection())
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        GalleryGrid(uiState, gridState, actions)
+        GalleryGrid(uiState, gridState, actions, canLoadMore)
         NewPostsBar(
             isVisible = uiState.newPostsBarVisible,
             listState = gridState,
@@ -115,6 +116,7 @@ private fun GalleryGrid(
     uiState: ReaderPostListUiState,
     gridState: LazyStaggeredGridState,
     actions: ReaderPostListActions,
+    canLoadMore: Boolean,
 ) {
     val items = uiState.items
     val emptyState = uiState.emptyState
@@ -178,7 +180,7 @@ private fun GalleryGrid(
     LoadMoreOnScrollToEnd(
         gridState = gridState,
         itemCount = items.size,
-        canLoadMore = hasPosts,
+        canLoadMore = hasPosts && canLoadMore,
         onLoadMore = actions.onLoadMore
     )
     GalleryPendingScroll(gridState, uiState.scrollToPosition, actions.onScrollHandled)

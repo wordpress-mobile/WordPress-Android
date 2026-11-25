@@ -507,14 +507,11 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         val actions = buildActions()
         val listState = LazyListState(savedFirstVisibleIndex, savedFirstVisibleOffset).also { listState = it }
         val gridState = LazyStaggeredGridState().also { gridState = it }
-        // only the Subscriptions feed and site previews have a gallery layout
-        val supportsGallery = postListViewModel.listType == ReaderPostListType.TAG_FOLLOWED ||
-            postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW
         return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
                 val isGalleryPreferred by layoutPreference.isGallery.collectAsStateWithLifecycle()
-                val isGallery = supportsGallery && isGalleryPreferred
+                val isGallery = supportsGallery() && isGalleryPreferred
                 SideEffect { isGalleryShown = isGallery }
                 if (isGallery) {
                     ReaderGalleryPostListScreen(uiState = uiState, gridState = gridState, actions = actions)
@@ -527,6 +524,18 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
                 }
             }
         })
+    }
+
+    /*
+     * site previews and the Subscriptions, Discover, Liked and Saved feeds have a gallery layout; P2s, Automattic
+     * and lists don't
+     */
+    private fun supportsGallery(): Boolean = when (postListViewModel.listType) {
+        ReaderPostListType.BLOG_PREVIEW -> true
+        ReaderPostListType.TAG_FOLLOWED -> postListViewModel.currentTag.let { tag ->
+            tag == null || !(tag.isP2 || tag.isA8C || tag.isListTopic)
+        }
+        else -> false
     }
 
     override fun onDestroyView() {

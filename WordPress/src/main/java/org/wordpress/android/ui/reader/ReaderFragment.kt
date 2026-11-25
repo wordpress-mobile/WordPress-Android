@@ -279,7 +279,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                                 onClearFilterClick = ::clearFilter,
                                 isSearchVisible = state.isSearchActionVisible,
                                 onSearchClick = viewModel::onSearchActionClicked,
-                                isGalleryLayout = isGalleryLayout.takeIf { selectedTag?.isFollowedSites == true },
+                                isGalleryLayout = isGalleryLayout.takeIf { selectedTag?.hasGalleryLayout() == true },
                                 onLayoutToggleClick = layoutPreference::toggle,
                             )
                         }
@@ -298,6 +298,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             }
         }
     }
+
+    // the feeds whose posts can show as a gallery, which ReaderPostListFragment and ReaderSavedPostsFragment follow
+    private fun ReaderTag.hasGalleryLayout() = isFollowedSites || isDiscover || isPostsILike || isBookmarked
 
     /**
      * The selected feed's fragment. The key on the tag's slug means changing feeds replaces it, as the old
