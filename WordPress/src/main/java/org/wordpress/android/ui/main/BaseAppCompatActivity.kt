@@ -30,6 +30,7 @@ import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessage
 import org.wordpress.android.ui.prefs.AppSettingsActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
 import org.wordpress.android.ui.reader.ReaderCommentListActivity
+import org.wordpress.android.ui.reader.ReaderPostListActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.reader.ReaderSearchActivity
 import org.wordpress.android.ui.reader.ReaderSubsActivity
@@ -121,6 +122,7 @@ private val excludedActivities = listOf(
     LoginActivity::class.java.name,
     MediaSettingsActivity::class.java.name,
     ReaderCommentListActivity::class.java.name,
+    ReaderPostListActivity::class.java.name,
     ReaderPostPagerActivity::class.java.name,
 
     // these are excluded because they implement custom IME inset handling for proper

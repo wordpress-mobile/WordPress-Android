@@ -5,25 +5,61 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.core.os.BundleCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.compose.AndroidFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
@@ -48,7 +84,9 @@ import org.wordpress.android.ui.posts.EditorLauncher
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnBlogInfoFailedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
 import org.wordpress.android.ui.reader.views.compose.enableNestedScrollInterop
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderGalleryCoverHeight
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -67,7 +105,11 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
     private var source: String? = null
     private var postListType: ReaderPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE
     private var siteId: Long = 0
-    private var listFragment: ReaderPostListFragment? = null
+    // state, so the gallery preview's status bar can follow the list as it scrolls
+    private var listFragment: ReaderPostListFragment? by mutableStateOf(null)
+
+    @Inject
+    lateinit var layoutPreference: ReaderLayoutPreference
 
     @Inject
     lateinit var siteStore: SiteStore
@@ -95,6 +137,8 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // edge to edge, so a gallery preview's cover can sit under the status bar; the screens inset themselves
+        enableEdgeToEdge()
 
         source = intent.getStringExtra(ReaderConstants.ARG_SOURCE)
         postListType = if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -151,11 +195,14 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun PostListScreen(title: String, listArguments: Bundle?) {
+        val isGallery by layoutPreference.isGallery.collectAsState()
+        if (postListType == ReaderPostListType.BLOG_PREVIEW && isGallery) {
+            GalleryPreviewScreen(listArguments)
+            return
+        }
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            // BaseAppCompatActivity has already applied the window insets
-            contentWindowInsets = WindowInsets(0),
             topBar = {
                 TopAppBar(
                     title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -174,10 +221,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
                             }
                         }
                     },
-                    scrollBehavior = scrollBehavior,
-                    // BaseAppCompatActivity has already padded the window for the status bar, so the bar mustn't
-                    // add it again
-                    windowInsets = WindowInsets(0)
+                    scrollBehavior = scrollBehavior
                 )
             }
         ) { contentPadding ->
@@ -193,6 +237,101 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
                 }
             }
         }
+    }
+
+    /**
+     * A blog preview in the gallery layout, as WPFolio shows a site: no top bar, the cover of the site's latest
+     * images up under the status bar, and round back and share buttons over it. The status bar shows the cover
+     * behind a scrim with light icons, then the screen's background once the cover scrolls away.
+     */
+    @Composable
+    private fun GalleryPreviewScreen(listArguments: Bundle?) {
+        val density = LocalDensity.current
+        val statusBarPx = WindowInsets.statusBars.getTop(density)
+        val coverPx = with(density) { ReaderGalleryCoverHeight.roundToPx() } + statusBarPx
+        val isOverCover by remember {
+            derivedStateOf {
+                val grid = listFragment?.feedListState as? LazyStaggeredGridState
+                grid == null || (grid.firstVisibleItemIndex == 0 && grid.firstVisibleItemScrollOffset < coverPx)
+            }
+        }
+        val isDarkTheme = isSystemInDarkTheme()
+        LaunchedEffect(isOverCover, isDarkTheme) {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                !isOverCover && !isDarkTheme
+        }
+        val background = MaterialTheme.colorScheme.surface
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(background)
+        ) {
+            listArguments?.let {
+                AndroidFragment<ReaderPostListFragment>(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.navigationBars),
+                    arguments = it
+                ) { fragment ->
+                    listFragment = fragment
+                    fragment.enableNestedScrollInterop()
+                }
+            }
+            if (isOverCover) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(with(density) { statusBarPx.toDp() } + COVER_SCRIM_HEIGHT)
+                        .background(
+                            Brush.verticalGradient(
+                                0f to Color.Black.copy(alpha = COVER_SCRIM_ALPHA),
+                                1f to Color.Transparent
+                            )
+                        )
+                )
+            } else {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .windowInsetsTopHeight(WindowInsets.statusBars)
+                        .background(background)
+                )
+            }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                OverlayButton(stringResource(R.string.back), onClick = ::finish) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
+                }
+                OverlayButton(stringResource(R.string.share_action), onClick = ::shareSite) {
+                    Icon(
+                        painterResource(R.drawable.ic_share_white_24dp),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun OverlayButton(label: String, onClick: () -> Unit, icon: @Composable () -> Unit) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(Color.Black.copy(alpha = OVERLAY_BUTTON_ALPHA))
+                .clickable(onClick = onClick)
+                .semantics {
+                    contentDescription = label
+                    role = Role.Button
+                }
+        ) { icon() }
     }
 
     override fun onResume() {
@@ -334,3 +473,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
         }
     }
 }
+
+private val COVER_SCRIM_HEIGHT = 72.dp
+private const val COVER_SCRIM_ALPHA = 0.4f
+private const val OVERLAY_BUTTON_ALPHA = 0.35f

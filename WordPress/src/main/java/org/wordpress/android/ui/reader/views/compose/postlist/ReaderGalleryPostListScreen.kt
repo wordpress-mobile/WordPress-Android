@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -32,14 +35,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
@@ -72,7 +81,10 @@ private const val TITLE_MAX_LINES = 3
 private const val HERO_EXCERPT_MAX_LINES = 3
 private const val QUOTE_MAX_LINES = 9
 private const val MOSAIC_IMAGE_COUNT = 3
-private val MOSAIC_HEIGHT = 180.dp
+/** The height of a blog preview's cover below the status bar, as WPFolio's */
+internal val ReaderGalleryCoverHeight = 220.dp
+private val MOSAIC_GAP = 2.dp
+private const val MOSAIC_LEAD_WEIGHT = 1.4f
 
 /**
  * The Reader post list as a gallery, ported from WPFolio: the first post with an image as a large hero, the rest as
@@ -200,7 +212,8 @@ private fun GalleryRow(
         }
 
         is ReaderPostListItem.SiteHeader -> Column {
-            if (mosaicImages.isNotEmpty()) CoverMosaic(mosaicImages)
+            // shown even without images, since the preview's buttons sit over it
+            CoverMosaic(mosaicImages)
             ReaderSiteHeader(
                 info = item.info,
                 onFollowClick = actions.onSiteHeaderFollowClicked,
@@ -398,27 +411,53 @@ private fun TileMenuBox(uiState: ReaderPostUiState, content: @Composable (Modifi
 }
 
 /**
- * The three latest images above a site's header, in site previews
+ * The three latest images above a site's header, in site previews, edge to edge as WPFolio's cover is: the
+ * newest large on the start side, the next two stacked beside it
  */
 @Composable
 private fun CoverMosaic(images: List<String>) {
-    Row(
-        modifier = Modifier
+    val placeholder = colorResource(R.color.placeholder)
+    // the preview is edge to edge, so the cover also fills the space under the status bar
+    val density = LocalDensity.current
+    val view = LocalView.current
+    val statusBarPx = WindowInsets.statusBars.getTop(density).takeIf { it > 0 }
+        ?: ViewCompat.getRootWindowInsets(view)?.getInsets(WindowInsetsCompat.Type.statusBars())?.top
+        ?: 0
+    @Composable
+    fun Tile(index: Int, modifier: Modifier) {
+        TileImage(images.getOrNull(index), modifier.background(placeholder))
+    }
+    Box(
+        Modifier
+            // past the grid's padding, to the screen's edges and the top bar
+            .bleed(horizontal = GRID_SPACING, top = GRID_SPACING)
             .fillMaxWidth()
-            .height(MOSAIC_HEIGHT)
-            .clip(RoundedCornerShape(TILE_CORNER)),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+            .height(ReaderGalleryCoverHeight + with(density) { statusBarPx.toDp() })
+            .background(placeholder)
     ) {
-        images.forEachIndexed { index, url ->
-            TileImage(
-                url = url,
-                modifier = Modifier
-                    // the first image is the widest, as in WPFolio's cover
-                    .weight(if (index == 0) 1.4f else 1f)
-                    .fillMaxSize()
-                    .background(colorResource(R.color.placeholder))
-            )
+        Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(MOSAIC_GAP)) {
+            Tile(0, Modifier.weight(MOSAIC_LEAD_WEIGHT).fillMaxHeight())
+            if (images.size > 1) {
+                Column(
+                    Modifier.weight(1f).fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(MOSAIC_GAP)
+                ) {
+                    Tile(1, Modifier.weight(1f).fillMaxWidth())
+                    if (images.size > 2) Tile(2, Modifier.weight(1f).fillMaxWidth())
+                }
+            }
         }
+    }
+}
+
+/** Lets an item ignore the grid's padding: [horizontal] on both sides, and [top] above it */
+private fun Modifier.bleed(horizontal: Dp, top: Dp) = layout { measurable, constraints ->
+    val extraWidth = (horizontal * 2).roundToPx()
+    val extraTop = top.roundToPx()
+    val width = constraints.maxWidth + extraWidth
+    val placeable = measurable.measure(constraints.copy(minWidth = width, maxWidth = width))
+    layout(constraints.maxWidth, (placeable.height - extraTop).coerceAtLeast(0)) {
+        placeable.place(-extraWidth / 2, -extraTop)
     }
 }
 
