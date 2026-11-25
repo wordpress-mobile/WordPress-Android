@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -347,7 +348,8 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         networkUtilsWrapper,
         readerTracker,
         resourceProvider,
-        testDispatcher()
+        testDispatcher(),
+        TestScope(testDispatcher())
     )
 
     private fun string(resId: Int) = "string:$resId"

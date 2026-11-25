@@ -39,6 +39,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -58,6 +61,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -175,7 +181,12 @@ fun ReaderSubsScreen(
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
                 when (tabs[page]) {
                     ReaderSubsTab.TAGS -> TagsPage(uiState.tags, actions)
-                    ReaderSubsTab.SITES -> SitesPage(uiState.sites, uiState.siteSearchQuery, actions)
+                    ReaderSubsTab.SITES -> SitesPage(
+                        sites = uiState.sites,
+                        suggestedSites = uiState.suggestedSites,
+                        searchQuery = uiState.siteSearchQuery,
+                        actions = actions
+                    )
                 }
             }
             if (uiState.isAdding) {
@@ -287,7 +298,14 @@ private fun TagRow(tag: ReaderSubsTag, onFollowClick: () -> Unit) {
 }
 
 @Composable
-private fun SitesPage(sites: List<ReaderSubsSite>?, searchQuery: String?, actions: ReaderSubsActions) {
+private fun SitesPage(
+    sites: List<ReaderSubsSite>?,
+    suggestedSites: List<ReaderSubsSite>?,
+    searchQuery: String?,
+    actions: ReaderSubsActions
+) {
+    // suggestions only show while the search is closed or empty
+    val suggestions = suggestedSites.orEmpty().takeIf { searchQuery.isNullOrEmpty() }.orEmpty()
     // keyed by the query so each search starts at the top, rather than where the previous list was scrolled to.
     // An open but empty search shows the same list as no search, so the two share a key.
     val listState = rememberSaveable(searchQuery?.takeIf { it.isNotEmpty() }, saver = LazyListState.Saver) {
@@ -299,7 +317,7 @@ private fun SitesPage(sites: List<ReaderSubsSite>?, searchQuery: String?, action
             title = stringResource(R.string.reader_no_followed_blogs_search_title),
             modifier = Modifier.fillMaxSize()
         )
-        sites.isEmpty() -> EmptyContentM3(
+        sites.isEmpty() && suggestions.isEmpty() -> EmptyContentM3(
             title = stringResource(R.string.reader_no_followed_blogs_title),
             subtitle = stringResource(R.string.reader_no_followed_blogs_description_subs),
             modifier = Modifier.fillMaxSize()
@@ -309,18 +327,109 @@ private fun SitesPage(sites: List<ReaderSubsSite>?, searchQuery: String?, action
             contentPadding = PaddingValues(bottom = listBottomPadding),
             modifier = Modifier.fillMaxSize()
         ) {
+            if (suggestions.isNotEmpty()) {
+                item(key = "suggested_header") { SectionHeader(stringResource(R.string.reader_suggested_sites)) }
+                items(suggestions, key = { "suggested:${it.key}" }) { site ->
+                    Column(Modifier.readableWidth()) {
+                        ReaderSiteRow(
+                            title = site.title,
+                            subtitle = site.subtitle,
+                            iconUrl = site.iconUrl,
+                            isFollowing = site.isFollowing,
+                            isFollowEnabled = site.isFollowEnabled,
+                            onClick = { actions.onSuggestedSiteClicked(site) },
+                            onFollowClick = { actions.onSuggestedSiteFollowClicked(site) }
+                        )
+                        HorizontalDivider()
+                    }
+                }
+                if (sites.isNotEmpty()) {
+                    item(key = "subscribed_header") {
+                        SectionHeader(stringResource(R.string.reader_your_subscriptions))
+                    }
+                }
+            }
             items(sites, key = { it.key }) { site ->
-                ReaderSiteRow(
-                    title = site.title,
-                    subtitle = site.subtitle,
-                    iconUrl = site.iconUrl,
-                    isFollowing = site.isFollowing,
-                    isFollowEnabled = site.isFollowEnabled,
-                    onClick = { actions.onSiteClicked(site) },
-                    onFollowClick = { actions.onSiteFollowClicked(site) }
-                )
-                HorizontalDivider()
+                SwipeToUnfollow(site, actions) {
+                    Column(
+                        Modifier
+                            .background(MaterialTheme.colorScheme.surface)
+                            .readableWidth()
+                    ) {
+                        ReaderSiteRow(
+                            title = site.title,
+                            subtitle = site.subtitle,
+                            iconUrl = site.iconUrl,
+                            isFollowing = site.isFollowing,
+                            isFollowEnabled = site.isFollowEnabled,
+                            onClick = { actions.onSiteClicked(site) },
+                            onFollowClick = { actions.onSiteFollowClicked(site) }
+                        )
+                        HorizontalDivider()
+                    }
+                }
             }
         }
     }
 }
+
+@Composable
+private fun SectionHeader(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier
+            .readableWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 4.dp)
+    )
+}
+
+/**
+ * Swiping a followed site towards the start unfollows it, with an undo. The swipe state isn't saved, so a row the
+ * undo brings back doesn't dismiss itself again.
+ */
+@Composable
+private fun SwipeToUnfollow(site: ReaderSubsSite, actions: ReaderSubsActions, content: @Composable () -> Unit) {
+    val unfollowLabel = stringResource(R.string.reader_unsubscribe_action)
+    val dismissState = remember(site.key) {
+        SwipeToDismissBoxState(
+            initialValue = SwipeToDismissBoxValue.Settled,
+            positionalThreshold = { it * SWIPE_THRESHOLD_FRACTION },
+        )
+    }
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = false,
+        onDismiss = { value ->
+            if (value == SwipeToDismissBoxValue.EndToStart) actions.onSiteSwipedAway(site)
+        },
+        backgroundContent = {
+            Box(
+                contentAlignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.errorContainer)
+                    .padding(horizontal = 24.dp)
+            ) {
+                Text(
+                    text = unfollowLabel,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+        },
+        modifier = Modifier.semantics {
+            customActions = listOf(
+                CustomAccessibilityAction(unfollowLabel) {
+                    actions.onSiteSwipedAway(site)
+                    true
+                }
+            )
+        }
+    ) {
+        content()
+    }
+}
+
+private const val SWIPE_THRESHOLD_FRACTION = 0.4f

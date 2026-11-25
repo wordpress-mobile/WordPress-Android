@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
@@ -17,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -60,6 +62,9 @@ class ReaderSubsActivity : BaseAppCompatActivity() {
             onTagFollowClicked = viewModel::onTagFollowClicked,
             onSiteClicked = viewModel::onSiteClicked,
             onSiteFollowClicked = viewModel::onSiteFollowClicked,
+            onSiteSwipedAway = viewModel::onSiteSwipedAway,
+            onSuggestedSiteClicked = viewModel::onSuggestedSiteClicked,
+            onSuggestedSiteFollowClicked = viewModel::onSuggestedSiteFollowClicked,
             onEntryChanged = viewModel::onEntryChanged,
             onAddClicked = viewModel::onAddClicked,
             onShowInterests = { interestsLauncher.launch(ReaderActivityLauncher.createReaderInterestsIntent(this)) }
@@ -99,6 +104,25 @@ class ReaderSubsActivity : BaseAppCompatActivity() {
                             ReaderTracker.SOURCE_SETTINGS,
                             readerTracker
                         )
+                        is ReaderSubsUiEvent.ShowUnfollowUndo -> launch {
+                            snackbarHostState.currentSnackbarData?.dismiss()
+                            var isUndone = false
+                            try {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = event.message,
+                                    actionLabel = getString(R.string.undo),
+                                    duration = SnackbarDuration.Long
+                                )
+                                isUndone = result == SnackbarResult.ActionPerformed
+                            } finally {
+                                // also when the screen stops with the snackbar still up
+                                if (isUndone) {
+                                    viewModel.onUnfollowUndone(event.site)
+                                } else {
+                                    viewModel.onUnfollowConfirmed(event.site)
+                                }
+                            }
+                        }
                         ReaderSubsUiEvent.HideKeyboard -> WindowCompat.getInsetsController(window, window.decorView)
                             .hide(WindowInsetsCompat.Type.ime())
                     }

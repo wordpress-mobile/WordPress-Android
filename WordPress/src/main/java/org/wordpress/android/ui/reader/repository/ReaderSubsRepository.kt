@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.wordpress.android.datasets.ReaderBlogTable
+import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
@@ -42,6 +43,29 @@ class ReaderSubsRepository @Inject constructor(
     suspend fun getFollowedBlogs(): List<ReaderBlog> = withContext(ioDispatcher) {
         ReaderBlogTable.getFollowedBlogs()
     }
+
+    /**
+     * When each followed site last posted, as far as the posts saved on this device know, keyed by
+     * [ReaderSubsSiteKey.forBlog] and [ReaderSubsSiteKey.forFeed]
+     */
+    suspend fun getLatestPostDates(): Map<String, String> = withContext(ioDispatcher) {
+        val dates = mutableMapOf<String, String>()
+        ReaderDatabase.getReadableDb().rawQuery(
+            "SELECT blog_id, feed_id, MAX(date_published) FROM tbl_posts GROUP BY blog_id, feed_id",
+            null
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                val date = cursor.getString(2) ?: continue
+                val blogId = cursor.getLong(0)
+                val feedId = cursor.getLong(1)
+                if (blogId != 0L) dates.merge(ReaderSubsSiteKey.forBlog(blogId), date) { a, b -> maxOf(a, b) }
+                if (feedId != 0L) dates.merge(ReaderSubsSiteKey.forFeed(feedId), date) { a, b -> maxOf(a, b) }
+            }
+        }
+        dates
+    }
+
+    suspend fun fetchSuggestedSites(): List<ReaderSuggestedSite> = blogRepository.fetchSuggestedSites()
 
     fun isValidTagName(name: String) = ReaderTag.isValidTagName(name)
 
@@ -125,4 +149,9 @@ class ReaderSubsRepository @Inject constructor(
 sealed class ReaderSubsEvent {
     data object FollowedTagsFetched : ReaderSubsEvent()
     data class FollowedBlogsFetched(val didChange: Boolean) : ReaderSubsEvent()
+}
+
+object ReaderSubsSiteKey {
+    fun forBlog(blogId: Long) = "blog:$blogId"
+    fun forFeed(feedId: Long) = "feed:$feedId"
 }

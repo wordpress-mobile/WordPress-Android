@@ -15,6 +15,9 @@ class ReaderSubsActions(
     val onTagFollowClicked: (ReaderSubsTag) -> Unit,
     val onSiteClicked: (ReaderSubsSite) -> Unit,
     val onSiteFollowClicked: (ReaderSubsSite) -> Unit,
+    val onSiteSwipedAway: (ReaderSubsSite) -> Unit,
+    val onSuggestedSiteClicked: (ReaderSubsSite) -> Unit,
+    val onSuggestedSiteFollowClicked: (ReaderSubsSite) -> Unit,
     val onEntryChanged: (String) -> Unit,
     val onAddClicked: () -> Unit,
     val onShowInterests: () -> Unit
