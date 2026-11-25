@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -168,26 +167,23 @@ public class TaxonomyStore extends Store {
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
     private final TaxonomyRsApiRestClient mTaxonomyRsApiRestClient;
-    private final TaxonomiesRestApiMigrationConfig mTaxonomiesRestApiMigrationConfig;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                  TaxonomyXMLRPCClient taxonomyXMLRPCClient,
-                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient,
-                                 TaxonomiesRestApiMigrationConfig taxonomiesRestApiMigrationConfig) {
+                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
         mTaxonomyRsApiRestClient = taxonomyRsApiRestClient;
-        mTaxonomiesRestApiMigrationConfig = taxonomiesRestApiMigrationConfig;
     }
 
     /**
-     * The self-hosted taxonomy wp-rs REST path is used only when the site exposes the REST API
-     * (Application Password) AND the taxonomies REST API migration feature flag is enabled.
-     * When the flag is off, self-hosted sites fall back to the legacy XML-RPC client.
+     * The self-hosted taxonomy wp-rs REST path is used whenever the site exposes the REST API
+     * (Application Password). Self-hosted sites still authenticated with legacy credentials have no
+     * REST API available, so they fall back to the XML-RPC client.
      */
     private boolean shouldUseTaxonomyRsApiRestClient(@NonNull SiteModel site) {
-        return site.isUsingSelfHostedRestApi() && mTaxonomiesRestApiMigrationConfig.isEnabled();
+        return site.isUsingSelfHostedRestApi();
     }
 
     @Override

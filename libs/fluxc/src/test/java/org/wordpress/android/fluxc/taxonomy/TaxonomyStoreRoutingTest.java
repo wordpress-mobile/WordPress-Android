@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -18,20 +17,18 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY;
 
 /**
- * Verifies that {@link TaxonomyStore} only routes self-hosted taxonomy operations to the new wp-rs
- * REST client when the {@code taxonomies_rest_api_migration} feature flag is enabled, and falls back
- * to the legacy XML-RPC client when it is disabled.
+ * Verifies that {@link TaxonomyStore} routes self-hosted taxonomy operations to the wp-rs REST
+ * client whenever the site exposes the REST API (Application Password), and only falls back to the
+ * legacy XML-RPC client for self-hosted sites still authenticated with legacy credentials.
  */
 @RunWith(RobolectricTestRunner.class)
 public class TaxonomyStoreRoutingTest {
     private TaxonomyRestClient mRestClient;
     private TaxonomyXMLRPCClient mXmlRpcClient;
     private TaxonomyRsApiRestClient mRsApiRestClient;
-    private TaxonomiesRestApiMigrationConfig mMigrationConfig;
 
     private TaxonomyStore mStore;
 
@@ -40,22 +37,33 @@ public class TaxonomyStoreRoutingTest {
         mRestClient = mock(TaxonomyRestClient.class);
         mXmlRpcClient = mock(TaxonomyXMLRPCClient.class);
         mRsApiRestClient = mock(TaxonomyRsApiRestClient.class);
-        mMigrationConfig = mock(TaxonomiesRestApiMigrationConfig.class);
         mStore = new TaxonomyStore(
                 new Dispatcher(),
                 mRestClient,
                 mXmlRpcClient,
-                mRsApiRestClient,
-                mMigrationConfig
+                mRsApiRestClient
         );
     }
 
-    private SiteModel selfHostedSite() {
+    /**
+     * Self-hosted site authenticated with an application password, so the REST API is available.
+     */
+    private SiteModel selfHostedSiteWithApplicationPassword() {
         SiteModel site = new SiteModel();
         site.setId(6);
         site.setIsWPCom(false);
         site.setApiRestUsernamePlain("user");
         site.setApiRestPasswordPlain("pass");
+        return site;
+    }
+
+    /**
+     * Self-hosted site on legacy credentials: no application password, so no REST API.
+     */
+    private SiteModel selfHostedSiteWithoutApplicationPassword() {
+        SiteModel site = new SiteModel();
+        site.setId(8);
+        site.setIsWPCom(false);
         return site;
     }
 
@@ -65,9 +73,8 @@ public class TaxonomyStoreRoutingTest {
 
     // region fetch
     @Test
-    public void selfHostedFetchUsesRsApiClientWhenFlagEnabled() {
-        when(mMigrationConfig.isEnabled()).thenReturn(true);
-        SiteModel site = selfHostedSite();
+    public void selfHostedFetchUsesRsApiClientWithApplicationPassword() {
+        SiteModel site = selfHostedSiteWithApplicationPassword();
 
         mStore.onAction(TaxonomyActionBuilder.newFetchCategoriesAction(site));
 
@@ -76,9 +83,8 @@ public class TaxonomyStoreRoutingTest {
     }
 
     @Test
-    public void selfHostedFetchFallsBackToXmlRpcWhenFlagDisabled() {
-        when(mMigrationConfig.isEnabled()).thenReturn(false);
-        SiteModel site = selfHostedSite();
+    public void selfHostedFetchFallsBackToXmlRpcWithoutApplicationPassword() {
+        SiteModel site = selfHostedSiteWithoutApplicationPassword();
 
         mStore.onAction(TaxonomyActionBuilder.newFetchCategoriesAction(site));
 
@@ -89,9 +95,8 @@ public class TaxonomyStoreRoutingTest {
 
     // region push
     @Test
-    public void selfHostedPushUsesRsApiClientWhenFlagEnabled() {
-        when(mMigrationConfig.isEnabled()).thenReturn(true);
-        SiteModel site = selfHostedSite();
+    public void selfHostedPushUsesRsApiClientWithApplicationPassword() {
+        SiteModel site = selfHostedSiteWithApplicationPassword();
         TermModel term = sampleCategory(); // remoteTermId > 0 -> update
 
         mStore.onAction(TaxonomyActionBuilder.newPushTermAction(new RemoteTermPayload(term, site)));
@@ -101,9 +106,8 @@ public class TaxonomyStoreRoutingTest {
     }
 
     @Test
-    public void selfHostedPushFallsBackToXmlRpcWhenFlagDisabled() {
-        when(mMigrationConfig.isEnabled()).thenReturn(false);
-        SiteModel site = selfHostedSite();
+    public void selfHostedPushFallsBackToXmlRpcWithoutApplicationPassword() {
+        SiteModel site = selfHostedSiteWithoutApplicationPassword();
         TermModel term = sampleCategory();
 
         mStore.onAction(TaxonomyActionBuilder.newPushTermAction(new RemoteTermPayload(term, site)));
@@ -115,9 +119,8 @@ public class TaxonomyStoreRoutingTest {
 
     // region delete
     @Test
-    public void selfHostedDeleteUsesRsApiClientWhenFlagEnabled() {
-        when(mMigrationConfig.isEnabled()).thenReturn(true);
-        SiteModel site = selfHostedSite();
+    public void selfHostedDeleteUsesRsApiClientWithApplicationPassword() {
+        SiteModel site = selfHostedSiteWithApplicationPassword();
         TermModel term = sampleCategory();
 
         mStore.onAction(TaxonomyActionBuilder.newDeleteTermAction(new RemoteTermPayload(term, site)));
@@ -127,9 +130,8 @@ public class TaxonomyStoreRoutingTest {
     }
 
     @Test
-    public void selfHostedDeleteFallsBackToXmlRpcWhenFlagDisabled() {
-        when(mMigrationConfig.isEnabled()).thenReturn(false);
-        SiteModel site = selfHostedSite();
+    public void selfHostedDeleteFallsBackToXmlRpcWithoutApplicationPassword() {
+        SiteModel site = selfHostedSiteWithoutApplicationPassword();
         TermModel term = sampleCategory();
 
         mStore.onAction(TaxonomyActionBuilder.newDeleteTermAction(new RemoteTermPayload(term, site)));
@@ -140,7 +142,7 @@ public class TaxonomyStoreRoutingTest {
     // endregion
 
     @Test
-    public void wpComSiteIsUnaffectedByFlag() {
+    public void wpComSiteUsesWpComRestClient() {
         SiteModel site = new SiteModel();
         site.setId(7);
         site.setIsWPCom(true);
