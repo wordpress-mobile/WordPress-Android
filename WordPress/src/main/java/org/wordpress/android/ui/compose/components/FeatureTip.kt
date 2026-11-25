@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.compose.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.MutatorMutex
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -29,14 +30,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -67,7 +67,8 @@ fun FeatureTip(
     anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
     anchor: @Composable () -> Unit,
 ) {
-    val state = rememberTooltipState(isPersistent = true)
+    // A private mutex, since with M3's shared default any other tooltip's show() would cancel this one
+    val state = rememberTooltipState(isPersistent = true, mutatorMutex = remember { MutatorMutex() })
     // A persistent tooltip's show() suspends until cancelled and dismisses on the way out,
     // so restarting this effect when isVisible turns false hides the bubble
     LaunchedEffect(isVisible) {
@@ -82,20 +83,25 @@ fun FeatureTip(
         modifier = modifier,
         onDismissRequest = {},
         enableUserInput = false,
-        hasAction = true,
+        // hasAction is left false: with TalkBack on it makes the popup focusable and touch-modal, and since
+        // onDismissRequest ignores Back and outside taps, the user would be trapped until they hit "Got it!"
         content = anchor,
     )
+}
+
+// Twice M3's default caret height. Created once since the shape has no equals() and RichTooltip remembers by it
+private val FeatureTipCaretShape = TooltipDefaults.caretSize.let {
+    TooltipDefaults.caretShape(it.copy(height = it.height * 2))
 }
 
 @Composable
 private fun TooltipScope.FeatureTipBubble(text: String, title: String?, onGotIt: () -> Unit) {
     val colors = MaterialTheme.colorScheme
-    val caretSize = TooltipDefaults.caretSize
     RichTooltip(
-        caretShape = TooltipDefaults.caretShape(DpSize(caretSize.width, caretSize.height * 2)),
+        caretShape = FeatureTipCaretShape,
         colors = TooltipDefaults.richTooltipColors(
-            containerColor = colors.primary,
-            contentColor = colors.onPrimary,
+            containerColor = colors.secondary,
+            contentColor = colors.onSecondary,
         ),
     ) {
         // Everything goes in the text slot because RichTooltip start-aligns its title and action.
@@ -116,7 +122,7 @@ private fun TooltipScope.FeatureTipBubble(text: String, title: String?, onGotIt:
             Text(text = text, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             TextButton(
                 onClick = onGotIt,
-                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimary),
+                colors = ButtonDefaults.textButtonColors(contentColor = colors.onSecondary),
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text(stringResource(R.string.feature_tip_got_it))
@@ -138,7 +144,13 @@ fun FeatureTip(
     anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
     anchor: @Composable () -> Unit,
 ) {
-    var isVisible by rememberSaveable { mutableStateOf(!AppPrefs.getBoolean(prefKey, false)) }
+    val wasShown = remember { AppPrefs.getBoolean(prefKey, false) }
+    if (wasShown) {
+        // Skip the tooltip machinery entirely for the common case of a tip that's already been seen
+        Box(modifier) { anchor() }
+        return
+    }
+    var isVisible by remember { mutableStateOf(true) }
     FeatureTip(
         text = text,
         isVisible = isVisible,
