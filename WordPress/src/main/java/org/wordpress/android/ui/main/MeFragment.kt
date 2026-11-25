@@ -679,7 +679,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun signOutWordPressCom() {
+        // Signing out can hide the bottom nav and switch away from this tab mid-way, destroying the view
+        // whose observer hides the progress dialog, so also hide it when the sign-out itself finishes
         viewModel.signOutWordPress(requireActivity().application as WordPress)
+            .invokeOnCompletion { hideDisconnectDialog() }
     }
 
     private fun clearNotifications() {

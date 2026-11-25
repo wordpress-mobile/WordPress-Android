@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.BuildConfig
@@ -73,7 +74,7 @@ class MeViewModel
         fun isError() = error != null
     }
 
-    fun signOutWordPress(application: WordPress) {
+    fun signOutWordPress(application: WordPress): Job =
         launch {
             _showDisconnectDialog.value = Event(true)
             withContext(bgDispatcher) {
@@ -81,7 +82,6 @@ class MeViewModel
             }
             _showDisconnectDialog.value = Event(false)
         }
-    }
 
     fun openDisconnectDialog() {
         _showDisconnectDialog.value = Event(true)
