@@ -27,7 +27,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
@@ -401,11 +400,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             else -> titleResId = R.string.notifications_empty_list
         }
-        if (BuildConfig.ENABLE_READER) {
-            showEmptyView(titleResId, descriptionResId, buttonResId)
-        } else {
-            showEmptyView(titleResId)
-        }
+        showEmptyView(titleResId, descriptionResId, buttonResId)
     }
 
     private fun NotificationsListFragmentPageBinding.showNewNotificationsBar() {

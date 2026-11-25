@@ -1388,9 +1388,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        // Signing in to or out of WordPress.com can change whether the Reader, and so the bottom nav, is available.
-        // Events also arrive while stopped, when switching pages would commit after onSaveInstanceState; onResume
-        // calls setUpMainView() in that case.
+        // Not while stopped: switching pages would commit after onSaveInstanceState; onResume handles it
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             setUpMainView();
         }

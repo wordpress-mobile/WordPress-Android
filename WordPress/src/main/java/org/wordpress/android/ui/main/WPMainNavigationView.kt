@@ -134,8 +134,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         assignNavigationListeners(true)
         disableShiftMode()
 
-        if (!BuildConfig.ENABLE_READER) hideReaderTab()
-
         // Overlay each item with our custom view. We resolve the item view by its menu item id
         // rather than walking getChildAt(), because the NavigationRailView used on tablets nests
         // its item container one level deeper than the phone's BottomNavigationView, which would
@@ -227,10 +225,6 @@ class WPMainNavigationView @JvmOverloads constructor(
     private fun getMainPageIndex(): Int {
         return if (hasSingleTabNav) 0
         else AppPrefs.getMainPageIndex(numPages() - 1)
-    }
-
-    private fun hideReaderTab() {
-        navigationBarView.menu.removeItem(R.id.nav_reader)
     }
 
     private fun disableShiftMode() {
@@ -504,7 +498,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 NOTIFS -> if (hasRealNotifications) {
                     NotificationsListFragment.newInstance()
                 } else {
-                    NotificationsInJetpackFragment.newInstance()
+                    NotificationsInJetpackFragment()
                 }
                 ME -> MeFragment.newInstance()
             }
@@ -529,11 +523,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = if (BuildConfig.ENABLE_READER) {
-            listOf(MY_SITE, READER, NOTIFS, ME)
-        } else {
-            listOf(MY_SITE, NOTIFS, ME)
-        }
+        private val pages = listOf(MY_SITE, READER, NOTIFS, ME)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"

@@ -73,10 +73,6 @@ class NotificationsInJetpackFragment : Fragment() {
             activityLauncherWrapper.openPlayStoreLink(activity, JETPACK_PACKAGE_NAME, CAMPAIGN_STATIC_POSTER)
         }
     }
-
-    companion object {
-        fun newInstance() = NotificationsInJetpackFragment()
-    }
 }
 
 @Composable
