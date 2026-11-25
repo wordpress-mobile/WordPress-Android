@@ -485,6 +485,11 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             mBottomNav.setVisibility(View.GONE);
             if (mBottomNav.getCurrentSelectedPage() != PageType.MY_SITE) {
                 mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                // A programmatic switch doesn't go through onPageChanged, so the FAB would keep the previous
+                // tab's state (e.g. hidden for Me after signing out of WordPress.com)
+                if (mViewModel != null) {
+                    mViewModel.onPageChanged(getSelectedSite(), mSiteStore.hasSite(), PageType.MY_SITE);
+                }
             }
         }
     }
