@@ -38,9 +38,13 @@ class FeatureFlagConfig
 
     var flags: List<FeatureFlag> = arrayListOf()
 
+    @Volatile
+    private var hasLoadedStoredFlags = false
+
     fun init(appScope: CoroutineScope) {
         appScope.launch {
             flags = featureFlagStore.getFeatureFlags()
+            hasLoadedStoredFlags = true
             // If the flags are empty, then this means that the
             if (flags.isEmpty()) {
                 insertRemoteConfigDefaultsInDatabase()
@@ -69,6 +73,7 @@ class FeatureFlagConfig
         appScope.launch {
             fetchRemoteFlags()
             flags = featureFlagStore.getFeatureFlags()
+            hasLoadedStoredFlags = true
         }
 
     private suspend fun fetchRemoteFlags() {
@@ -111,27 +116,24 @@ class FeatureFlagConfig
         val remoteFeatureFlag = flags.find { it.key == remoteField }
         return if (remoteFeatureFlag == null) {
             val defaultValue = getRemoteConfigDefaultValue(remoteField)
+            storeMissingFlag(remoteField, defaultValue ?: buildConfigValue)
             if (defaultValue != null) {
-                appScope.launch {
-                    featureFlagStore.insertFeatureFlagValue(
-                        remoteField,
-                        defaultValue
-                    )
-                    flags = featureFlagStore.getFeatureFlags()
-                }
                 FeatureState.DefaultValue(defaultValue)
             } else {
-                appScope.launch {
-                    featureFlagStore.insertFeatureFlagValue(
-                        remoteField,
-                        buildConfigValue
-                    )
-                    flags = featureFlagStore.getFeatureFlags()
-                }
                 FeatureState.BuildConfigValue(buildConfigValue)
             }
         } else {
             FeatureState.RemoteValue(remoteFeatureFlag.value)
+        }
+    }
+
+    private fun storeMissingFlag(remoteField: String, value: Boolean) {
+        // Until init() has loaded the stored flags, a flag can look missing only because it isn't loaded yet,
+        // and storing the default would overwrite its stored remote value
+        if (!hasLoadedStoredFlags) return
+        appScope.launch {
+            featureFlagStore.insertFeatureFlagValue(remoteField, value)
+            flags = featureFlagStore.getFeatureFlags()
         }
     }
 

@@ -575,7 +575,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
         // Setup Observers
-        // The flag fetched after a WordPress.com sign-in can turn the Reader, and so the bottom nav, on or off
+        // A sign-in, a sign-out or a late-loading flag can turn the Reader, and so the bottom nav, on or off
         mReaderAvailability.getAvailabilityChanged().observe(this, event -> {
             if (event.getContentIfNotHandled() != null) {
                 setUpMainView();

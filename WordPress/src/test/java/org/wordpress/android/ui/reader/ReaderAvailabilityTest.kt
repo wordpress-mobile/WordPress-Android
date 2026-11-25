@@ -116,6 +116,30 @@ class ReaderAvailabilityTest : BaseUnitTest() {
         assertThat(readerAvailability.availabilityChanged.value).isNull()
     }
 
+    @Test
+    fun `stored value loading after an uncached default reports the change`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = true)
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.DefaultValue(false))
+        readerAvailability.isReaderAvailable()
+
+        whenever(featureConfig.featureState()).thenReturn(FeatureState.RemoteValue(true))
+
+        assertThat(readerAvailability.isReaderAvailable()).isTrue
+        assertThat(readerAvailability.availabilityChanged.value?.getContentIfNotHandled()).isNotNull
+    }
+
+    @Test
+    fun `sign-in with the flag off reports nothing`() {
+        setUpWordPressApp(isFlagEnabled = false, hasAccessToken = false)
+        readerAvailability.isReaderAvailable()
+
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        readerAvailability.refreshFlagAfterSignIn()
+
+        assertThat(readerAvailability.isReaderAvailable()).isFalse
+        assertThat(readerAvailability.availabilityChanged.value).isNull()
+    }
+
     private fun setUpWordPressApp(isFlagEnabled: Boolean, hasAccessToken: Boolean) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         // Not reached without a WordPress.com account

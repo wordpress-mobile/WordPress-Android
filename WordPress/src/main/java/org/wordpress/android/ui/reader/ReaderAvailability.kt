@@ -22,6 +22,9 @@ import javax.inject.Singleton
  * Signing out forgets the value. A sign-in reads it again once that account's flags have been fetched
  * ([refreshFlagAfterSignIn]), as iOS does: until then only the pre-sign-in value, or the default on a
  * fresh install, is stored.
+ *
+ * Whenever the answer differs from the previous one, [availabilityChanged] fires so the nav and My Site
+ * can catch up, whether the cause is a sign-in, a sign-out or a stored flag that loaded after the first check.
  */
 @Singleton
 class ReaderAvailability @Inject constructor(
@@ -32,28 +35,36 @@ class ReaderAvailability @Inject constructor(
     @Volatile
     private var cachedFlag: Boolean? = null
 
+    @Volatile
+    private var lastAnswer: Boolean? = null
+
     private val _availabilityChanged = MutableLiveData<Event<Unit>>()
 
-    /** Fires when [refreshFlagAfterSignIn] changes availability while the app UI is already showing. */
+    /** Fires when the answer from [isReaderAvailable] changes. */
     val availabilityChanged: LiveData<Event<Unit>> = _availabilityChanged
 
-    fun isReaderAvailable(): Boolean = when {
-        buildConfigWrapper.isJetpackApp -> true
-        !accountStore.hasAccessToken() -> {
-            cachedFlag = null
-            false
+    fun isReaderAvailable(): Boolean {
+        val answer = when {
+            buildConfigWrapper.isJetpackApp -> true
+            !accountStore.hasAccessToken() -> {
+                cachedFlag = null
+                false
+            }
+            else -> cachedFlag ?: readFlag()
         }
-        else -> cachedFlag ?: readFlag()
+        val previousAnswer = lastAnswer
+        lastAnswer = answer
+        if (previousAnswer != null && previousAnswer != answer) {
+            _availabilityChanged.postValue(Event(Unit))
+        }
+        return answer
     }
 
     /** Call once the feature flags fetched after a WordPress.com sign-in have been stored. */
     fun refreshFlagAfterSignIn() {
         if (buildConfigWrapper.isJetpackApp || !accountStore.hasAccessToken()) return
-        val previousFlag = cachedFlag
         cachedFlag = null
-        if (readFlag() != previousFlag) {
-            _availabilityChanged.postValue(Event(Unit))
-        }
+        isReaderAvailable()
     }
 
     private fun readFlag(): Boolean {
