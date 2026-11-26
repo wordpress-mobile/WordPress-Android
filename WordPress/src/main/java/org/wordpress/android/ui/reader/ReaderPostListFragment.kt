@@ -522,7 +522,8 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
                         uiState = uiState,
                         gridState = gridState,
                         actions = actions,
-                        isSiteHeaderExpected = postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW
+                        // not the list type: the Subscriptions site filter is a blog list without a header
+                        isSiteHeaderExpected = postListViewModel.hasSiteHeader
                     )
                 } else {
                     ReaderPostListScreen(
