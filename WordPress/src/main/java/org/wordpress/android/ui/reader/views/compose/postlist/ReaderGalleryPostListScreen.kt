@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader.views.compose.postlist
 
+import android.icu.text.CompactDecimalFormat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -23,11 +26,18 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,11 +46,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
@@ -57,15 +74,19 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
 import org.wordpress.android.ui.reader.accent.readerImageMeta
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.views.compose.detail.MEDIUM_EMPHASIS_ALPHA
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostMoreMenuItem
+import org.wordpress.android.ui.reader.views.compose.postcard.countText
 import org.wordpress.android.ui.reader.views.compose.postcard.readerPostTitleColor
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
+import org.wordpress.android.util.PhotonUtils
 
 private val TILE_MIN_WIDTH = 240.dp
 private const val MIN_COLUMNS = 2
@@ -81,6 +102,7 @@ private const val TILE_PATTERN_SIZE = 4
 private const val TITLE_MAX_LINES = 3
 private const val HERO_EXCERPT_MAX_LINES = 3
 private const val QUOTE_MAX_LINES = 9
+private const val EXCERPT_ALPHA = 0.85f
 private const val MOSAIC_IMAGE_COUNT = 3
 /** The height of a blog preview's cover below the status bar, as WPFolio's */
 internal val ReaderGalleryCoverHeight = 220.dp
@@ -227,7 +249,7 @@ private fun GalleryRow(
             LaunchedEffect(item.key) { uiState.onItemRendered(uiState) }
             when {
                 isHero -> HeroTile(uiState)
-                uiState.featuredImageSourceUrl != null -> ImageTile(uiState)
+                uiState.featuredImageSourceUrl != null || uiState.firstStripImage() != null -> ImageTile(uiState)
                 else -> QuoteTile(uiState)
             }
         }
@@ -260,7 +282,7 @@ private fun HeroTile(uiState: ReaderPostUiState) {
     val accent = accentColor(uiState, meta?.accent)
     TileMenuBox(uiState) { modifier ->
         Box(
-            modifier = modifier
+            modifier = modifier.modifier
                 .fillMaxWidth()
                 .height(HERO_HEIGHT)
                 .clip(RoundedCornerShape(TILE_CORNER))
@@ -282,7 +304,7 @@ private fun HeroTile(uiState: ReaderPostUiState) {
                     .align(Alignment.BottomStart)
                     .padding(20.dp)
             ) {
-                SiteLine(uiState, color = Color.White.copy(alpha = 0.85f))
+                SiteRow(uiState, color = Color.White.copy(alpha = 0.85f), onMoreClick = modifier.onMoreClick)
                 uiState.title?.let {
                     Text(
                         text = uiStringText(it),
@@ -321,7 +343,7 @@ private fun ImageTile(uiState: ReaderPostUiState) {
     }
     val accent = accentColor(uiState, meta?.accent)
     TileMenuBox(uiState) { modifier ->
-        Column(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = modifier.modifier.fillMaxWidth()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -329,7 +351,8 @@ private fun ImageTile(uiState: ReaderPostUiState) {
                     .clip(RoundedCornerShape(TILE_CORNER))
                     .background(accent)
             ) {
-                TileImage(uiState.featuredImageTileUrl, Modifier.fillMaxSize())
+                // a gallery post has no featured image, so it shows the first of its gallery's
+                TileImage(uiState.featuredImageTileUrl ?: uiState.firstStripImage(), Modifier.fillMaxSize())
             }
             uiState.title?.let {
                 Text(
@@ -342,9 +365,10 @@ private fun ImageTile(uiState: ReaderPostUiState) {
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            SiteLine(
+            SiteRow(
                 uiState,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                onMoreClick = modifier.onMoreClick,
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
@@ -358,41 +382,90 @@ private fun ImageTile(uiState: ReaderPostUiState) {
 private fun QuoteTile(uiState: ReaderPostUiState) {
     val accent = accentColor(uiState, null)
     val excerpt = uiState.excerpt?.takeIf { it.isNotBlank() }
+    val textColor = Color.White.copy(alpha = if (uiState.isSeen) MEDIUM_EMPHASIS_ALPHA else 1f)
     TileMenuBox(uiState) { modifier ->
         Column(
-            modifier = modifier
+            modifier = modifier.modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(TILE_CORNER))
                 .background(accent)
                 .padding(16.dp)
         ) {
-            Text(
-                text = excerpt ?: uiState.title?.let { uiStringText(it) }.orEmpty(),
-                modifier = Modifier.weight(1f),
-                fontSize = if (excerpt != null) 15.sp else 19.sp,
-                lineHeight = if (excerpt != null) 21.sp else 25.sp,
-                fontWeight = if (excerpt != null) FontWeight.Normal else FontWeight.SemiBold,
-                color = Color.White.copy(alpha = if (uiState.isSeen) MEDIUM_EMPHASIS_ALPHA else 1f),
-                maxLines = QUOTE_MAX_LINES,
-                overflow = TextOverflow.Ellipsis,
+            // the title, then as much of the excerpt as fits
+            Column(Modifier.weight(1f)) {
+                uiState.title?.let {
+                    Text(
+                        text = uiStringText(it),
+                        fontSize = 17.sp,
+                        lineHeight = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = textColor,
+                        maxLines = TITLE_MAX_LINES,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+                excerpt?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier.padding(top = 6.dp),
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        color = textColor.copy(alpha = textColor.alpha * EXCERPT_ALPHA),
+                        maxLines = QUOTE_MAX_LINES,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+            SiteRow(
+                uiState,
+                color = Color.White.copy(alpha = 0.75f),
+                onMoreClick = modifier.onMoreClick,
+                modifier = Modifier.padding(top = 8.dp)
             )
-            SiteLine(uiState, color = Color.White.copy(alpha = 0.75f), modifier = Modifier.padding(top = 8.dp))
         }
     }
 }
 
+/**
+ * The site and date, which open the site as the card's blog section does, and the tile's "⋯" menu button
+ */
 @Composable
-private fun SiteLine(uiState: ReaderPostUiState, color: Color, modifier: Modifier = Modifier) {
-    val blogName = uiStringText(uiState.blogSection.blogName)
-    Text(
-        text = "$blogName · ${uiState.blogSection.dateLine}",
-        modifier = modifier,
-        style = MaterialTheme.typography.labelMedium,
-        color = color,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-    )
+private fun SiteRow(uiState: ReaderPostUiState, color: Color, onMoreClick: () -> Unit, modifier: Modifier = Modifier) {
+    val blogSection = uiState.blogSection
+    val onSiteClick = blogSection.onClicked
+    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = "${uiStringText(blogSection.blogName)} · ${blogSection.dateLine}",
+            modifier = Modifier
+                .weight(1f)
+                .then(
+                    if (onSiteClick != null) {
+                        Modifier.clickable { onSiteClick(blogSection.postId, blogSection.blogId) }
+                    } else {
+                        Modifier
+                    }
+                ),
+            style = MaterialTheme.typography.labelMedium,
+            color = color,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
+            contentDescription = stringResource(R.string.show_more_desc),
+            tint = color,
+            modifier = Modifier
+                .padding(start = 4.dp)
+                .size(20.dp)
+                .clickable(
+                    interactionSource = null,
+                    indication = ripple(bounded = false),
+                    role = Role.Button,
+                    onClick = onMoreClick,
+                ),
+        )
+    }
 }
 
 @Composable
@@ -405,30 +478,131 @@ private fun TileImage(url: String?, modifier: Modifier) {
     )
 }
 
+/** What a tile's content needs from its [TileMenuBox]: the clickable modifier, and how to open the menu */
+private class TileScope(val modifier: Modifier, val onMoreClick: () -> Unit)
+
 /**
- * Taps open the post; a long press opens its more menu, which the card shows from its button
+ * Taps open the post. The tile's "⋯" button, or a long press, opens one menu with the card's actions (save, like,
+ * comments, reblog, with their counts) above its usual more menu, so a tile needs no action row of its own. Screen
+ * readers get the same actions directly.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TileMenuBox(uiState: ReaderPostUiState, content: @Composable (Modifier) -> Unit) {
+private fun TileMenuBox(uiState: ReaderPostUiState, content: @Composable (TileScope) -> Unit) {
+    var isMenuOpen by remember(uiState.postId, uiState.blogId) { mutableStateOf(false) }
+    val primaryActions = uiState.tilePrimaryActions()
+    val openMenu = {
+        isMenuOpen = true
+        // the view model fills in the more menu's items, as it does for the card
+        if (uiState.moreMenuVisibility) uiState.onMoreButtonClicked(uiState)
+    }
+    val closeMenu = {
+        isMenuOpen = false
+        if (uiState.moreMenuItems != null) uiState.onMoreDismissed(uiState)
+    }
+    val moreLabel = stringResource(R.string.show_more_desc)
+    val actionLabels = primaryActions.map { primaryActionLabel(it) }
     Box {
         content(
-            Modifier.combinedClickable(
-                onClick = { uiState.onItemClicked(uiState.postId, uiState.blogId) },
-                onLongClick = if (uiState.moreMenuVisibility) {
-                    { uiState.onMoreButtonClicked(uiState) }
-                } else {
-                    null
-                },
+            TileScope(
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = { uiState.onItemClicked(uiState.postId, uiState.blogId) },
+                        onLongClick = openMenu,
+                    )
+                    .semantics {
+                        customActions = primaryActions.mapIndexed { index, action ->
+                            CustomAccessibilityAction(actionLabels[index]) {
+                                action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type)
+                                true
+                            }
+                        } + CustomAccessibilityAction(moreLabel) {
+                            openMenu()
+                            true
+                        }
+                    },
+                onMoreClick = openMenu,
             )
         )
-        val menuItems = uiState.moreMenuItems
-        DropdownMenu(expanded = menuItems != null, onDismissRequest = { uiState.onMoreDismissed(uiState) }) {
+        DropdownMenu(expanded = isMenuOpen, onDismissRequest = closeMenu) {
+            TileMenuActions(uiState, primaryActions, onActionClick = closeMenu)
+            val menuItems = uiState.moreMenuItems
+            if (primaryActions.isNotEmpty() && !menuItems.isNullOrEmpty()) HorizontalDivider()
             menuItems?.forEach { menuItem ->
-                ReaderPostMoreMenuItem(menuItem) { it.onClicked(uiState.postId, uiState.blogId, it.type) }
+                ReaderPostMoreMenuItem(menuItem) {
+                    isMenuOpen = false
+                    it.onClicked(uiState.postId, uiState.blogId, it.type)
+                }
             }
         }
     }
+}
+
+/** Save, like, comments and reblog, as the card's action row offers them, with their counts */
+@Composable
+private fun TileMenuActions(
+    uiState: ReaderPostUiState,
+    actions: List<PrimaryAction>,
+    onActionClick: () -> Unit,
+) {
+    val locale = LocalConfiguration.current.locales[0]
+    val countFormat = remember(locale) {
+        CompactDecimalFormat.getInstance(locale, CompactDecimalFormat.CompactStyle.SHORT)
+    }
+    actions.forEach { action ->
+        val tint = if (action.isSelected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        }
+        DropdownMenuItem(
+            text = { Text(primaryActionLabel(action)) },
+            leadingIcon = {
+                Icon(painterResource(primaryActionIcon(action)), contentDescription = null, tint = tint)
+            },
+            trailingIcon = countText(action, countFormat)?.takeIf { action.count > 0 }?.let { count ->
+                { Text(count, style = MaterialTheme.typography.labelMedium) }
+            },
+            onClick = {
+                onActionClick()
+                action.onClicked?.invoke(uiState.postId, uiState.blogId, action.type)
+            },
+        )
+    }
+}
+
+/** The card's actions a tile offers: the ones that can be used, in the card's order */
+private fun ReaderPostUiState.tilePrimaryActions(): List<PrimaryAction> =
+    listOf(bookmarkAction, likeAction, commentsAction, reblogAction).filter { it.isEnabled && it.onClicked != null }
+
+@Composable
+private fun primaryActionLabel(action: PrimaryAction): String = when (action.type) {
+    ReaderPostCardActionType.LIKE -> stringResource(R.string.like)
+    ReaderPostCardActionType.COMMENTS -> stringResource(R.string.comments)
+    else -> action.contentDescription?.let { uiStringText(it) }.orEmpty()
+}
+
+private fun primaryActionIcon(action: PrimaryAction): Int = when (action.type) {
+    ReaderPostCardActionType.BOOKMARK -> if (action.isSelected) {
+        R.drawable.ic_bookmark_fill_new_24dp
+    } else {
+        R.drawable.ic_bookmark_outline_new_24dp
+    }
+    ReaderPostCardActionType.LIKE -> if (action.isSelected) {
+        R.drawable.ic_like_fill_new_24dp
+    } else {
+        R.drawable.ic_like_outline_new_24dp
+    }
+    ReaderPostCardActionType.COMMENTS -> R.drawable.ic_comment_outline_new_24dp
+    else -> R.drawable.ic_reblog_new_24dp
+}
+
+/** The first image of a gallery post's strip, at tile width, for the tile to show */
+@Composable
+private fun ReaderPostUiState.firstStripImage(): String? {
+    val image = thumbnailStripSection?.images?.firstOrNull() ?: return null
+    val widthPx = LocalConfiguration.current.screenWidthDp.let { with(LocalDensity.current) { it.dp.roundToPx() } } / 2
+    return remember(image, widthPx) { PhotonUtils.getPhotonImageUrl(image, widthPx, 0) }
 }
 
 /**
