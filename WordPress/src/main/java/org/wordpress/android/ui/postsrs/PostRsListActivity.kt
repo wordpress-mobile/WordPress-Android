@@ -23,6 +23,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.rs.RsConfirmationDialogState
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.setContent
 import javax.inject.Inject
 
@@ -44,6 +45,9 @@ class PostRsListActivity : BaseAppCompatActivity() {
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val initialTab = intent.getSerializableExtraCompat<PostRsListTab>(EXTRA_INITIAL_TAB)
+            ?: PostRsListTab.PUBLISHED
 
         observeEvents()
 
@@ -91,6 +95,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     localDrafts = localDrafts,
                     onOpenLocalDraft = viewModel::openLocalDraft,
                     onRetryLocalDraft = viewModel::retryLocalDraft,
+                    initialTab = initialTab,
                 )
             }
         }
@@ -150,6 +155,15 @@ class PostRsListActivity : BaseAppCompatActivity() {
     }
 
     companion object {
-        fun createIntent(context: Context) = Intent(context, PostRsListActivity::class.java)
+        private const val EXTRA_INITIAL_TAB = "extra_initial_tab"
+
+        // @JvmOverloads so Java callers can omit the tab and open on the default one.
+        @JvmOverloads
+        fun createIntent(
+            context: Context,
+            initialTab: PostRsListTab? = null
+        ): Intent = Intent(context, PostRsListActivity::class.java).apply {
+            initialTab?.let { putExtra(EXTRA_INITIAL_TAB, it) }
+        }
     }
 }

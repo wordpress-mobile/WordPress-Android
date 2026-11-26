@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Drafts and Scheduled shortcuts open the new Posts and Pages screens**
+  On sites that already get the new Posts and Pages screens, the My Site "Drafts" and "Scheduled" shortcuts now open those screens on the matching tab instead of the older ones. This applies to the shortcuts for both posts and pages. Previously only the main Posts and Pages entries opened the new screens, so the shortcuts landed on a different-looking list for the same site.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site → Posts → Drafts / Scheduled; My Site → Pages → Drafts / Scheduled
+  - **Notes:** Which sites get the new screens is unchanged by this: self-hosted sites signed in with an application password always do, and WordPress.com sites do only when the android_wp_rs_wpcom flag is on. Sites on neither keep the old screens everywhere. Upload notifications, blogging reminders, the Stats "schedule a post" prompt and pages deep links still open the old screens for every site.
+
 - **Experimental block editor loading and error screens stay readable after switching dark mode**
   Switching between light and dark mode while the experimental block editor is open no longer leaves its loading or error screen unreadable. Those screens now use the new mode's colors, including their background. The rest of the editor screen keeps the mode it opened in until the editor is reopened.
   - **Apps:** Both

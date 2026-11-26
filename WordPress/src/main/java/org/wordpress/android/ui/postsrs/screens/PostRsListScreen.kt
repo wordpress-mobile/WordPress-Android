@@ -99,9 +99,14 @@ fun PostRsListScreen(
     localDrafts: List<RsLocalDraftUiModel> = emptyList(),
     onOpenLocalDraft: (Int) -> Unit = {},
     onRetryLocalDraft: (Int) -> Boolean = { true },
+    initialTab: PostRsListTab = PostRsListTab.PUBLISHED,
 ) {
     val tabs = PostRsListTab.entries
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    // Only the first composition honours this; a restored state keeps the tab the user left on.
+    val pagerState = rememberPagerState(
+        initialPage = tabs.indexOf(initialTab).coerceAtLeast(0),
+        pageCount = { tabs.size }
+    )
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
     val activeTab = tabs[pagerState.settledPage]

@@ -90,8 +90,10 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.pagesrs.PageRsListTab;
 import org.wordpress.android.ui.pagesrs.PagesRsListActivity;
 import org.wordpress.android.ui.postsrs.PostRsListActivity;
+import org.wordpress.android.ui.postsrs.PostRsListTab;
 import org.wordpress.android.posttypes.CptPostTypesActivity;
 import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
@@ -615,10 +617,6 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (canUseWpRs(context, site)) {
-            context.startActivity(PostRsListActivity.Companion.createIntent(context));
-            return;
-        }
         viewCurrentBlogPostsOfType(context, site, null);
     }
 
@@ -634,12 +632,39 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        if (postListType == null) {
+        if (canUseWpRs(context, site)) {
+            context.startActivity(
+                    PostRsListActivity.Companion.createIntent(context, toPostRsListTab(postListType))
+            );
+        } else if (postListType == null) {
             context.startActivity(PostsListActivity.buildIntent(context, site));
         } else {
             context.startActivity(PostsListActivity.buildIntent(context, site, postListType, false, null));
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
+    }
+
+    /**
+     * The tab the wordpress-rs posts list should open on. Null - including for SEARCH, which has no
+     * tab of its own there - leaves it on its default tab.
+     */
+    @Nullable
+    private static PostRsListTab toPostRsListTab(@Nullable PostListType postListType) {
+        if (postListType == null) {
+            return null;
+        }
+        switch (postListType) {
+            case PUBLISHED:
+                return PostRsListTab.PUBLISHED;
+            case DRAFTS:
+                return PostRsListTab.DRAFTS;
+            case SCHEDULED:
+                return PostRsListTab.SCHEDULED;
+            case TRASHED:
+                return PostRsListTab.TRASHED;
+            default:
+                return null;
+        }
     }
 
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
@@ -672,7 +697,11 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPagesOfType(Context context, SiteModel site, PageListType pageListType) {
-        if (pageListType == null) {
+        if (canUseWpRs(context, site)) {
+            context.startActivity(
+                    PagesRsListActivity.Companion.createIntent(context, toPageRsListTab(pageListType))
+            );
+        } else if (pageListType == null) {
             Intent intent = new Intent(context, PagesActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
@@ -683,6 +712,26 @@ public class ActivityLauncher {
             context.startActivity(intent);
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
+    }
+
+    /** The tab the wordpress-rs pages list should open on; null leaves it on its default tab. */
+    @Nullable
+    private static PageRsListTab toPageRsListTab(@Nullable PageListType pageListType) {
+        if (pageListType == null) {
+            return null;
+        }
+        switch (pageListType) {
+            case PUBLISHED:
+                return PageRsListTab.PUBLISHED;
+            case DRAFTS:
+                return PageRsListTab.DRAFTS;
+            case SCHEDULED:
+                return PageRsListTab.SCHEDULED;
+            case TRASHED:
+                return PageRsListTab.TRASHED;
+            default:
+                return null;
+        }
     }
 
     public static void viewPageParentForResult(@NonNull Fragment fragment, @NonNull SiteModel site,
