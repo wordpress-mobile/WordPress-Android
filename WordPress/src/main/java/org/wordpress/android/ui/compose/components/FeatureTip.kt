@@ -172,7 +172,12 @@ private fun TooltipScope.FeatureTipBubble(text: AnnotatedString, title: String?,
 }
 
 private val CloseButtonSize = 32.dp
-private val CloseButtonEndOffset = 12.dp
+
+// Mirrors M3's internal RichTooltipHorizontalPadding, which the close button is pushed into
+private val RichTooltipHorizontalPadding = 16.dp
+
+// Leaves a 4dp margin between the close button and the bubble's end edge
+private val CloseButtonEndOffset = RichTooltipHorizontalPadding - 4.dp
 
 /**
  * Same as the stateless [FeatureTip], but shows the bubble until the user closes it and
