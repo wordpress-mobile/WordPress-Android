@@ -41,6 +41,7 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -77,7 +78,10 @@ fun FeatureTip(
     // A persistent tooltip's show() suspends until cancelled and dismisses on the way out,
     // so restarting this effect when isVisible turns false hides the bubble
     LaunchedEffect(isVisible) {
-        if (isVisible) state.show()
+        if (isVisible) {
+            delay(SHOW_DELAY_MS)
+            state.show()
+        }
     }
     TooltipBox(
         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(anchorPosition.toTooltipAnchorPosition()),
@@ -93,6 +97,8 @@ fun FeatureTip(
         content = anchor,
     )
 }
+
+private const val SHOW_DELAY_MS = 500L
 
 /** Plain-text version of the stateless [FeatureTip]. */
 @Composable
