@@ -9,18 +9,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
@@ -57,7 +58,7 @@ private fun FeatureTipPosition.toTooltipAnchorPosition() = when (this) {
 
 /**
  * Wraps [anchor] and, while [isVisible], shows a speech bubble pointing at it to explain a new feature.
- * Only the "Got it!" button closes the bubble; taps elsewhere pass through to the UI underneath.
+ * Only its close button dismisses the bubble; taps elsewhere pass through to the UI underneath.
  * [text] can carry formatting, e.g. `AnnotatedString.fromHtml(stringResource(...))` or `buildAnnotatedString`;
  * there's a plain [String] overload for unformatted text.
  */
@@ -65,7 +66,7 @@ private fun FeatureTipPosition.toTooltipAnchorPosition() = when (this) {
 fun FeatureTip(
     text: AnnotatedString,
     isVisible: Boolean,
-    onGotIt: () -> Unit,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
@@ -81,14 +82,14 @@ fun FeatureTip(
     TooltipBox(
         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(anchorPosition.toTooltipAnchorPosition()),
         tooltip = {
-            FeatureTipBubble(text = text, title = title, onGotIt = onGotIt)
+            FeatureTipBubble(text = text, title = title, onDismiss = onDismiss)
         },
         state = state,
         modifier = modifier,
         onDismissRequest = {},
         enableUserInput = false,
         // hasAction is left false: with TalkBack on it makes the popup focusable and touch-modal, and since
-        // onDismissRequest ignores Back and outside taps, the user would be trapped until they hit "Got it!"
+        // onDismissRequest ignores Back and outside taps, the user would be trapped until they hit close
         content = anchor,
     )
 }
@@ -98,12 +99,12 @@ fun FeatureTip(
 fun FeatureTip(
     text: String,
     isVisible: Boolean,
-    onGotIt: () -> Unit,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
     anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
     anchor: @Composable () -> Unit,
-) = FeatureTip(AnnotatedString(text), isVisible, onGotIt, modifier, title, anchorPosition, anchor)
+) = FeatureTip(AnnotatedString(text), isVisible, onDismiss, modifier, title, anchorPosition, anchor)
 
 // Twice M3's default caret height. Created once since the shape has no equals() and RichTooltip remembers by it
 private val FeatureTipCaretShape = TooltipDefaults.caretSize.let {
@@ -111,7 +112,7 @@ private val FeatureTipCaretShape = TooltipDefaults.caretSize.let {
 }
 
 @Composable
-private fun TooltipScope.FeatureTipBubble(text: AnnotatedString, title: String?, onGotIt: () -> Unit) {
+private fun TooltipScope.FeatureTipBubble(text: AnnotatedString, title: String?, onDismiss: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     RichTooltip(
         caretShape = FeatureTipCaretShape,
@@ -120,35 +121,55 @@ private fun TooltipScope.FeatureTipBubble(text: AnnotatedString, title: String?,
             contentColor = colors.onPrimaryContainer,
         ),
     ) {
-        // Everything goes in the text slot because RichTooltip start-aligns its title and action.
+        // Everything goes in the text slot because RichTooltip start-aligns its title.
         // IntrinsicSize.Max sizes the bubble to its widest line instead of the full tooltip max width.
-        Column(
-            modifier = Modifier
-                .width(IntrinsicSize.Max)
-                .padding(top = 8.dp)
-        ) {
-            title?.let {
+        Box(modifier = Modifier.width(IntrinsicSize.Max)) {
+            // Inset on both sides by the close button's overlap so the text stays centered and clear of it
+            Column(
+                modifier = Modifier.padding(
+                    horizontal = CloseButtonSize - CloseButtonEndOffset,
+                    vertical = 16.dp
+                )
+            ) {
+                title?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 Text(
-                    text = it,
-                    style = MaterialTheme.typography.titleSmall,
+                    text = text,
+                    style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            Text(text = text, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-            TextButton(
-                onClick = onGotIt,
-                colors = ButtonDefaults.textButtonColors(contentColor = colors.onPrimaryContainer),
-                modifier = Modifier.align(Alignment.End)
+            // Pushed into RichTooltip's end padding so it sits in the bubble's corner. Compose still gives
+            // it a 48dp touch target despite the smaller layout size.
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = CloseButtonEndOffset)
+                    .size(CloseButtonSize)
             ) {
-                Text(stringResource(R.string.feature_tip_got_it))
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.close),
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
     }
 }
 
+private val CloseButtonSize = 32.dp
+private val CloseButtonEndOffset = 12.dp
+
 /**
- * Same as the stateless [FeatureTip], but shows the bubble until the user taps "Got it!" and
+ * Same as the stateless [FeatureTip], but shows the bubble until the user closes it and
  * records that in [prefKey] so it's never shown again.
  */
 @Composable
@@ -170,7 +191,7 @@ fun FeatureTip(
     FeatureTip(
         text = text,
         isVisible = isVisible,
-        onGotIt = {
+        onDismiss = {
             AppPrefs.setBoolean(prefKey, true)
             isVisible = false
         },
@@ -207,7 +228,7 @@ private fun FeatureTipPreview() {
                 title = "Saved posts",
                 text = AnnotatedString.fromHtml("<b>New!</b> Tap here to see the posts you've saved to read later."),
                 isVisible = true,
-                onGotIt = {},
+                onDismiss = {},
             ) {
                 IconButton(onClick = {}) {
                     Icon(Icons.Default.Bookmark, contentDescription = null)
