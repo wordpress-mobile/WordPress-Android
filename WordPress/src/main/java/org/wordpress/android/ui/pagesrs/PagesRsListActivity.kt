@@ -30,6 +30,7 @@ import org.wordpress.android.ui.rs.RsConfirmationDialogState
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.clipboardManager
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.setContent
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -47,6 +48,9 @@ class PagesRsListActivity : BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val initialTab = intent.getSerializableExtraCompat<PageRsListTab>(EXTRA_INITIAL_TAB)
+            ?: PageRsListTab.PUBLISHED
 
         mlpViewModel = ViewModelProvider(this, viewModelFactory)[ModalLayoutPickerViewModel::class.java]
         observeEvents()
@@ -97,7 +101,8 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onRowsVisible = viewModel::onRowsVisible,
                     onDensityToggled = viewModel::onDensityToggled,
                     onCancelOpeningPage = viewModel::cancelOpeningPage,
-                    density = density
+                    density = density,
+                    initialTab = initialTab,
                 )
             }
         }
@@ -197,7 +202,15 @@ class PagesRsListActivity : BaseAppCompatActivity() {
 
     companion object {
         private const val CLIPBOARD_URL_LABEL = "Page URL"
+        private const val EXTRA_INITIAL_TAB = "extra_initial_tab"
 
-        fun createIntent(context: Context) = Intent(context, PagesRsListActivity::class.java)
+        // @JvmOverloads so Java callers can omit the tab and open on the default one.
+        @JvmOverloads
+        fun createIntent(
+            context: Context,
+            initialTab: PageRsListTab? = null
+        ): Intent = Intent(context, PagesRsListActivity::class.java).apply {
+            initialTab?.let { putExtra(EXTRA_INITIAL_TAB, it) }
+        }
     }
 }

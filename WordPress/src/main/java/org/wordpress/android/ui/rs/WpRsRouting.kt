@@ -10,9 +10,9 @@ import javax.inject.Singleton
  * the legacy (FluxC) ones. Keep this as the single definition so those screens can't drift apart
  * for the same site.
  *
- * Note this does not govern every route into those screens: the drafts/scheduled tabs, upload
- * notifications and blogging reminders go straight to the legacy screens regardless of this
- * decision.
+ * Note this does not govern every route into those screens. Upload notifications, blogging
+ * reminders, the stats "schedule a post" prompt and pages deep links that name a site you have
+ * added go straight to the legacy screens regardless of this decision.
  */
 @Singleton
 class WpRsRouting @Inject constructor(

@@ -5,7 +5,9 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamPostsOrderBy
 
-internal enum class PageRsListTab(
+// Public, unlike the rest of this screen's types: the tab to open on is part of the Activity's
+// Intent contract, which ActivityLauncher sets.
+enum class PageRsListTab(
     val labelResId: Int,
     val emptyMessageResId: Int,
     val statuses: List<PostStatus>,

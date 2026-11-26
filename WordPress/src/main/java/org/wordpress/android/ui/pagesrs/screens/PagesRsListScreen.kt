@@ -102,10 +102,15 @@ internal fun PagesRsListScreen(
     onRowsVisible: (PageRsListTab, List<Long>) -> Unit,
     onDensityToggled: (PageRsListTab) -> Unit,
     onCancelOpeningPage: () -> Unit,
-    density: ContentListDensity = ContentListDensity.COMFORTABLE
+    density: ContentListDensity = ContentListDensity.COMFORTABLE,
+    initialTab: PageRsListTab = PageRsListTab.PUBLISHED,
 ) {
     val tabs = PageRsListTab.entries
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    // Only the first composition honours this; a restored state keeps the tab the user left on.
+    val pagerState = rememberPagerState(
+        initialPage = tabs.indexOf(initialTab).coerceAtLeast(0),
+        pageCount = { tabs.size }
+    )
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
     val activeTab = tabs[pagerState.settledPage]
