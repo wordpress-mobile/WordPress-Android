@@ -11,8 +11,8 @@ import javax.inject.Singleton
  * for the same site.
  *
  * Note this does not govern every route into those screens. Upload notifications, blogging
- * reminders, the stats "schedule a post" prompt and the pages deep links go straight to the legacy
- * screens regardless of this decision.
+ * reminders, the stats "schedule a post" prompt and pages deep links that name a site you have
+ * added go straight to the legacy screens regardless of this decision.
  */
 @Singleton
 class WpRsRouting @Inject constructor(
