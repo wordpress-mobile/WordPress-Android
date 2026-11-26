@@ -107,7 +107,7 @@ class ReaderPostListRepository @Inject constructor(
     }
 
     suspend fun isFollowedSite(blog: ReaderBlog): Boolean = withContext(ioDispatcher) {
-        (blog.hasFeedUrl() && ReaderBlogTable.isFollowedFeed(blog.feedId)) ||
+        (blog.isExternal && ReaderBlogTable.isFollowedFeed(blog.feedId)) ||
                 ReaderBlogTable.isFollowedBlog(blog.blogId)
     }
 
