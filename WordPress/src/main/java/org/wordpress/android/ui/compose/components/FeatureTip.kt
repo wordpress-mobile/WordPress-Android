@@ -35,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,10 +58,12 @@ private fun FeatureTipPosition.toTooltipAnchorPosition() = when (this) {
 /**
  * Wraps [anchor] and, while [isVisible], shows a speech bubble pointing at it to explain a new feature.
  * Only the "Got it!" button closes the bubble; taps elsewhere pass through to the UI underneath.
+ * [text] can carry formatting, e.g. `AnnotatedString.fromHtml(stringResource(...))` or `buildAnnotatedString`;
+ * there's a plain [String] overload for unformatted text.
  */
 @Composable
 fun FeatureTip(
-    text: String,
+    text: AnnotatedString,
     isVisible: Boolean,
     onGotIt: () -> Unit,
     modifier: Modifier = Modifier,
@@ -89,13 +93,25 @@ fun FeatureTip(
     )
 }
 
+/** Plain-text version of the stateless [FeatureTip]. */
+@Composable
+fun FeatureTip(
+    text: String,
+    isVisible: Boolean,
+    onGotIt: () -> Unit,
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
+    anchor: @Composable () -> Unit,
+) = FeatureTip(AnnotatedString(text), isVisible, onGotIt, modifier, title, anchorPosition, anchor)
+
 // Twice M3's default caret height. Created once since the shape has no equals() and RichTooltip remembers by it
 private val FeatureTipCaretShape = TooltipDefaults.caretSize.let {
     TooltipDefaults.caretShape(it.copy(height = it.height * 2))
 }
 
 @Composable
-private fun TooltipScope.FeatureTipBubble(text: String, title: String?, onGotIt: () -> Unit) {
+private fun TooltipScope.FeatureTipBubble(text: AnnotatedString, title: String?, onGotIt: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     RichTooltip(
         caretShape = FeatureTipCaretShape,
@@ -138,7 +154,7 @@ private fun TooltipScope.FeatureTipBubble(text: String, title: String?, onGotIt:
 @Composable
 fun FeatureTip(
     prefKey: AppPrefs.PrefKey,
-    text: String,
+    text: AnnotatedString,
     modifier: Modifier = Modifier,
     title: String? = null,
     anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
@@ -165,6 +181,17 @@ fun FeatureTip(
     )
 }
 
+/** Plain-text version of the self-persisting [FeatureTip]. */
+@Composable
+fun FeatureTip(
+    prefKey: AppPrefs.PrefKey,
+    text: String,
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    anchorPosition: FeatureTipPosition = FeatureTipPosition.Below,
+    anchor: @Composable () -> Unit,
+) = FeatureTip(prefKey, AnnotatedString(text), modifier, title, anchorPosition, anchor)
+
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -178,7 +205,7 @@ private fun FeatureTipPreview() {
         ) {
             FeatureTip(
                 title = "Saved posts",
-                text = "Tap here to see the posts you've saved to read later.",
+                text = AnnotatedString.fromHtml("<b>New!</b> Tap here to see the posts you've saved to read later."),
                 isVisible = true,
                 onGotIt = {},
             ) {
