@@ -477,6 +477,23 @@ class SubFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onSubfilterSelected keeps the blog id of a site that has a feed URL`() {
+        val blog = ReaderBlog().apply {
+            blogId = 123L
+            feedUrl = "http://example.com/feed"
+        }
+        var readerModeInfo: ReaderModeInfo? = null
+        viewModel.readerModeInfo.observeForever { readerModeInfo = it }
+
+        viewModel.onSubfilterSelected(Site(blog = blog, onClickAction = {}))
+
+        requireNotNull(readerModeInfo).let {
+            assertThat(it.blogId).isEqualTo(123L)
+            assertThat(it.feedId).isEqualTo(0L)
+        }
+    }
+
+    @Test
     fun `onSubfilterSelected set expected readerModeInfo when a tag filter was tapped`() {
         val filter: Tag = mock()
         var readerModeInfo: ReaderModeInfo? = null
