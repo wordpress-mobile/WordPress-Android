@@ -298,18 +298,13 @@ class SubFilterViewModel @Inject constructor(
             ))
 
             SubfilterListItem.ItemType.SITE -> {
-                val currentFeedId = (subfilterListItem as Site).blog.feedId
-                val currentBlogId = if (subfilterListItem.blog.hasFeedUrl()) {
-                    currentFeedId
-                } else {
-                    subfilterListItem.blog.blogId
-                }
-
+                // a feed's blogId is its feedId, and a site's feedId is 0 even when it has a feed URL
+                val blog = (subfilterListItem as Site).blog
                 _readerModeInfo.value = (ReaderModeInfo(
                     null,
                     ReaderPostListType.BLOG_PREVIEW,
-                    currentBlogId,
-                    currentFeedId,
+                    blog.blogId,
+                    blog.feedId,
                     requestNewerPosts,
                     subfilterListItem.label,
                     isFirstLoad,
