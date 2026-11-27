@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+// CI probe: app-only changes should skip library lint while keeping app lint enabled.
 object ArrayUtils {
     @JvmStatic
     fun remove(stringArray: Array<String>, index: Int): Array<String> {
