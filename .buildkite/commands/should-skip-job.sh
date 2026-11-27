@@ -18,18 +18,21 @@ if [[ "${WORDPRESS_CI_FULL_BUILD:-}" == 1 || "${BUILDKITE_SOURCE:-}" != webhook 
   run_job
 fi
 
-# Preserve the existing documentation, tooling and version exclusions.
+# Limit text-file exclusions to store metadata. FluxC generates code from endpoint .txt files.
 PATTERNS=(
-  '*.md' '*.po' '*.pot' '*.txt' '.gitignore' 'config/**'
-  'fastlane/**' 'Gemfile' 'Gemfile.lock' 'version.properties'
+  '*.md' '*.po' '*.pot' '.gitignore' 'version.properties'
+  'WordPress/metadata/*.txt' 'WordPress/jetpack_metadata/*.txt'
+  'fastlane/metadata/*' 'fastlane/jetpack_metadata/*'
 )
 case "$job" in
-  validation) PATTERNS+=('**/strings.xml') ;;
-  library-lint)
-    # Library sources and module build files still run lint.
-    PATTERNS+=('WordPress/src/*' 'WordPress/metadata/*' 'WordPress/jetpack_metadata/*' 'docs/*')
-    ;;
+  # Locale Consistency compares Gradle and Fastlane declarations. It doesn't read translations.
+  validation) PATTERNS+=('*/strings.xml') ;;
+  # Only the Gradle lint jobs can ignore Fastlane code and gems. Prototype builds also use Fastlane.
+  lint|library-lint) PATTERNS+=('fastlane/*' 'Gemfile' 'Gemfile.lock') ;;
 esac
+if [[ "$job" == library-lint ]]; then
+  PATTERNS+=('WordPress/src/*' 'WordPress/metadata/*' 'WordPress/jetpack_metadata/*' 'docs/*')
+fi
 
 # Empty diffs, unknown paths and errors keep the job.
 if pr_changed_files --all-match "${PATTERNS[@]}"; then
