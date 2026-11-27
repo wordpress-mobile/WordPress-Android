@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -76,6 +75,7 @@ import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
 import org.wordpress.android.ui.reader.accent.readerImageMeta
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
@@ -483,9 +483,8 @@ private fun TileImage(url: String?, modifier: Modifier) {
 private class TileScope(val modifier: Modifier, val onMoreClick: () -> Unit)
 
 /**
- * Taps open the post. The tile's "⋯" button, or a long press, opens one menu with the card's actions (save, like,
- * comments, reblog, with their counts) above its usual more menu, so a tile needs no action row of its own. Screen
- * readers get the same actions directly.
+ * Taps open the post. The tile's "⋯" button, or a long press, opens a short menu: save, like (with its count) and
+ * share, so a tile needs no action row of its own. Screen readers get save and like directly.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -527,19 +526,20 @@ private fun TileMenuBox(uiState: ReaderPostUiState, content: @Composable (TileSc
         )
         DropdownMenu(expanded = isMenuOpen, onDismissRequest = closeMenu) {
             TileMenuActions(uiState, primaryActions, onActionClick = closeMenu)
-            val menuItems = uiState.moreMenuItems
-            if (primaryActions.isNotEmpty() && !menuItems.isNullOrEmpty()) HorizontalDivider()
-            menuItems?.forEach { menuItem ->
-                ReaderPostMoreMenuItem(menuItem) {
-                    isMenuOpen = false
-                    it.onClicked(uiState.postId, uiState.blogId, it.type)
+            // only Share from the card's more menu, which the view model fills in when the menu opens
+            uiState.moreMenuItems
+                ?.filter { it is SecondaryAction && it.type == ReaderPostCardActionType.SHARE }
+                ?.forEach { menuItem ->
+                    ReaderPostMoreMenuItem(menuItem) {
+                        isMenuOpen = false
+                        it.onClicked(uiState.postId, uiState.blogId, it.type)
+                    }
                 }
-            }
         }
     }
 }
 
-/** Save, like, comments and reblog, as the card's action row offers them, with their counts */
+/** Save and like, from the card's action row, with the like count */
 @Composable
 private fun TileMenuActions(
     uiState: ReaderPostUiState,
@@ -572,16 +572,19 @@ private fun TileMenuActions(
     }
 }
 
-/** The card's actions a tile offers: the ones that can be used, in the card's order */
+/** The card's actions a tile offers, save and like, when they can be used */
 private fun ReaderPostUiState.tilePrimaryActions(): List<PrimaryAction> =
-    listOf(bookmarkAction, likeAction, commentsAction, reblogAction).filter { it.isEnabled && it.onClicked != null }
+    listOf(bookmarkAction, likeAction).filter { it.isEnabled && it.onClicked != null }
 
 @Composable
-private fun primaryActionLabel(action: PrimaryAction): String = when (action.type) {
-    ReaderPostCardActionType.LIKE -> stringResource(R.string.like)
-    ReaderPostCardActionType.COMMENTS -> stringResource(R.string.comments)
-    else -> action.contentDescription?.let { uiStringText(it) }.orEmpty()
-}
+private fun primaryActionLabel(action: PrimaryAction): String = stringResource(
+    when (action.type) {
+        ReaderPostCardActionType.BOOKMARK -> {
+            if (action.isSelected) R.string.reader_secondary_bookmarked else R.string.save
+        }
+        else -> if (action.isSelected) R.string.mnu_comment_liked else R.string.like
+    }
+)
 
 private fun primaryActionIcon(action: PrimaryAction): Int = when (action.type) {
     ReaderPostCardActionType.BOOKMARK -> if (action.isSelected) {
@@ -589,13 +592,11 @@ private fun primaryActionIcon(action: PrimaryAction): Int = when (action.type) {
     } else {
         R.drawable.ic_bookmark_outline_new_24dp
     }
-    ReaderPostCardActionType.LIKE -> if (action.isSelected) {
+    else -> if (action.isSelected) {
         R.drawable.ic_like_fill_new_24dp
     } else {
         R.drawable.ic_like_outline_new_24dp
     }
-    ReaderPostCardActionType.COMMENTS -> R.drawable.ic_comment_outline_new_24dp
-    else -> R.drawable.ic_reblog_new_24dp
 }
 
 /** The first image of a gallery post's strip, at tile width, for the tile to show */
