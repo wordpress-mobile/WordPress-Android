@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Self-hosted sites signed in with an application password refresh over the REST API**
+  When the app refreshes a self-hosted site it signed in to with an application password — on launch, when you switch to the site, when you save a site setting, and when the media library reloads — it now asks the site's REST API instead of XML-RPC. On hosts that rate-limit `xmlrpc.php` this removes the requests that could make the site look unreachable and wrongly raise the "XML-RPC Disabled" card. The site's timezone also comes from the REST API now, which reports a named zone such as "Europe/Madrid" rather than a fixed offset, so Stats day boundaries follow daylight saving.
+  - **Apps:** Both
+  - **Type:** Changed
+  - **Availability:** Everyone
+  - **Where:** My Site, for a self-hosted site added through Login → Enter your existing site address
+  - **Notes:** Nothing moves in the UI, and no site needs to be signed in to again. One field has no REST equivalent: WordPress doesn't publish its own version over the REST API, so the first refresh after a site is added still asks XML-RPC once, for the version alone — it gates **My Site → Plugins** (WordPress 5.5 or later) and the editor's theme support. Every refresh after that goes over the REST API. A site whose server blocks XML-RPC has no recorded version and won't show the Plugins menu, which was already the case before this change. Reading the site's default comment status needs an administrator application password; for a non-administrator the app keeps the value that first refresh recorded, so a later change to the setting won't be picked up.
+
 - **Filtering Reader Subscriptions to a site shows its posts again**
   Picking a WordPress.com or Jetpack site in the Subscriptions filter shows that site's posts again, instead of "This blog is empty".
   - **Apps:** Both

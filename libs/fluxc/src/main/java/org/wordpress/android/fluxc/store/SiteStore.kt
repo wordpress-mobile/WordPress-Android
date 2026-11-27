@@ -1150,14 +1150,42 @@ open class SiteStore @Inject constructor(
             // them -- and its origin can predate an upgrade of the row (e.g. WPAPI -> WPCOM_REST by
             // /me/sites), which would re-fetch through the wrong client and downgrade the row again.
             val storedSite = getSiteByLocalId(site.id) ?: site
-            val updatedSite = when (storedSite.origin) {
-                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
-                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
+            // Below ORIGIN_WPCOM_REST, the transport is chosen by the credentials on the row rather than
+            // by its origin, matching PostStore, MediaStore and TaxonomyStore. An application-password
+            // self-hosted site is stored as ORIGIN_XMLRPC whenever the sign-in's wp.getUsersBlogs
+            // succeeded -- the common case -- so routing on origin sent a site with working REST
+            // credentials down wp.getOptions. The ORIGIN_WPAPI arm stays for rows added by the
+            // non-application-password FETCH_SITE_WP_API path. See CMM-2935.
+            val updatedSite = when {
+                storedSite.origin == SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
+                storedSite.origin == SiteModel.ORIGIN_WPAPI ||
+                        storedSite.isUsingSelfHostedRestApi -> fetchSelfHostedRestSite(storedSite)
                 else -> siteXMLRPCClient.fetchSite(storedSite)
             }
 
             updateSite(updatedSite)
         }
+    }
+
+    /**
+     * Refreshes a self-hosted site over its REST API -- except for the one fetch that has to learn the
+     * site's WordPress version. `software_version` has no REST equivalent (core deliberately doesn't
+     * publish its own version anywhere in the REST API), and an empty one fails every
+     * `VersionUtils.checkMinimalVersion` gate: Plugins (WP >= 5.5), the editor's
+     * `/wp-block-editor/v1/settings` fetch, and gallery-block support detection. A row that has never
+     * recorded a version takes a single `wp.getOptions` refresh to learn it -- which also seeds the
+     * options `/wp/v2/settings` only serves to administrators -- and every later refresh goes over REST.
+     *
+     * Skipped for a row with no verified XML-RPC endpoint, and falls through to REST when the XML-RPC
+     * fetch fails, so neither case can pin a site to a transport that doesn't work for it. The failed
+     * fetch leaves the row untouched: [SiteXMLRPCClient.fetchSite] only mutates it on success.
+     */
+    private suspend fun fetchSelfHostedRestSite(site: SiteModel): SiteModel {
+        if (site.softwareVersion.isNullOrEmpty() && !site.xmlRpcUrl.isNullOrEmpty()) {
+            val xmlRpcSite = siteXMLRPCClient.fetchSite(site)
+            if (!xmlRpcSite.isError) return xmlRpcSite
+        }
+        return siteWPAPIRestClient.fetchWPAPISite(site)
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
@@ -1319,9 +1347,20 @@ open class SiteStore @Inject constructor(
      * UNIQUE (SITE_ID, URL) constraint (discarding the whole update) or, when the URLs differ, make
      * [SiteSqlUtils.insertOrUpdateSiteReturningId]'s bare-SITE_ID match target the other row and
      * overwrite it. Leave the blog id with the row that already owns it.
+     *
+     * Keyed on the credentials rather than on the origin alone, for the same reason [fetchSite] is: an
+     * application-password site is stored as `ORIGIN_XMLRPC` whenever its sign-in's `wp.getUsersBlogs`
+     * succeeded, and it reaches the Jetpack connection lookup that discovers the blog id just the same.
      */
     private fun yieldBlogIdIfOwnedElsewhere(siteModel: SiteModel) {
-        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return
+        if (siteModel.siteId == 0L) return
+        // A WP.com-owned row addresses every one of its calls with this blog id, so it must never yield
+        // it -- and a Jetpack-connected row is not isWPCom(), so the credential check doesn't exclude
+        // it. Same ordering PostStore and MediaStore apply, for the same reason (CMM-2114).
+        if (siteModel.isUsingWpComRestApi ||
+            (siteModel.origin != SiteModel.ORIGIN_WPAPI && !siteModel.isUsingSelfHostedRestApi)) {
+            return
+        }
         if (siteSqlUtils.getSitesWithRemoteId(siteModel.siteId).any { it.id != siteModel.id }) {
             siteModel.siteId = 0
         }
