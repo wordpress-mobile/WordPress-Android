@@ -1150,9 +1150,16 @@ open class SiteStore @Inject constructor(
             // them -- and its origin can predate an upgrade of the row (e.g. WPAPI -> WPCOM_REST by
             // /me/sites), which would re-fetch through the wrong client and downgrade the row again.
             val storedSite = getSiteByLocalId(site.id) ?: site
-            val updatedSite = when (storedSite.origin) {
-                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
-                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
+            // Below ORIGIN_WPCOM_REST, the transport is chosen by the credentials on the row rather than
+            // by its origin, matching PostStore, MediaStore and TaxonomyStore. An application-password
+            // self-hosted site is stored as ORIGIN_XMLRPC whenever the sign-in's wp.getUsersBlogs
+            // succeeded -- the common case -- so routing on origin sent a site with working REST
+            // credentials down wp.getOptions. The ORIGIN_WPAPI arm stays for rows added by the
+            // non-application-password FETCH_SITE_WP_API path. See CMM-2935.
+            val updatedSite = when {
+                storedSite.origin == SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
+                storedSite.origin == SiteModel.ORIGIN_WPAPI ||
+                        storedSite.isUsingSelfHostedRestApi -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
                 else -> siteXMLRPCClient.fetchSite(storedSite)
             }
 
@@ -1319,9 +1326,14 @@ open class SiteStore @Inject constructor(
      * UNIQUE (SITE_ID, URL) constraint (discarding the whole update) or, when the URLs differ, make
      * [SiteSqlUtils.insertOrUpdateSiteReturningId]'s bare-SITE_ID match target the other row and
      * overwrite it. Leave the blog id with the row that already owns it.
+     *
+     * Keyed on the credentials rather than on the origin alone, for the same reason [fetchSite] is: an
+     * application-password site is stored as `ORIGIN_XMLRPC` whenever its sign-in's `wp.getUsersBlogs`
+     * succeeded, and it reaches the Jetpack connection lookup that discovers the blog id just the same.
      */
     private fun yieldBlogIdIfOwnedElsewhere(siteModel: SiteModel) {
-        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return
+        if (siteModel.siteId == 0L) return
+        if (siteModel.origin != SiteModel.ORIGIN_WPAPI && !siteModel.isUsingSelfHostedRestApi) return
         if (siteSqlUtils.getSitesWithRemoteId(siteModel.siteId).any { it.id != siteModel.id }) {
             siteModel.siteId = 0
         }

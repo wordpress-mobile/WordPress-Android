@@ -32,6 +32,7 @@ class SiteWPAPIRestClient @Inject constructor(
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val jetpackConnectionStatusFetcher: JetpackConnectionStatusFetcher,
+    private val siteOptionsRsFetcher: SiteOptionsRsFetcher,
     dispatcher: Dispatcher,
     @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue,
     userAgent: UserAgent
@@ -52,8 +53,18 @@ class SiteWPAPIRestClient @Inject constructor(
 
     /**
      * @param previousSite the site this fetch is refreshing, when there is one. The model returned here
-     * replaces the stored row wholesale, so fields this fetch can't determine are carried forward from it
-     * rather than reset.
+     * replaces the stored row wholesale -- the write is a full-row update that excludes only the
+     * application-password credential columns -- so this refreshes [previousSite] in place rather than
+     * returning a fresh model. Anything left unset would otherwise be written back as its default,
+     * including [SiteModel.getSelfHostedSiteId] (the blog id every XML-RPC call is addressed with) and
+     * [SiteModel.isSelfHostedAdmin] (which gates Pages and Plugins) -- both set only by
+     * `wp.getUsersBlogs` at sign-in, so neither could be recovered.
+     *
+     * [SiteModel.getOrigin] is likewise left as the stored row records it. An application-password site
+     * whose sign-in went through `wp.getUsersBlogs` is stored as `ORIGIN_XMLRPC`, and origin still routes
+     * `CommentsStore` and `SiteStore.fetchPostFormats`, where `ORIGIN_WPAPI` means "no XML-RPC available"
+     * rather than "use REST". Which transport refreshes the row is decided by its credentials
+     * (`SiteStore.fetchSite`); what the row *records* is deliberately not changed here. See CMM-2935.
      */
     suspend fun fetchWPAPISite(
         payload: FetchWPAPISitePayload,
@@ -78,28 +89,41 @@ class SiteWPAPIRestClient @Inject constructor(
                 val response = result.data
                 val jetpackPlugin = fetchJetpackPluginState(response?.namespaces, discoveredWpApiUrl, payload)
                 val jetpackConnection = fetchJetpackConnectionState(jetpackPlugin, discoveredWpApiUrl, payload)
-                SiteModel().apply {
-                    // Carry the local id so SiteStore.updateSite finds the stored row and preserves the
-                    // editor preferences, and so SiteSqlUtils matches the row by local id rather than by
-                    // SITE_ID + URL -- that match misses, and inserts a duplicate site, as soon as a real
-                    // WP.com blog id is stored.
-                    id = previousSite?.id ?: 0
-                    name = response?.name
-                    description = response?.description
-                    timezone = response?.gmtOffset
-                    origin = SiteModel.ORIGIN_WPAPI
-                    hasWooCommerce = response?.namespaces?.any {
-                        it.startsWith(WOO_API_NAMESPACE_PREFIX)
-                    } ?: false
+                // Only a stored row can be asked for its own options, because the request goes out with
+                // the application password held on it. At sign-in there's no row yet; the refresh that
+                // follows moments later, when the app opens, fills these in.
+                val siteOptions = previousSite
+                    ?.takeIf { it.isUsingSelfHostedRestApi }
+                    ?.let { siteOptionsRsFetcher.fetch(it) }
+                // The local id matters even on the fresh-model path: SiteStore.updateSite needs it to find
+                // the stored row and preserve the editor preferences, and SiteSqlUtils needs it to match
+                // the row by local id rather than by SITE_ID + URL -- that match misses, and inserts a
+                // duplicate site, as soon as a real WP.com blog id is stored.
+                (previousSite ?: SiteModel()).apply {
+                    // Every assignment below is guarded: a thin `_fields` response, or an option read the
+                    // site refused, must leave the stored value alone rather than blank it.
+                    response?.name?.takeIf { it.isNotEmpty() }?.let { name = it }
+                    response?.description?.let { description = it }
+                    (siteOptions?.timezone ?: response?.gmtOffset)?.let { timezone = it }
+                    siteOptions?.defaultCommentStatus?.let { defaultCommentStatus = it }
+                    siteOptions?.isFeaturedImageSupported?.let { setIsFeaturedImageSupported(it) }
+                    if (previousSite == null || previousSite.origin == SiteModel.ORIGIN_UNKNOWN) {
+                        origin = SiteModel.ORIGIN_WPAPI
+                    }
+                    response?.namespaces?.let { namespaces ->
+                        hasWooCommerce = namespaces.any { it.startsWith(WOO_API_NAMESPACE_PREFIX) }
+                    }
                     applyJetpackState(jetpackPlugin, jetpackConnection, previousSite)
 
-                    applicationPasswordsAuthorizeUrl = response?.authentication?.applicationPasswords
-                        ?.endpoints?.authorization
-                    if (!applicationPasswordsAuthorizeUrl.isNullOrEmpty() &&
-                        applicationPasswordsAuthorizeUrl.contains(APPLICATION_PASSWORDS_URL_SUFFIX)) {
-                        // Infer the admin URL from the application passwords authorization URL
-                        adminUrl = applicationPasswordsAuthorizeUrl.substringBefore(APPLICATION_PASSWORDS_URL_SUFFIX)
-                    }
+                    response?.authentication?.applicationPasswords?.endpoints?.authorization
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.let { authorizeUrl ->
+                            applicationPasswordsAuthorizeUrl = authorizeUrl
+                            if (authorizeUrl.contains(APPLICATION_PASSWORDS_URL_SUFFIX)) {
+                                // Infer the admin URL from the application passwords authorization URL
+                                adminUrl = authorizeUrl.substringBefore(APPLICATION_PASSWORDS_URL_SUFFIX)
+                            }
+                        }
 
                     wpApiRestUrl = discoveredWpApiUrl
                     this.url = cleanedUrl.replaceBefore("://", urlScheme)

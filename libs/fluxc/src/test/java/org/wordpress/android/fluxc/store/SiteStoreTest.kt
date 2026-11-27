@@ -125,6 +125,106 @@ class SiteStoreTest {
         assertSiteFetchError(site)
     }
 
+    @Test
+    fun `fetchSite from WPAPI endpoint for an application-password site stored as XMLRPC`() = test {
+        // The common application-password sign-in stores the row as ORIGIN_XMLRPC, because its
+        // wp.getUsersBlogs succeeded. The credentials, not the origin, decide the transport.
+        val site = applicationPasswordSite().apply { origin = SiteModel.ORIGIN_XMLRPC }
+        val updatedSite = SiteModel()
+        whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `fetchSite from XMLRPC endpoint for a site stored as XMLRPC without application password`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(false)
+        site.origin = SiteModel.ORIGIN_XMLRPC
+        val updatedSite = SiteModel()
+        whenever(siteXMLRPCClient.fetchSite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteWPAPIClient)
+    }
+
+    @Test
+    fun `fetchSite from WPAPI endpoint for a site stored as WPAPI`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(false)
+        site.origin = SiteModel.ORIGIN_WPAPI
+        val updatedSite = SiteModel()
+        whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `fetchSite from WPCom endpoint for a WPCom site that also holds an application password`() = test {
+        // Atomic sites carry application-password credentials too, and must keep going to WP.com REST.
+        val site = applicationPasswordSite().apply {
+            setIsWPCom(true)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+        val updatedSite = SiteModel()
+        whenever(siteRestClient.fetchSite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteWPAPIClient)
+        verifyNoInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `fetchSite yields a blog id another row owns for an application-password site stored as XMLRPC`() =
+        test {
+            val site = applicationPasswordSite().apply { origin = SiteModel.ORIGIN_XMLRPC }
+            val updatedSite = applicationPasswordSite().apply {
+                id = 1
+                origin = SiteModel.ORIGIN_XMLRPC
+                siteId = WPCOM_BLOG_ID
+            }
+            val meSitesRow = SiteModel().apply {
+                id = 2
+                siteId = WPCOM_BLOG_ID
+            }
+            whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+            whenever(siteSqlUtils.getSitesWithRemoteId(WPCOM_BLOG_ID)).thenReturn(listOf(meSitesRow))
+
+            siteStore.fetchSite(site)
+
+            // The /me/sites row keeps the blog id; this row would otherwise trip UNIQUE (SITE_ID, URL)
+            // or overwrite it.
+            verify(siteSqlUtils).insertOrUpdateSite(argWhere { it.siteId == 0L })
+        }
+
+    @Test
+    fun `fetchSite keeps a blog id no other row owns`() = test {
+        val site = applicationPasswordSite().apply { origin = SiteModel.ORIGIN_XMLRPC }
+        val updatedSite = applicationPasswordSite().apply {
+            id = 1
+            origin = SiteModel.ORIGIN_XMLRPC
+            siteId = WPCOM_BLOG_ID
+        }
+        whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+        whenever(siteSqlUtils.getSitesWithRemoteId(WPCOM_BLOG_ID)).thenReturn(listOf(updatedSite))
+
+        siteStore.fetchSite(site)
+
+        verify(siteSqlUtils).insertOrUpdateSite(argWhere { it.siteId == WPCOM_BLOG_ID })
+    }
+
+    private fun applicationPasswordSite() = SiteModel().apply {
+        setIsWPCom(false)
+        apiRestUsernamePlain = "user"
+        apiRestPasswordPlain = "app password"
+    }
+
     private suspend fun assertSiteFetchError(site: SiteModel) {
         val onSiteChanged = siteStore.fetchSite(site)
 
@@ -606,5 +706,9 @@ class SiteStoreTest {
         whenever(siteSqlUtils.sitesAccessedViaWPAPI).thenReturn(wpapiSites)
 
         assertThat(siteStore.sitesAccessedViaWPAPICount).isEqualTo(2)
+    }
+
+    companion object {
+        private const val WPCOM_BLOG_ID = 1234L
     }
 }
