@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Approving and replying from a comment notification no longer needs XML-RPC**
+  Approving a comment, or replying to it, from a push notification now uses the same REST API as the comment screens. On a self-hosted site added with an application password, those two buttons previously went over XML-RPC, so they failed on a site with XML-RPC disabled while the in-app comment screens worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Comment push notification → Approve and Reply buttons
+  - **Notes:** Only affects self-hosted sites signed in with an application password that also receive WordPress.com notifications, i.e. Jetpack-connected. WordPress.com and Jetpack sites already used the REST API and are unchanged. The notification's Like button still goes through the old path; liking is a WordPress.com-only endpoint, so it was never XML-RPC.
+
 - **Filtering Reader Subscriptions to a site shows its posts again**
   Picking a WordPress.com or Jetpack site in the Subscriptions filter shows that site's posts again, instead of "This blog is empty".
   - **Apps:** Both
