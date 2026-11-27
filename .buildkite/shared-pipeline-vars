@@ -3,6 +3,19 @@
  # This file is `source`'d before calling `buildkite-agent pipeline upload`, and can be used
  # to set up some variables that will be interpolated in the `.yml` pipeline before uploading it.
 
-export CI_TOOLKIT="automattic/a8c-ci-toolkit#8.0.1"
+export CI_TOOLKIT="automattic/a8c-ci-toolkit#8.1.0"
 export TEST_COLLECTOR="test-collector#v1.10.1"
 export CLAUDE_PLUGIN="iangmaia/claude-summarize#ce99c67dd57cdf236c3daca82b86a335fd5e9cc2"
+
+# The Claude analysis upload also sources this file, on an agent without the CI toolkit.
+SKIP_BUILD=false
+SKIP_VALIDATION=false
+SKIP_LINT=false
+SKIP_LIBRARY_LINT=false
+if command -v pr_changed_files >/dev/null 2>&1; then
+    SKIP_BUILD=$(.buildkite/commands/should-skip-job.sh build) || SKIP_BUILD=false
+    SKIP_VALIDATION=$(.buildkite/commands/should-skip-job.sh validation) || SKIP_VALIDATION=false
+    SKIP_LINT=$(.buildkite/commands/should-skip-job.sh lint) || SKIP_LINT=false
+    SKIP_LIBRARY_LINT=$(.buildkite/commands/should-skip-job.sh library-lint) || SKIP_LIBRARY_LINT=false
+fi
+export SKIP_BUILD SKIP_VALIDATION SKIP_LINT SKIP_LIBRARY_LINT

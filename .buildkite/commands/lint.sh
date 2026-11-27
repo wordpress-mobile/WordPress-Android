@@ -1,9 +1,5 @@
 #!/bin/bash -eu
 
-if "$(dirname "${BASH_SOURCE[0]}")/should-skip-job.sh" --job-type lint; then
-  exit 0
-fi
-
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
 # Use Debug for PR builds (faster), Release for trunk and release-branch builds.
