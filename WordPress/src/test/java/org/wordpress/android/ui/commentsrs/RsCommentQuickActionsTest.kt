@@ -5,13 +5,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.rs.WpRsRouting
@@ -22,8 +19,6 @@ class RsCommentQuickActionsTest : BaseUnitTest() {
 
     @Mock lateinit var commentsRsDataSource: CommentsRsDataSource
 
-    @Mock lateinit var commentsStore: CommentsStore
-
     private lateinit var quickActions: RsCommentQuickActions
 
     private val site = SiteModel().apply { id = SITE_LOCAL_ID }
@@ -33,7 +28,6 @@ class RsCommentQuickActionsTest : BaseUnitTest() {
         quickActions = RsCommentQuickActions(
             wpRsRouting = wpRsRouting,
             commentsRsDataSource = commentsRsDataSource,
-            commentsStore = commentsStore,
             bgDispatcher = testDispatcher(),
             mainDispatcher = testDispatcher()
         )
@@ -51,38 +45,6 @@ class RsCommentQuickActionsTest : BaseUnitTest() {
         whenever(wpRsRouting.canUseWpRs(site)).thenReturn(false)
 
         assertThat(quickActions.canHandle(site)).isFalse
-    }
-
-    @Test
-    fun `approve moderates over wordpress-rs and reports success`() = test {
-        whenever(commentsRsDataSource.updateStatus(site, COMMENT_ID, APPROVED)).thenReturn(RsResult.Success)
-        var result: Boolean? = null
-
-        quickActions.approve(site, COMMENT_ID) { result = it }
-
-        assertThat(result).isTrue
-        verify(commentsRsDataSource).updateStatus(site, COMMENT_ID, APPROVED)
-    }
-
-    @Test
-    fun `approve keeps the FluxC cache in step with the write`() = test {
-        whenever(commentsRsDataSource.updateStatus(site, COMMENT_ID, APPROVED)).thenReturn(RsResult.Success)
-
-        quickActions.approve(site, COMMENT_ID) {}
-
-        verify(commentsStore).moderateCommentLocally(site, COMMENT_ID, APPROVED)
-    }
-
-    @Test
-    fun `approve reports failure and leaves the cache alone when the write fails`() = test {
-        whenever(commentsRsDataSource.updateStatus(site, COMMENT_ID, APPROVED))
-            .thenReturn(RsResult.Error("nope"))
-        var result: Boolean? = null
-
-        quickActions.approve(site, COMMENT_ID) { result = it }
-
-        assertThat(result).isFalse
-        verify(commentsStore, never()).moderateCommentLocally(site, COMMENT_ID, APPROVED)
     }
 
     @Test

@@ -597,19 +597,9 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
-            // A site the wordpress-rs comment screens serve is moderated the same way here, so a
-            // notification can't take an application-password site down the XML-RPC path that its
-            // own screens never use (CMM-2933).
-            if (mRsCommentQuickActions.canHandle(site)) {
-                mRsCommentQuickActions.approve(site, comment.getRemoteCommentId(), success -> {
-                    if (success) {
-                        requestCompleted(ARG_ACTION_APPROVE);
-                    } else {
-                        requestFailed(ARG_ACTION_APPROVE);
-                    }
-                });
-                return;
-            }
+            // Not routed through RsCommentQuickActions: the Approve action is never added to a
+            // comment notification (see GCMMessageHandler, disabled pending #17026), so this path
+            // is unreachable and gating it would be dead code. CMM-2933 covers Reply only.
 
             // keep the CommentId, we'll use it later to know whether to trigger the end processing notification
             // or not
@@ -639,9 +629,11 @@ public class NotificationsProcessingService extends Service {
             // Pseudo comment (built from the note)
             CommentModel comment = mNote.buildComment();
 
-            // See approveComment(): the same routing decision as the comment screens (CMM-2933).
-            // The post id is required here but not on the FluxC path, which derives it from the
-            // parent comment, so a note without one keeps the old route rather than failing.
+            // The same routing decision as the comment screens, so a notification can't take an
+            // application-password site down the XML-RPC path its own screens never use (CMM-2933).
+            // wp/v2 comment-create needs a post id, so a note without one keeps the old route. That
+            // note already failed there — XML-RPC newComment is passed the same missing post id —
+            // so this preserves the existing behaviour rather than fixing it.
             if (mRsCommentQuickActions.canHandle(site) && comment.getRemotePostId() > 0) {
                 mRsCommentQuickActions.reply(
                         site,
