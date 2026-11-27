@@ -219,6 +219,74 @@ class SiteStoreTest {
         verify(siteSqlUtils).insertOrUpdateSite(argWhere { it.siteId == WPCOM_BLOG_ID })
     }
 
+    @Test
+    fun `fetchSite keeps the blog id of a Jetpack row that also holds an application password`() = test {
+        // A Jetpack-connected row is not isWPCom(), so the credential check alone wouldn't exclude it --
+        // but it addresses every WP.com REST call with this blog id and must never yield it (CMM-2114).
+        val site = applicationPasswordSite().apply { origin = SiteModel.ORIGIN_WPCOM_REST }
+        val updatedSite = applicationPasswordSite().apply {
+            id = 1
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            setIsJetpackConnected(true)
+            siteId = WPCOM_BLOG_ID
+        }
+        whenever(siteRestClient.fetchSite(site)).thenReturn(updatedSite)
+
+        siteStore.fetchSite(site)
+
+        // The guard returns before the lookup, so the blog id is never even a candidate to yield.
+        verify(siteSqlUtils, never()).getSitesWithRemoteId(any())
+        verify(siteSqlUtils).insertOrUpdateSite(argWhere { it.siteId == WPCOM_BLOG_ID })
+    }
+
+    @Test
+    fun `fetchSite takes one XMLRPC refresh to learn a missing software version`() = test {
+        // software_version has no REST equivalent, and an empty one fails every version gate.
+        val site = applicationPasswordSite().apply { xmlRpcUrl = XMLRPC_URL }
+        val updatedSite = SiteModel()
+        whenever(siteXMLRPCClient.fetchSite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteWPAPIClient)
+    }
+
+    @Test
+    fun `fetchSite goes to REST once the software version is known`() = test {
+        val site = applicationPasswordSite().apply {
+            xmlRpcUrl = XMLRPC_URL
+            softwareVersion = "6.7"
+        }
+        val updatedSite = SiteModel()
+        whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `fetchSite falls through to REST when the XMLRPC version fetch fails`() = test {
+        val site = applicationPasswordSite().apply { xmlRpcUrl = XMLRPC_URL }
+        val erroredSite = SiteModel().apply { error = BaseNetworkError(PARSE_ERROR) }
+        val updatedSite = SiteModel()
+        whenever(siteXMLRPCClient.fetchSite(site)).thenReturn(erroredSite)
+        whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+    }
+
+    @Test
+    fun `fetchSite skips the XMLRPC version refresh for a site with no XMLRPC endpoint`() = test {
+        val site = applicationPasswordSite()
+        val updatedSite = SiteModel()
+        whenever(siteWPAPIClient.fetchWPAPISite(site)).thenReturn(updatedSite)
+
+        assertSiteFetched(updatedSite, site)
+
+        verifyNoInteractions(siteXMLRPCClient)
+    }
+
     private fun applicationPasswordSite() = SiteModel().apply {
         setIsWPCom(false)
         apiRestUsernamePlain = "user"
@@ -710,5 +778,6 @@ class SiteStoreTest {
 
     companion object {
         private const val WPCOM_BLOG_ID = 1234L
+        private const val XMLRPC_URL = "https://site.com/xmlrpc.php"
     }
 }

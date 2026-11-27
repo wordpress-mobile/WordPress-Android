@@ -166,6 +166,67 @@ class SiteWPAPIRestClientTest {
         assertThat(result.hasWooCommerce).isTrue()
     }
 
+    @Test
+    fun `the index timezone string is preferred over the numeric gmt offset`() = test {
+        // The index serves timezone_string unauthenticated, so even a non-administrator gets the
+        // DST-correct zone and never falls back to the fixed offset. See CMM-1095.
+        givenRootResponse(RootWPAPIRestResponse(timezoneString = "Europe/Madrid", gmtOffset = "2"))
+        givenSiteOptions(SiteOptions())
+
+        val result = restClient.fetchWPAPISite(storedSite())
+
+        assertThat(result.timezone).isEqualTo("Europe/Madrid")
+    }
+
+    @Test
+    fun `an empty index timezone string falls back to the gmt offset`() = test {
+        // A site on a manual UTC offset reports timezone_string as empty.
+        givenRootResponse(RootWPAPIRestResponse(timezoneString = "", gmtOffset = "2"))
+        givenSiteOptions(SiteOptions())
+
+        val result = restClient.fetchWPAPISite(storedSite())
+
+        assertThat(result.timezone).isEqualTo("2")
+    }
+
+    @Test
+    fun `a legacy row with a working XMLRPC endpoint keeps its unknown origin`() = test {
+        // ORIGIN_WPAPI would tell CommentsStore and fetchPostFormats that XML-RPC is unavailable.
+        givenRootResponse(RootWPAPIRestResponse())
+        givenSiteOptions(SiteOptions())
+        val storedSite = storedSite().apply { origin = SiteModel.ORIGIN_UNKNOWN }
+
+        val result = restClient.fetchWPAPISite(storedSite)
+
+        assertThat(result.origin).isEqualTo(SiteModel.ORIGIN_UNKNOWN)
+    }
+
+    @Test
+    fun `a legacy row with no XMLRPC endpoint is healed to WPAPI`() = test {
+        givenRootResponse(RootWPAPIRestResponse())
+        givenSiteOptions(SiteOptions())
+        val storedSite = storedSite().apply {
+            origin = SiteModel.ORIGIN_UNKNOWN
+            xmlRpcUrl = ""
+        }
+
+        val result = restClient.fetchWPAPISite(storedSite)
+
+        assertThat(result.origin).isEqualTo(SiteModel.ORIGIN_WPAPI)
+    }
+
+    @Test
+    fun `the stored rest endpoint is used instead of rediscovering one`() = test {
+        givenRootResponse(RootWPAPIRestResponse(name = "Fresh title"))
+        givenSiteOptions(SiteOptions())
+        val storedSite = storedSite().apply { wpApiRestUrl = WP_API_URL }
+
+        val result = restClient.fetchWPAPISite(storedSite)
+
+        assertThat(result.wpApiRestUrl).isEqualTo(WP_API_URL)
+        verify(discoveryWPAPIRestClient, never()).discoverWPAPIBaseURL(any())
+    }
+
     private suspend fun givenRootResponse(response: RootWPAPIRestResponse) {
         whenever(
             wpapiGsonRequestBuilder.syncGetRequest(

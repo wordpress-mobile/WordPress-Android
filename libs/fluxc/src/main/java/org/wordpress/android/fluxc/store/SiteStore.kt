@@ -1159,12 +1159,33 @@ open class SiteStore @Inject constructor(
             val updatedSite = when {
                 storedSite.origin == SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
                 storedSite.origin == SiteModel.ORIGIN_WPAPI ||
-                        storedSite.isUsingSelfHostedRestApi -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
+                        storedSite.isUsingSelfHostedRestApi -> fetchSelfHostedRestSite(storedSite)
                 else -> siteXMLRPCClient.fetchSite(storedSite)
             }
 
             updateSite(updatedSite)
         }
+    }
+
+    /**
+     * Refreshes a self-hosted site over its REST API -- except for the one fetch that has to learn the
+     * site's WordPress version. `software_version` has no REST equivalent (core deliberately doesn't
+     * publish its own version anywhere in the REST API), and an empty one fails every
+     * `VersionUtils.checkMinimalVersion` gate: Plugins (WP >= 5.5), the editor's
+     * `/wp-block-editor/v1/settings` fetch, and gallery-block support detection. A row that has never
+     * recorded a version takes a single `wp.getOptions` refresh to learn it -- which also seeds the
+     * options `/wp/v2/settings` only serves to administrators -- and every later refresh goes over REST.
+     *
+     * Skipped for a row with no verified XML-RPC endpoint, and falls through to REST when the XML-RPC
+     * fetch fails, so neither case can pin a site to a transport that doesn't work for it. The failed
+     * fetch leaves the row untouched: [SiteXMLRPCClient.fetchSite] only mutates it on success.
+     */
+    private suspend fun fetchSelfHostedRestSite(site: SiteModel): SiteModel {
+        if (site.softwareVersion.isNullOrEmpty() && !site.xmlRpcUrl.isNullOrEmpty()) {
+            val xmlRpcSite = siteXMLRPCClient.fetchSite(site)
+            if (!xmlRpcSite.isError) return xmlRpcSite
+        }
+        return siteWPAPIRestClient.fetchWPAPISite(site)
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
@@ -1333,7 +1354,13 @@ open class SiteStore @Inject constructor(
      */
     private fun yieldBlogIdIfOwnedElsewhere(siteModel: SiteModel) {
         if (siteModel.siteId == 0L) return
-        if (siteModel.origin != SiteModel.ORIGIN_WPAPI && !siteModel.isUsingSelfHostedRestApi) return
+        // A WP.com-owned row addresses every one of its calls with this blog id, so it must never yield
+        // it -- and a Jetpack-connected row is not isWPCom(), so the credential check doesn't exclude
+        // it. Same ordering PostStore and MediaStore apply, for the same reason (CMM-2114).
+        if (siteModel.isUsingWpComRestApi ||
+            (siteModel.origin != SiteModel.ORIGIN_WPAPI && !siteModel.isUsingSelfHostedRestApi)) {
+            return
+        }
         if (siteSqlUtils.getSitesWithRemoteId(siteModel.siteId).any { it.id != siteModel.id }) {
             siteModel.siteId = 0
         }

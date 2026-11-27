@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIDiscoveryUtils
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionState
@@ -41,7 +42,7 @@ class SiteWPAPIRestClient @Inject constructor(
         private const val WOO_API_NAMESPACE_PREFIX = "wc/"
         private const val JETPACK_API_NAMESPACE_PREFIX = "jetpack/"
         private const val FETCH_API_CALL_FIELDS =
-            "name,description,gmt_offset,url,authentication,namespaces"
+            "name,description,gmt_offset,timezone_string,url,authentication,namespaces"
         private const val APPLICATION_PASSWORDS_URL_SUFFIX = "authorize-application.php"
         private const val PLUGINS_PATH = "wp/v2/plugins"
         private const val PLUGINS_FIELDS = "plugin,status,version"
@@ -74,15 +75,8 @@ class SiteWPAPIRestClient @Inject constructor(
             DiscoveryUtils.stripKnownPaths(urlWithScheme)
         }
 
-        val discoveredWpApiUrl = discoverApiEndpoint(cleanedUrl)
+        val (discoveredWpApiUrl, result) = requestRoot(cleanedUrl, previousSite)
         val urlScheme = discoveredWpApiUrl.toHttpUrl().scheme
-
-        val result = wpapiGsonRequestBuilder.syncGetRequest(
-            restClient = this,
-            url = discoveredWpApiUrl,
-            clazz = RootWPAPIRestResponse::class.java,
-            params = mapOf("_fields" to FETCH_API_CALL_FIELDS)
-        )
 
         return when (result) {
             is Success -> {
@@ -100,31 +94,8 @@ class SiteWPAPIRestClient @Inject constructor(
                 // the row by local id rather than by SITE_ID + URL -- that match misses, and inserts a
                 // duplicate site, as soon as a real WP.com blog id is stored.
                 (previousSite ?: SiteModel()).apply {
-                    // Every assignment below is guarded: a thin `_fields` response, or an option read the
-                    // site refused, must leave the stored value alone rather than blank it.
-                    response?.name?.takeIf { it.isNotEmpty() }?.let { name = it }
-                    response?.description?.let { description = it }
-                    (siteOptions?.timezone ?: response?.gmtOffset)?.let { timezone = it }
-                    siteOptions?.defaultCommentStatus?.let { defaultCommentStatus = it }
-                    siteOptions?.isFeaturedImageSupported?.let { setIsFeaturedImageSupported(it) }
-                    if (previousSite == null || previousSite.origin == SiteModel.ORIGIN_UNKNOWN) {
-                        origin = SiteModel.ORIGIN_WPAPI
-                    }
-                    response?.namespaces?.let { namespaces ->
-                        hasWooCommerce = namespaces.any { it.startsWith(WOO_API_NAMESPACE_PREFIX) }
-                    }
+                    applyRootResponse(response, siteOptions, previousSite)
                     applyJetpackState(jetpackPlugin, jetpackConnection, previousSite)
-
-                    response?.authentication?.applicationPasswords?.endpoints?.authorization
-                        ?.takeIf { it.isNotEmpty() }
-                        ?.let { authorizeUrl ->
-                            applicationPasswordsAuthorizeUrl = authorizeUrl
-                            if (authorizeUrl.contains(APPLICATION_PASSWORDS_URL_SUFFIX)) {
-                                // Infer the admin URL from the application passwords authorization URL
-                                adminUrl = authorizeUrl.substringBefore(APPLICATION_PASSWORDS_URL_SUFFIX)
-                            }
-                        }
-
                     wpApiRestUrl = discoveredWpApiUrl
                     this.url = cleanedUrl.replaceBefore("://", urlScheme)
                     if (payload.isApplicationPassword) {
@@ -158,6 +129,80 @@ class SiteWPAPIRestClient @Inject constructor(
             ),
             previousSite = site
         )
+    }
+
+    /**
+     * Reads the REST root, preferring the endpoint the row already has over re-deriving one from the
+     * site URL: that endpoint was verified when the site was added, and rediscovery costs a request and
+     * resolves to nothing useful on a host whose home URL doesn't serve WordPress, or that strips the
+     * `api.w.org` link header. Discovery still runs for a row that has no stored endpoint, and as a
+     * retry when the stored one no longer answers -- otherwise a site that moved its REST root would be
+     * pinned to the stale one, since a failed fetch writes nothing back. That retry can re-request the
+     * same endpoint when discovery lands back on it, which only costs a request on a site that is
+     * already failing.
+     *
+     * @return the endpoint the returned response came from, which is the one to persist.
+     */
+    private suspend fun requestRoot(
+        cleanedUrl: String,
+        previousSite: SiteModel?
+    ): Pair<String, WPAPIResponse<RootWPAPIRestResponse>> {
+        val storedUrl = previousSite?.wpApiRestUrl?.takeIf { it.isNotEmpty() }
+        val storedResult = storedUrl?.let { requestRootFrom(it) }
+        if (storedUrl != null && storedResult is Success) {
+            return storedUrl to storedResult
+        }
+        val discoveredUrl = discoverApiEndpoint(cleanedUrl)
+        return discoveredUrl to requestRootFrom(discoveredUrl)
+    }
+
+    private suspend fun requestRootFrom(url: String) = wpapiGsonRequestBuilder.syncGetRequest(
+        restClient = this,
+        url = url,
+        clazz = RootWPAPIRestResponse::class.java,
+        params = mapOf("_fields" to FETCH_API_CALL_FIELDS)
+    )
+
+    /**
+     * Applies the REST root's fields and the separately-read [siteOptions] to the stored row. Every
+     * assignment is guarded: a thin `_fields` response, or an option read the site refused, must leave
+     * the stored value alone rather than blank it.
+     */
+    private fun SiteModel.applyRootResponse(
+        response: RootWPAPIRestResponse?,
+        siteOptions: SiteOptions?,
+        previousSite: SiteModel?
+    ) {
+        response?.name?.takeIf { it.isNotEmpty() }?.let { name = it }
+        response?.description?.let { description = it }
+        // The index reports the Olson name unauthenticated, so prefer it over the numeric gmt_offset --
+        // which can't express DST, and is what caused CMM-1095 -- and don't depend on the settings
+        // endpoint, which only an administrator can read.
+        (
+            siteOptions?.timezone
+                ?: response?.timezoneString?.takeIf { it.isNotEmpty() }
+                ?: response?.gmtOffset
+        )?.let { timezone = it }
+        siteOptions?.defaultCommentStatus?.let { defaultCommentStatus = it }
+        siteOptions?.isFeaturedImageSupported?.let { setIsFeaturedImageSupported(it) }
+        // ORIGIN_WPAPI tells CommentsStore and SiteStore.fetchPostFormats that no XML-RPC is available,
+        // so only heal a legacy ORIGIN_UNKNOWN row that has no verified XML-RPC endpoint to lose.
+        if (previousSite == null ||
+            (previousSite.origin == SiteModel.ORIGIN_UNKNOWN && previousSite.xmlRpcUrl.isNullOrEmpty())) {
+            origin = SiteModel.ORIGIN_WPAPI
+        }
+        response?.namespaces?.let { namespaces ->
+            hasWooCommerce = namespaces.any { it.startsWith(WOO_API_NAMESPACE_PREFIX) }
+        }
+        response?.authentication?.applicationPasswords?.endpoints?.authorization
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { authorizeUrl ->
+                applicationPasswordsAuthorizeUrl = authorizeUrl
+                if (authorizeUrl.contains(APPLICATION_PASSWORDS_URL_SUFFIX)) {
+                    // Infer the admin URL from the application passwords authorization URL
+                    adminUrl = authorizeUrl.substringBefore(APPLICATION_PASSWORDS_URL_SUFFIX)
+                }
+            }
     }
 
     /**
