@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -601,7 +602,8 @@ private fun primaryActionIcon(action: PrimaryAction): Int = when (action.type) {
 @Composable
 private fun ReaderPostUiState.firstStripImage(): String? {
     val image = thumbnailStripSection?.images?.firstOrNull() ?: return null
-    val widthPx = LocalConfiguration.current.screenWidthDp.let { with(LocalDensity.current) { it.dp.roundToPx() } } / 2
+    // the window's width, which is the screen's unless the app shares it
+    val widthPx = LocalWindowInfo.current.containerSize.width / 2
     return remember(image, widthPx) { PhotonUtils.getPhotonImageUrl(image, widthPx, 0) }
 }
 
