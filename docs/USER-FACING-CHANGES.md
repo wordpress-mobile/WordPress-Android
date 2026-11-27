@@ -8,6 +8,14 @@ What belongs here and how to write an entry: [`USER-FACING-CHANGES-DOCUMENTATION
 
 <!-- Add new entries directly below this line. -->
 
+- **Replying from a comment notification no longer needs XML-RPC**
+  Replying to a comment from a push notification now uses the same REST API as the comment screens. On a self-hosted site added with an application password, Reply previously went over XML-RPC, so it failed on a site with XML-RPC disabled while the in-app comment screens worked.
+  - **Apps:** Both
+  - **Type:** Fixed
+  - **Availability:** Everyone
+  - **Where:** Comment push notification → Reply button
+  - **Notes:** Applies to any site the app holds an application password for. Besides self-hosted sites signed in with one, that includes Jetpack-connected and WordPress.com Atomic sites, whose application passwords are minted automatically — their Reply also moves to the new REST path, though it was already REST via a different client, so no behaviour change is expected there. WordPress.com Simple sites are unaffected unless `android_wp_rs_wpcom` is on. The notification's Like button still goes through the old path; liking is a WordPress.com-only endpoint, so it was never XML-RPC. Approve is not covered: that button is not currently offered on comment notifications.
+
 - **Filtering Reader Subscriptions to a site shows its posts again**
   Picking a WordPress.com or Jetpack site in the Subscriptions filter shows that site's posts again, instead of "This blog is empty".
   - **Apps:** Both

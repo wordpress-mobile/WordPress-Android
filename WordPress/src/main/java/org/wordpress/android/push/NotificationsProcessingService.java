@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.ui.commentsrs.RsCommentQuickActions;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -95,6 +96,7 @@ public class NotificationsProcessingService extends Service {
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject PerAppLocaleManager mPerAppLocaleManager;
+    @Inject RsCommentQuickActions mRsCommentQuickActions;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -532,7 +534,10 @@ public class NotificationsProcessingService extends Service {
             WordPress.getRestClientUtils().getNotification(params, noteId, listener, errorListener);
         }
 
-        // Like or unlike a comment via the REST API
+        // Like or unlike a comment via the REST API.
+        // Not routed through RsCommentQuickActions: wordpress-rs has no comment like action, and
+        // liking is a WP.com-only endpoint, so FluxC serves this over WP.com REST either way.
+        // See CMM-2939.
         private void likeComment() {
             if (mNote == null) {
                 requestFailed(ARG_ACTION_LIKE);
@@ -592,6 +597,10 @@ public class NotificationsProcessingService extends Service {
                 return;
             }
 
+            // Not routed through RsCommentQuickActions: the Approve action is never added to a
+            // comment notification (see GCMMessageHandler, disabled pending #17026), so this path
+            // is unreachable and gating it would be dead code. CMM-2933 covers Reply only.
+
             // keep the CommentId, we'll use it later to know whether to trigger the end processing notification
             // or not
             keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
@@ -620,13 +629,33 @@ public class NotificationsProcessingService extends Service {
             // Pseudo comment (built from the note)
             CommentModel comment = mNote.buildComment();
 
-            // Pseudo comment reply
-            CommentModel reply = new CommentModel();
-            reply.setContent(mReplyText);
+            // The same routing decision as the comment screens, so a notification can't take an
+            // application-password site down the XML-RPC path its own screens never use (CMM-2933).
+            // wp/v2 comment-create needs a post id, so a note without one keeps the old route. That
+            // note already failed there — XML-RPC newComment is passed the same missing post id —
+            // so this preserves the existing behaviour rather than fixing it.
+            if (mRsCommentQuickActions.canHandle(site) && comment.getRemotePostId() > 0) {
+                mRsCommentQuickActions.reply(
+                        site,
+                        comment.getRemotePostId(),
+                        comment.getRemoteCommentId(),
+                        mReplyText,
+                        success -> {
+                            if (success) {
+                                requestCompleted(ARG_ACTION_REPLY);
+                            } else {
+                                requestFailed(ARG_ACTION_REPLY);
+                            }
+                        });
+            } else {
+                // Pseudo comment reply
+                CommentModel reply = new CommentModel();
+                reply.setContent(mReplyText);
 
-            // Push the reply
-            RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
-            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
+                // Push the reply
+                RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
+                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
+            }
 
             // Bump analytics
             AnalyticsUtils.trackCommentReplyWithDetails(
