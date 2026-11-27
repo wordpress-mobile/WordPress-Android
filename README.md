@@ -95,3 +95,5 @@ be covered by a different license compatible with the GPLv2.
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
 [8]: https://developers.google.com/identity/
+
+<!-- CI skip verification only; do not merge this PR. -->
