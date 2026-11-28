@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-11 04:38:48+0000
+Translation-Revision-Date: 2026-11-24 08:58:18+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: pl
@@ -2037,7 +2037,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
     <string name="insert_label_with_count">Wstaw %d</string>
-    <string name="crop">przytnij</string>
     <string name="photo_picker_video_title">Wybierz wideo</string>
     <string name="photo_picker_use_video">Użyj tego wideo</string>
     <string name="photo_picker_photo_or_video_title">Wybierz media</string>
@@ -2045,6 +2044,7 @@ Language: pl
     <string name="preview_image_thumbnail_description">Pogląd miniatury obrazka</string>
     <string name="photo_picker_use_media">Użyj tego pliku</string>
     <string name="feature_announcement_dialog_label">Co nowego w %s</string>
+    <string name="crop">kadruj</string>
     <string name="button_insert">Wstaw</string>
     <string name="copy_text">Kopiuj</string>
     <string name="comment_share_link_via">Udostępnij przez</string>

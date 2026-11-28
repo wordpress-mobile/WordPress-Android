@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-17 09:23:49+0000
+Translation-Revision-Date: 2026-11-26 09:54:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: gl_ES
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Estás a chatear cunha IA do soporte de %1$s.</string>
+    <string name="login_session_expired">A túa sesión de acceso caducou. Téntao de novo.</string>
+    <string name="reader_save_posts_synced_dialog_message">As entradas gardadas sincronízanse coa túa conta de WordPress.com, así que están en todos os teus dispositivos.</string>
+    <string name="reader_saved_post_removed">Eliminada das entradas gardadas</string>
+    <string name="reader_saved_posts_limit_reached">Alcanzaches o límite de entradas gardadas. Elimina algunhas para gardar máis.</string>
+    <string name="stats_period_last_3_years">Últimos 3 anos</string>
+    <string name="stats_chart_interval_submenu">Abrir opcións de intervalo</string>
+    <string name="stats_chart_interval">Intervalo</string>
+    <string name="post_rs_local_drafts_retry_description">Reintentar a subida de «%s»</string>
+    <string name="post_rs_local_drafts_upload_failed">Fallou a subida</string>
+    <string name="post_rs_local_drafts_subtitle">Estas entradas só están neste dispositivo.</string>
+    <string name="post_rs_local_drafts_title">Non subidas</string>
+    <string name="confirm_delete_single_media">Borrar %1$d elemento multimedia?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, non establecido</string>
+    <string name="media_settings_alt_text_sheet_helper">Procura unha ou dúas frases</string>
+    <string name="media_settings_description_sheet_explanation">Móstrase na páxina do adxunto.</string>
+    <string name="media_settings_caption_sheet_explanation">Móstrase debaixo da imaxe nas entradas.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Describe o que hai na imaxe para as persoas que usan lectores de pantalla. Déixao baleiro se a imaxe é decorativa.</string>
+    <string name="media_settings_uploaded">Subido</string>
+    <string name="media_settings_file_size">Tamaño do arquivo</string>
+    <string name="media_settings_file_type">Tipo de arquivo</string>
+    <string name="media_settings_file_name">Nome do arquivo</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recargar o editor</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recarga o editor para continuar a edición.</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">O editor deixou de funcionar</string>
@@ -3603,6 +3626,7 @@ Language: gl_ES
     <string name="reader_err_get_post_generic">Non foi posible acceder a este artigo</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Sen artigos recentes</string>
     <string name="media_edit_copy_url_toast">URL copiado ao portapapeis</string>
+    <string name="media_settings_copy_url">Copiar o URL</string>
     <string name="selected_theme">Tema escollido</string>
     <string name="could_not_load_theme">Non foi posible cargar o tema</string>
     <string name="theme_activation_error">Algo foi mal. Non foi posible activar o tema.</string>
@@ -3687,6 +3711,7 @@ Language: gl_ES
     <string name="my_site_btn_blog_posts">Entradas</string>
     <string name="reader_label_new_posts_subtitle">Pulsa para velos</string>
     <string name="select_all">Seleccionar todo</string>
+    <string name="media_settings_dimensions">Dimensións</string>
     <string name="language">Idioma</string>
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
@@ -3721,6 +3746,7 @@ Language: gl_ES
     <string name="stats_timeframe_years">Anos</string>
     <string name="themes_fetching">Á procura dos temas…</string>
     <string name="ssl_certificate_details">Detalles</string>
+    <string name="confirm_delete_multi_media">Borrar %1$d elementos multimedia?</string>
     <string name="cab_selected">%d seleccionados</string>
     <string name="browse_our_faq_button">Ves as FAQ</string>
     <string name="reader_empty_comments">Sen comentarios aínda</string>

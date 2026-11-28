@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-18 15:58:21+0000
+Translation-Revision-Date: 2026-11-25 09:58:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.1.0
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">%1$s サポートの AI とチャットしています。</string>
+    <string name="login_session_expired">ログインセッションの期限が切れました。 もう一度お試しください。</string>
+    <string name="reader_save_posts_synced_dialog_message">保存された投稿は WordPress.com アカウントと同期されるため、すべての端末に保存されます。</string>
+    <string name="reader_saved_post_removed">保存済み投稿から削除</string>
+    <string name="reader_saved_posts_limit_reached">保存された投稿の上限に達しました。 さらに保存するには、一部を削除してください。</string>
+    <string name="stats_period_last_3_years">過去3年間</string>
+    <string name="stats_chart_interval_submenu">間隔オプションを開く</string>
+    <string name="stats_chart_interval">間隔</string>
+    <string name="post_rs_local_drafts_retry_description">「%s」のアップロードを再試行</string>
+    <string name="post_rs_local_drafts_upload_failed">アップロードに失敗しました</string>
+    <string name="post_rs_local_drafts_subtitle">これらの投稿はこの端末にのみ保存されます。</string>
+    <string name="post_rs_local_drafts_title">アップロードされていません</string>
+    <string name="confirm_delete_single_media">%1$d個のメディアファイルを削除しますか ?</string>
+    <string name="media_settings_row_value">%1$s、%2$s</string>
+    <string name="media_settings_row_not_set">%1$s、設定されていません</string>
+    <string name="media_settings_alt_text_sheet_helper">1〜2文の文章にするよう心がけます</string>
+    <string name="media_settings_description_sheet_explanation">添付ファイルページに表示されます。</string>
+    <string name="media_settings_caption_sheet_explanation">投稿の画像の下に表示されます。</string>
+    <string name="media_settings_alt_text_sheet_explanation">スクリーンリーダーを使用するユーザー向けに、画像の内容を説明します。 画像がデザインである場合は、空欄のままにします。</string>
+    <string name="media_settings_uploaded">アップロード済み</string>
+    <string name="media_settings_file_size">ファイルサイズ</string>
+    <string name="media_settings_file_type">ファイルの種類</string>
+    <string name="media_settings_file_name">ファイル名</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">エディターを再読み込み</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">編集を続けるには、エディターを再読み込みしてください。</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">エディターの機能が停止しました</string>
@@ -3671,6 +3694,7 @@ Language: ja_JP
     <string name="my_site_btn_blog_posts">投稿</string>
     <string name="reader_label_new_posts_subtitle">タップして表示</string>
     <string name="select_all">すべて選択</string>
+    <string name="media_settings_dimensions">サイズ</string>
     <string name="language">言語</string>
     <string name="reader_empty_posts_request_failed">投稿を取得できません</string>
     <string name="error_notification_open">通知を開けませんでした</string>
@@ -3705,6 +3729,7 @@ Language: ja_JP
     <string name="stats_timeframe_years">年</string>
     <string name="themes_fetching">テーマを取得中…</string>
     <string name="ssl_certificate_details">詳細</string>
+    <string name="confirm_delete_multi_media">%1$d個のメディアファイルを削除しますか ?</string>
     <string name="cab_selected">%d件選択</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_empty_comments">コメントはまだありません</string>

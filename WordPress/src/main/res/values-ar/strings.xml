@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-18 15:57:59+0000
+Translation-Revision-Date: 2026-11-25 09:58:34+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.1.0
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="post_rs_local_drafts_subtitle">هذه التدوينات محفوظة على هذا الجهاز فقط.</string>
+    <string name="post_rs_local_drafts_upload_failed">فشل الرفع</string>
+    <string name="post_rs_local_drafts_retry_description">إعادة محاولة الرفع \"%s\"</string>
+    <string name="stats_chart_interval">الفاصل الزمني</string>
+    <string name="stats_chart_interval_submenu">فتح خيارات الفاصل الزمني</string>
+    <string name="stats_period_last_3_years">آخر 3 أعوام</string>
+    <string name="reader_saved_posts_limit_reached">لقد بلغت الحد الأقصى لعدد التدوينات المحفوظة. أزل بعض التدوينات من قائمتك لتتمكن من حفظ المزيد.</string>
+    <string name="reader_saved_post_removed">أُزيلت التدوينة من قائمة التدوينات المحفوظة</string>
+    <string name="reader_save_posts_synced_dialog_message">تتم مزامنة التدوينات المحفوظة مع حسابك على WordPress.com، لتكون متاحة على جميع أجهزتك.</string>
+    <string name="login_session_expired">انتهت صلاحية جلسة تسجيل الدخول الخاصة بك. يُرجى إعادة المحاولة.</string>
+    <string name="ai_support_disclosure">أنت تتحدث الآن مع مساعد ذكاء اصطناعي من فريق دعم ⁦%1$s⁩.</string>
+    <string name="media_settings_file_name">اسم الملف</string>
+    <string name="media_settings_file_type">نوع الملف</string>
+    <string name="media_settings_file_size">حجم الملف</string>
+    <string name="media_settings_uploaded">تم الرفع</string>
+    <string name="media_settings_alt_text_sheet_explanation">صف محتوى الصورة للأشخاص الذين يستخدمون قارئات الشاشة. اترك الحقل فارغًا إذا كانت الصورة مستخدمة لغرض زخرفي.</string>
+    <string name="media_settings_caption_sheet_explanation">معروض أسفل الصورة في التدوينات.</string>
+    <string name="media_settings_description_sheet_explanation">يظهر في صفحة المرفق.</string>
+    <string name="media_settings_alt_text_sheet_helper">اكتب وصفًا في جملة أو جملتين</string>
+    <string name="media_settings_row_not_set">⁦%1$s⁩، لم يتم التعيين</string>
+    <string name="media_settings_row_value">%1$s، %2$s</string>
+    <string name="confirm_delete_single_media">هل ترغب في حذف ⁦%1$d⁩ من عناصر الوسائط؟</string>
+    <string name="post_rs_local_drafts_title">لم يتم الرفع</string>
     <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">الكاميرا غير متاحة على هذا الجهاز</string>
     <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">فشل تحميل المحرر</string>
     <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">خطأ غير معروف</string>
@@ -3581,6 +3604,7 @@ Language: ar
     <string name="reader_err_get_post_generic">يتعذر استرجاع هذه المقالة</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
     <string name="media_edit_copy_url_toast">تم نسخ عنوان URL إلى الحافظة</string>
+    <string name="media_settings_copy_url">نسخ عنوان الموقع</string>
     <string name="selected_theme">تحديد قالب</string>
     <string name="could_not_load_theme">يتعذر تحميل القالب</string>
     <string name="theme_activation_error">حدث خطأ. يتعذر تنشيط القالب</string>
@@ -3666,6 +3690,7 @@ Language: ar
     <string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
     <string name="select_all">اختيار الكل</string>
     <string name="language">اللغة</string>
+    <string name="media_settings_dimensions">الأبعاد</string>
     <string name="reader_empty_posts_request_failed">يتعذر استرداد المقالات</string>
     <string name="error_notification_open">تعذر فتح التنبيه</string>
     <string name="stats_search_terms_unknown_search_terms">مصطلحات بحث غير معروفة</string>
@@ -3700,6 +3725,7 @@ Language: ar
     <string name="themes_fetching">جاري جلب القوالب…</string>
     <string name="ssl_certificate_details">تفاصيل</string>
     <string name="cab_selected">تم تحديد %d</string>
+    <string name="confirm_delete_multi_media">هل ترغب في حذف ⁦%1$d⁩ من عناصر الوسائط؟</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="reader_label_like">أعجبني</string>
