@@ -78,6 +78,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.compose.components.FeatureTip
+import org.wordpress.android.ui.compose.components.FeatureTipPosition
 import org.wordpress.android.ui.compose.components.FeedbackDialog
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -629,11 +631,20 @@ private fun NewStatsScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
+                    // TODO Temporary FeatureTip try-out
+                    var showBackTip by remember { mutableStateOf(true) }
+                    FeatureTip(
+                        text = "Back to My Site",
+                        isVisible = showBackTip,
+                        onDismiss = { showBackTip = false },
+                        anchorPosition = FeatureTipPosition.End,
+                    ) {
+                        IconButton(onClick = onBackPressed) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
                 },
                 actions = {
