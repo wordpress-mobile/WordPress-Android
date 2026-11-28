@@ -245,7 +245,8 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         menuItems: MutableList<ReaderPostCardAction>,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) {
-        if (!readerUtilsWrapper.isSelfHosted(post.authorBlogId)) {
+        val hasWordPressAccount = post.authorId > 0
+        if (hasWordPressAccount) {
             menuItems.add(buildReportUser(onButtonClicked))
             menuItems.add(buildBlockUser(onButtonClicked))
         }

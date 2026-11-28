@@ -255,10 +255,9 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `contains report user action for wpcom sites`() = test {
+    fun `contains report user action when author has a WordPress account`() = test {
         // Arrange
-        val post = init()
-        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(false)
+        val post = init(authorId = 123L)
 
         // Act
         val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
@@ -267,10 +266,9 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not contain report user action for self-hosted sites`() = test {
+    fun `does not contain report user action when author has no WordPress account`() = test {
         // Arrange
-        val post = init()
-        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
+        val post = init(authorId = 0L)
 
         // Act
         val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
@@ -381,10 +379,9 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does contain block user action for wpcom sites`() = test {
+    fun `contains block user action when author has a WordPress account`() = test {
         // Arrange
-        val post = init()
-        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(false)
+        val post = init(authorId = 123L)
 
         // Act
         val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
@@ -395,10 +392,9 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not contain block user action for self-hosted sites`() = test {
+    fun `does not contain block user action when author has no WordPress account`() = test {
         // Arrange
-        val post = init()
-        whenever(readerUtilsWrapper.isSelfHosted(post.authorId)).thenReturn(true)
+        val post = init(authorId = 0L)
 
         // Act
         val menuItems = builder.buildMoreMenuItems(post, false, dummyOnClick)
@@ -414,7 +410,8 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         isFeed: Boolean = false,
         isSeenSupported: Boolean = true,
         isSeen: Boolean = false,
-        isBookmarked: Boolean = false
+        isBookmarked: Boolean = false,
+        authorId: Long = 100L
     ): ReaderPost {
         whenever(readerPostTableWrapper.isPostFollowed(anyOrNull())).thenReturn(isFollowed)
         whenever(readerPostTableWrapper.isPostSeen(anyOrNull())).thenReturn(isSeen)
@@ -425,6 +422,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
             this.isSeenSupported = isSeenSupported
             this.isSeen = isSeen
             this.isBookmarked = isBookmarked
+            this.authorId = authorId
         }
     }
 }
