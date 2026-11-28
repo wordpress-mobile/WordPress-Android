@@ -41,13 +41,13 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.currentStateAsState
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.prefs.AppPrefs
-
-/** Where the bubble sits relative to its anchor. */
-enum class FeatureTipPosition { Above, Below, Start, End }
 
 // Maps to the experimental M3 type here so callers of FeatureTip don't need to opt in
 private fun FeatureTipPosition.toTooltipAnchorPosition() = when (this) {
@@ -75,10 +75,14 @@ fun FeatureTip(
 ) {
     // A private mutex, since with M3's shared default any other tooltip's show() would cancel this one
     val state = rememberTooltipState(isPersistent = true, mutatorMutex = remember { MutatorMutex() })
+    // Only shown while the screen is resumed. ViewPager2 keeps neighbouring pages composed at STARTED,
+    // and their bubbles would otherwise pop up over the current page.
+    val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
+    val show = isVisible && lifecycleState.isAtLeast(Lifecycle.State.RESUMED)
     // A persistent tooltip's show() suspends until cancelled and dismisses on the way out,
-    // so restarting this effect when isVisible turns false hides the bubble
-    LaunchedEffect(isVisible) {
-        if (isVisible) {
+    // so restarting this effect when show turns false hides the bubble
+    LaunchedEffect(show) {
+        if (show) {
             delay(SHOW_DELAY_MS)
             state.show()
         }
