@@ -35,11 +35,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -78,28 +86,64 @@ fun FeatureTip(
     // Only shown while the screen is resumed. ViewPager2 keeps neighbouring pages composed at STARTED,
     // and their bubbles would otherwise pop up over the current page.
     val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
-    val show = isVisible && lifecycleState.isAtLeast(Lifecycle.State.RESUMED)
-    // A persistent tooltip's show() suspends until cancelled and dismisses on the way out,
-    // so restarting this effect when show turns false hides the bubble
-    LaunchedEffect(show) {
+    // The anchor's bounds in the window, or null until it's laid out and whenever it isn't shown at full size:
+    // partly off screen, or shrunk by an ancestor's transform such as ViewPager2's page transformer mid-swipe
+    var anchorBounds by remember { mutableStateOf<Rect?>(null) }
+    val show = isVisible && lifecycleState.isAtLeast(Lifecycle.State.RESUMED) && anchorBounds != null
+    // A persistent tooltip's show() suspends until cancelled and dismisses on the way out, so restarting this
+    // effect hides the bubble. Keying it on the bounds too hides the bubble while its anchor moves (a scroll,
+    // a page swipe, a bar sliding away) and brings it back once the anchor has been still for the show delay.
+    LaunchedEffect(show, anchorBounds) {
         if (show) {
             delay(SHOW_DELAY_MS)
             state.show()
         }
     }
-    TooltipBox(
-        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(anchorPosition.toTooltipAnchorPosition()),
-        tooltip = {
-            FeatureTipBubble(text = text, title = title, onDismiss = onDismiss)
-        },
-        state = state,
-        modifier = modifier,
-        onDismissRequest = {},
-        enableUserInput = false,
-        // hasAction is left false: with TalkBack on it makes the popup focusable and touch-modal, and since
-        // onDismissRequest ignores Back and outside taps, the user would be trapped until they hit close
-        content = anchor,
-    )
+    val maxWidth = anchorBounds?.let { sideMaxWidth(anchorPosition, it) } ?: TooltipDefaults.richTooltipMaxWidth
+    // The caller's modifier goes on this Box rather than TooltipBox, which puts it on an inner node where
+    // parent data such as Modifier.weight would be lost
+    Box(
+        modifier = modifier.onGloballyPositioned { coordinates ->
+            val bounds = coordinates.boundsInWindow()
+            val isFullSize = bounds.width >= coordinates.size.width - 1 &&
+                bounds.height >= coordinates.size.height - 1
+            anchorBounds = bounds.takeIf { isFullSize }
+        }
+    ) {
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                anchorPosition.toTooltipAnchorPosition()
+            ),
+            tooltip = {
+                FeatureTipBubble(text = text, title = title, maxWidth = maxWidth, onDismiss = onDismiss)
+            },
+            state = state,
+            onDismissRequest = {},
+            enableUserInput = false,
+            // hasAction is left false: with TalkBack on it makes the popup focusable and touch-modal, and since
+            // onDismissRequest ignores Back and outside taps, the user would be trapped until they hit close
+            content = anchor,
+        )
+    }
+}
+
+/**
+ * For [FeatureTipPosition.Start] and [FeatureTipPosition.End], the widest the bubble can be and still fit beside
+ * [anchorBounds]. M3 flips a bubble that doesn't fit to the anchor's other side without keeping it on screen, and
+ * a custom position provider would lose M3's caret placement, so the bubble is narrowed instead.
+ */
+@Composable
+private fun sideMaxWidth(position: FeatureTipPosition, anchorBounds: Rect): Dp {
+    val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
+    val isOnRight = when (position) {
+        FeatureTipPosition.End -> isLtr
+        FeatureTipPosition.Start -> !isLtr
+        else -> return TooltipDefaults.richTooltipMaxWidth
+    }
+    val windowWidth = LocalWindowInfo.current.containerSize.width
+    val space = if (isOnRight) windowWidth - anchorBounds.right else anchorBounds.left
+    val available = with(LocalDensity.current) { space.toDp() } - TooltipAnchorSpacing
+    return available.coerceAtMost(TooltipDefaults.richTooltipMaxWidth)
 }
 
 private const val SHOW_DELAY_MS = 500L
@@ -122,10 +166,16 @@ private val FeatureTipCaretShape = TooltipDefaults.caretSize.let {
 }
 
 @Composable
-private fun TooltipScope.FeatureTipBubble(text: AnnotatedString, title: String?, onDismiss: () -> Unit) {
+private fun TooltipScope.FeatureTipBubble(
+    text: AnnotatedString,
+    title: String?,
+    maxWidth: Dp,
+    onDismiss: () -> Unit,
+) {
     val colors = MaterialTheme.colorScheme
     RichTooltip(
         caretShape = FeatureTipCaretShape,
+        maxWidth = maxWidth,
         colors = TooltipDefaults.richTooltipColors(
             containerColor = colors.primaryContainer,
             contentColor = colors.onPrimaryContainer,
@@ -179,6 +229,9 @@ private val CloseButtonSize = 32.dp
 
 // Mirrors M3's internal RichTooltipHorizontalPadding, which the close button is pushed into
 private val RichTooltipHorizontalPadding = 16.dp
+
+// Mirrors M3's internal SpacingBetweenTooltipAndAnchor
+private val TooltipAnchorSpacing = 4.dp
 
 // Leaves a 4dp margin between the close button and the bubble's end edge
 private val CloseButtonEndOffset = RichTooltipHorizontalPadding - 4.dp
