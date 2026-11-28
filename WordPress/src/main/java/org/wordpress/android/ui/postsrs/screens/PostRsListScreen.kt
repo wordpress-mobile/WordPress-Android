@@ -41,6 +41,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FeatureTip
+import org.wordpress.android.ui.compose.components.FeatureTipPosition
 import org.wordpress.android.ui.compose.components.FilterChipTabRow
 import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -203,11 +205,20 @@ fun PostRsListScreen(
             }
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onCreatePost,
-                icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                text = { Text(stringResource(R.string.content_list_fab_write)) }
-            )
+            // TODO: Temporary FeatureTip try-out
+            var showFabTip by remember { mutableStateOf(true) }
+            FeatureTip(
+                text = "Start a new post",
+                isVisible = showFabTip,
+                onDismiss = { showFabTip = false },
+                anchorPosition = FeatureTipPosition.Above,
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = onCreatePost,
+                    icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                    text = { Text(stringResource(R.string.content_list_fab_write)) }
+                )
+            }
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
@@ -217,7 +228,9 @@ fun PostRsListScreen(
                     selectedIndex = pagerState.settledPage,
                     onSelect = { index ->
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                    }
+                    },
+                    // TODO: Temporary FeatureTip try-out
+                    featureTipIndex = tabs.lastIndex
                 )
             }
 

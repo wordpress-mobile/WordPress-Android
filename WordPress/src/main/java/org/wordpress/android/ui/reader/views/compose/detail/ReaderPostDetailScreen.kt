@@ -34,6 +34,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.FeatureTip
+import org.wordpress.android.ui.compose.components.FeatureTipPosition
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
@@ -290,17 +293,26 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
                 .padding(horizontal = Margin.ExtraLarge.value, vertical = Margin.Medium.value),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            BottomBarAction(
-                postId = state.postId,
-                blogId = state.blogId,
-                action = actions.bookmarkAction,
-                labelRes = R.string.save,
-                iconRes = if (actions.bookmarkAction.isSelected && actions.bookmarkAction.isEnabled) {
-                    R.drawable.ic_bookmark_fill_new_24dp
-                } else {
-                    R.drawable.ic_bookmark_outline_new_24dp
-                },
-            )
+            // TODO: Temporary FeatureTip try-out
+            var showSaveTip by remember { mutableStateOf(true) }
+            FeatureTip(
+                text = "Save posts to read later",
+                isVisible = showSaveTip,
+                onDismiss = { showSaveTip = false },
+                anchorPosition = FeatureTipPosition.Above,
+            ) {
+                BottomBarAction(
+                    postId = state.postId,
+                    blogId = state.blogId,
+                    action = actions.bookmarkAction,
+                    labelRes = R.string.save,
+                    iconRes = if (actions.bookmarkAction.isSelected && actions.bookmarkAction.isEnabled) {
+                        R.drawable.ic_bookmark_fill_new_24dp
+                    } else {
+                        R.drawable.ic_bookmark_outline_new_24dp
+                    },
+                )
+            }
             BottomBarAction(
                 postId = state.postId,
                 blogId = state.blogId,
@@ -315,17 +327,26 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
                 labelRes = R.string.comment,
                 iconRes = R.drawable.ic_comment_outline_new_24dp,
             )
-            BottomBarAction(
-                postId = state.postId,
-                blogId = state.blogId,
-                action = actions.likeAction,
-                labelRes = R.string.like,
-                iconRes = if (actions.likeAction.isSelected) {
-                    R.drawable.ic_like_fill_new_24dp
-                } else {
-                    R.drawable.ic_like_outline_new_24dp
-                },
-            )
+            // TODO: Temporary FeatureTip try-out
+            var showLikeTip by remember { mutableStateOf(true) }
+            FeatureTip(
+                text = "Let the author know you liked their post",
+                isVisible = showLikeTip,
+                onDismiss = { showLikeTip = false },
+                anchorPosition = FeatureTipPosition.Above,
+            ) {
+                BottomBarAction(
+                    postId = state.postId,
+                    blogId = state.blogId,
+                    action = actions.likeAction,
+                    labelRes = R.string.like,
+                    iconRes = if (actions.likeAction.isSelected) {
+                        R.drawable.ic_like_fill_new_24dp
+                    } else {
+                        R.drawable.ic_like_outline_new_24dp
+                    },
+                )
+            }
         }
     }
 }
