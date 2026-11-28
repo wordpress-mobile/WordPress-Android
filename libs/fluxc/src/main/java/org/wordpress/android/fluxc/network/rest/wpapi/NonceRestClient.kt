@@ -43,7 +43,13 @@ class NonceRestClient @Inject constructor(
         val username = site.getUserNameProcessed()
         val password = site.getPasswordProcessed()
         if (username == null || password == null) return Unknown(site.username)
-        return requestNonce(site.url, username, password)
+        return requestNonce(
+            siteUrl = site.url,
+            username = username,
+            password = password,
+            loginUrl = site.loginUrl,
+            adminUrl = site.adminUrl
+        )
     }
 
     /**
@@ -51,12 +57,24 @@ class NonceRestClient @Inject constructor(
      *  [rest-nonce endpoint](https://developer.wordpress.org/reference/functions/wp_ajax_rest_nonce/)
      *  that became available in WordPress 5.3.
      */
+    suspend fun requestNonce(siteUrl: String, username: String, password: String): Nonce =
+        requestNonce(siteUrl, username, password, loginUrl = null, adminUrl = null)
+
     @Suppress("NestedBlockDepth")
-    suspend fun requestNonce(siteUrl: String, username: String, password: String): Nonce {
+    private suspend fun requestNonce(
+        siteUrl: String,
+        username: String,
+        password: String,
+        loginUrl: String?,
+        adminUrl: String?
+    ): Nonce {
         @Suppress("MagicNumber")
         fun Int.isRedirect(): Boolean = this in 300..399
-        val wpLoginUrl = siteUrl.slashJoin("wp-login.php")
-        val redirectUrl = siteUrl.slashJoin("wp-admin/admin-ajax.php?action=rest-nonce")
+        val wpLoginUrl = loginUrl?.takeIf { it.isNotBlank() }
+            ?: siteUrl.slashJoin("wp-login.php")
+        val adminBaseUrl = adminUrl?.takeIf { it.isNotBlank() }
+            ?: siteUrl.slashJoin("wp-admin")
+        val redirectUrl = adminBaseUrl.slashJoin("admin-ajax.php?action=rest-nonce")
         val body = mapOf(
             "log" to username,
             "pwd" to password,

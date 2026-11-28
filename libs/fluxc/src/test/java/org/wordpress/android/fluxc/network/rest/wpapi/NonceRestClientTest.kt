@@ -71,6 +71,43 @@ class NonceRestClientTest {
     }
 
     @Test
+    fun `site-specific login and admin URLs are used when available`() = test {
+        val customLoginUrl = "${site.url}/secure-login"
+        val customAdminUrl = "${site.url}/secure-admin/"
+        val customNonceRequestUrl = "${customAdminUrl}admin-ajax.php?action=rest-nonce"
+        site.loginUrl = customLoginUrl
+        site.adminUrl = customAdminUrl
+
+        val redirectResponse = WPAPIResponse.Error<String>(
+            WPAPINetworkError(
+                BaseNetworkError(
+                    VolleyError(
+                        NetworkResponse(
+                            301,
+                            byteArrayOf(),
+                            false,
+                            System.currentTimeMillis(),
+                            listOf(Header("Location", customNonceRequestUrl))
+                        )
+                    )
+                ),
+                null
+            )
+        )
+        val expectedNonce = "1expectedNONCE"
+        givenLoginResponse(
+            response = redirectResponse,
+            loginUrl = customLoginUrl,
+            redirectUrl = customNonceRequestUrl
+        )
+        givenNonceRequestResponse(WPAPIResponse.Success(expectedNonce), customNonceRequestUrl)
+
+        val actual = subject.requestNonce(site)
+
+        TestCase.assertEquals(Nonce.Available(expectedNonce, site.username), actual)
+    }
+
+    @Test
     fun `invalid credentials returns correct error message`() = test {
         @Suppress("MaxLineLength")
         val loginResponse = WPAPIResponse.Success(
@@ -210,19 +247,26 @@ class NonceRestClientTest {
         assertEquals(Nonce.CookieNonceErrorType.CUSTOM_ADMIN_URL, actual.type)
     }
 
-    private suspend fun givenLoginResponse(response: WPAPIResponse<String>) {
+    private suspend fun givenLoginResponse(
+        response: WPAPIResponse<String>,
+        loginUrl: String = "${site.url}/wp-login.php",
+        redirectUrl: String = nonceRequestUrl
+    ) {
         val body = mapOf(
             "log" to site.username,
             "pwd" to site.password,
-            "redirect_to" to nonceRequestUrl
+            "redirect_to" to redirectUrl
         )
 
-        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, "${site.url}/wp-login.php", body = body))
+        whenever(wpApiEncodedRequestBuilder.syncPostRequest(subject, loginUrl, body = body))
             .thenReturn(response)
     }
 
-    private suspend fun givenNonceRequestResponse(response: WPAPIResponse<String>) {
-        whenever(wpApiEncodedRequestBuilder.syncGetRequest(subject, nonceRequestUrl))
+    private suspend fun givenNonceRequestResponse(
+        response: WPAPIResponse<String>,
+        redirectUrl: String = nonceRequestUrl
+    ) {
+        whenever(wpApiEncodedRequestBuilder.syncGetRequest(subject, redirectUrl))
             .thenReturn(response)
     }
 }
