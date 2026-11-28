@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-20 19:44:40+0000
+Translation-Revision-Date: 2026-11-25 09:55:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Du chattar med en AI från supporten för %1$s.</string>
+    <string name="login_session_expired">Din inloggningssession har löpt ut. Försök igen.</string>
+    <string name="reader_save_posts_synced_dialog_message">Sparade inlägg synkroniseras med ditt konto på WordPress.com, så de finns på alla dina enheter.</string>
+    <string name="reader_saved_post_removed">Borttaget från sparade inlägg</string>
+    <string name="reader_saved_posts_limit_reached">Du har nått gränsen för sparade inlägg. Ta bort en del för att spara mer.</string>
     <string name="stats_period_last_3_years">Senaste 3 åren</string>
+    <string name="stats_chart_interval_submenu">Öppna intervallalternativ</string>
     <string name="stats_chart_interval">Intervall</string>
+    <string name="post_rs_local_drafts_retry_description">Försök ladda upp \"%s\"</string>
     <string name="post_rs_local_drafts_upload_failed">Uppladdningen misslyckades</string>
+    <string name="post_rs_local_drafts_subtitle">Dessa inlägg finns endast på den här enheten.</string>
     <string name="post_rs_local_drafts_title">Inte uppladdad</string>
+    <string name="confirm_delete_single_media">Ta bort %1$d medieobjekt?</string>
     <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, inte inställd</string>
+    <string name="media_settings_alt_text_sheet_helper">Sträva efter en eller två meningar</string>
+    <string name="media_settings_description_sheet_explanation">Visas på bilagssidan.</string>
+    <string name="media_settings_caption_sheet_explanation">Visas under bilden i inlägg.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Beskriv vad som finns i bilden för personer som använder skärmläsare. Lämna fältet tomt om bilden är av dekorativ karaktär.</string>
     <string name="media_settings_uploaded">Uppladdad</string>
     <string name="media_settings_file_size">Filstorlek</string>
     <string name="media_settings_file_type">Filtyp</string>
@@ -3732,6 +3746,7 @@ Language: sv_SE
     <string name="stats_timeframe_years">År</string>
     <string name="themes_fetching">Hämtar teman…</string>
     <string name="ssl_certificate_details">Detaljer</string>
+    <string name="confirm_delete_multi_media">Ta bort %1$d medieobjekt?</string>
     <string name="cab_selected">%d valda</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
     <string name="reader_empty_comments">Inga kommentarer än</string>

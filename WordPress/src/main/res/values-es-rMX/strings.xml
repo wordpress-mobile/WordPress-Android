@@ -1,11 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-12 13:21:34+0000
+Translation-Revision-Date: 2026-11-23 13:27:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: es_MX
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recargar el editor</string>
+    <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Recargar el editor para seguir editando.</string>
+    <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">El editor ha dejado de funcionar</string>
+    <string name="gbk_editor_load_failed_unknown_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Error desconocido</string>
+    <string name="gbk_editor_load_failed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No se ha podido cargar el editor</string>
+    <string name="gbk_block_inserter_camera_unavailable" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">La cámara no está disponible en este dispositivo</string>
+    <string name="gbk_block_inserter_camera" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Cámara</string>
+    <string name="gbk_block_inserter_photos" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Fotos</string>
+    <string name="gbk_block_inserter_no_results_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No hay bloques que coincidan con \"%1$s\"</string>
+    <string name="gbk_block_inserter_no_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No hay resultados</string>
+    <string name="gbk_block_inserter_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Vaciar la búsqueda</string>
+    <string name="gbk_block_inserter_tab_recent" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reciente</string>
+    <string name="gbk_block_inserter_close" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Cerrar</string>
+    <string name="gbk_block_inserter_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Añadir bloque</string>
+    <string name="gbk_block_inserter_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Bloques de búsqueda</string>
+    <string name="gbk_block_inserter_failure" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">No se ha podido mostrar el insertador de bloques.</string>
+    <string name="gbk_block_inserter_section_suggested" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Sugeridos</string>
+    <string name="gbk_block_inserter_section_most_used" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Más utilizados</string>
+    <string name="comment_detail_in_reply_to">En respuesta a %1$s:</string>
+    <string name="comment_author_info_guest">Invitado</string>
+    <string name="comment_author_info_registered">Usuario registrado</string>
+    <string name="comment_author_info_bio">Bio</string>
+    <string name="comment_author_info_posted_from">Publicado desde</string>
+    <string name="comment_author_info_send_email">Enviar correo electrónico</string>
+    <string name="comment_author_info_email">Correo electrónico</string>
+    <string name="comment_author_info_website">Sitio web</string>
+    <string name="comment_author_info_posted_at">Publicado el</string>
+    <string name="comment_author_info_show">Mostrar detalles del autor</string>
+    <string name="comment_detail_on_post">en %1$s</string>
+    <string name="comment_reply_continue">Continuar con la respuesta</string>
+    <string name="comment_reply_save_draft">Guardar el borrador</string>
+    <string name="comment_reply_delete_draft">Eliminar borrador</string>
+    <string name="comment_reply_keep_editing">Seguir editando</string>
+    <string name="comment_reply_unsent">Tienes una respuesta sin enviar.</string>
+    <string name="comment_trash_has_replies">Este comentario tiene respuestas. Estas no se moverán a la papelera junto con él.</string>
+    <string name="content_list_density_show_comfortable">Mostrar la lista completa</string>
+    <string name="content_list_density_show_condensed">Mostrar lista resumida</string>
+    <string name="content_list_comment_count_plural">%1$s comentario</string>
+    <string name="content_list_comment_count_singular">%1$s comentario</string>
+    <string name="content_list_view_count_plural">%1$s vistas</string>
+    <string name="content_list_view_count_singular">%1$s visita</string>
+    <string name="content_list_fab_write">Escribe</string>
+    <string name="content_list_group_earlier_in">Antes en %1$s</string>
+    <string name="content_list_group_this_week">Esta semana</string>
+    <string name="content_list_group_yesterday">Ayer</string>
+    <string name="content_list_group_today">Hoy</string>
+    <string name="unified_support_related_label">Relacionado:</string>
+    <string name="unified_support_attachment_link_content_description">Abrir enlace: %1$s</string>
+    <string name="unified_support_status_ai_assistant">Asistente de IA</string>
+    <string name="he_support_status_ongoing">En curso</string>
+    <string name="he_support_reply_sent_confirmation">Se ha enviado tu respuesta. Comprueba tu correo electrónico para ver las actualizaciones.</string>
+    <string name="he_support_add_more_info_button">Añadir más información</string>
+    <string name="application_password_private_site_card">Este sitio es privado, así que no podemos volver a conectarnos a él.</string>
+    <string name="application_password_private_site_error">Este sitio es privado, así que no podemos leer sus ajustes para iniciar sesión por ti.</string>
+    <string name="prepublishing_tags_remove_tag_desc">Quitar la etiqueta %1$s</string>
+    <string name="prepublishing_tags_add_hint">Añadir una etiqueta</string>
+    <string name="photo_picker_choose_other_files">Otros archivos</string>
+    <string name="photo_picker_choose_photo_or_video">Fotos y videos</string>
+    <string name="editor_saving_locked_leave">Salir</string>
+    <string name="editor_saving_locked_continue">Continuar</string>
+    <string name="editor_saving_locked_keep_editing">Seguir editando</string>
+    <string name="editor_saving_locked_leave_message">Si te vas ahora, cualquier cosa que esté en marcha, como subir a medios, se detendrá y es posible que ese archivo no aparezca o se vea mal en tu entrada.</string>
+    <string name="editor_saving_locked_save_message">Hay algo en el editor, como la subida de un archivo de medios, que aún está en curso. Si sigues adelante, es posible que no aparezca o que se vea mal en tu entrada.</string>
+    <string name="editor_saving_locked_title">Tu entrada aún no está lista</string>
     <string name="support_screen_unified_support_title">Obtener ayuda</string>
     <string name="support_screen_unified_support_description">Obtén respuestas de nuestro equipo de soporte, en cualquier momento</string>
     <string name="unified_support_attachment_match_score">%1$d%% de coincidencia</string>
@@ -3487,6 +3551,7 @@ Language: es_MX
     <string name="reader_err_get_post_generic">No se pudo recuperar esta entrada</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
     <string name="media_edit_copy_url_toast">URL copiada en el portapapeles</string>
+    <string name="media_settings_copy_url">Copiar URL</string>
     <string name="selected_theme">Tema seleccionado</string>
     <string name="could_not_load_theme">No se ha podido cargar el tema</string>
     <string name="theme_activation_error">Se ha producido un error. No se ha podido activar el tema</string>
@@ -3605,6 +3670,7 @@ Language: es_MX
     <string name="themes_fetching">Obteniendo temas…</string>
     <string name="stats_view_videos">Videos</string>
     <string name="ssl_certificate_details">Detalles</string>
+    <string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
     <string name="cab_selected">%d seleccionados</string>
     <string name="reader_title_photo_viewer">%1$d de %2$d</string>
     <string name="comment">Comentario</string>

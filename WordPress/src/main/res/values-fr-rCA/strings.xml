@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-11 13:55:26+0000
+Translation-Revision-Date: 2026-11-25 09:57:51+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Vous discutez avec l’IA de l’assistance %1$s.</string>
+    <string name="login_session_expired">Votre session de connexion a expiré. Veuillez réessayer.</string>
+    <string name="reader_save_posts_synced_dialog_message">Les articles enregistrés sont synchronisés avec votre compte WordPress.com, ils sont donc sur tous vos appareils.</string>
+    <string name="reader_saved_post_removed">Supprimé des articles enregistrés</string>
+    <string name="reader_saved_posts_limit_reached">Vous avez atteint la limite d’articles enregistrés. Supprimez-en quelques-uns pour en enregistrer plus.</string>
+    <string name="stats_period_last_3_years">3 dernières années</string>
+    <string name="stats_chart_interval_submenu">Options d’intervalle d’ouverture</string>
+    <string name="stats_chart_interval">Intervalle</string>
+    <string name="post_rs_local_drafts_retry_description">Retenter le téléversement de « %s »</string>
+    <string name="post_rs_local_drafts_upload_failed">Le téléversement a échoué</string>
+    <string name="post_rs_local_drafts_subtitle">Ces articles sont uniquement sur cet appareil.</string>
+    <string name="post_rs_local_drafts_title">Non téléversé</string>
+    <string name="confirm_delete_single_media">Supprimer %1$d élément média ?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, non défini</string>
+    <string name="media_settings_alt_text_sheet_helper">Visez une phrase ou deux</string>
+    <string name="media_settings_description_sheet_explanation">Affiché sur la page du fichier joint.</string>
+    <string name="media_settings_caption_sheet_explanation">Affiché sous l’image dans les articles.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Décrivez le contenu de l’image pour les personnes qui utilisent des lecteurs d’écran. Ne rien remplir si l’image est purement décorative.</string>
+    <string name="media_settings_uploaded">Téléversé</string>
+    <string name="media_settings_file_size">Taille du fichier</string>
+    <string name="media_settings_file_type">Type de fichier</string>
+    <string name="media_settings_file_name">Nom du fichier</string>
     <string name="support_screen_unified_support_description">Obtenez des réponses de notre équipe d’assistance à tout moment</string>
     <string name="support_screen_unified_support_title">Obtenir de l’aide</string>
     <string name="unified_support_attachment_match_score">%1$d %% de correspondance</string>
@@ -3475,6 +3498,7 @@ Language: fr
     <string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Pas d\'articles récents.</string>
     <string name="media_edit_copy_url_toast">URL copiée dans le presse-papiers.</string>
+    <string name="media_settings_copy_url">Copier l’URL</string>
     <string name="selected_theme">Thème sélectionné</string>
     <string name="could_not_load_theme">Impossible de charger le thème</string>
     <string name="theme_activation_error">Quelque chose s\'est mal passé. Impossible d\'activer le thème.</string>
@@ -3559,6 +3583,7 @@ Language: fr
     <string name="my_site_btn_blog_posts">Articles</string>
     <string name="reader_label_new_posts_subtitle">Touchez pour les afficher</string>
     <string name="select_all">Tout selectionner</string>
+    <string name="media_settings_dimensions">Dimensions</string>
     <string name="language">Langue</string>
     <string name="reader_empty_posts_request_failed">Impossible de récupérer les articles</string>
     <string name="error_notification_open">Impossible d\'ouvrir la notification</string>
@@ -3593,6 +3618,7 @@ Language: fr
     <string name="stats_timeframe_years">Années</string>
     <string name="themes_fetching">Récupération des thèmes…</string>
     <string name="ssl_certificate_details">Détails</string>
+    <string name="confirm_delete_multi_media">Supprimer %1$d éléments média ?</string>
     <string name="cab_selected">%d sélectionnés</string>
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
     <string name="reader_empty_comments">Pas encore de commentaires</string>

@@ -4155,6 +4155,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
 
+    <!-- Notifications tab in the WordPress app, which points users to the Jetpack app -->
+    <string name="notifications_in_jetpack_title">Notifications are in the Jetpack app</string>
+    <string name="notifications_in_jetpack_message">Keep up with comments, likes and new followers on your sites with the free Jetpack app.</string>
+    <string name="notifications_in_jetpack_button">Go to the Jetpack app</string>
+
     <!-- Jetpack full plugin install onboarding -->
     <string name="jetpack_individual_plugin_support_onboarding_title">Please install the full Jetpack plugin</string>
     <!-- translators:
@@ -4470,6 +4475,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_credentials_stored">Application password credentials stored for %1$s</string>
     <string name="application_password_credentials_storing_error">There was an error storing Application password credentials for %1$s</string>
     <string name="application_password_authorization_cancelled">Authorization cancelled</string>
+    <string name="application_password_authorization_header_blocked">Your server is blocking sign-in with application passwords. Contact your hosting provider for help.</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
     <string name="application_password_private_site_error">This site is private, so we can\'t read its settings to sign you in.</string>
@@ -5075,4 +5081,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">The editor stopped working</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload the editor to continue editing.</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload Editor</string>
+    <string name="gbk_editor_webview_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Update Android System WebView to use the editor.</string>
 </resources>

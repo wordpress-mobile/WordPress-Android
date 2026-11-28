@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-11-18 15:58:16+0000
+Translation-Revision-Date: 2026-11-25 09:54:18+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.1.0
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ai_support_disclosure">Anda sedang mengobrol dengan AI dari Dukungan %1$s.</string>
+    <string name="login_session_expired">Sesi login Anda telah kedaluwarsa. Coba lagi.</string>
+    <string name="reader_save_posts_synced_dialog_message">Pos yang disimpan disinkronkan dengan akun WordPress.com Anda, jadi pos tersebut ada di semua perangkat Anda.</string>
+    <string name="reader_saved_post_removed">Dihapus dari pos yang disimpan</string>
+    <string name="reader_saved_posts_limit_reached">Anda telah mencapai batas pos yang disimpan. Hapus beberapa pos agar bisa menyimpan lagi.</string>
+    <string name="stats_period_last_3_years">3 tahun terakhir</string>
+    <string name="stats_chart_interval_submenu">Buka pilihan interval</string>
+    <string name="stats_chart_interval">Interval</string>
+    <string name="post_rs_local_drafts_retry_description">Coba unggah lagi \"%s\"</string>
+    <string name="post_rs_local_drafts_upload_failed">Unggahan gagal</string>
+    <string name="post_rs_local_drafts_subtitle">Pos ini hanya ada di perangkat ini.</string>
+    <string name="post_rs_local_drafts_title">Belum diunggah</string>
+    <string name="confirm_delete_single_media">Hapus %1$d item media?</string>
+    <string name="media_settings_row_value">%1$s, %2$s</string>
+    <string name="media_settings_row_not_set">%1$s, belum diatur</string>
+    <string name="media_settings_alt_text_sheet_helper">Buat satu atau dua kalimat</string>
+    <string name="media_settings_description_sheet_explanation">Ditampilkan pada halaman lampiran.</string>
+    <string name="media_settings_caption_sheet_explanation">Ditampilkan di bawah gambar pada pos.</string>
+    <string name="media_settings_alt_text_sheet_explanation">Deskripsikan isi gambar bagi pengguna pembaca layar. Biarkan kosong jika gambar hanya hiasan.</string>
+    <string name="media_settings_uploaded">Diunggah</string>
+    <string name="media_settings_file_size">Ukuran berkas</string>
+    <string name="media_settings_file_type">Jenis berkas</string>
+    <string name="media_settings_file_name">Nama berkas</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Muat ulang Editor</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Muat ulang editor untuk melanjutkan pengeditan.</string>
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Editor berhenti berfungsi</string>
@@ -3684,6 +3707,7 @@ Language: id
     <string name="my_site_btn_blog_posts">Pos</string>
     <string name="reader_label_new_posts_subtitle">Ketuk untuk menampilkannya</string>
     <string name="select_all">Pilih semua</string>
+    <string name="media_settings_dimensions">Dimensi</string>
     <string name="language">Bahasa</string>
     <string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
     <string name="error_notification_open">Gagal membuka notifikasi</string>
@@ -3718,6 +3742,7 @@ Language: id
     <string name="stats_timeframe_years">Tahun</string>
     <string name="themes_fetching">Mengambil tema…</string>
     <string name="ssl_certificate_details">Rincian</string>
+    <string name="confirm_delete_multi_media">Hapus %1$d item media?</string>
     <string name="cab_selected">%d terpilih</string>
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
