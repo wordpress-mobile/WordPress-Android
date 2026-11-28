@@ -536,7 +536,10 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         })
     }
 
-    private fun supportsGallery() = hasGalleryLayout || postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW
+    // previews are always galleries when the reader picked that layout, so a tag reads like a magazine too
+    private fun supportsGallery() = hasGalleryLayout ||
+        postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW ||
+        postListViewModel.listType == ReaderPostListType.TAG_PREVIEW
 
     override fun onDestroyView() {
         super.onDestroyView()

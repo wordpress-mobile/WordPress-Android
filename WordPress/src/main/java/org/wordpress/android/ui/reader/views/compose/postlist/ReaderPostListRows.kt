@@ -57,8 +57,10 @@ import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderSiteHeaderUiState
+import org.wordpress.android.ui.reader.views.compose.suggested.ReaderSuggestedSitesRow
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.WPAvatarUtils
@@ -94,78 +96,89 @@ internal fun ReaderSiteHeader(
 ) {
     val blavatarSize = dimensionResource(R.dimen.blavatar_sz_extra_large)
     ReaderPostListRowSurface {
-        Column(modifier = Modifier.padding(Margin.ExtraLarge.value)) {
-            info.imageUrl?.let { imageUrl ->
-                val sizePx = with(LocalDensity.current) { blavatarSize.roundToPx() }
-                AsyncImage(
-                    model = imageRequest(
-                        url = PhotonUtils.getPhotonImageUrl(imageUrl, sizePx, sizePx, PhotonUtils.Quality.HIGH),
-                        imageType = SiteUtils.getSiteImageType(info.isP2orA8C, BlavatarShape.CIRCULAR)
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(bottom = Margin.ExtraLarge.value)
-                        .size(blavatarSize)
-                        .clip(CircleShape)
-                )
-            }
-            val host = info.host
-            Text(
-                text = info.name ?: host ?: stringResource(R.string.reader_untitled_post),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = HEADER_TITLE_MAX_LINES,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (host != null) {
+        Column {
+            Column(modifier = Modifier.padding(Margin.ExtraLarge.value)) {
+                info.imageUrl?.let { imageUrl ->
+                    val sizePx = with(LocalDensity.current) { blavatarSize.roundToPx() }
+                    AsyncImage(
+                        model = imageRequest(
+                            url = PhotonUtils.getPhotonImageUrl(imageUrl, sizePx, sizePx, PhotonUtils.Quality.HIGH),
+                            imageType = SiteUtils.getSiteImageType(info.isP2orA8C, BlavatarShape.CIRCULAR)
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(bottom = Margin.ExtraLarge.value)
+                            .size(blavatarSize)
+                            .clip(CircleShape)
+                    )
+                }
+                val host = info.host
                 Text(
-                    text = host,
-                    modifier = Modifier.padding(top = Margin.Medium.value),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            info.description?.let { description ->
-                Text(
-                    text = description,
-                    modifier = Modifier.padding(top = Margin.Medium.value),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA),
-                    maxLines = DESCRIPTION_MAX_LINES,
+                    text = info.name ?: host ?: stringResource(R.string.reader_untitled_post),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = HEADER_TITLE_MAX_LINES,
                     overflow = TextOverflow.Ellipsis
                 )
-            }
-            val subscriberCount = info.subscriberCount
-            if (subscriberCount != null) {
-                Text(
-                    text = subscriberCountText(subscriberCount),
-                    modifier = Modifier.padding(top = Margin.Medium.value, bottom = Margin.ExtraLarge.value),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            } else {
-                Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                FollowButton(
-                    isFollowed = info.isFollowed,
-                    isInProgress = info.isFollowInProgress,
-                    onClick = onFollowClick
-                )
-                if (info.showSettings) {
-                    IconButton(
-                        onClick = onSettingsClick,
-                        enabled = !info.isFollowInProgress,
-                        modifier = Modifier.padding(start = Margin.Medium.value)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_cog_white_24dp),
-                            contentDescription = stringResource(R.string.reader_subscription_settings_title),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
+                if (host != null) {
+                    Text(
+                        text = host,
+                        modifier = Modifier.padding(top = Margin.Medium.value),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                info.description?.let { description ->
+                    Text(
+                        text = description,
+                        modifier = Modifier.padding(top = Margin.Medium.value),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA),
+                        maxLines = DESCRIPTION_MAX_LINES,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                val subscriberCount = info.subscriberCount
+                if (subscriberCount != null) {
+                    Text(
+                        text = subscriberCountText(subscriberCount),
+                        modifier = Modifier.padding(top = Margin.Medium.value, bottom = Margin.ExtraLarge.value),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    FollowButton(
+                        isFollowed = info.isFollowed,
+                        isInProgress = info.isFollowInProgress,
+                        onClick = onFollowClick
+                    )
+                    if (info.showSettings) {
+                        IconButton(
+                            onClick = onSettingsClick,
+                            enabled = !info.isFollowInProgress,
+                            modifier = Modifier.padding(start = Margin.Medium.value)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_cog_white_24dp),
+                                contentDescription = stringResource(R.string.reader_subscription_settings_title),
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
                 }
+            }
+            // "subscribed, now what?": only after subscribing here, not for sites already followed
+            val wasFollowed = remember { info.isFollowed }
+            if (!wasFollowed && info.isFollowed) {
+                ReaderSuggestedSitesRow(
+                    source = ReaderTracker.SOURCE_SUGGESTED_SITES,
+                    modifier = Modifier.padding(bottom = Margin.ExtraLarge.value),
+                    contentPadding = Margin.ExtraLarge.value
+                )
             }
         }
     }

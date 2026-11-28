@@ -67,6 +67,7 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.reader.FollowConversationUiState
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.toComposeFontFamily
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.reader.views.compose.comments.AuthorBadge
 import org.wordpress.android.ui.reader.views.compose.comments.FollowConversationActions
 import org.wordpress.android.ui.reader.views.compose.postcard.CircleAvatar
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesPreviewTag
+import org.wordpress.android.ui.reader.views.compose.suggested.ReaderSuggestedSitesRow
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.WPAvatarUtils
@@ -153,6 +155,14 @@ fun ReaderPostDetailFooter(
         }
         if (hasWebViewContent && nextPost != null) {
             NextPost(nextPost, actions.onNextPostClick, Modifier.padding(horizontal = margin))
+        }
+        if (hasWebViewContent) {
+            // the end of a post is when a reader is most open to finding more like it
+            ReaderSuggestedSitesRow(
+                source = ReaderTracker.SOURCE_SUGGESTED_SITES,
+                modifier = Modifier.padding(top = Margin.ExtraLarge.value, bottom = Margin.ExtraLarge.value),
+                contentPadding = margin
+            )
         }
     }
 }

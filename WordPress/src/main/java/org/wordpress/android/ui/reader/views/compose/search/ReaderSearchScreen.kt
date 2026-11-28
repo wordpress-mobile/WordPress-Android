@@ -270,12 +270,12 @@ private fun SuggestionRow(suggestion: String, onClick: () -> Unit, onDelete: () 
 @Composable
 private fun SitesTab(uiState: ReaderSearchUiState, listState: LazyListState, actions: ReaderSearchActions) {
     when {
-        uiState.isLoadingSites -> LoadingState()
+        uiState.isLoadingDisplayedSites -> LoadingState()
 
-        uiState.sitesRequestFailed ->
+        uiState.sitesRequestFailed && uiState.urlSite == null ->
             SearchMessage(title = stringResource(R.string.reader_empty_search_request_failed))
 
-        uiState.sites.isEmpty() -> {
+        uiState.displayedSites.isEmpty() -> {
             val query = uiState.submittedQuery.orEmpty().htmlEncode()
             val description = stringResource(R.string.reader_empty_search_description, "<em>$query</em>")
             SearchMessage(
@@ -292,12 +292,12 @@ private fun SitesTab(uiState: ReaderSearchUiState, listState: LazyListState, act
 private fun SitesList(uiState: ReaderSearchUiState, listState: LazyListState, actions: ReaderSearchActions) {
     LoadMoreOnScrollToEnd(
         listState = listState,
-        itemCount = uiState.sites.size,
+        itemCount = uiState.displayedSites.size,
         canLoadMore = uiState.canRequestMoreSites,
         onLoadMore = actions.onLoadMoreSites
     )
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
-        items(uiState.sites, key = { it.key }) { site ->
+        items(uiState.displayedSites, key = { it.key }) { site ->
             Column(Modifier.readableWidth()) {
                 ReaderSiteRow(
                     title = site.title?.takeIf { it.isNotEmpty() }

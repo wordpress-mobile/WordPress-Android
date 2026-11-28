@@ -32,8 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
+import org.wordpress.android.ui.reader.views.compose.suggested.ReaderSuggestedSitesRow
 
 private const val BOOKMARK_ICON_ID = "bookmark"
 private const val BOOKMARK_ICON_ALPHA = 0.6f
@@ -50,15 +52,38 @@ internal fun ReaderPostListEmptyState(
     isTopAligned: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    // nothing to read yet, so offer sites to subscribe to
+    val showSuggestions = emptyState == ReaderPostListEmptyState.NoFollowedSites ||
+        emptyState == ReaderPostListEmptyState.FollowedSitesNoRecentPosts
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = if (isTopAligned) Arrangement.Top else Arrangement.Center
+    ) {
+        EmptyStateMessage(emptyState, onButtonClick, isTopAligned)
+        if (showSuggestions) {
+            ReaderSuggestedSitesRow(
+                source = ReaderTracker.SOURCE_SUGGESTED_SITES,
+                modifier = Modifier.padding(bottom = Margin.ExtraExtraMediumLarge.value)
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyStateMessage(
+    emptyState: ReaderPostListEmptyState,
+    onButtonClick: (ReaderPostListEmptyButton) -> Unit,
+    isTopAligned: Boolean,
+) {
     val content = emptyStateContent(emptyState)
     val padding = Margin.ExtraExtraMediumLarge.value
     Column(
-        modifier = modifier
+        modifier = Modifier
             .padding(start = padding, end = padding, bottom = padding, top = if (isTopAligned) TOP_PADDING else padding)
             // a live region, so TalkBack announces it when its content changes
             .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (isTopAligned) Arrangement.Top else Arrangement.Center
     ) {
         if (content.title.isNotEmpty()) {
             Text(
