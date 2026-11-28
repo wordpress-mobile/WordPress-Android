@@ -4,7 +4,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import org.wordpress.android.ui.reader.ReaderCommentModeration
 
 data class ReaderCommentListActions(
-    val onBack: () -> Unit,
     val onRefresh: () -> Unit,
     val onLoadMore: () -> Unit,
     val onScrollHandled: () -> Unit,

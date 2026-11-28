@@ -3,9 +3,13 @@ package org.wordpress.android.ui.reader.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +22,8 @@ import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.UserAgent
@@ -85,6 +91,52 @@ class ReaderWebView @JvmOverloads constructor(
     var urlClickListener: ReaderWebViewUrlClickListener? = null
     var pageFinishedListener: ReaderWebViewPageFinishedListener? = null
     var customViewListener: ReaderCustomViewListener? = null
+
+    /** Shares the text the reader selected as a quote, from a "Share quote" item in the selection menu */
+    var shareQuoteListener: ((String) -> Unit)? = null
+
+    override fun startActionMode(callback: ActionMode.Callback?, type: Int): ActionMode? {
+        val listener = shareQuoteListener
+        return if (callback != null && listener != null && type == ActionMode.TYPE_FLOATING) {
+            super.startActionMode(ShareQuoteCallback(callback, listener), type)
+        } else {
+            super.startActionMode(callback, type)
+        }
+    }
+
+    /**
+     * Adds "Share quote" to the WebView's own text selection menu, leaving its other items alone
+     */
+    private inner class ShareQuoteCallback(
+        private val wrapped: ActionMode.Callback,
+        private val listener: (String) -> Unit,
+    ) : ActionMode.Callback2() {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            val isCreated = wrapped.onCreateActionMode(mode, menu)
+            menu.add(Menu.NONE, SHARE_QUOTE_ITEM_ID, SHARE_QUOTE_ITEM_ORDER, R.string.reader_share_quote)
+            return isCreated
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu) = wrapped.onPrepareActionMode(mode, menu)
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            if (item.itemId != SHARE_QUOTE_ITEM_ID) return wrapped.onActionItemClicked(mode, item)
+            evaluateJavascript("window.getSelection().toString()") { result ->
+                // the result is a JSON string literal
+                val text = runCatching { JSONArray("[$result]").optString(0) }.getOrNull()
+                if (!text.isNullOrBlank()) listener(text.trim())
+            }
+            mode.finish()
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) = wrapped.onDestroyActionMode(mode)
+
+        override fun onGetContentRect(mode: ActionMode, view: View, outRect: Rect) {
+            (wrapped as? ActionMode.Callback2)?.onGetContentRect(mode, view, outRect)
+                ?: super.onGetContentRect(mode, view, outRect)
+        }
+    }
 
     /**
      * Private posts on https blogs have their images fetched with the account's token
@@ -305,6 +357,9 @@ class ReaderWebView @JvmOverloads constructor(
     }
 
     companion object {
+        private val SHARE_QUOTE_ITEM_ID = View.generateViewId()
+        private const val SHARE_QUOTE_ITEM_ORDER = 100
+
         /**
          * The blank page [clearContent] loads to drop the previous post - the only page this WebView ever loads
          * that isn't a rendered article

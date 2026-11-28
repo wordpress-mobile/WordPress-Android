@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.views.compose.postcard.ReaderPostCard
+import org.wordpress.android.ui.reader.views.compose.readableWidth
 import org.wordpress.android.ui.rs.contentlist.ContentListPullToRefreshBox
 import org.wordpress.android.ui.rs.contentlist.LoadMoreOnScrollToEnd
 import org.wordpress.android.ui.rs.contentlist.contentListLoadingMoreItem
@@ -91,7 +93,7 @@ private fun PostList(
 
     LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         items(items = items, key = { it.key }, contentType = { it::class }) { item ->
-            Column(modifier = Modifier.padding(horizontal = margin)) {
+            Column(modifier = Modifier.readableWidth().padding(horizontal = margin)) {
                 PostListRow(item, actions)
                 if (item !== items.last()) {
                     HorizontalDivider(color = colorResource(R.color.on_surface_divider))
@@ -99,10 +101,7 @@ private fun PostList(
             }
         }
         if (emptyState != null) {
-            // centred in the list, except below a header (where centring could push it off screen) and for
-            // search, which shows its messages just under the tabs
-            val isTopAligned = items.isNotEmpty() || emptyState is ReaderPostListEmptyState.SearchUpdating ||
-                    emptyState is ReaderPostListEmptyState.SearchNoResults
+            val isTopAligned = emptyState.isTopAligned(hasItems = items.isNotEmpty())
             item(key = "empty") {
                 ReaderPostListEmptyState(
                     emptyState = emptyState,
@@ -126,10 +125,22 @@ private fun PostList(
         canLoadMore = hasPosts,
         onLoadMore = actions.onLoadMore
     )
-    KeepTopInViewOnPrepend(listState, items.firstOrNull()?.key, uiState.scrollToPosition)
-    PendingScroll(listState, uiState.scrollToPosition, actions.onScrollHandled)
-    ReportFirstItemVisibility(listState, actions.onFirstItemVisibilityChanged)
+    KeepTopInViewOnPrepend(
+        firstKey = items.firstOrNull()?.key,
+        scrollToPosition = uiState.scrollToPosition,
+        isAtTop = { listState.firstVisibleItemIndex == 0 },
+        scrollToTop = { listState.requestScrollToItem(0) },
+    )
+    PendingScroll(uiState.scrollToPosition, actions.onScrollHandled) { listState.requestScrollToItem(it) }
+    ReportFirstItemVisibility(listState, { listState.firstVisibleItemIndex == 0 }, actions.onFirstItemVisibilityChanged)
 }
+
+/**
+ * Centred in the list, except below a header (where centring could push it off screen) and for search, which shows
+ * its messages just under the tabs
+ */
+internal fun ReaderPostListEmptyState.isTopAligned(hasItems: Boolean) = hasItems ||
+    this is ReaderPostListEmptyState.SearchUpdating || this is ReaderPostListEmptyState.SearchNoResults
 
 @Composable
 private fun PostListRow(item: ReaderPostListItem, actions: ReaderPostListActions) {
@@ -162,20 +173,26 @@ private fun PostListRow(item: ReaderPostListItem, actions: ReaderPostListActions
 }
 
 /**
- * A keyed LazyColumn stays anchored on its first row when rows are added above it, so newer posts would
- * land above the screen - keep the top in view instead, as the RecyclerView did
+ * A keyed lazy list or grid stays anchored on its first row when rows are added above it, so newer posts (or a
+ * site's header, which arrives after its posts) would land above the screen - keep the top in view instead, as the
+ * RecyclerView did. [isAtTop] and [scrollToTop] work on the list or grid showing the posts.
  */
 @Composable
-private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, scrollToPosition: Int?) {
+internal fun KeepTopInViewOnPrepend(
+    firstKey: String?,
+    scrollToPosition: Int?,
+    isAtTop: () -> Boolean,
+    scrollToTop: () -> Unit,
+) {
     val previousFirstKey = remember { PreviousKey() }
     // runs before this frame's measure, so the list still reports the position from before the change
     SideEffect {
         val previous = previousFirstKey.value
         previousFirstKey.value = firstKey
         val isFirstKeyChanged = previous != null && firstKey != previous
-        val wasAtTop = scrollToPosition == null && listState.firstVisibleItemIndex == 0
+        val wasAtTop = scrollToPosition == null && isAtTop()
         if (isFirstKeyChanged && wasAtTop) {
-            listState.requestScrollToItem(0)
+            scrollToTop()
         }
     }
 }
@@ -183,31 +200,33 @@ private fun KeepTopInViewOnPrepend(listState: LazyListState, firstKey: String?, 
 // a plain holder rather than state, since changing it mustn't trigger recomposition
 private class PreviousKey(var value: String? = null)
 
+/** Scrolls to [scrollToPosition] once, with [scrollToItem] for the list or grid showing the posts */
 @Composable
-private fun PendingScroll(listState: LazyListState, scrollToPosition: Int?, onScrollHandled: () -> Unit) {
+internal fun PendingScroll(scrollToPosition: Int?, onScrollHandled: () -> Unit, scrollToItem: (Int) -> Unit) {
     val currentOnScrollHandled by rememberUpdatedState(onScrollHandled)
     LaunchedEffect(scrollToPosition) {
         if (scrollToPosition != null) {
-            listState.requestScrollToItem(scrollToPosition)
+            scrollToItem(scrollToPosition)
             currentOnScrollHandled()
         }
     }
 }
 
+/** Reports whether the first row is showing; [isAtTop] reads it from the list or grid in [scrollState] */
 @Composable
-private fun ReportFirstItemVisibility(listState: LazyListState, onChanged: (Boolean) -> Unit) {
+internal fun ReportFirstItemVisibility(scrollState: Any, isAtTop: () -> Boolean, onChanged: (Boolean) -> Unit) {
     val currentOnChanged by rememberUpdatedState(onChanged)
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex == 0 }
+    LaunchedEffect(scrollState) {
+        snapshotFlow { isAtTop() }
             .distinctUntilChanged()
             .collect { currentOnChanged(it) }
     }
 }
 
 @Composable
-private fun NewPostsBar(
+internal fun NewPostsBar(
     isVisible: Boolean,
-    listState: LazyListState,
+    listState: ScrollableState,
     onClick: () -> Unit,
     onScrolledAway: () -> Unit,
     modifier: Modifier = Modifier,

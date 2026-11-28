@@ -68,7 +68,7 @@ sealed class ReaderPostListItem {
     }
 
     companion object {
-        private const val KEY_HEADER = "header"
+        internal const val KEY_HEADER = "header"
         private const val KEY_GAP_MARKER = "gap"
 
         // pseudo_id is part of the posts table's primary key, and every list query fixes the rest of it, so it's

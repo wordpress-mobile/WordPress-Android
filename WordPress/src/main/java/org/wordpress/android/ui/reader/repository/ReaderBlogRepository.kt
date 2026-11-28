@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.JSONUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.VolleyUtils
 import java.net.HttpURLConnection
@@ -348,6 +349,40 @@ class ReaderBlogRepository @Inject constructor(
         readerTracker.trackBlog(stat, blogId, feedId, source)
     }
 
+    /**
+     * Sites WordPress.com recommends to this user, leaving out ones they already follow. Empty if the request fails.
+     */
+    suspend fun fetchSuggestedSites(): List<ReaderSuggestedSite> {
+        val result = awaitRestRequest(cancelWithCaller = true) { listener, errorListener ->
+            WordPress.getRestClientUtilsV1_2().getWithLocale(
+                "read/recommendations/sites?number=$SUGGESTED_SITES_COUNT&posts_per_site=0",
+                listener,
+                errorListener
+            )
+        }
+        val sites = result.response?.optJSONArray("sites") ?: return emptyList()
+        return withContext(ioDispatcher) {
+            (0 until sites.length()).mapNotNull { index ->
+                val site = sites.optJSONObject(index) ?: return@mapNotNull null
+                val url = site.optString("URL").takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                if (site.optBoolean("is_following")) return@mapNotNull null
+                val blogId = site.optLong("blog_id")
+                val feedId = site.optLong("feed_id")
+                // the response can lag behind a follow made a moment ago
+                if (ReaderBlogTable.isFollowedBlog(blogId) || ReaderBlogTable.isFollowedFeed(feedId)) {
+                    return@mapNotNull null
+                }
+                ReaderSuggestedSite(
+                    blogId = blogId,
+                    feedId = feedId,
+                    name = JSONUtils.getStringDecoded(site, "name").takeIf { it.isNotEmpty() },
+                    url = url,
+                    iconUrl = site.optJSONObject("icon")?.optString("img")?.takeIf { it.isNotEmpty() },
+                )
+            }.distinctBy { it.url }
+        }
+    }
+
     private suspend fun post(path: String): RestResult = awaitRestRequest { listener, errorListener ->
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener)
     }
@@ -396,3 +431,14 @@ data class BlockedUserResult(
     // key: (tag slug, tag type)
     val deletedRows: Map<Pair<String, ReaderTagType>, ReaderPostList>
 )
+
+/** A site WordPress.com recommends following */
+data class ReaderSuggestedSite(
+    val blogId: Long,
+    val feedId: Long,
+    val name: String?,
+    val url: String,
+    val iconUrl: String?,
+)
+
+private const val SUGGESTED_SITES_COUNT = 10

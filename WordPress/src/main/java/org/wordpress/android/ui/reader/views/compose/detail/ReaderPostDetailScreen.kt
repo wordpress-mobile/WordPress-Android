@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.views.compose.detail
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,12 +35,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -128,6 +135,9 @@ class ReaderPostDetailChromeState(canScroll: () -> Boolean) {
      */
     var topInset by mutableIntStateOf(0)
 
+    /** How far through the post the reader has scrolled, from 0 to 1, for the reading progress bar */
+    var readingProgress by mutableFloatStateOf(0f)
+
     /**
      * The details state, unless it's still that of a post replaced in place, whose related posts and other details
      * mustn't show below the new post or be tracked for it
@@ -152,6 +162,8 @@ class ReaderPostDetailScreenActions(
     val onMoreItemClick: (ReaderPostCardActionType) -> Unit,
     val onSignInClick: () -> Unit,
     val onOpenInBrowserClick: () -> Unit,
+    // switches the post detail to WPFolio's native rendering; null hides the menu item
+    val onUseNativeRenderer: (() -> Unit)? = null,
 )
 
 /**
@@ -200,9 +212,39 @@ fun ReaderPostDetailScreen(
                 )
             }
         }
+        if (detailsState != null && chrome.isPostShown && !chrome.isCustomViewShowing) {
+            ReadingProgressBar(
+                progress = { chrome.readingProgress },
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = with(LocalDensity.current) { chrome.topInset.toDp() })
+            )
+        }
         // only composed while video is showing, since it would otherwise take every touch meant for the post
         if (chrome.isCustomViewShowing) {
             AndroidView(factory = { customViewContainer }, modifier = Modifier.fillMaxSize())
+        }
+    }
+}
+
+/**
+ * A thin bar under the status bar that fills as the post is read
+ */
+@Composable
+private fun ReadingProgressBar(progress: () -> Float, modifier: Modifier = Modifier) {
+    val color = MaterialTheme.colorScheme.primary
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(3.dp)
+    ) {
+        val fraction = progress().coerceIn(0f, 1f)
+        if (fraction > 0f) {
+            drawRoundRect(
+                color = color,
+                size = Size(size.width * fraction, size.height),
+                cornerRadius = CornerRadius(size.height / 2, size.height / 2),
+            )
         }
     }
 }
@@ -254,6 +296,15 @@ private fun TopBar(
                     DropdownMenu(expanded = moreMenuItems != null, onDismissRequest = actions.onMoreDismiss) {
                         moreMenuItems?.forEach { item ->
                             ReaderPostMoreMenuItem(item) { actions.onMoreItemClick(it.type) }
+                        }
+                        actions.onUseNativeRenderer?.let { onUseNative ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.reader_article_use_native_renderer)) },
+                                onClick = {
+                                    actions.onMoreDismiss()
+                                    onUseNative()
+                                },
+                            )
                         }
                     }
                 }

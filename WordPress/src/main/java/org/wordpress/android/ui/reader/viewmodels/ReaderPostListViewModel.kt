@@ -881,6 +881,10 @@ class ReaderPostListViewModel @Inject constructor(
     /*
      * Returns the blog and feed ids the site header shows, or null if the list has no site header
      */
+    /** Whether the list shows a site's header above its posts, which a blog preview's gallery waits for */
+    val hasSiteHeader: Boolean
+        get() = siteHeaderIds() != null
+
     private fun siteHeaderIds(): Pair<Long, Long>? {
         val tag = currentTag
         return when {

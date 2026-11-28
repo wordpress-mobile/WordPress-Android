@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +41,9 @@ import org.wordpress.android.util.EmoticonsUtils
 fun CommentHtmlBody(
     html: String,
     modifier: Modifier = Modifier,
-    onImageClick: ((String) -> Unit)? = null
+    onImageClick: ((String) -> Unit)? = null,
+    // the text's style, for screens with their own reading type; the default is 16sp in the theme's font
+    textStyle: TextStyle? = null,
 ) {
     val linkColor = MaterialTheme.colorScheme.primary
     val segments = remember(html) { splitCommentHtml(html) }
@@ -55,7 +59,7 @@ fun CommentHtmlBody(
                             Text(
                                 text = annotated,
                                 color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = 16.sp
+                                style = textStyle ?: LocalTextStyle.current.copy(fontSize = 16.sp)
                             )
                         }
                     }

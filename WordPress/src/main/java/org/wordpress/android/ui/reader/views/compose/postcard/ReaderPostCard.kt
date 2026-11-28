@@ -98,7 +98,7 @@ fun ReaderPostCard(
                 modifier = Modifier.padding(top = Margin.Medium.value),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = readerPostTitleColor(uiState.isSeen),
                 maxLines = TEXT_MAX_LINES,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -119,6 +119,14 @@ fun ReaderPostCard(
         }
         ActionRow(uiState)
     }
+}
+
+/** A post's title color, dimmed once the post has been seen */
+@Composable
+internal fun readerPostTitleColor(isSeen: Boolean) = if (isSeen) {
+    MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
+} else {
+    MaterialTheme.colorScheme.onSurface
 }
 
 @Composable
@@ -267,7 +275,7 @@ private fun ActionRow(uiState: ReaderPostUiState) {
 }
 
 /** The count beside an action's icon: zero only while the action can be used, as on iOS. */
-private fun countText(action: PrimaryAction, countFormat: CompactDecimalFormat): String? =
+internal fun countText(action: PrimaryAction, countFormat: CompactDecimalFormat): String? =
     action.count.takeIf { action.isEnabled || it > 0 }?.let { countFormat.format(it) }
 
 @Composable

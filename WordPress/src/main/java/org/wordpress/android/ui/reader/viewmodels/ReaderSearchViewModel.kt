@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import android.webkit.URLUtil
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,9 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.repository.ReaderBlogRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,13 +70,17 @@ class ReaderSearchViewModel @Inject constructor(
     val events: Flow<ReaderSearchEvent> = _events.receiveAsFlow()
 
     private var suggestionsJob: Job? = null
+    private var urlLookupJob: Job? = null
     private var lastTappedSiteKey: String? = null
 
     init {
         dispatcher.register(this)
         loadSuggestions()
         // after process death the post list restores its own results, but the sites have to be fetched again
-        _uiState.value.submittedQuery?.let { searchSites(it, offset = 0) }
+        _uiState.value.submittedQuery?.let {
+            searchSites(it, offset = 0)
+            lookUpUrl(it)
+        }
     }
 
     override fun onCleared() {
@@ -98,6 +105,7 @@ class ReaderSearchViewModel @Inject constructor(
         readerTracker.trackQuery(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, query)
         _events.trySend(ReaderSearchEvent.SubmitPostSearch(query))
         searchSites(query, offset = 0)
+        lookUpUrl(query)
     }
 
     fun onSuggestionClicked(query: String) {
@@ -140,6 +148,8 @@ class ReaderSearchViewModel @Inject constructor(
     }
 
     fun onSiteClicked(site: ReaderSearchSite) {
+        // a URL the server couldn't find has nothing to preview, though following it may still discover a feed
+        if (site.siteId == 0L && site.feedId == 0L) return
         lastTappedSiteKey = site.key
         _events.trySend(ReaderSearchEvent.ShowSitePreview(site))
     }
@@ -150,7 +160,7 @@ class ReaderSearchViewModel @Inject constructor(
     fun onResume() {
         val key = lastTappedSiteKey ?: return
         lastTappedSiteKey = null
-        val site = _uiState.value.sites.firstOrNull { it.key == key } ?: return
+        val site = _uiState.value.displayedSites.firstOrNull { it.key == key } ?: return
         launch {
             val isFollowing = withContext(bgDispatcher) { blogTable.isSiteFollowed(site.siteId, site.feedId) }
             updateSite(key) { it.copy(isFollowing = isFollowing) }
@@ -166,7 +176,12 @@ class ReaderSearchViewModel @Inject constructor(
         val isAskingToFollow = !site.isFollowing
         updateSite(site.key) { it.copy(isFollowing = isAskingToFollow, isFollowEnabled = false) }
         launch {
-            val succeeded = blogRepository.followFeed(site.feedId, isAskingToFollow, ReaderTracker.SOURCE_SEARCH)
+            val followUrl = site.followUrl
+            val succeeded = if (followUrl != null && isAskingToFollow) {
+                followByUrl(site, followUrl)
+            } else {
+                blogRepository.followFeed(site.feedId, isAskingToFollow, ReaderTracker.SOURCE_SEARCH)
+            }
             updateSite(site.key) {
                 it.copy(isFollowing = if (succeeded) isAskingToFollow else !isAskingToFollow, isFollowEnabled = true)
             }
@@ -229,6 +244,45 @@ class ReaderSearchViewModel @Inject constructor(
         dispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload))
     }
 
+    /*
+     * A query that looks like a site or feed address gets a row of its own above the search results, so readers can
+     * subscribe to any site or RSS/Atom feed by pasting its URL, which a keyword search rarely finds
+     */
+    private fun lookUpUrl(query: String) {
+        urlLookupJob?.cancel()
+        val url = searchUrl(query) ?: return
+        setState { it.copy(selectedTab = ReaderSearchTab.SITES, isLookingUpUrl = true) }
+        urlLookupJob = launch {
+            val blog = blogRepository.lookupFeedUrl(url)
+            if (_uiState.value.submittedQuery != query) return@launch
+            setState { it.copy(urlSite = blog.toUrlSite(url), isLookingUpUrl = false) }
+        }
+    }
+
+    /*
+     * follows by URL, which discovers the feed if the lookup didn't, then picks up the ids the follow saved so the
+     * row can be unfollowed and previewed
+     */
+    private suspend fun followByUrl(site: ReaderSearchSite, url: String): Boolean {
+        val blog = if (site.siteId != 0L || site.feedId != 0L) blogRepository.lookupFeedUrl(url) else null
+        if (!blogRepository.followFeedUrl(url, blog, ReaderTracker.SOURCE_SEARCH)) return false
+        // the ids can change the row's key, so this update also finishes the follow
+        blogRepository.lookupFeedUrl(url)?.let { followed ->
+            updateSite(site.key) { followed.toUrlSite(url).copy(isFollowing = true) }
+        }
+        return true
+    }
+
+    private fun ReaderBlog?.toUrlSite(url: String) = ReaderSearchSite(
+        siteId = this?.blogId ?: 0,
+        feedId = this?.feedId ?: 0,
+        title = this?.takeIf { it.hasName() }?.name ?: UrlUtils.getHost(url),
+        url = this?.takeIf { it.hasUrl() }?.url ?: url,
+        iconUrl = this?.imageUrl,
+        isFollowing = this?.isFollowing == true,
+        followUrl = url
+    )
+
     private fun clearSearch() {
         setState { it.withoutSites().copy(submittedQuery = null, selectedTab = ReaderSearchTab.POSTS) }
         _events.trySend(ReaderSearchEvent.ClearPostSearch)
@@ -245,7 +299,10 @@ class ReaderSearchViewModel @Inject constructor(
     }
 
     private fun updateSite(key: String, transform: (ReaderSearchSite) -> ReaderSearchSite) = setState { state ->
-        state.copy(sites = state.sites.map { if (it.key == key) transform(it) else it })
+        state.copy(
+            sites = state.sites.map { if (it.key == key) transform(it) else it },
+            urlSite = state.urlSite?.let { if (it.key == key) transform(it) else it }
+        )
     }
 
     private fun setState(transform: (ReaderSearchUiState) -> ReaderSearchUiState) {
@@ -257,6 +314,8 @@ class ReaderSearchViewModel @Inject constructor(
 
     private fun ReaderSearchUiState.withoutSites() = copy(
         sites = emptyList(),
+        urlSite = null,
+        isLookingUpUrl = false,
         isLoadingSites = false,
         isLoadingMoreSites = false,
         canLoadMoreSites = false,
@@ -279,6 +338,16 @@ class ReaderSearchViewModel @Inject constructor(
         private const val KEY_SELECTED_TAB = "selected_tab"
         private const val MAX_SUGGESTIONS = 5
         private const val MAX_SUGGESTIONS_WHEN_EMPTY = 10
+
+        /** The query as a site or feed address, or null if it doesn't look like one */
+        internal fun searchUrl(query: String): String? {
+            if (query.any { it.isWhitespace() } || !query.contains('.')) return null
+            val url = UrlUtils.normalizeUrl(if (query.contains("://")) query else "https://$query")
+            val host = UrlUtils.getHost(url)
+            // a TLD after the last dot, so "3.5" or "e.g." aren't addresses
+            val tld = host.substringAfterLast('.', "")
+            return url.takeIf { URLUtil.isNetworkUrl(it) && tld.length >= 2 && tld.all { c -> c.isLetter() } }
+        }
     }
 }
 
@@ -294,8 +363,18 @@ data class ReaderSearchUiState(
     val isLoadingMoreSites: Boolean = false,
     val canLoadMoreSites: Boolean = false,
     val nextSitesOffset: Int = 0,
-    val sitesRequestFailed: Boolean = false
+    val sitesRequestFailed: Boolean = false,
+    // the site or feed at the address the query looks like, shown above the search results
+    val urlSite: ReaderSearchSite? = null,
+    val isLookingUpUrl: Boolean = false,
 ) {
+    val displayedSites: List<ReaderSearchSite>
+        get() = urlSite?.let { url -> listOf(url) + sites.filterNot { it.key == url.key } } ?: sites
+
+    /** Waiting on everything the Sites tab could show */
+    val isLoadingDisplayedSites: Boolean
+        get() = (isLoadingSites || isLookingUpUrl) && displayedSites.isEmpty()
+
     /*
      * Results stay up while the user edits the query, unless there are suggestions to offer for it
      */
@@ -328,7 +407,9 @@ data class ReaderSearchSite(
     val url: String?,
     val iconUrl: String?,
     val isFollowing: Boolean,
-    val isFollowEnabled: Boolean = true
+    val isFollowEnabled: Boolean = true,
+    // set for the row found from a URL query, which follows by URL so the server can discover the feed
+    val followUrl: String? = null,
 ) {
     // feed and site ids are separate id spaces, so prefix them to keep LazyColumn keys unique
     val key: String

@@ -4,8 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,10 +30,15 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.repository.ReaderPostListRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListEmptyButton
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListItem
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderGalleryPostListScreen
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPSnackbar
 import uniffi.wp_api.ReaderSavedKey
@@ -46,10 +57,15 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
     lateinit var readerTracker: ReaderTracker
 
     private val viewModel: ReaderSavedPostsViewModel by viewModels()
+    @Inject
+    lateinit var layoutPreference: ReaderLayoutPreference
+
     private val listState = LazyListState()
+    private val gridState = LazyStaggeredGridState()
+    private var isGalleryShown by mutableStateOf(false)
 
     // so the Reader's top bar hides with the list, as it does for the other feeds
-    override val feedListState get() = listState
+    override val feedListState: ScrollableState get() = if (isGalleryShown) gridState else listState
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val actions = ReaderSavedPostsActions(
@@ -57,10 +73,27 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
             onLoadMore = viewModel::loadMore,
             onEmptyStateButtonClicked = ::onEmptyStateButtonClicked
         )
+        // the gallery shows the saved posts' cards as the Reader's other post lists do
+        val galleryActions = ReaderPostListActions(
+            onRefresh = actions.onRefresh,
+            onLoadMore = actions.onLoadMore,
+            onEmptyStateButtonClicked = actions.onEmptyStateButtonClicked
+        )
         return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                ReaderSavedPostsScreen(uiState = uiState, listState = listState, actions = actions)
+                val isGallery by layoutPreference.isGallery.collectAsStateWithLifecycle()
+                SideEffect { isGalleryShown = isGallery }
+                if (isGallery) {
+                    ReaderGalleryPostListScreen(
+                        uiState = remember(uiState) { uiState.toPostListUiState() },
+                        gridState = gridState,
+                        actions = galleryActions,
+                        canLoadMore = uiState.hasMore
+                    )
+                } else {
+                    ReaderSavedPostsScreen(uiState = uiState, listState = listState, actions = actions)
+                }
             }
         })
     }
@@ -79,8 +112,16 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
     }
 
     override fun onScrollToTop() {
-        listState.requestScrollToItem(0)
+        if (isGalleryShown) gridState.requestScrollToItem(0) else listState.requestScrollToItem(0)
     }
+
+    private fun ReaderSavedPostsViewModel.UiState.toPostListUiState() = ReaderPostListUiState(
+        items = posts.map { ReaderPostListItem.Post(it.card, key = it.item.key.stableKey()) },
+        isRefreshing = isRefreshing,
+        isLoadingMore = isLoadingMore,
+        canPullToRefresh = true,
+        emptyState = emptyState(this)
+    )
 
     private fun handleEvent(event: ReaderSavedPostsViewModel.Event) {
         when (event) {
@@ -106,7 +147,11 @@ class ReaderSavedPostsFragment : Fragment(), WPMainActivity.OnScrollToTopListene
             ) { viewModel.onUndoUnsave(event.item) }
             ReaderSavedPostsViewModel.Event.RequestFailed -> showMessage(R.string.reader_error_request_failed_title)
             ReaderSavedPostsViewModel.Event.NoNetwork -> showMessage(R.string.error_network_connection)
-            is ReaderSavedPostsViewModel.Event.ScrollTo -> listState.requestScrollToItem(event.index)
+            is ReaderSavedPostsViewModel.Event.ScrollTo -> if (isGalleryShown) {
+                gridState.requestScrollToItem(event.index)
+            } else {
+                listState.requestScrollToItem(event.index)
+            }
             ReaderSavedPostsViewModel.Event.TooManySaves -> showMessage(R.string.reader_saved_posts_limit_reached)
             ReaderSavedPostsViewModel.Event.LoadMoreFailed ->
                 showMessage(R.string.reader_error_request_failed_title, R.string.retry, viewModel::loadMore)

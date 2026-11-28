@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.wordpress.android.datasets.ReaderBlogTable
+import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
@@ -42,6 +43,25 @@ class ReaderSubsRepository @Inject constructor(
     suspend fun getFollowedBlogs(): List<ReaderBlog> = withContext(ioDispatcher) {
         ReaderBlogTable.getFollowedBlogs()
     }
+
+    /** When each site last posted, as far as the posts saved on this device know */
+    suspend fun getLatestPostDates(): LatestPostDates = withContext(ioDispatcher) {
+        val byBlog = mutableMapOf<Long, String>()
+        val byFeed = mutableMapOf<Long, String>()
+        ReaderDatabase.getReadableDb().rawQuery(
+            "SELECT blog_id, feed_id, MAX(date_published) FROM tbl_posts GROUP BY blog_id, feed_id",
+            null
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                val date = cursor.getString(2) ?: continue
+                byBlog.merge(cursor.getLong(0), date) { a, b -> maxOf(a, b) }
+                byFeed.merge(cursor.getLong(1), date) { a, b -> maxOf(a, b) }
+            }
+        }
+        LatestPostDates(byBlog, byFeed)
+    }
+
+    suspend fun fetchSuggestedSites(): List<ReaderSuggestedSite> = blogRepository.fetchSuggestedSites()
 
     fun isValidTagName(name: String) = ReaderTag.isValidTagName(name)
 
@@ -125,4 +145,10 @@ class ReaderSubsRepository @Inject constructor(
 sealed class ReaderSubsEvent {
     data object FollowedTagsFetched : ReaderSubsEvent()
     data class FollowedBlogsFetched(val didChange: Boolean) : ReaderSubsEvent()
+}
+
+/** The ISO 8601 date of each site's latest saved post, by blog ID and by feed ID */
+class LatestPostDates(private val byBlog: Map<Long, String>, private val byFeed: Map<Long, String>) {
+    fun of(blogId: Long, feedId: Long): String? =
+        blogId.takeIf { it != 0L }?.let(byBlog::get) ?: feedId.takeIf { it != 0L }?.let(byFeed::get)
 }

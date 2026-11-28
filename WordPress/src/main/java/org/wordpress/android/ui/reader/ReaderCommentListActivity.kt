@@ -5,13 +5,20 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.Lifecycle
@@ -28,13 +35,13 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity
-import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
+import org.wordpress.android.ui.reader.views.compose.article.ReaderArticleMaterialTheme
 import org.wordpress.android.ui.reader.views.compose.comments.ReaderCommentListActions
 import org.wordpress.android.ui.reader.views.compose.comments.ReaderCommentListScreen
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
@@ -79,6 +86,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
 
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         // so the bars draw behind the system bars, and the keyboard's insets reach Compose on every API level
         enableEdgeToEdge()
@@ -89,7 +97,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         observeEvents()
 
         val actions = ReaderCommentListActions(
-            onBack = ::finish,
             onRefresh = {
                 conversationViewModel.onRefresh()
                 viewModel.onRefresh()
@@ -116,14 +123,24 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsState()
             val followState by conversationViewModel.updateFollowUiState.observeAsState()
-            AppThemeM3 {
-                ReaderCommentListScreen(
-                    uiState = uiState,
-                    followState = followState,
-                    replyText = replyText.value,
-                    actions = actions,
-                    snackbarHostState = snackbarHostState
-                )
+            ReaderArticleMaterialTheme {
+                // a tall sheet over the post, as WPFolio shows comments; closing it closes the screen
+                ModalBottomSheet(
+                    onDismissRequest = ::finish,
+                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                    // the screen insets its own composer
+                    contentWindowInsets = { WindowInsets(0) },
+                ) {
+                    Box(Modifier.fillMaxHeight(SHEET_HEIGHT_FRACTION)) {
+                        ReaderCommentListScreen(
+                            uiState = uiState,
+                            followState = followState,
+                            replyText = replyText.value,
+                            actions = actions,
+                            snackbarHostState = snackbarHostState,
+                        )
+                    }
+                }
             }
         }
     }
@@ -319,3 +336,5 @@ class ReaderCommentListActivity : BaseAppCompatActivity() {
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
     }
 }
+
+private const val SHEET_HEIGHT_FRACTION = 0.92f

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose
 
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
  */
 interface ReaderScrollingFeed {
     /** The list the feed is showing, if any; reads of it are observable */
-    val feedListState: LazyListState?
+    val feedListState: ScrollableState?
 }
 
 /**

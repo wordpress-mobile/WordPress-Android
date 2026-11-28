@@ -11,6 +11,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.accent.ReaderImageAccentSampler
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
@@ -43,7 +44,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val savedPostsRepository: ReaderSavedPostsRepository,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val imageAccentSampler: ReaderImageAccentSampler,
 ) {
     @Suppress("LongParameterList")
     suspend fun mapPostToUiState(
@@ -93,6 +95,16 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null,
     ): ReaderPostUiState {
+        val featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight)
+        val featuredImageSourceUrl = post.featuredImage.takeIf { !featuredImageUrl.isNullOrEmpty() }
+        // height 0 asks Photon for the width only, so the image keeps its shape
+        fun uncroppedUrl(url: String, width: Int) =
+            readerUtilsWrapper.getResizedImageUrl(url, width, 0, post.isPrivate, post.isPrivateAtomic)
+        featuredImageSourceUrl?.let { sourceUrl ->
+            imageAccentSampler.enqueue(sourceUrl) {
+                uncroppedUrl(sourceUrl, ReaderImageAccentSampler.SAMPLE_SIZE_PX)
+            }
+        }
         return ReaderPostUiState(
             source = source,
             postId = post.postId,
@@ -102,7 +114,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
             blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
-            featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+            featuredImageUrl = featuredImageUrl,
+            featuredImageSourceUrl = featuredImageSourceUrl,
+            featuredImageUncroppedUrl = featuredImageSourceUrl?.let { uncroppedUrl(it, photonWidth) },
+            featuredImageTileUrl = featuredImageSourceUrl?.let { uncroppedUrl(it, photonWidth / 2) },
             thumbnailStripSection = buildThumbnailStripUrls(post),
             featuredImageVisibility = buildFeaturedImageVisibility(post),
             moreMenuVisibility = accountStore.hasAccessToken(),
@@ -111,6 +126,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             reblogAction = buildReblogSection(post, onButtonClicked),
             commentsAction = buildCommentsSection(post, onButtonClicked),
             moreMenuItems = moreMenuItems,
+            isSeen = post.isSeenSupported && post.isSeen,
             onItemClicked = onItemClicked,
             onItemRendered = onItemRendered,
             onMoreButtonClicked = onMoreButtonClicked,

@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -29,6 +30,7 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.LatestPostDates
 import org.wordpress.android.ui.reader.repository.ReaderSubsRepository
 import org.wordpress.android.ui.reader.repository.UpdateTask
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -53,6 +55,8 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         whenever(repository.events).thenReturn(emptyFlow())
         whenever(repository.getFollowedTags()).thenReturn(listOf(cats, dogs))
         whenever(repository.getFollowedBlogs()).thenReturn(emptyList())
+        whenever(repository.getLatestPostDates()).thenReturn(LatestPostDates(emptyMap(), emptyMap()))
+        whenever(repository.fetchSuggestedSites()).thenReturn(emptyList())
         whenever(repository.getHost(any())).thenAnswer { (it.arguments[0] as String).substringAfter("://") }
         whenever(repository.isValidTagName(any())).thenReturn(true)
         whenever(repository.isFollowedUrl(any())).thenReturn(false)
@@ -347,7 +351,8 @@ class ReaderSubsViewModelTest : BaseUnitTest() {
         networkUtilsWrapper,
         readerTracker,
         resourceProvider,
-        testDispatcher()
+        testDispatcher(),
+        TestScope(testDispatcher())
     )
 
     private fun string(resId: Int) = "string:$resId"

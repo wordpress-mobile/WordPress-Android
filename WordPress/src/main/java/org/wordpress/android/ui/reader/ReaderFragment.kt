@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.livedata.observeAsState
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
+import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
@@ -71,6 +73,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProvider {
+    @Inject
+    lateinit var layoutPreference: ReaderLayoutPreference
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -254,6 +259,7 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
         val topBarState by viewModel.topBarUiState.observeAsState()
         val uiState by viewModel.uiState.observeAsState()
         val selectedTag = (uiState as? ContentUiState)?.selectedReaderTag
+        val isGalleryLayout by layoutPreference.isGallery.collectAsState()
         Box {
             ReaderShellLayout(
                 scrollConnection = topBarScrollConnection,
@@ -273,6 +279,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                                 onClearFilterClick = ::clearFilter,
                                 isSearchVisible = state.isSearchActionVisible,
                                 onSearchClick = viewModel::onSearchActionClicked,
+                                isGalleryLayout = isGalleryLayout.takeIf { selectedTag?.hasGalleryLayout() == true },
+                                onLayoutToggleClick = layoutPreference::toggle,
                             )
                         }
                     }
@@ -290,6 +298,9 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
             }
         }
     }
+
+    // the feeds that offer the gallery layout, with its toggle; this decides it for every feed the Reader hosts
+    private fun ReaderTag.hasGalleryLayout() = isFollowedSites || isDiscover || isPostsILike || isBookmarked
 
     /**
      * The selected feed's fragment. The key on the tag's slug means changing feeds replaces it, as the old
@@ -325,7 +336,8 @@ class ReaderFragment : Fragment(), OnScrollToTopListener, SubFilterViewModelProv
                         tag,
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                         true,
-                        tag.isFilterable
+                        tag.isFilterable,
+                        hasGalleryLayout = tag.hasGalleryLayout()
                     )
                 },
                 onUpdate = ::onFeedAdded

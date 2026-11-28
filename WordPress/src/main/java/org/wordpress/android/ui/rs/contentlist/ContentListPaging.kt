@@ -2,6 +2,7 @@ package org.wordpress.android.ui.rs.contentlist
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +37,17 @@ fun LoadMoreOnScrollToEnd(
     onLoadMore: () -> Unit,
 ) = LoadMoreOnScrollToEnd(gridState, itemCount, canLoadMore, onLoadMore) {
     gridState.layoutInfo.let { (it.visibleItemsInfo.lastOrNull()?.index ?: 0) to it.totalItemsCount }
+}
+
+/** [LoadMoreOnScrollToEnd] for a lazy staggered grid. */
+@Composable
+fun LoadMoreOnScrollToEnd(
+    gridState: LazyStaggeredGridState,
+    itemCount: Int,
+    canLoadMore: Boolean,
+    onLoadMore: () -> Unit,
+) = LoadMoreOnScrollToEnd(gridState, itemCount, canLoadMore, onLoadMore) {
+    gridState.layoutInfo.let { (it.visibleItemsInfo.maxOfOrNull { item -> item.index } ?: 0) to it.totalItemsCount }
 }
 
 /** [lastVisibleAndTotal] reads the index of the last visible item and the total item count from [scrollState]. */

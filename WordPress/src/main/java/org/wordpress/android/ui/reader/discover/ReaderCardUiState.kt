@@ -24,6 +24,12 @@ sealed class ReaderCardUiState {
         val title: UiString?,
         val excerpt: String?,
         val featuredImageUrl: String?,
+        // the image's own URL, which its sampled accent and aspect ratio are saved under
+        val featuredImageSourceUrl: String? = null,
+        // sized to the card's width but not cropped, for showing the image at its own aspect ratio
+        val featuredImageUncroppedUrl: String? = null,
+        // as above, but sized for a gallery tile, which is at most half the card's width
+        val featuredImageTileUrl: String? = null,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
@@ -32,6 +38,8 @@ sealed class ReaderCardUiState {
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
+        // read already, so the card dims its title
+        val isSeen: Boolean = false,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderPostUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,

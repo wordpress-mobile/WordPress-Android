@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT
+import org.wordpress.android.ui.reader.accent.readerImageMeta
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
 import org.wordpress.android.util.DisplayUtils
@@ -46,6 +48,10 @@ import org.wordpress.android.util.PhotonUtils
 import java.util.EnumSet
 
 private const val FEATURED_IMAGE_ASPECT_RATIO = 16f / 9f
+
+// the tallest and widest a featured image's own shape may make the card's image, from 4:5 to 16:9
+private const val MIN_FEATURED_IMAGE_RATIO = 4f / 5f
+private const val MAX_FEATURED_IMAGE_RATIO = 16f / 9f
 
 /**
  * The featured image or, for gallery posts, the thumbnail strip.
@@ -60,25 +66,45 @@ fun ReaderPostCardMedia(uiState: ReaderPostUiState) {
 
 @Composable
 private fun FeaturedImage(uiState: ReaderPostUiState) {
-    val backgroundColor = colorResource(R.color.reader_featured_image_background)
-    val transformation = remember(backgroundColor) { PortraitAwareCropTransformation(backgroundColor.toArgb()) }
+    val meta = readerImageMeta(uiState.featuredImageSourceUrl)
+    // the image's own shape, but only if it was known when the card first showed, so the card never changes
+    // height while it's on screen
+    val ratio = remember(uiState.postId, uiState.blogId) {
+        meta?.ratio?.coerceIn(MIN_FEATURED_IMAGE_RATIO, MAX_FEATURED_IMAGE_RATIO)
+    }
+    val accent = meta?.accent?.let { Color(it) }
+    val backgroundColor = accent ?: colorResource(R.color.reader_featured_image_background)
+    // transparent, so the box's background shows around a portrait image and an accent arriving late doesn't
+    // change the request, which would decode the image again
+    val transformation = remember { PortraitAwareCropTransformation(Color.Transparent.toArgb()) }
 
     Box(
         modifier = Modifier
             .padding(top = Margin.Medium.value)
             .fillMaxWidth()
-            .aspectRatio(FEATURED_IMAGE_ASPECT_RATIO)
+            .aspectRatio(ratio ?: FEATURED_IMAGE_ASPECT_RATIO)
             .clip(RoundedCornerShape(dimensionResource(R.dimen.reader_featured_image_corner_radius_new)))
             .background(backgroundColor),
         contentAlignment = Alignment.Center,
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(uiState.featuredImageUrl)
-                .placeholder(R.drawable.bg_rectangle_placeholder_radius_4dp)
-                .error(R.drawable.bg_rectangle_placeholder_radius_4dp)
+                .apply {
+                    if (ratio != null) {
+                        // uncropped, so the box's own shape decides the crop
+                        data(uiState.featuredImageUncroppedUrl)
+                    } else {
+                        data(uiState.featuredImageUrl)
+                        transformations(transformation)
+                    }
+                    // the accent stands in while the image loads, rather than a gray box
+                    if (accent == null) {
+                        placeholder(R.drawable.bg_rectangle_placeholder_radius_4dp)
+                        error(R.drawable.bg_rectangle_placeholder_radius_4dp)
+                    }
+                }
                 .fallback(R.color.placeholder)
-                .transformations(transformation)
+                .crossfade(true)
                 .build(),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),

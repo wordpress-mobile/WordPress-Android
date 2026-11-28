@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -64,6 +67,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.subscription.ReaderSubscriptionSettingsBottomSheetFragment
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderLayoutPreference
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListArgs
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListUiEvent
@@ -71,6 +75,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.MeasureOnLayoutComposeView
 import org.wordpress.android.ui.reader.views.compose.ReaderScrollingFeed
+import org.wordpress.android.ui.reader.views.compose.postlist.ReaderGalleryPostListScreen
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListActions
 import org.wordpress.android.ui.reader.views.compose.postlist.ReaderPostListScreen
 import org.wordpress.android.util.AppLog
@@ -102,6 +107,9 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 
+    @Inject
+    lateinit var layoutPreference: ReaderLayoutPreference
+
     private lateinit var postListViewModel: ReaderPostListViewModel
 
     // created with each view, since it holds that view's layout. The position is kept here in between, so
@@ -109,7 +117,11 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     // state, so the Reader's top bar can follow the list as it's recreated with the view
     private var listState: LazyListState? by mutableStateOf(null)
 
-    override val feedListState get() = listState
+    // the grid the gallery layout shows instead, kept alongside the list so switching layouts keeps both positions
+    private var gridState: LazyStaggeredGridState? by mutableStateOf(null)
+    private var isGalleryShown by mutableStateOf(false)
+
+    override val feedListState: ScrollableState? get() = if (isGalleryShown) gridState else listState
     private var savedFirstVisibleIndex = 0
     private var savedFirstVisibleOffset = 0
 
@@ -119,6 +131,9 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     private var tagFragmentStartedWith: ReaderTag? = null
 
     private var isFilterableScreen = false
+
+    // whether the feed that hosts this list offers the gallery layout, as its host decides
+    private var hasGalleryLayout = false
 
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
 
@@ -133,6 +148,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         val arguments = requireArguments()
         isTopLevel = arguments.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL)
         isFilterableScreen = arguments.getBoolean(ReaderConstants.ARG_IS_FILTERABLE)
+        hasGalleryLayout = arguments.getBoolean(ARG_HAS_GALLERY_LAYOUT)
         tagFragmentStartedWith =
             BundleCompat.getSerializable(arguments, ReaderConstants.ARG_ORIGINAL_TAG, ReaderTag::class.java)
 
@@ -494,17 +510,36 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     ): View {
         val actions = buildActions()
         val listState = LazyListState(savedFirstVisibleIndex, savedFirstVisibleOffset).also { listState = it }
+        val gridState = LazyStaggeredGridState().also { gridState = it }
         return MeasureOnLayoutComposeView(requireContext(), {
             AppThemeM3 {
                 val uiState by postListViewModel.uiState.collectAsStateWithLifecycle()
-                ReaderPostListScreen(
-                    uiState = uiState,
-                    listState = listState,
-                    actions = actions
-                )
+                val isGalleryPreferred by layoutPreference.isGallery.collectAsStateWithLifecycle()
+                val isGallery = supportsGallery() && isGalleryPreferred
+                SideEffect { isGalleryShown = isGallery }
+                if (isGallery) {
+                    ReaderGalleryPostListScreen(
+                        uiState = uiState,
+                        gridState = gridState,
+                        actions = actions,
+                        // not the list type: the Subscriptions site filter is a blog list without a header
+                        isSiteHeaderExpected = postListViewModel.hasSiteHeader
+                    )
+                } else {
+                    ReaderPostListScreen(
+                        uiState = uiState,
+                        listState = listState,
+                        actions = actions
+                    )
+                }
             }
         })
     }
+
+    // previews are always galleries when the reader picked that layout, so a tag reads like a magazine too
+    private fun supportsGallery() = hasGalleryLayout ||
+        postListViewModel.listType == ReaderPostListType.BLOG_PREVIEW ||
+        postListViewModel.listType == ReaderPostListType.TAG_PREVIEW
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -513,6 +548,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             savedFirstVisibleOffset = it.firstVisibleItemScrollOffset
         }
         listState = null
+        gridState = null
     }
 
     private fun buildActions() = ReaderPostListActions(
@@ -860,9 +896,12 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
     }
 
     override fun onScrollToTop() {
-        val listState = listState ?: return
-        if (listState.firstVisibleItemIndex > 0) {
-            // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
+        val gridState = gridState
+        val listState = listState
+        // animated scrolls need Compose's frame clock, which lifecycleScope doesn't provide
+        if (isGalleryShown && gridState != null) {
+            viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { gridState.animateScrollToItem(0) }
+        } else if (!isGalleryShown && listState != null && listState.firstVisibleItemIndex > 0) {
             viewLifecycleOwner.lifecycleScope.launch(AndroidUiDispatcher.Main) { listState.animateScrollToItem(0) }
         }
     }
@@ -884,6 +923,8 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
         get() = tagFragmentStartedWith != null && tagFragmentStartedWith!!.isFollowedSites
 
     companion object {
+        private const val ARG_HAS_GALLERY_LAYOUT = "has_gallery_layout"
+
         private const val READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f
         private const val KEY_TAG_PREVIEW_HISTORY = "tag_preview_history"
         private var hasPurgedReaderDb = false
@@ -896,7 +937,8 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             tag: ReaderTag,
             listType: ReaderPostListType?,
             isTopLevel: Boolean = false,
-            isFilterable: Boolean = false
+            isFilterable: Boolean = false,
+            hasGalleryLayout: Boolean = false
         ) = Bundle().apply {
             // Tag this fragment is started with
             putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag)
@@ -905,6 +947,7 @@ class ReaderPostListFragment : Fragment(), OnActivityBackPressedListener, OnScro
             putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType)
             putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel)
             putBoolean(ReaderConstants.ARG_IS_FILTERABLE, isFilterable)
+            putBoolean(ARG_HAS_GALLERY_LAYOUT, hasGalleryLayout)
         }
 
         /*
