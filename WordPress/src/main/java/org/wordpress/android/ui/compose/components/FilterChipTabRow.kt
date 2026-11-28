@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -48,9 +47,7 @@ fun FilterChipTabRow(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = FilterChipTabRowDefaults.ContentPadding,
-    enabled: Boolean = true,
-    // TODO: Temporary FeatureTip try-out
-    featureTipIndex: Int? = null
+    enabled: Boolean = true
 ) {
     val listState = rememberLazyListState()
 
@@ -77,40 +74,32 @@ fun FilterChipTabRow(
     ) {
         itemsIndexed(labels) { index, label ->
             val selected = index == selectedIndex
-            // TODO: Temporary FeatureTip try-out
-            var showChipTip by remember { mutableStateOf(index == featureTipIndex) }
-            FeatureTip(
-                text = "Filter your list",
-                isVisible = showChipTip,
-                onDismiss = { showChipTip = false },
-            ) {
-                FilterChip(
-                    selected = selected,
-                    onClick = { onSelect(index) },
-                    label = { Text(label) },
-                    enabled = enabled,
-                    // FilterChip announces as a checkbox; this is a tab strip
-                    modifier = Modifier.semantics {
-                        role = Role.Tab
-                        collectionItemInfo = CollectionItemInfo(
-                            rowIndex = 0,
-                            rowSpan = 1,
-                            columnIndex = index,
-                            columnSpan = 1
-                        )
-                    },
-                    shape = MaterialTheme.shapes.large,
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    border = FilterChipDefaults.filterChipBorder(
-                        enabled = enabled,
-                        selected = selected,
-                        borderColor = MaterialTheme.colorScheme.outlineVariant
+            FilterChip(
+                selected = selected,
+                onClick = { onSelect(index) },
+                label = { Text(label) },
+                enabled = enabled,
+                // FilterChip announces as a checkbox; this is a tab strip
+                modifier = Modifier.semantics {
+                    role = Role.Tab
+                    collectionItemInfo = CollectionItemInfo(
+                        rowIndex = 0,
+                        rowSpan = 1,
+                        columnIndex = index,
+                        columnSpan = 1
                     )
+                },
+                shape = MaterialTheme.shapes.large,
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                border = FilterChipDefaults.filterChipBorder(
+                    enabled = enabled,
+                    selected = selected,
+                    borderColor = MaterialTheme.colorScheme.outlineVariant
                 )
-            }
+            )
         }
     }
 }

@@ -228,9 +228,7 @@ fun PostRsListScreen(
                     selectedIndex = pagerState.settledPage,
                     onSelect = { index ->
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                    },
-                    // TODO: Temporary FeatureTip try-out
-                    featureTipIndex = tabs.lastIndex
+                    }
                 )
             }
 

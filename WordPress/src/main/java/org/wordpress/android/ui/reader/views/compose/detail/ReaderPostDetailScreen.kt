@@ -327,26 +327,17 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
                 labelRes = R.string.comment,
                 iconRes = R.drawable.ic_comment_outline_new_24dp,
             )
-            // TODO: Temporary FeatureTip try-out
-            var showLikeTip by remember { mutableStateOf(true) }
-            FeatureTip(
-                text = "Let the author know you liked their post",
-                isVisible = showLikeTip,
-                onDismiss = { showLikeTip = false },
-                anchorPosition = FeatureTipPosition.Above,
-            ) {
-                BottomBarAction(
-                    postId = state.postId,
-                    blogId = state.blogId,
-                    action = actions.likeAction,
-                    labelRes = R.string.like,
-                    iconRes = if (actions.likeAction.isSelected) {
-                        R.drawable.ic_like_fill_new_24dp
-                    } else {
-                        R.drawable.ic_like_outline_new_24dp
-                    },
-                )
-            }
+            BottomBarAction(
+                postId = state.postId,
+                blogId = state.blogId,
+                action = actions.likeAction,
+                labelRes = R.string.like,
+                iconRes = if (actions.likeAction.isSelected) {
+                    R.drawable.ic_like_fill_new_24dp
+                } else {
+                    R.drawable.ic_like_outline_new_24dp
+                },
+            )
         }
     }
 }
