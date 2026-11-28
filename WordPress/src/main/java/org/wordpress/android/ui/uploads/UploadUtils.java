@@ -206,9 +206,8 @@ public class UploadUtils {
 
         boolean uploadNotStarted = data.getBooleanExtra(EditorConstants.EXTRA_UPLOAD_NOT_STARTED, false);
         if (uploadNotStarted && !NetworkUtils.isNetworkAvailable(activity)) {
-            // The network is not available, we can enqueue a request to upload local changes later
-            UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
-            // And tell the user about it
+            // Editor already enqueued the upload worker and showed offline feedback on SAVED_LOCALLY;
+            // only offer cancel if a pending auto-upload exists without re-enqueuing duplicates.
             showSnackbar(snackbarAttachView, getDeviceOfflinePostModelNotUploadedMessage(post, uploadAction),
                     R.string.cancel,
                     v -> {

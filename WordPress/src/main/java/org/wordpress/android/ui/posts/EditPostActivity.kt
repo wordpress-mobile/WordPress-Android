@@ -1135,7 +1135,17 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             finishEvent.applyIfNotHandled {
                 when (this) {
                     ActivityFinishState.SAVED_ONLINE -> saveResult(saved = true, uploadNotStarted = false)
-                    ActivityFinishState.SAVED_LOCALLY -> saveResult(saved = true, uploadNotStarted = true)
+                    ActivityFinishState.SAVED_LOCALLY -> {
+                        saveResult(saved = true, uploadNotStarted = true)
+                        if (!NetworkUtils.isNetworkAvailable(this@EditPostActivity) && !isFinishing) {
+                            val waitingRes = if (editPostRepository.getPost()?.isPage == true) {
+                                org.wordpress.android.R.string.page_waiting_for_connection_publish
+                            } else {
+                                org.wordpress.android.R.string.post_waiting_for_connection_publish
+                            }
+                            ToastUtils.showToast(this@EditPostActivity, waitingRes, ToastUtils.Duration.SHORT)
+                        }
+                    }
                     ActivityFinishState.CANCELLED -> saveResult(saved = false, uploadNotStarted = true)
                 }
                 removePostOpenInEditorStickyEvent()
