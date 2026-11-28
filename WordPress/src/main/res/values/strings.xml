@@ -5081,4 +5081,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gbk_editor_crashed_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">The editor stopped working</string>
     <string name="gbk_editor_crashed_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload the editor to continue editing.</string>
     <string name="gbk_editor_crashed_reload" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Reload Editor</string>
+    <string name="gbk_editor_webview_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg-kit">Update Android System WebView to use the editor.</string>
 </resources>
