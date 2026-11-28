@@ -631,7 +631,7 @@ private fun NewStatsScreen(
                     }
                 },
                 navigationIcon = {
-                    // TODO: Temporary FeatureTip try-out
+                    // TODO Temporary FeatureTip try-out
                     var showBackTip by remember { mutableStateOf(true) }
                     FeatureTip(
                         text = "Back to My Site",

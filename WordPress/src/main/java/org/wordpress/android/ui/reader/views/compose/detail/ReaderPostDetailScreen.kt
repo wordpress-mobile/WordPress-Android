@@ -293,7 +293,7 @@ private fun BottomBar(state: ReaderPostDetailsUiState, modifier: Modifier = Modi
                 .padding(horizontal = Margin.ExtraLarge.value, vertical = Margin.Medium.value),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            // TODO: Temporary FeatureTip try-out
+            // TODO Temporary FeatureTip try-out
             var showSaveTip by remember { mutableStateOf(true) }
             FeatureTip(
                 text = "Save posts to read later",

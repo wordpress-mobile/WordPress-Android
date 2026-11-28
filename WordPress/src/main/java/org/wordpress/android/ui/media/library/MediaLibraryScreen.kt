@@ -292,7 +292,7 @@ private fun MainTopBar(
             }
         },
         actions = {
-            // TODO: Temporary FeatureTip on the search icon
+            // TODO Temporary FeatureTip on the search icon
             FeatureTip(
                 prefKey = AppPrefs.UndeletablePrefKey.FEATURE_TIP_MEDIA_REDESIGN_SHOWN,
                 text = AnnotatedString.fromHtml("<b>New!</b> Search your media library"),

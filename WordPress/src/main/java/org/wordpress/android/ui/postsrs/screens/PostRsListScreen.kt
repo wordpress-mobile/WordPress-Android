@@ -205,7 +205,7 @@ fun PostRsListScreen(
             }
         },
         floatingActionButton = {
-            // TODO: Temporary FeatureTip try-out
+            // TODO Temporary FeatureTip try-out
             var showFabTip by remember { mutableStateOf(true) }
             FeatureTip(
                 text = "Start a new post",
