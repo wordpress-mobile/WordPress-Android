@@ -78,10 +78,11 @@ fun FeatureTip(
 ) {
     // A private mutex, since with M3's shared default any other tooltip's show() would cancel this one
     val state = rememberTooltipState(isPersistent = true, mutatorMutex = remember { MutatorMutex() })
-    // The anchor's bounds in the window, or null until it's laid out and whenever it isn't shown at full size:
-    // partly off screen, or shrunk by an ancestor's transform such as ViewPager2's page transformer mid-swipe.
-    // That also keeps tips on ViewPager2's off-screen neighbouring pages hidden.
+    // The anchor's bounds in the window, or null until it's laid out and whenever it isn't fully on screen at full
+    // size: partly or entirely outside the window (including ViewPager2's neighbouring pages, which stay composed
+    // off screen), or shrunk by an ancestor's transform such as ViewPager2's page transformer mid-swipe
     var anchorBounds by remember { mutableStateOf<Rect?>(null) }
+    val windowSize = LocalWindowInfo.current.containerSize
     val show = isVisible && anchorBounds != null
     // A persistent tooltip's show() suspends until cancelled and dismisses on the way out, so restarting this
     // effect hides the bubble. Keying it on the bounds too hides the bubble while its anchor moves (a scroll,
@@ -97,10 +98,13 @@ fun FeatureTip(
     // parent data such as Modifier.weight would be lost
     Box(
         modifier = modifier.onGloballyPositioned { coordinates ->
+            // boundsInWindow() only clips to the anchor's own ComposeView, so check against the window too
             val bounds = coordinates.boundsInWindow()
+            val isInWindow = bounds.left >= 0f && bounds.top >= 0f &&
+                bounds.right <= windowSize.width && bounds.bottom <= windowSize.height
             val isFullSize = bounds.width >= coordinates.size.width - 1 &&
                 bounds.height >= coordinates.size.height - 1
-            anchorBounds = bounds.takeIf { isFullSize }
+            anchorBounds = bounds.takeIf { isInWindow && isFullSize }
         }
     ) {
         TooltipBox(
